@@ -25,8 +25,10 @@ import {
   getPublicHostPlantSectionNote,
 } from '../src/utils/publicHostPlantNotes.js';
 import { normalizeJapaneseInsectName } from '../src/utils/insectNameAliases.js';
+import { buildSourceLabel as buildPlantProfileSourceLabel } from '../src/utils/plantProfileText.js';
 import { getHostResourceType } from '../src/utils/hostResource.js';
 import {
+  collectPlantPageNames,
   isValidPlantName,
   SUSPICIOUS_PLANT_NAME_SET,
 } from './lib/dataLiteBuilders.mjs';
@@ -1775,7 +1777,7 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
 </html>`;
 }
 
-// 植物プロファイル（『日本の野生植物』由来の生活形・樹高・花期・分布・生育環境）の
+// 植物プロファイル（『日本の野生植物』由来の生活形・樹高・花期・分布・生育環境・識別形質）の
 // 表示ラベル。data-lite の detail.profile と対応する。
 const PLANT_PROFILE_FIELDS = [
   ['habit', '生活形'],
@@ -1783,6 +1785,8 @@ const PLANT_PROFILE_FIELDS = [
   ['flowerPeriod', '花期'],
   ['distribution', '分布'],
   ['habitat', '生育環境'],
+  ['similarTaxa', '比較対象'],
+  ['distinguishingFeatures', '類似種との見分け方'],
 ];
 
 // 植物メタページ本文に「植物の特徴」セクションを描画する。
@@ -1806,10 +1810,8 @@ function renderPlantProfileSection(displayPlantName, detail = {}, plantFamily = 
     : `${displayPlantName}の形態・分布に関する基本情報です。`;
 
   const source = String(profile.source || '').trim();
-  const page = String(profile.page || '').trim();
-  const sourceText = source
-    ? `出典：${source}${page ? ` p.${page}` : ''}`
-    : '';
+  const sourceLabel = buildPlantProfileSourceLabel(profile);
+  const sourceText = source ? `出典：${sourceLabel}` : '';
 
   const dlItems = facts
     .map(([label, value]) => `
@@ -2858,7 +2860,9 @@ async function generateMetaPages() {
     // 植物ページを生成
     let plantCount = 0;
     let skippedPlants = 0;
-    hostPlantsMap.forEach((insects, plantName) => {
+    const plantPageNames = collectPlantPageNames(hostPlantsMap, plantDetailIndex);
+    plantPageNames.forEach((plantName) => {
+      const insects = hostPlantsMap.get(plantName) || [];
       if (!isValidPlantName(plantName)) {
         console.log(`スキップ: 無効な植物名 '${plantName}'`);
         skippedPlants++;
@@ -2867,7 +2871,7 @@ async function generateMetaPages() {
       plantCount++;
       const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
       const plantEnSlug = plantNameToEnSlug.get(safePlantName) || null;
-      const plantFamily = plantFamilyByKey.get(plantName) || '';
+      const plantFamily = plantFamilyByKey.get(plantName) || getPlantDetailForMeta(plantName)?.family || '';
       const html = generatePlantHTML(plantName, insects, allPlantImages, null, plantEnSlug, plantFamily);
       const filename = path.join(__dirname, `../public/meta/plant/${safePlantName}.html`);
       fs.writeFileSync(filename, html);
@@ -3084,10 +3088,10 @@ async function generateMetaPages() {
 
     // 植物インデックス用データ（科名別グループ）を構築
     const plantIndexByFamily = {};
-    hostPlantsMap.forEach((_plantInsects, plantName) => {
+    collectPlantPageNames(hostPlantsMap, plantDetailIndex).forEach((plantName) => {
       if (!isValidPlantName(plantName)) return;
       // キーは基底名なので科名は plantFamilyByKey から引く（科別グルーピング用）
-      const family = plantFamilyByKey.get(plantName) || '科名未設定';
+      const family = plantFamilyByKey.get(plantName) || getPlantDetailForMeta(plantName)?.family || '科名未設定';
       if (!plantIndexByFamily[family]) plantIndexByFamily[family] = [];
       const safePlantName = plantName.replace(/[/\\?%*:|"<>]/g, '-');
       plantIndexByFamily[family].push({ name: plantName, file: safePlantName });

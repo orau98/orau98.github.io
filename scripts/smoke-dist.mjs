@@ -33,6 +33,7 @@ const REQUIRED_FILES = [
   'meta/butterfly/index.html',
   'meta/moth/index.html',
   'meta/plant/index.html',
+  'meta/plant/グスクカンアオイ.html',
   'en/meta/moth/index.html',
   'en/meta/plant/index.html',
   'robots.txt',
@@ -293,6 +294,14 @@ assert(
   okinagusaRouteHtml.includes('name="robots" content="index, follow') &&
     okinagusaRouteHtml.includes('rel="canonical" href="https://orau98.github.io/meta/plant/'),
   'オキナグサ interactive route must consolidate into the indexable static plant profile',
+);
+
+const identificationProfileHtml = readDistText('meta/plant/グスクカンアオイ.html');
+assert(
+  identificationProfileHtml.includes('類似種との見分け方') &&
+    identificationProfileHtml.includes('比較対象') &&
+    identificationProfileHtml.includes('日本の野生植物'),
+  'a profile-only plant with audited identification traits must get a source-backed static page',
 );
 
 const okinagusaEnglishRoutePath = path.join('en', 'plant', 'オキナグサ', 'index.html');

@@ -23,8 +23,8 @@ import Vision
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUTPUT = ROOT / "normalized_data" / "plant_profiles.csv"
-DEFAULT_REPORT = ROOT / "reports" / "wildplant_profile_extraction_report.json"
+DEFAULT_OUTPUT = ROOT / "work" / "wildplant_profile_candidates.csv"
+DEFAULT_REPORT = ROOT / "work" / "wildplant_profile_extraction_report.json"
 DEFAULT_CACHE_ROOT = Path.home() / "Codex_offload" / "wildplant_ocr_cache"
 
 FIELDNAMES = [
@@ -40,6 +40,9 @@ FIELDNAMES = [
     "flower_period",
     "distribution",
     "habitat",
+    "similar_taxa",
+    "distinguishing_features",
+    "printed_page",
     "source",
     "page",
     "extraction_method",
@@ -49,11 +52,10 @@ FAMILY_RE = re.compile(r"([一-龯ぁ-んァ-ヶー]+科)\s*([A-Z][A-Z]+ACEAE)\b
 GENUS_RE = re.compile(r"[【\[]?\s*\d+\s*[】\]]\s*([一-龯ぁ-んァ-ヶー]+属)\s+([A-Z][A-Za-z-]+)")
 ENTRY_RE = re.compile(
     r"(?P<num>[0-9０-９]{1,3})[.．]\s*"
-    r"(?P<name>[一-龯ぁ-んァ-ヶー]+)"
-    r"(?:[（(〔\[][^\s）)\]〕]{1,30}[）)\]〕])?\s+"
-    r"(?P<sci>[A-Z][A-Za-z-]+(?:\s+(?:[×x]\s*)?[a-z][a-z-]+)"
-    r"(?:\s+(?:var\.|subsp\.|f\.)\s+[a-z][a-z-]+)?"
-    r"(?:\s+[a-z][a-z-]+)?)"
+    r"(?P<name>[一-龯ぁ-んァ-ヶー]+(?:[ \u3000]+[一-龯ぁ-んァ-ヶー]+)?)"
+    r"(?:\s*[（(〔\[［【][^）)\]〕］】\n]{1,160}[）)\]〕］】])?\s+"
+    r"(?P<sci>[A-Za-z][A-Za-z-]+(?:\s+(?:[×x]\s*)?[a-z][A-Za-z-]+)"
+    r"(?:\s+(?:var\.|subsp\.|f\.)\s+[a-z][A-Za-z-]+)?)"
 )
 HABIT_RE = re.compile(
     r"((?:常緑|落葉|多年生|一年生|二年生|寄生性|浮遊性|つる性|着生|海岸性|湿生)?"
@@ -76,6 +78,10 @@ PLANT_NAME_CORRECTIONS = {
     "マルミスプタ": "マルミスブタ",
     "ミカワスプタ": "ミカワスブタ",
     "ヤナギスプタ": "ヤナギスブタ",
+    "イプキ": "イブキ",
+    "マツプサ": "マツブサ",
+    "アリマウマノススクサ": "アリマウマノスズクサ",
+    "コウシュンウマノススクサ": "コウシュンウマノスズクサ",
 }
 
 
@@ -142,26 +148,62 @@ def ocr_page(doc: fitz.Document, page_number: int, dpi: int) -> str:
     return ocr_image_data(pix.tobytes("png"))
 
 
+def ocr_half_page(doc: fitz.Document, page_number: int, side: str, dpi: int) -> str:
+    page = doc[page_number - 1]
+    rect = page.rect
+    midpoint = rect.x0 + rect.width / 2
+    clip = (
+        fitz.Rect(rect.x0, rect.y0, midpoint, rect.y1)
+        if side == "left"
+        else fitz.Rect(midpoint, rect.y0, rect.x1, rect.y1)
+    )
+    pix = page.get_pixmap(dpi=dpi, clip=clip, alpha=False)
+    return ocr_image_data(pix.tobytes("png"))
+
+
 def load_or_ocr_pages(
     pdf_path: Path,
     pages: list[int],
     cache_dir: Path,
     dpi: int,
     force_ocr: bool = False,
-) -> list[tuple[int, str, bool]]:
+    split_spreads: bool = False,
+    printed_pages: set[int] | None = None,
+) -> list[tuple[int, int | None, str, bool]]:
     cache_dir.mkdir(parents=True, exist_ok=True)
     doc = fitz.open(str(pdf_path))
-    results: list[tuple[int, str, bool]] = []
+    results: list[tuple[int, int | None, str, bool]] = []
     for index, page_number in enumerate(pages, 1):
-        cache_path = cache_dir / f"page-{page_number:04d}.txt"
-        if cache_path.exists() and not force_ocr:
-            text = cache_path.read_text(encoding="utf-8")
-            results.append((page_number, text, True))
-            continue
-        text = ocr_page(doc, page_number, dpi)
-        cache_path.write_text(text, encoding="utf-8")
-        results.append((page_number, text, False))
-        print(f"  OCR p.{page_number} ({index}/{len(pages)}): {len(text)} chars", flush=True)
+        parts = (
+            [
+                ("left", 2 * page_number - 2),
+                ("right", 2 * page_number - 1),
+            ]
+            if split_spreads
+            else [("full", None)]
+        )
+        for side, printed_page in parts:
+            if printed_pages is not None and printed_page not in printed_pages:
+                continue
+            cache_name = (
+                f"page-{page_number:04d}-{side}-printed-{printed_page:04d}.txt"
+                if split_spreads
+                else f"page-{page_number:04d}.txt"
+            )
+            cache_path = cache_dir / cache_name
+            if cache_path.exists() and not force_ocr:
+                text = cache_path.read_text(encoding="utf-8")
+                results.append((page_number, printed_page, text, True))
+                continue
+            text = (
+                ocr_half_page(doc, page_number, side, dpi)
+                if split_spreads
+                else ocr_page(doc, page_number, dpi)
+            )
+            cache_path.write_text(text, encoding="utf-8")
+            results.append((page_number, printed_page, text, False))
+            page_label = f"PDF p.{page_number} / p.{printed_page}" if split_spreads else f"PDF p.{page_number}"
+            print(f"  OCR {page_label} ({index}/{len(pages)}): {len(text)} chars", flush=True)
     doc.close()
     return results
 
@@ -178,6 +220,15 @@ def clean_scientific_name(value: str) -> str:
     value = value.replace(" x ", " × ")
     value = re.sub(r"\s+", " ", value)
     return value.strip()
+
+
+def clean_plant_name(value: str) -> str:
+    value = clean_text(value)
+    previous = None
+    while value != previous:
+        previous = value
+        value = re.sub(r"([一-龯ぁ-んァ-ヶー])\s+([一-龯ぁ-んァ-ヶー])", r"\1\2", value)
+    return PLANT_NAME_CORRECTIONS.get(value, value)
 
 
 def clean_genus_name(value: str) -> str:
@@ -274,11 +325,15 @@ def iter_events(text: str):
         yield (match.start(), "entry", match)
 
 
-def parse_profiles(page_texts: list[tuple[int, str, bool]], source_label: str) -> list[dict]:
+def parse_profiles(
+    page_texts: list[tuple[int, int | None, str, bool]],
+    source_label: str,
+    split_spreads: bool = False,
+) -> list[dict]:
     state = ParseState()
     profiles: list[dict] = []
 
-    for page_number, raw_text, _from_cache in page_texts:
+    for page_number, printed_page, raw_text, _from_cache in page_texts:
         if not raw_text.strip():
             continue
         text = raw_text.replace("\r\n", "\n").replace("\r", "\n")
@@ -295,7 +350,7 @@ def parse_profiles(page_texts: list[tuple[int, str, bool]], source_label: str) -
                 state.genus_scientific = clean_genus_name(match.group(2))
                 continue
 
-            plant_name = PLANT_NAME_CORRECTIONS.get(clean_text(match.group("name")), clean_text(match.group("name")))
+            plant_name = clean_plant_name(match.group("name"))
             if not is_valid_plant_name(plant_name):
                 continue
             next_start = events[idx + 1][0] if idx + 1 < len(events) else len(text)
@@ -314,9 +369,16 @@ def parse_profiles(page_texts: list[tuple[int, str, bool]], source_label: str) -
                 "flower_period": extract_flower_period(segment),
                 "distribution": extract_distribution(segment),
                 "habitat": extract_habitat(segment),
+                "similar_taxa": "",
+                "distinguishing_features": "",
+                "printed_page": str(printed_page or ""),
                 "source": source_label,
                 "page": str(page_number),
-                "extraction_method": "macOS Vision OCR + rule parser",
+                "extraction_method": (
+                    "macOS Vision OCR (split spread) + rule parser"
+                    if split_spreads
+                    else "macOS Vision OCR + rule parser"
+                ),
             }
             profiles.append(profile)
     return profiles
@@ -335,7 +397,14 @@ def assign_profile_ids(rows: list[dict]) -> list[dict]:
     return rows
 
 
-PROFILE_FACT_FIELDS = ["habit", "height", "flower_period", "distribution", "habitat"]
+PROFILE_FACT_FIELDS = [
+    "habit",
+    "height",
+    "flower_period",
+    "distribution",
+    "habitat",
+    "distinguishing_features",
+]
 TAXON_FIELDS = ["family", "family_latin", "genus_jp", "genus_scientific"]
 
 
@@ -407,7 +476,9 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Extract wild plant profiles from scanned PDF pages")
+    parser = argparse.ArgumentParser(
+        description="Generate review candidates from scanned wild-plant PDF pages (never public data directly)"
+    )
     parser.add_argument("pdf", help="Source PDF path")
     parser.add_argument("--pages", help="Page range, e.g. 34-75,101")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Output plant profile CSV")
@@ -416,6 +487,15 @@ def main() -> int:
     parser.add_argument("--source-label", default="日本の野生植物 第1巻", help="Source label stored in CSV")
     parser.add_argument("--dpi", type=int, default=220, help="OCR render DPI")
     parser.add_argument("--force-ocr", action="store_true", help="Re-run OCR even when cached text exists")
+    parser.add_argument(
+        "--split-spreads",
+        action="store_true",
+        help="OCR the left and right book pages separately and store the printed page number",
+    )
+    parser.add_argument(
+        "--printed-pages",
+        help="Printed book page range used with --split-spreads, e.g. 33-608",
+    )
     parser.add_argument("--replace", action="store_true", help="Replace output instead of merging")
     parser.add_argument("--replace-source", action="store_true", help="Replace existing rows for the same source label")
     parser.add_argument(
@@ -432,6 +512,19 @@ def main() -> int:
         print(f"PDF not found: {pdf_path}", file=sys.stderr)
         return 1
 
+    output_path = Path(args.output)
+    if not output_path.is_absolute():
+        output_path = ROOT / output_path
+    resolved_output = output_path.resolve()
+    forbidden_roots = [(ROOT / "normalized_data").resolve(), (ROOT / "public").resolve()]
+    if any(resolved_output == root or root in resolved_output.parents for root in forbidden_roots):
+        print(
+            "Refusing to write OCR candidates into normalized_data/ or public/. "
+            "Review the original PDF and apply an approved source-audit ledger instead.",
+            file=sys.stderr,
+        )
+        return 2
+
     doc = fitz.open(str(pdf_path))
     page_count = doc.page_count
     doc.close()
@@ -447,8 +540,21 @@ def main() -> int:
     print(f"[wildplants] pdf={pdf_path}")
     print(f"[wildplants] pages={pages[0]}-{pages[-1]} ({len(pages)} pages)")
     print(f"[wildplants] cache={cache_dir}")
-    page_texts = load_or_ocr_pages(pdf_path, pages, cache_dir, args.dpi, args.force_ocr)
-    extracted = parse_profiles(page_texts, args.source_label)
+    printed_pages = None
+    if args.printed_pages:
+        if not args.split_spreads:
+            parser.error("--printed-pages requires --split-spreads")
+        printed_pages = set(parse_page_spec(args.printed_pages, page_count * 2))
+    page_texts = load_or_ocr_pages(
+        pdf_path,
+        pages,
+        cache_dir,
+        args.dpi,
+        args.force_ocr,
+        args.split_spreads,
+        printed_pages,
+    )
+    extracted = parse_profiles(page_texts, args.source_label, args.split_spreads)
     raw_extracted = len(extracted)
     if args.require_profile_facts:
         extracted = [
@@ -457,9 +563,6 @@ def main() -> int:
             if any(clean_text(row.get(field, "")) for field in PROFILE_FACT_FIELDS)
         ]
 
-    output_path = Path(args.output)
-    if not output_path.is_absolute():
-        output_path = ROOT / output_path
     existing = [] if args.replace else read_existing_rows(output_path)
     if args.replace_source and not args.replace:
         source_label = clean_text(args.source_label)
@@ -471,6 +574,8 @@ def main() -> int:
         "pdf": str(pdf_path),
         "source_label": args.source_label,
         "pages": pages,
+        "printed_pages": sorted(printed_pages) if printed_pages is not None else [],
+        "split_spreads": args.split_spreads,
         "output": str(output_path),
         "cache_dir": str(cache_dir),
         "extracted": len(extracted),
@@ -480,8 +585,8 @@ def main() -> int:
         "added": added,
         "updated": updated,
         "total_rows": len(rows),
-        "cached_pages": sum(1 for _page, _text, from_cache in page_texts if from_cache),
-        "ocr_pages": sum(1 for _page, _text, from_cache in page_texts if not from_cache),
+        "cached_pages": sum(1 for _page, _printed, _text, from_cache in page_texts if from_cache),
+        "ocr_pages": sum(1 for _page, _printed, _text, from_cache in page_texts if not from_cache),
     }
     report_path = Path(args.report)
     if not report_path.is_absolute():
@@ -490,6 +595,7 @@ def main() -> int:
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"[wildplants] extracted={len(extracted)} added={added} updated={updated} total={len(rows)}")
+    print("[wildplants] candidates only: original-PDF audit is required before publication")
     print(f"[wildplants] wrote {output_path}")
     print(f"[wildplants] report {report_path}")
     return 0

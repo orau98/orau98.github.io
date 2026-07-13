@@ -4,9 +4,25 @@ import assert from 'node:assert/strict';
 import {
   buildFlowerVisitPlantDataset,
   buildHostPlantDataset,
+  collectPlantPageNames,
   isNonPlantResourceName,
   isSuspiciousPlantName,
 } from '../scripts/lib/dataLiteBuilders.mjs';
+
+test('collectPlantPageNames includes audited profile-only plants for static pages', () => {
+  assert.deepEqual(
+    collectPlantPageNames(
+      { クスノキ: ['アオスジアゲハ'] },
+      {
+        クスノキ: { profile: { distribution: '本州・四国・九州' } },
+        グスクカンアオイ: { profile: { distinguishingFeatures: '花柱と雄蕊の数で区別する。' } },
+        基本情報のみ: { profile: { distribution: '本州に分布する' } },
+        空プロフィール: { profile: { distribution: '' } },
+      },
+    ),
+    ['グスクカンアオイ', 'クスノキ'],
+  );
+});
 
 test('buildHostPlantDataset canonicalizes aliases and excludes flower visits from host plants', () => {
   const ylistLite = {
@@ -151,6 +167,9 @@ test('buildHostPlantDataset adds plant profiles even without linked insects', ()
       habit: '常緑高木',
       flower_period: '5-6月',
       distribution: '本州・四国・九州・琉球に見られる',
+      similar_taxa: 'ヤブニッケイ',
+      distinguishing_features: 'ヤブニッケイと比べ、葉裏は灰白色である。',
+      printed_page: '138',
       source: '日本の野生植物 第1巻',
       page: '70',
     },
@@ -161,6 +180,31 @@ test('buildHostPlantDataset adds plant profiles even without linked insects', ()
   assert.equal(plantDetails.クスノキ.scientificName, 'Cinnamomum camphora');
   assert.equal(plantDetails.クスノキ.profile.habit, '常緑高木');
   assert.equal(plantDetails.クスノキ.profile.page, '70');
+  assert.equal(plantDetails.クスノキ.profile.printedPage, '138');
+  assert.equal(plantDetails.クスノキ.profile.similarTaxa, 'ヤブニッケイ');
+  assert.equal(
+    plantDetails.クスノキ.profile.distinguishingFeatures,
+    'ヤブニッケイと比べ、葉裏は灰白色である。',
+  );
+});
+
+test('buildHostPlantDataset keeps an identification-only audited profile', () => {
+  const { plantDetails } = buildHostPlantDataset([], {}, [
+    {
+      plant_name: 'シラネニンジン',
+      distinguishing_features: 'ミヤマウイキョウと比べ、葉は3出せず2-3回羽状複葉になる。',
+      similar_taxa: 'ミヤマウイキョウ',
+      source: '日本の野生植物 第2巻',
+      page: '307',
+      printed_page: '612',
+    },
+  ]);
+
+  assert.equal(
+    plantDetails.シラネニンジン.profile.distinguishingFeatures,
+    'ミヤマウイキョウと比べ、葉は3出せず2-3回羽状複葉になる。',
+  );
+  assert.equal(plantDetails.シラネニンジン.profile.printedPage, '612');
 });
 
 test('buildHostPlantDataset keeps the richest profile for duplicate plant names', () => {
@@ -272,6 +316,44 @@ test('buildHostPlantDataset keeps homonymous plant profiles separate from YList 
   assert.equal(plantDetails.タチガシワ.scientificName, 'Vincetoxicum magnificum');
   assert.equal(plantDetails.タチガシワ.profile.genusJp, 'カモメヅル属');
   assert.equal(plantDetails.カシワ, undefined);
+});
+
+test('buildHostPlantDataset keeps a profile on its exact YList heading instead of an alias target', () => {
+  const { plantDetails } = buildHostPlantDataset([], {
+    aliasToCanonical: {
+      ゴヨウマツ: 'ヒメコマツ',
+    },
+    plants: {
+      ゴヨウマツ: {
+        familyJp: 'マツ科',
+        familyEn: 'Pinaceae',
+        scientificName: 'Pinus parviflora',
+        aliases: ['ヒメコマツ'],
+      },
+      ヒメコマツ: {
+        familyJp: 'マツ科',
+        familyEn: 'Pinaceae',
+        scientificName: 'Pinus parviflora var. parviflora',
+        aliases: ['ゴヨウマツ'],
+      },
+    },
+  }, [
+    {
+      plant_name: 'ゴヨウマツ',
+      scientific_name: 'Pinus parviflora var. parviflora',
+      family: 'マツ科',
+      family_latin: 'PINACEAE',
+      habit: '常緑高木',
+      similar_taxa: 'キタゴヨウ',
+      distinguishing_features: '冬芽の先がとがる。',
+      source: '日本の野生植物 第1巻',
+      page: '20',
+    },
+  ]);
+
+  assert.equal(plantDetails.ゴヨウマツ.profile.similarTaxa, 'キタゴヨウ');
+  assert.equal(plantDetails.ゴヨウマツ.profile.distinguishingFeatures, '冬芽の先がとがる。');
+  assert.equal(plantDetails.ヒメコマツ, undefined);
 });
 
 test('buildHostPlantDataset drops leaked Japanese genus names when Latin genus conflicts', () => {

@@ -1,0 +1,149 @@
+{
+  "audit_id": "japanese-wild-plants-2026-07-12",
+  "reviewed_on": "2026-07-12",
+  "policy": "OCR is candidate generation and page-location assistance only. Every published field correction is accepted only after the full target-species account is visually re-read on the original PDF image. Publish short objective facts and concrete differentiating traits; exclude subjective commentary, uncertain assertions, and text belonging to another taxon.",
+  "sources": {
+    "日本の野生植物 第1巻": {
+      "volume": "1",
+      "pdf_file": "日本の野生植物 1- ソテツ科～コミカンソウ科.pdf",
+      "source_pdf_sha256": "bcdcd5ac593747d6d58321d4a696ec96fb963233541af2a4666c4a1fbd1d4fb1",
+      "pdf_page_start": 17,
+      "pdf_page_end": 305,
+      "printed_page_start": 33,
+      "printed_page_end": 608,
+      "excluded_after_text": "PDF p.305 right side (printed p.609) onward is plates/index material"
+    },
+    "日本の野生植物 第2巻": {
+      "volume": "2",
+      "pdf_file": "日本の野生植物 2- ミゾハコベ科～スイカズラ科 ―フィールド版―改訂新版.pdf",
+      "source_pdf_sha256": "2d104638c72cbfc58f17ab38223bce3d7798f72abc2d14fa4495a3a7546f3b12",
+      "pdf_page_start": 16,
+      "pdf_page_end": 316,
+      "printed_page_start": 31,
+      "printed_page_end": 630,
+      "excluded_after_text": "PDF p.316 right side (printed p.631) onward is plates/index material"
+    }
+  },
+  "publication_rules": {
+    "profile_ledger": "data/source_audits/japanese-wild-plants-profile-completeness-2026-07-12.csv",
+    "profile_ledger_sha256": "31547e63ce225f9a62f6ef55ef1395d35fc24c1df93883bd90628b3fe6bad07a",
+    "identification_ledger": "data/source_audits/japanese-wild-plants-identification-2026-07-12.csv",
+    "identification_ledger_sha256": "ce06288b4736a102b5355ebc022bf639489262b98278409be90b3463dba57341",
+    "integrity_ledger": "data/source_audits/japanese-wild-plants-profile-integrity-2026-07-12.csv",
+    "integrity_ledger_sha256": "0517eb3c7d57407676f20b02791b0495edad9cc69146691aeafef3728089c8df",
+    "ocr_token_ledger": "data/source_audits/japanese-wild-plants-ocr-token-verification-2026-07-12.csv",
+    "ocr_token_ledger_sha256": "9c74214b9316c7eef234344ba2dcd3184335ad3777a750fe0cf3dea080f71318",
+    "include_decision": "include",
+    "requires_pdf_page": true,
+    "requires_printed_page": true,
+    "exclude_subjective_commentary": true,
+    "exclude_vague_similarity_without_traits": true,
+    "single_identification_owner_per_profile": true,
+    "exclude_plates_indexes_and_generic_keys": true,
+    "name_ledger": "data/source_audits/japanese-wild-plants-name-integrity-2026-07-12.csv",
+    "name_ledger_sha256": "efaab75c5a15d68245ecf1932d6a7701de62aa951b5ab4aa0d913de1beb6b42a",
+    "taxonomy_review_ledger": "data/source_audits/japanese-wild-plants-taxonomy-followup-2026-07-12.csv",
+    "taxonomy_review_ledger_sha256": "b56ba39d720d30bc45836ceb74cec22be641560678fb09de45683cfa0e23971d"
+  },
+  "coverage_reconciliation": {
+    "method": "Split every audited spread into its left and right printed pages, inventory numbered species headings, reconcile them against existing fact-bearing profiles and both the legacy and improved parsers, then check unresolved names against the book index. Every residual candidate is decided from the original PDF image.",
+    "volume1_fact_profiles_before_audit": 2071,
+    "volume2_fact_profiles_before_audit": 1965,
+    "volume1_audited_printed_pages": 576,
+    "volume2_audited_printed_pages": 600,
+    "volume1_profile_candidate_decisions": 706,
+    "volume2_profile_candidate_decisions": 598,
+    "total_profile_candidate_decisions": 1304,
+    "profile_candidates_included": 898,
+    "profile_candidates_excluded": 406,
+    "included_profile_rows_with_identification_content": 89,
+    "obsolete_ocr_name_removal_targets": 166,
+    "fact_bearing_obsolete_profiles_removed_from_baseline": 146,
+    "factless_or_absent_obsolete_targets": 20
+  },
+  "profile_audit_batches": {
+    "volume1_text_opening_accounts": 121,
+    "volume1_legacy_parser_misses": 169,
+    "volume2_legacy_parser_misses": 212,
+    "volume1_full_heading_reconciliation": 416,
+    "volume2_full_heading_reconciliation": 386
+  },
+  "identification_audit_batches": {
+    "volume1_comparison_candidates": 411,
+    "volume2_comparison_candidates": 225,
+    "volume1_structured_field_cleanup": 13,
+    "volume2_structured_field_cleanup": 16
+  },
+  "identification_candidate_inventory": {
+    "volume1_candidates_before_review": 411,
+    "volume2_candidates_before_review": 213,
+    "volume2_rows_after_splitting_multi_subject_candidates": 225,
+    "total_identification_decisions": 665,
+    "identification_rows_included": 346,
+    "published_identification_profiles": 342,
+    "structured_field_cleanup_rows": 28
+  },
+  "profile_integrity_review": {
+    "method": "Normalize layout whitespace without changing meaning; visually re-read the full target-species account on the original PDF image for every published field correction, checking field boundaries, other OCR errors, text belonging to adjacent taxa, uncertainty, and concrete comparison traits. Representative token mappings are retained only as candidate-location evidence and never authorize a published replacement by themselves.",
+    "layout_whitespace_findings_normalized": 415,
+    "ocr_token_occurrences_reviewed": 519,
+    "verified_ocr_token_mappings": 39,
+    "individual_original_pdf_visual_corrections": 272,
+    "page_relocated_representative_mapping_corrections": 0,
+    "corrections": 978,
+    "field_replacements": 888,
+    "field_deletions": 31,
+    "correction_rows_with_identification_content": 88,
+    "legacy_scope_note": "The omission and identification candidate inventories were visually reviewed in full. Every field changed by this integrity ledger was reviewed against the full target-species account on the original PDF image. Legacy profiles that did not trigger an integrity finding were not individually re-read and must not be described as original-image reviewed.",
+    "full_field_original_pdf_visual_corrections": 706,
+    "field_additions": 59,
+    "layout_punctuation_fields_normalized": 350,
+    "layout_punctuation_occurrences_normalized": 364,
+    "numeric_range_glyph_fields_normalized": 1611,
+    "numeric_range_glyph_occurrences_normalized": 1616
+  },
+  "published_result": {
+    "profiles": 4884,
+    "volume1_profiles": 2487,
+    "volume2_profiles": 2397,
+    "profiles_with_distinguishing_features": 515,
+    "profiles_with_original_pdf_identification_review": 426,
+    "profiles_with_printed_page_provenance": 2277
+  },
+  "name_integrity_review": {
+    "method": "Compare OCR-derived plant, scientific, family, and genus names with source headings and machine-suggested near matches, then accept only corrections visually confirmed on the original PDF image. Every close Latin-name candidate received an independent second visual check.",
+    "corrections": 434,
+    "plant_name_corrections": 14,
+    "scientific_name_corrections": 346,
+    "duplicate_profiles_merged": 5,
+    "genus_jp_corrections": 109,
+    "genus_scientific_corrections": 129,
+    "family_corrections": 98,
+    "family_latin_corrections": 98
+  },
+  "taxonomy_followup_review": {
+    "method": "Re-check every high-priority OCR/name-support candidate and every Latin-family conflict on the original PDF image. Keep source-era taxonomy when the heading is correct; apply only visually confirmed OCR or adjacent-heading errors.",
+    "candidates_reviewed": 557,
+    "categories": {
+      "plant_name_not_supported_by_ocr_page": 49,
+      "possible_ocr_latin_typo_against_ylist": 277,
+      "scientific_name_not_supported_by_ocr_page": 9,
+      "ylist_family_conflict": 99,
+      "ylist_family_latin_conflict": 123
+    },
+    "decisions": {
+      "correct_ocr": 460,
+      "keep_source": 97
+    },
+    "source_rows": {
+      "日本の野生植物 第1巻": 368,
+      "日本の野生植物 第2巻": 189
+    },
+    "original_pdf_visual_reviews": 557,
+    "independently_cross_checked_scientific_name_candidates": 277,
+    "root_resolved_crosscheck_disagreements": 6,
+    "independently_resolved_field_review_errors": 1,
+    "corrected_profile_page_references": 1,
+    "unresolved_high_priority_findings_after_review": 0
+  }
+}

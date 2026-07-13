@@ -30,9 +30,47 @@ DEFAULT_EXTRACTION_REPORT_PATTERN = "wildplant_profile_extraction_report*.json"
 DEFAULT_CSV_REPORT = ROOT / "reports" / "wildplant_profile_factcheck.csv"
 DEFAULT_MD_REPORT = ROOT / "reports" / "wildplant_profile_factcheck.md"
 DEFAULT_JSON_REPORT = ROOT / "reports" / "wildplant_profile_factcheck_summary.json"
+DEFAULT_TAXONOMY_REVIEW = (
+    ROOT / "data" / "source_audits" / "japanese-wild-plants-taxonomy-followup-2026-07-12.csv"
+)
 
-FACT_FIELDS = ["habit", "height", "flower_period", "distribution", "habitat"]
+FACT_FIELDS = [
+    "habit",
+    "height",
+    "flower_period",
+    "distribution",
+    "habitat",
+    "distinguishing_features",
+]
 TAXON_FIELDS = ["family", "family_latin", "genus_jp", "genus_scientific", "scientific_name"]
+STRUCTURED_FACT_FIELDS = ["habit", "height", "flower_period", "distribution", "habitat"]
+SUBJECTIVE_RE = re.compile(
+    r"美し|優美|上品|豪壮|幸福|至福|うれし|嬉し|楽しい|かっこ|格好|魅力|観賞価値|"
+    r"条件に恵まれ|採集者|コレクション|珍品"
+)
+UNVERIFIED_RE = re.compile(
+    r"[?？]|推定|と思|とされ|と考え|可能性|疑問符|見解がある|おそらく|疑わし|不明|"
+    r"らしい|といわれ|であろう|わからない|説もある"
+)
+OCR_PUNCTUATION_RE = re.compile(r"，|\d\s*ー\s*\d")
+HEADING_OR_PLATE_RE = re.compile(
+    r"\b[A-Z][a-z]+(?:\s+(?:×\s*)?[a-z][A-Za-z.-]*)+\b|[（(]?[PＰ][LＬ.]?\s*\d+"
+)
+KNOWN_OCR_CORRUPTION_RE = re.compile(
+    r"林緑|治海地|広薬|掃化|針薬|落薬|掛林|温原|材林|熟帯|荷林|プナ帯|楽林|業林|"
+    r"洗水|相林|道ぼた|横林|吐感喇|波蝕能上の街中|吐略射列島|満に|東開アジア|飯島|"
+    r"薬は|際半島|照楽勘林|酉太平洋|洸水|千潟|寒器|地瑚礁|酸陵品|棋林|広城|"
+    r"フィリビン|阪島|桝林|針業荷林|広楽林|広業林|琉琉球|探集|昼久島|植裁|"
+    r"吐感射列島|以商|開麟|薬が|專の形質|化序|吐畷射列島|に[避違]する|"
+    r"吐鴨喇|海美半島|薬裏|，、|山離|広楽|林線|常線|浴葉|開喫|吐鳴喇|南部島膜|"
+    r"開側|機験島|プナ帝|多営地|針楽街休|要南省|以率|橋林|常緑酵林|以酒|落棄樹林|"
+    r"楜林|常緑広棄林|朝鮮半品|亜寒番|亜寒待|多年章|観質|霧ヶ絲|陳林|伯者大山|"
+    r"丘険地|白馬店|夕張缶|毎枝|制技|海水地|全殿|品後|科面基部|開願|提防|出憩|"
+    r"伯者|浦限|全士|四因|朝鮮半鳥|街路間|睡道|治岸|菌アジア|痛る|山糸|夏緑橋林|"
+    r"製素|厳阜|蘭焼|常緑勘林|租子島|鹿島槍ヶ缶|禁島|吐蠣開列島|吐職刺列島|"
+    r"常緑萄林|吐蠣喇列島|九レ州|吐略刺列島|常緑材|常麻|専筒|照薬萄林|照棄街林|隠枝|千薬県|"
+    r"九州産部|八ヶ醤|無帯"
+)
 REPORT_FIELDS = [
     "score",
     "category",
@@ -43,6 +81,7 @@ REPORT_FIELDS = [
     "family",
     "family_latin",
     "page",
+    "printed_page",
     "source",
     "current_value",
     "expected_or_check",
@@ -61,6 +100,10 @@ PLANT_NAME_CORRECTIONS = {
     "マルミスプタ": "マルミスブタ",
     "ミカワスプタ": "ミカワスブタ",
     "ヤナギスプタ": "ヤナギスブタ",
+    "イプキ": "イブキ",
+    "マツプサ": "マツブサ",
+    "アリマウマノススクサ": "アリマウマノスズクサ",
+    "コウシュンウマノススクサ": "コウシュンウマノスズクサ",
 }
 
 CORRECTION_REVERSE: dict[str, list[str]] = defaultdict(list)
@@ -90,6 +133,7 @@ class Finding:
             "family": clean(self.row.get("family", "")),
             "family_latin": clean(self.row.get("family_latin", "")),
             "page": clean(self.row.get("page", "")),
+            "printed_page": clean(self.row.get("printed_page", "")),
             "source": clean(self.row.get("source", "")),
             "current_value": self.current_value,
             "expected_or_check": self.expected_or_check,
@@ -157,6 +201,20 @@ def has_profile_facts(row: dict[str, str]) -> bool:
     return any(clean(row.get(field, "")) for field in FACT_FIELDS)
 
 
+def page_numbers(value: str) -> tuple[int, ...]:
+    pages: list[int] = []
+    for part in clean(value).split(";"):
+        part = part.strip()
+        if part.isdigit():
+            pages.append(int(part))
+    return tuple(dict.fromkeys(pages))
+
+
+def first_page_number(value: str) -> int:
+    pages = page_numbers(value)
+    return pages[0] if pages else 0
+
+
 def profile_score(row: dict[str, str]) -> int:
     score = sum(4 for field in FACT_FIELDS if clean(row.get(field, "")))
     score += 2 if clean(row.get("family", "")) and clean(row.get("family_latin", "")) else 0
@@ -165,7 +223,7 @@ def profile_score(row: dict[str, str]) -> int:
 
 
 def row_sort_key(row: dict[str, str]) -> tuple[int, int, str]:
-    page = int(clean(row.get("page", "")) or 0)
+    page = first_page_number(row.get("page", ""))
     return (-profile_score(row), page, clean(row.get("profile_id", "")))
 
 
@@ -360,10 +418,14 @@ def audit_ocr_support(rows: list[dict[str, str]], ocr_pages: dict[tuple[str, int
     if not ocr_pages:
         return
     for row in rows:
-        page = int(clean(row.get("page", "")) or 0)
+        pages = page_numbers(row.get("page", ""))
         source = clean(row.get("source", ""))
-        page_text = ocr_pages.get((source, page)) or ocr_pages.get(("", page))
-        if page_text is None:
+        page_texts = [
+            page_text
+            for page in pages
+            if (page_text := ocr_pages.get((source, page)) or ocr_pages.get(("", page))) is not None
+        ]
+        if not page_texts:
             add_finding(
                 findings,
                 Finding(
@@ -377,6 +439,7 @@ def audit_ocr_support(rows: list[dict[str, str]], ocr_pages: dict[tuple[str, int
             )
             continue
 
+        page_text = "\n".join(page_texts)
         page_compact = compact(page_text)
         name = clean(row.get("plant_name", ""))
         if name and not any(compact(variant) in page_compact for variant in plant_name_variants(name)):
@@ -671,11 +734,53 @@ def audit_low_information(rows: list[dict[str, str]], plants: dict, alias_to_can
                     44,
                     "low_information_profile",
                     row,
-                    "no habit/height/flower/distribution/habitat",
+                    "no habit/height/flower/distribution/habitat/distinguishing_features",
                     "At least one concrete profile fact",
                     "This row is mostly taxonomy only, so it is more likely to be a figure caption or duplicate fragment.",
                 ),
             )
+
+
+def audit_public_fact_integrity(rows: list[dict[str, str]], findings: list[Finding]) -> None:
+    """Fail-visible checks for prose that must never return to public profiles."""
+    checks = [
+        (SUBJECTIVE_RE, "subjective_or_editorial_profile_text", "Objective profile prose only"),
+        (UNVERIFIED_RE, "unverified_or_speculative_profile_text", "Verified objective facts only"),
+        (KNOWN_OCR_CORRUPTION_RE, "known_ocr_corruption_in_profile_text", "Corrected original-PDF wording"),
+        (OCR_PUNCTUATION_RE, "ocr_punctuation_in_profile_text", "Normalize punctuation without changing meaning"),
+    ]
+    for row in rows:
+        for field in FACT_FIELDS:
+            value = clean(row.get(field, ""))
+            if not value:
+                continue
+            for pattern, category, expected in checks:
+                if pattern.search(value):
+                    add_finding(
+                        findings,
+                        Finding(
+                            100,
+                            category,
+                            row,
+                            value,
+                            expected,
+                            f"Forbidden public profile prose remains in {field}.",
+                        ),
+                    )
+        for field in STRUCTURED_FACT_FIELDS:
+            value = clean(row.get(field, ""))
+            if value and HEADING_OR_PLATE_RE.search(value):
+                add_finding(
+                    findings,
+                    Finding(
+                        100,
+                        "heading_scientific_or_plate_text_in_profile_field",
+                        row,
+                        value,
+                        "Account facts without heading, scientific name, or plate label",
+                        f"A species heading or plate label remains in {field}.",
+                    ),
+                )
 
 
 def dedupe_findings(findings: list[Finding]) -> list[Finding]:
@@ -700,10 +805,72 @@ def dedupe_findings(findings: list[Finding]) -> list[Finding]:
             -item.score,
             item.category,
             clean(item.row.get("plant_name", "")),
-            int(clean(item.row.get("page", "")) or 0),
+            first_page_number(item.row.get("page", "")),
             clean(item.row.get("profile_id", "")),
         ),
     )
+
+
+def apply_taxonomy_review_decisions(
+    findings: list[Finding],
+    review_rows: list[dict[str, str]],
+) -> tuple[list[Finding], dict[str, int]]:
+    """Remove only exact, original-PDF-reviewed taxonomy candidates from the unresolved list.
+
+    A keep decision matches the reviewed current value. A correction matches its
+    verified replacement, so source-era names that still intentionally differ
+    from YList do not return as unresolved after the OCR repair. The pre-fix
+    value of a correction is never suppressed; that keeps unapplied actions
+    visible.
+    """
+    reviewed: dict[tuple[str, str, str, str], dict[str, str]] = {}
+    for row in review_rows:
+        decision = clean(row.get("decision", ""))
+        reviewed_value = (
+            clean(row.get("current_value", ""))
+            if decision == "keep_source"
+            else clean(row.get("verified_value", ""))
+        )
+        review_key = (
+            clean(row.get("source", "")),
+            clean(row.get("plant_name", "")),
+            clean(row.get("audit_category", "")),
+            reviewed_value,
+        )
+        if all(review_key):
+            reviewed[review_key] = row
+            if review_key[2] == "possible_ocr_latin_typo_against_ylist":
+                reviewed[(
+                    review_key[0],
+                    review_key[1],
+                    "scientific_name_not_supported_by_ocr_page",
+                    review_key[3],
+                )] = row
+
+    unresolved: list[Finding] = []
+    matched_ids: set[str] = set()
+    for finding in findings:
+        finding_key = (
+            clean(finding.row.get("source", "")),
+            clean(finding.row.get("plant_name", "")),
+            finding.category,
+            clean(finding.current_value),
+        )
+        review = reviewed.get(finding_key)
+        if not review:
+            unresolved.append(finding)
+            continue
+        matched_ids.add(clean(review.get("audit_id", "")))
+
+    correction_rows = [row for row in review_rows if clean(row.get("decision", "")) == "correct_ocr"]
+    keep_rows = [row for row in review_rows if clean(row.get("decision", "")) == "keep_source"]
+    return unresolved, {
+        "ledger_rows": len(review_rows),
+        "keep_source_rows": len(keep_rows),
+        "correct_ocr_rows": len(correction_rows),
+        "reviewed_findings_suppressed": len(findings) - len(unresolved),
+        "review_rows_matching_current_findings": len(matched_ids),
+    }
 
 
 def write_csv_report(path: Path, findings: list[Finding], chosen_profile_ids: set[str]) -> None:
@@ -727,6 +894,7 @@ def write_markdown_report(
     cache_sources: list[tuple[str, Path]],
     limit: int,
     chosen_profile_ids: set[str],
+    review_stats: dict[str, int],
 ) -> None:
     category_counts = Counter(finding.category for finding in findings)
     candidate_findings = [finding for finding in findings if finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"]
@@ -749,6 +917,8 @@ def write_markdown_report(
         f"- Audited rows: {len(rows)}",
         f"- Profile candidate rows with factual fields: {len(chosen_profile_ids)}",
         f"- Findings: {len(findings)}",
+        f"- Original-PDF taxonomy review ledger rows: {review_stats['ledger_rows']}",
+        f"- Reviewed taxonomy findings excluded from this unresolved list: {review_stats['reviewed_findings_suppressed']}",
         f"- High-priority findings (score >= 80): {high_priority}",
         f"- High-priority profile-candidate findings: {high_priority_candidates}",
         f"- OCR caches: {ocr_cache_summary(cache_sources)}",
@@ -887,12 +1057,14 @@ def write_json_summary(
     findings: list[Finding],
     cache_sources: list[tuple[str, Path]],
     chosen_profile_ids: set[str],
+    review_stats: dict[str, int],
 ) -> None:
     candidate_findings = [finding for finding in findings if finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"]
     summary = {
         "audited_rows": len(rows),
         "profile_candidate_rows": len(chosen_profile_ids),
         "findings": len(findings),
+        "taxonomy_review": review_stats,
         "high_priority_findings": sum(1 for finding in findings if finding.score >= 80),
         "profile_candidate_findings": len(candidate_findings),
         "high_priority_profile_candidate_findings": sum(1 for finding in candidate_findings if finding.score >= 80),
@@ -926,6 +1098,11 @@ def main() -> int:
     parser.add_argument("--csv-report", default=str(DEFAULT_CSV_REPORT), help="Output suspect CSV")
     parser.add_argument("--md-report", default=str(DEFAULT_MD_REPORT), help="Output Markdown summary")
     parser.add_argument("--json-report", default=str(DEFAULT_JSON_REPORT), help="Output JSON summary")
+    parser.add_argument(
+        "--taxonomy-review",
+        default=str(DEFAULT_TAXONOMY_REVIEW),
+        help="Original-PDF taxonomy review ledger used to separate reviewed candidates from unresolved findings",
+    )
     parser.add_argument("--top", type=int, default=100, help="Number of findings to include in Markdown")
     args = parser.parse_args()
 
@@ -939,6 +1116,7 @@ def main() -> int:
     csv_report_path = resolve_path(args.csv_report, DEFAULT_CSV_REPORT)
     md_report_path = resolve_path(args.md_report, DEFAULT_MD_REPORT)
     json_report_path = resolve_path(args.json_report, DEFAULT_JSON_REPORT)
+    taxonomy_review_path = resolve_path(args.taxonomy_review, DEFAULT_TAXONOMY_REVIEW)
     cache_sources = load_cache_sources(extraction_report_paths, args.cache_dir)
 
     rows = read_csv(input_path)
@@ -952,19 +1130,38 @@ def main() -> int:
     audit_scientific_shape(rows, findings)
     audit_duplicate_rows(rows, findings)
     audit_low_information(rows, plants, alias_to_canonical, findings)
+    audit_public_fact_integrity(rows, findings)
     findings = dedupe_findings(findings)
+    taxonomy_review_rows = read_csv(taxonomy_review_path)
+    findings, review_stats = apply_taxonomy_review_decisions(findings, taxonomy_review_rows)
     chosen_profile_ids = display_profile_ids(rows)
 
     write_csv_report(csv_report_path, findings, chosen_profile_ids)
-    write_markdown_report(md_report_path, rows, findings, cache_sources, args.top, chosen_profile_ids)
-    write_json_summary(json_report_path, rows, findings, cache_sources, chosen_profile_ids)
+    write_markdown_report(
+        md_report_path,
+        rows,
+        findings,
+        cache_sources,
+        args.top,
+        chosen_profile_ids,
+        review_stats,
+    )
+    write_json_summary(
+        json_report_path,
+        rows,
+        findings,
+        cache_sources,
+        chosen_profile_ids,
+        review_stats,
+    )
 
     candidate_findings = [finding for finding in findings if finding_display_scope(finding, chosen_profile_ids) == "profile_candidate"]
     print(
         "[wildplants-audit] "
         f"rows={len(rows)} profile_candidates={len(chosen_profile_ids)} "
         f"findings={len(findings)} high_priority={sum(1 for f in findings if f.score >= 80)} "
-        f"candidate_high_priority={sum(1 for f in candidate_findings if f.score >= 80)}"
+        f"candidate_high_priority={sum(1 for f in candidate_findings if f.score >= 80)} "
+        f"reviewed_suppressed={review_stats['reviewed_findings_suppressed']}"
     )
     print(f"[wildplants-audit] wrote {csv_report_path}")
     print(f"[wildplants-audit] wrote {md_report_path}")

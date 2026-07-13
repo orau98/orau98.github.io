@@ -7,7 +7,7 @@
 - `normalized_data/insects.csv`: 昆虫の実体。主キーは `insect_id`。和名、別名、分類、学名、シノニム、分類変更メモを持つ。
 - `normalized_data/hostplants.csv`: 昆虫と植物・資源の関係行。`insect_id` で昆虫に接続し、植物名、科名、観察タイプ、利用部位、ステージ、出典、備考を持つ。
 - `normalized_data/general_notes.csv`: 昆虫単位の備考。出現時期、生態情報、保全状況などを `note_type` で分ける。
-- `normalized_data/plant_profiles.csv`: 植物単位のプロフィール。和名、学名、科、属、生活型、花期、分布、生育環境、出典ページを持つ。
+- `normalized_data/plant_profiles.csv`: 植物単位のプロフィール。和名、学名、科、属、生活型、花期、分布、生育環境、類似種との識別形質、PDF見開き番号、冊子ページを持つ。`page` と `printed_page` はそれぞれ既知の証拠ページ集合で、複数値は `;` 区切りとする。両列を位置対応配列とはみなさず、正確なPDF・冊子ページ対は原PDF監査台帳を正本とする。
 - `normalized_data/ylist-lite.json`: YList由来の植物分類・別名索引の正式スナップショット。元のYList CSV（`public/20210514YList_download.csv`）はリポジトリに存在しないため、このスナップショットが事実上の一次データ。`build:data-lite` はこのファイルが無く、かつ既存出力も無い場合にビルドを失敗させる。
 
 `npm run sync:public-insects` が `insects.csv` / `hostplants.csv` / `general_notes.csv` を `normalized_data/` から `public/` へコピーする（アプリが実行時にfetchするランタイム契約。CI/デプロイ両方で実行される）。

@@ -681,6 +681,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           flowerPeriod: 'Flowering',
           distribution: 'Distribution',
           habitat: 'Habitat',
+          similarTaxa: 'Compared with',
+          distinguishingFeatures: 'Identification',
           source: 'Source',
         }
       : {
@@ -691,6 +693,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           flowerPeriod: '花期',
           distribution: '分布',
           habitat: '生育環境',
+          similarTaxa: '比較対象',
+          distinguishingFeatures: '類似種との見分け方',
           source: '出典',
         };
     const genusValue = [
@@ -709,6 +713,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       ['flowerPeriod', plantProfile.flowerPeriod],
       ['distribution', plantProfile.distribution],
       ['habitat', plantProfile.habitat],
+      ['similarTaxa', plantProfile.similarTaxa],
+      ['distinguishingFeatures', plantProfile.distinguishingFeatures],
     ]
       .map(([key, value]) => ({ key, label: labels[key], value: normalizePlantProfileText(value) }))
       .filter((row) => row.value);
@@ -1880,7 +1886,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                 冗長だったため表示しない。項目のdlと出典のみを出す */}
             <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
               {plantProfileFacts.map((item) => (
-                <div key={item.key} className="border-b border-slate-200/70 pb-3 dark:border-slate-800">
+                <div
+                  key={item.key}
+                  className={`border-b border-slate-200/70 pb-3 dark:border-slate-800 ${item.key === 'distinguishingFeatures' ? 'sm:col-span-2' : ''}`}
+                >
                   <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                     {item.label}
                   </dt>

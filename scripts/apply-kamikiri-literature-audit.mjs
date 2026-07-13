@@ -142,8 +142,19 @@ function comprehensiveAuditState() {
     kind,
     new Map(rows.map((row) => [kind === 'insect' ? clean(row.insect_id) : clean(row.record_id), row])),
   ]));
-  const same = (actual, expected) =>
-    actual && Object.entries(expected).every(([column, value]) => clean(actual[column]) === clean(value));
+  const downstreamAliasFields = new Set([
+    'old_japanese_name',
+    'alternative_name',
+    'other_names',
+    'synonyms',
+  ]);
+  const same = (actual, expected, kind) => actual && Object.entries(expected).every(([column, value]) => {
+    if (kind === 'insect' && downstreamAliasFields.has(column)) {
+      const actualValues = new Set(splitList(actual[column]));
+      return splitList(value).every((item) => actualValues.has(item));
+    }
+    return clean(actual[column]) === clean(value);
+  });
   const states = [...(ledger.actions || []), ...(ledger.metadata_cleanup_actions || [])].map((action) => {
     const kind = action.op.endsWith('_note') ? 'note' : action.op.endsWith('_host') ? 'host' : 'insect';
     const idColumn = kind === 'insect' ? 'insect_id' : 'record_id';
@@ -151,12 +162,12 @@ function comprehensiveAuditState() {
     const current = byKind[kind].get(id);
     if (action.op.startsWith('delete_')) {
       if (!current) return 'applied';
-      if (same(current, action.before)) return 'pending';
+      if (same(current, action.before, kind)) return 'pending';
       return 'conflict';
     }
-    if (same(current, action.after)) return 'applied';
+    if (same(current, action.after, kind)) return 'applied';
     if (action.op.startsWith('add_') && !current) return 'pending';
-    if (action.op.startsWith('update_') && same(current, action.before)) return 'pending';
+    if (action.op.startsWith('update_') && same(current, action.before, kind)) return 'pending';
     return 'conflict';
   });
   if (states.every((state) => state === 'applied')) return 'applied';

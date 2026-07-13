@@ -1,6 +1,6 @@
 # Wild Plant Profile Fact Check
 
-Generated: 2026-05-08T01:31:40
+Generated: 2026-07-13T03:04:14
 
 This report audits the OCR-derived `normalized_data/plant_profiles.csv` data for likely hallucinations or OCR/parser artifacts. It is a review list, not an automatic deletion list.
 
@@ -8,302 +8,249 @@ Display safety rules: taxonomy-only OCR fragments are excluded from site profile
 
 ## Summary
 
-- Audited rows: 5928
-- Profile candidate rows with factual fields: 4036
-- Findings: 8165
-- High-priority findings (score >= 80): 3180
-- High-priority profile-candidate findings: 430
-- OCR caches: 日本の野生植物 第1巻: /Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_1; 日本の野生植物 第2巻: /Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_2
+- Audited rows: 4884
+- Profile candidate rows with factual fields: 4884
+- Findings: 3773
+- Original-PDF taxonomy review ledger rows: 557
+- Reviewed taxonomy findings excluded from this unresolved list: 104
+- High-priority findings (score >= 80): 0
+- High-priority profile-candidate findings: 0
+- OCR caches: 日本の野生植物 第1巻: /Users/akimotohiroki/Codex_offload/wildplant_ocr_cache/jp_wild_plants_1
 
 ## Source Counts
 
 | Source | Rows | Profile candidate rows | High-priority profile-candidate findings |
 | --- | ---: | ---: | ---: |
-| 日本の野生植物 第1巻 | 3963 | 2071 | 248 |
-| 日本の野生植物 第2巻 | 1965 | 1965 | 182 |
+| 日本の野生植物 第1巻 | 2487 | 2487 | 0 |
+| 日本の野生植物 第2巻 | 2397 | 2397 | 0 |
 
 ## High-Priority Profile-Candidate Findings By Source
 
 | Source | Category | Count |
 | --- | --- | ---: |
-| 日本の野生植物 第1巻 | possible_ocr_latin_typo_against_ylist | 162 |
-| 日本の野生植物 第1巻 | ylist_family_conflict | 86 |
-| 日本の野生植物 第2巻 | possible_ocr_latin_typo_against_ylist | 170 |
-| 日本の野生植物 第2巻 | ylist_family_conflict | 12 |
 
 ## Category Counts
 
 | Category | Count |
 | --- | ---: |
-| duplicate_name_scientific_conflict | 2015 |
-| low_information_profile | 1707 |
-| genus_scientific_conflicts_with_scientific_name | 1584 |
-| duplicate_low_information_row_shadowed | 1008 |
-| possible_ocr_latin_typo_against_ylist | 632 |
-| duplicate_name_family_conflict | 559 |
-| ylist_family_latin_conflict | 271 |
-| ylist_family_conflict | 252 |
-| ylist_scientific_name_conflict | 129 |
-| family_latin_outlier_for_japanese_family | 8 |
+| ocr_page_missing | 2397 |
+| genus_scientific_conflicts_with_scientific_name | 1292 |
+| ylist_scientific_name_conflict | 84 |
 
 ## Profile-Candidate Category Counts
 
 | Category | Count |
 | --- | ---: |
-| genus_scientific_conflicts_with_scientific_name | 1562 |
-| duplicate_name_scientific_conflict | 993 |
-| possible_ocr_latin_typo_against_ylist | 332 |
-| duplicate_name_family_conflict | 277 |
-| ylist_family_latin_conflict | 117 |
-| ylist_family_conflict | 98 |
-| ylist_scientific_name_conflict | 71 |
+| ocr_page_missing | 2397 |
+| genus_scientific_conflicts_with_scientific_name | 1292 |
+| ylist_scientific_name_conflict | 84 |
 
-## Top 120 Profile-Candidate Findings
+## Top 100 Profile-Candidate Findings
 
 | Score | Category | Plant | Scientific name | Family | Page | Reason | Expected/check |
 | ---: | --- | --- | --- | --- | ---: | --- | --- |
-| 88 | possible_ocr_latin_typo_against_ylist | アオハダ | Ilex maeropoda | モチノキ科 | 229 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ilex macropoda |
-| 88 | possible_ocr_latin_typo_against_ylist | アカガシ | Quereus aeuta | ブナ科 | 282 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus acuta |
-| 88 | possible_ocr_latin_typo_against_ylist | アカギ | Bischofa javaniea | コミカンソウ科 | 303 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Bischofia javanica |
-| 88 | possible_ocr_latin_typo_against_ylist | アカメガシワ | Mallotus japonieus | トウダイグサ科 | 301 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Mallotus japonicus |
-| 88 | possible_ocr_latin_typo_against_ylist | アキカラマツ | Thalietrum minus | キンポウゲ科 | 196 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Thalictrum minus var. hypoleucum |
-| 88 | possible_ocr_latin_typo_against_ylist | アキニレ | UImus parvifolia | ニレ科 | 250 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ulmus parvifolia |
-| 88 | possible_ocr_latin_typo_against_ylist | アキノタムラソウ | Salvia japoniea | シソ科 | 212 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Salvia japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | アキノノゲシ | Lactuea indica | キク科 | 263 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lactuca indica var. laciniata |
-| 88 | possible_ocr_latin_typo_against_ylist | アキメヒシバ | Digitaria violaseens | イネ科 | 167 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Digitaria violascens |
-| 88 | possible_ocr_latin_typo_against_ylist | アズマイチゲ | Auemone raddeana | キンポウゲ科 | 187 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Anemone raddeana |
-| 88 | possible_ocr_latin_typo_against_ylist | アズマシャクナゲ | Rhododendron degroniamum | ツツジ科 | 136 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rhododendron degronianum |
-| 88 | possible_ocr_latin_typo_against_ylist | アゼスゲ | Carex thunbergil | カヤツリグサ科 | 119 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Carex thunbergii |
-| 88 | possible_ocr_latin_typo_against_ylist | アブラシバ | Cares satsumensis | カヤツリグサ科 | 117 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Carex satsumensis |
-| 88 | possible_ocr_latin_typo_against_ylist | アベマキ | Quereus variabills | ブナ科 | 281 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus variabilis |
-| 88 | possible_ocr_latin_typo_against_ylist | アマシバ | Symploeos formosana | ハイノキ科 | 126 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Symplocos formosana |
-| 88 | possible_ocr_latin_typo_against_ylist | アマチャヅル | Gynostemma pentaplyllum | ウリ科 | 289 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Gynostemma pentaphyllum |
-| 88 | possible_ocr_latin_typo_against_ylist | アメリカセンダングサ | Bideus frondosa | キク科 | 290 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Bidens frondosa |
-| 88 | possible_ocr_latin_typo_against_ylist | アラカシ | Quereus glauea | ブナ科 | 282 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus glauca |
-| 88 | possible_ocr_latin_typo_against_ylist | アリアケスミレ | Viola betonieifolia | スミレ科 | 29 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Viola betonicifolia var. albescens |
-| 88 | possible_ocr_latin_typo_against_ylist | アンズ | Prunus armeninca | バラ科 | 276 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Prunus armeniaca |
-| 88 | possible_ocr_latin_typo_against_ylist | イイギリ | Idesia polyearpa | ヤナギ科 | 19 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Idesia polycarpa |
-| 88 | possible_ocr_latin_typo_against_ylist | イケマ | Cyuanchum candatum | キョウチクトウ科 | 160 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cynanchum caudatum |
-| 88 | possible_ocr_latin_typo_against_ylist | イソヤマアオキ | Coceulus laurifolius | ツヅラフジ科 | 179 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cocculus laurifolius |
-| 88 | possible_ocr_latin_typo_against_ylist | イタチササゲ | Lathyrus davidi | ハマビシ科 | 233 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lathyrus davidii |
-| 88 | possible_ocr_latin_typo_against_ylist | イタドリ | Fallopia japoniea | タデ科 | 85 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Fallopia japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | イタビカズラ | Fieus sarmentosa | アサ科 | 254 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ficus sarmentosa subsp. nipponica |
-| 88 | possible_ocr_latin_typo_against_ylist | イチイガシ | Quereus gilva | ブナ科 | 282 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus gilva |
-| 88 | possible_ocr_latin_typo_against_ylist | イヌコウジュ | Mosla seabra | シソ科 | 208 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Mosla scabra |
-| 88 | possible_ocr_latin_typo_against_ylist | イヌザンショウ | Zanthosylum sehinifolium | ミカン科 | 58 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Zanthoxylum schinifolium var. schinifolium |
-| 88 | possible_ocr_latin_typo_against_ylist | イヌブナ | Fagus japoniea | ブナ科 | 280 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Fagus japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | イワガネ | Oreoenide frutescens | イラクサ科 | 258 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Oreocnide frutescens |
-| 88 | possible_ocr_latin_typo_against_ylist | イワシモツケ | Spiraea nipponiea | バラ科 | 279 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Spiraea niopponica var. nipponica |
-| 88 | possible_ocr_latin_typo_against_ylist | イワスゲ | Cares stenantha | カヤツリグサ科 | 124 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Carex stenantha var. stenantha |
-| 88 | possible_ocr_latin_typo_against_ylist | イワダレソウ | Plyla nodiflora | クマツヅラ科 | 226 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Phyla nodiflora |
-| 88 | possible_ocr_latin_typo_against_ylist | イワヒゲ | Cassiope lyeopodioides | ツツジ科 | 143 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cassiope lycopodioides |
-| 88 | possible_ocr_latin_typo_against_ylist | ウキヤガラ | Bollbosehoenus fluviatills | カヤツリグサ科 | 113 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Bolboschoenus fluviatilis subsp. yagara |
-| 88 | possible_ocr_latin_typo_against_ylist | ウシノケグサ | Festuea ovina | イネ科 | 153 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Festuca ovina |
-| 88 | possible_ocr_latin_typo_against_ylist | ウシハコベ | Stellaria aguatiea | ナデシコ科 | 97 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Stellaria aquatica |
-| 88 | possible_ocr_latin_typo_against_ylist | ウバメガシ | Quereus phillyreoides | ブナ科 | 281 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus phillyraeoides |
-| 88 | possible_ocr_latin_typo_against_ylist | ウメモドキ | Iles serrata | モチノキ科 | 229 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ilex serrata |
-| 88 | possible_ocr_latin_typo_against_ylist | ウラシマツツジ | Aretous alpinus | ツツジ科 | 139 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Arctous alpinus var. japonicus |
-| 88 | possible_ocr_latin_typo_against_ylist | ウラジロウツギ | Deutzia maximowieziana | アジサイ科 | 110 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Deutzia maximovicziana |
-| 88 | possible_ocr_latin_typo_against_ylist | ウラジロエノキ | Tvema orientalis | アサ科 | 252 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Trema orientalis |
-| 88 | possible_ocr_latin_typo_against_ylist | ウラジロガシ | Quereus salieina | ブナ科 | 282 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus salicina |
-| 88 | possible_ocr_latin_typo_against_ylist | ウラジロヨウラク | Rhododendron multillorum | ツツジ科 | 136 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rhododendron multiflorum |
-| 88 | possible_ocr_latin_typo_against_ylist | ウワバミソウ | Elatostema involueratum | イラクサ科 | 257 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Elatostema involucratum |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾイラクサ | Urtiea platyplylla | イラクサ科 | 259 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Urtica platyphylla |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾタチカタバミ | Oxalis strieta | カタバミ科 | 294 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Oxalis stricta |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾノキヌヤナギ | Salix sclwerinii | ヤナギ科 | 24 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Salix schwerinii |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾノコリンゴ | Malus baceata | バラ科 | 274 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Malus baccata var. mandshurica |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾノサワアザミ | Cirsium peetinellum | キク科 | 249 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cirsium pectinellum |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾハタザオ | Catolobus pendulus | アブラナ科 | 73 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Catolobus pendula |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾヒナノウスツボ | Serophularia alata | ゴマノハグサ科 | 193 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Scrophularia alata |
-| 88 | possible_ocr_latin_typo_against_ylist | エゾリンドウ | Gentiana trilora | アカネ科 | 155 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Gentiana triflora var. japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | エビスグサ | Semna obtusifolia | ハマビシ科 | 225 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Senna obtusifolia |
-| 88 | possible_ocr_latin_typo_against_ylist | エビヅル | Vitis fieifolia | ブドウ科 | 218 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Vitis ficifolia |
-| 88 | possible_ocr_latin_typo_against_ylist | エンジュ | Styphonolobium japonieum | ハマビシ科 | 240 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Styphnolobium japonicum |
-| 88 | possible_ocr_latin_typo_against_ylist | オオイタビ | Fieus pumila | アサ科 | 254 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ficus pumila |
-| 88 | possible_ocr_latin_typo_against_ylist | オオカモメヅル | Vincetosieum aristolochioides | キョウチクトウ科 | 163 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Vincetoxicum aristolochioides |
-| 88 | possible_ocr_latin_typo_against_ylist | オオクサキビ | Panicum dichotomillorum | イネ科 | 171 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Panicum dichotomiflorum |
-| 88 | possible_ocr_latin_typo_against_ylist | オオシマザクラ | Cerasls speciosa | バラ科 | 272 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cerasus speciosa |
-| 88 | possible_ocr_latin_typo_against_ylist | オオバイヌビワ | Fieus septiea | アサ科 | 254 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ficus septica |
-| 88 | possible_ocr_latin_typo_against_ylist | オオバギ | Maearanga tanarius | トウダイグサ科 | 301 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Macaranga tanarius var. tomentosa |
-| 88 | possible_ocr_latin_typo_against_ylist | オオバシマムラサキ | Calliearpa subpubescens | シソ科 | 198 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Callicarpa subpubescens |
-| 88 | possible_ocr_latin_typo_against_ylist | オオバセンキュウ | Angeliea gennflexa | セリ科 | 302 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Angelica genuflexa |
-| 88 | possible_ocr_latin_typo_against_ylist | オオバルリミノキ | Lasianthus vertieilatus | アカネ科 | 149 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lasianthus verticillatus |
-| 88 | possible_ocr_latin_typo_against_ylist | オオベンケイソウ | Hylotelephium speetabile | ベンケイソウ科 | 212 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Hylotelephium spectabile |
-| 88 | possible_ocr_latin_typo_against_ylist | オオルリソウ | Cynoglossum fureatum | ムラサキ科 | 177 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cynoglossum furcatum var. villosulum |
-| 88 | possible_ocr_latin_typo_against_ylist | オカトラノオ | Lysimaehia clethroides | サクラソウ科 | 121 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lysimachia clethroides |
-| 88 | possible_ocr_latin_typo_against_ylist | オガサワラコミカンソウ | Phyllanthus debilis | コミカンソウ科 | 305 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Phyllanthus deblis |
-| 88 | possible_ocr_latin_typo_against_ylist | オギ | Miseanthus saechariflorus | イネ科 | 170 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Miscanthus sacchariflorus |
-| 88 | possible_ocr_latin_typo_against_ylist | オグルマ | Iaula britamniea | キク科 | 289 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Inula britannica subsp. japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | オトギリソウ | Eyperieum erectum | オトギリソウ科 | 37 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Hypericum erectum |
-| 88 | possible_ocr_latin_typo_against_ylist | オトコヨモギ | Artemisia japoniea | キク科 | 281 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Artemisia japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | オニシモツケ | Fillipendula camtschatiea | バラ科 | 262 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Filipendula camtschatica |
-| 88 | possible_ocr_latin_typo_against_ylist | オランダイチゴ | Fragaria xananassa | バラ科 | 263 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Fragaria ananassa |
-| 88 | possible_ocr_latin_typo_against_ylist | オランダガラシ | Nasturtium offeinale | アブラナ科 | 76 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Nasturtium officinale |
-| 88 | possible_ocr_latin_typo_against_ylist | カエデドコロ | Dioscorea quinguelobata | ヤマノイモ科 | 59 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Dioscorea quinquelobata |
-| 88 | possible_ocr_latin_typo_against_ylist | カギカズラ | Unearia rlynchophylla | アカネ科 | 153 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Uncaria rhynchophylla |
-| 88 | possible_ocr_latin_typo_against_ylist | カゴノキ | Lisea coreana | クスノキ科 | 37 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Litsea coreana |
-| 88 | possible_ocr_latin_typo_against_ylist | カシワ | Quereus dentata | ブナ科 | 281 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus dentata |
-| 88 | possible_ocr_latin_typo_against_ylist | カジイチゴ | Rubus trifdus | バラ科 | 268 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rubus trifidus |
-| 88 | possible_ocr_latin_typo_against_ylist | カタバミ | Oxalis cornieulata | カタバミ科 | 294 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Oxalis corniculata |
-| 88 | possible_ocr_latin_typo_against_ylist | カテンソウ | Nanoenide japoniea | イラクサ科 | 257 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Nanocnide japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | カナクギノキ | Lindera erythroearpa | クスノキ科 | 37 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lindera erythrocarpa |
-| 88 | possible_ocr_latin_typo_against_ylist | カナムグラ | Humulus seandens | アサ科 | 252 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Humulus scandens |
-| 88 | possible_ocr_latin_typo_against_ylist | カノコユリ | Lilium speeiosum | ユリ科 | 67 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lilium speciosum |
-| 88 | possible_ocr_latin_typo_against_ylist | カラコギカエデ | Acer tatarieum | ムクロジ科 | 52 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Acer tataricum subsp. aidzuense |
-| 88 | possible_ocr_latin_typo_against_ylist | カラスノゴマ | Corchoropsis erenata | アオイ科 | 60 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Corchoropsis crenata |
-| 88 | possible_ocr_latin_typo_against_ylist | カラマツソウ | Thalictrum aguilegifolium | キンポウゲ科 | 195 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Thalictrum aquilegiifolium var. intermedium |
-| 88 | possible_ocr_latin_typo_against_ylist | カワラケツメイ | Chamaeerista nomame | ハマビシ科 | 224 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Chamaecrista nomame |
-| 88 | possible_ocr_latin_typo_against_ylist | カンスゲ | Carex morrowil | カヤツリグサ科 | 122 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Carex morrowi |
-| 88 | possible_ocr_latin_typo_against_ylist | ガジュマル | Fieus mieroearpa | アサ科 | 254 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Ficus microcarpa |
-| 88 | possible_ocr_latin_typo_against_ylist | キカラスウリ | Trichosanthes kirilowi | ウリ科 | 290 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Trichosanthes kirilowii var. japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | キジムシロ | Potentila fragarioides | バラ科 | 265 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Potentilla fragarioides var. major |
-| 88 | possible_ocr_latin_typo_against_ylist | キダチニンドウ | Lonicera hypoglauea | スイカズラ科 | 313 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lonicera hypoglauca |
-| 88 | possible_ocr_latin_typo_against_ylist | キチジョウソウ | Reineekea carnea | クサスギカズラ科 | 100 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Reineckea carnea |
-| 88 | possible_ocr_latin_typo_against_ylist | キツネノマゴ | Justicia proeumbens | キツネノマゴ科 | 224 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Justicia procumbens var. leucantha f. japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | キツネヤナギ | Salis vulpina | ヤナギ科 | 23 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Salix vulpina |
-| 88 | possible_ocr_latin_typo_against_ylist | キンシバイ | Hyperieum patulum | オトギリソウ科 | 36 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Hypericum patulum |
-| 88 | possible_ocr_latin_typo_against_ylist | ギシギシ | Rumex japonieus | タデ科 | 89 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rumex japonicus |
-| 88 | possible_ocr_latin_typo_against_ylist | ギョウギシバ | Cynodon daetylon | イネ科 | 160 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Cynodon dactylon var. dactylon |
-| 88 | possible_ocr_latin_typo_against_ylist | ギョクシンカ | Taremna kotoensis | アカネ科 | 153 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Tarenna kotoensis var. gyokushinkwa |
-| 88 | possible_ocr_latin_typo_against_ylist | ギョボク | Crateya formosensis | フウチョウボク科 | 67 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Crateva formosensis |
-| 88 | possible_ocr_latin_typo_against_ylist | ギーマ | Vaecinium wrightii | ツツジ科 | 141 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Vaccinium wrightii |
-| 88 | possible_ocr_latin_typo_against_ylist | クコ | Lyeium chinense | ナス科 | 170 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Lycium chinense |
-| 88 | possible_ocr_latin_typo_against_ylist | クサスギカズラ | Asparagus cochinehinensis | クサスギカズラ科 | 96 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Asparagus cochinchinensis |
-| 88 | possible_ocr_latin_typo_against_ylist | クサトベラ | Seaevola taeeada | クサトベラ科 | 234 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Scaevola taccada |
-| 88 | possible_ocr_latin_typo_against_ylist | クサヨシ | Phalaris arundinaeen | イネ科 | 156 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Phalaris arundinacea |
-| 88 | possible_ocr_latin_typo_against_ylist | クスノハカエデ | Aeer itoanum | ムクロジ科 | 54 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Acer itoanum |
-| 88 | possible_ocr_latin_typo_against_ylist | クヌギ | Quereus aeutissima | ブナ科 | 281 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Quercus acutissima |
-| 88 | possible_ocr_latin_typo_against_ylist | クマザサ | Sasa veitehii | イネ科 | 146 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Sasa veitchii var. veitchii |
-| 88 | possible_ocr_latin_typo_against_ylist | クマシデ | Carpinus japoniea | カバノキ科 | 287 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Carpinus japonica |
-| 88 | possible_ocr_latin_typo_against_ylist | クマタケラン | Alpinia xformosana | ショウガ科 | 105 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Alpinia formosana |
-| 88 | possible_ocr_latin_typo_against_ylist | クロウメモドキ | Rhamnus japoniea | クロウメモドキ科 | 249 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rhamnus japonica var. decipiens |
-| 88 | possible_ocr_latin_typo_against_ylist | クロツバラ | Rhamnus davuriea | クロウメモドキ科 | 249 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Rhamnus davurica var. nipponica |
-| 88 | possible_ocr_latin_typo_against_ylist | クロトウヒレン | Saussurea sessilillora | キク科 | 257 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Saussurea sessiliflora |
-| 88 | possible_ocr_latin_typo_against_ylist | クロバナヒキオコシ | Isodon trichoearpus | シソ科 | 213 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Isodon trichocarpus |
-| 88 | possible_ocr_latin_typo_against_ylist | クワズイモ | Alocasia odora | サトイモ科 | 39 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Alocasia odorum |
-| 88 | possible_ocr_latin_typo_against_ylist | グミモドキ | Croton cascariloides | トウダイグサ科 | 297 | The scientific name is very close to YList but not identical, which is typical of OCR letter errors. | Croton cascarilloides |
+| 78 | genus_scientific_conflicts_with_scientific_name | アイナエ | Mitrasaeme pygmaea | マチン科 | 158 | The row's genus field should match the first word of the scientific name. | mitrasaeme |
+| 78 | genus_scientific_conflicts_with_scientific_name | アイヌソモソモ | Poa fauriei | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオイカズラ | Streptolirion lineare | ツユクサ科 | 103 | The row's genus field should match the first word of the scientific name. | streptolirion |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオイチゴツナギ | Poa alta | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオウキクサ | Lemna aoukikusa | サトイモ科 | 44 | The row's genus field should match the first word of the scientific name. | lemna |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオガヤツリ | Cyperus nipponieus | カヤツリグサ科 | 131 | The row's genus field should match the first word of the scientific name. | cyperus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオキラン | Epipogium japonieum | ラン科 | 77 | The row's genus field should match the first word of the scientific name. | epipogium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオギリ | Firmiana simnplex | アオイ科 | 61 | The row's genus field should match the first word of the scientific name. | firmiana |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオスゲ | Cares leueochlora | カヤツリグサ科 | 123 | The row's genus field should match the first word of the scientific name. | cares |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオチドリ | Dactylorhiza viridis | ラン科 | 76 | The row's genus field should match the first word of the scientific name. | dactylorhiza |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオテンツキ | Fimnbristylis dipsacea | カヤツリグサ科 | 134 | The row's genus field should match the first word of the scientific name. | fimnbristylis |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオノイワレンゲ | Orostachys malacophylla | ベンケイソウ科 | 213 | The row's genus field should match the first word of the scientific name. | orostachys |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオノツガザクラ | Plyllodoce aleutica | ツツジ科 | 133 | The row's genus field should match the first word of the scientific name. | plyllodoce |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオバナハイノキ | Symplocos liukiuensis | ハイノキ科 | 126 | The row's genus field should match the first word of the scientific name. | symplocos |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオバノキ | Symplocos cochinchinensis | ハイノキ科 | 126 | The row's genus field should match the first word of the scientific name. | symplocos |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオミズ | Pilea pumila | イラクサ科 | 259 | The row's genus field should match the first word of the scientific name. | pilea |
+| 78 | genus_scientific_conflicts_with_scientific_name | アオヤギソウ | Veratrum maackii | シュロソウ科 | 63 | The row's genus field should match the first word of the scientific name. | veratrum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アカササゲ | Vigna vexillata | ハマビシ科 | 243 | The row's genus field should match the first word of the scientific name. | vigna |
+| 78 | genus_scientific_conflicts_with_scientific_name | アカミズキ | Wendlandia formosana | アカネ科 | 153 | The row's genus field should match the first word of the scientific name. | wendlandia |
+| 78 | genus_scientific_conflicts_with_scientific_name | アカミノイヌホオズキ | Solanum villlosum | ナス科 | 173 | The row's genus field should match the first word of the scientific name. | solanum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アカミノルイヨウショウマ | Actaea erythroearpa | キンポウゲ科 | 185 | The row's genus field should match the first word of the scientific name. | actaea |
+| 78 | genus_scientific_conflicts_with_scientific_name | アカモノ | Gaultheria adenothrix | ツツジ科 | 140 | The row's genus field should match the first word of the scientific name. | gaultheria |
+| 78 | genus_scientific_conflicts_with_scientific_name | アカヤシオ | Rhododendron pentaphyllum | ツツジ科 | 136 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | genus_scientific_conflicts_with_scientific_name | アキザキナギラン | Cymbidium aspidistrifolium | ラン科 | 75 | The row's genus field should match the first word of the scientific name. | cymbidium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アキニレ | Ulmus parvifolia | ニレ科 | 250 | The row's genus field should match the first word of the scientific name. | ulmus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アキノコハマギク | Chrysanthemum arcticum | キク科 | 282 | The row's genus field should match the first word of the scientific name. | chrysanthemum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アキノハハコグサ | Pseudognaphalium lypoleucum | キク科 | 287 | The row's genus field should match the first word of the scientific name. | pseudognaphalium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アギナシ | Sagittaria aginashi | オモダカ科 | 48 | The row's genus field should match the first word of the scientific name. | sagittaria |
+| 78 | genus_scientific_conflicts_with_scientific_name | アクシバ | Vaecinium japonieu | ツツジ科 | 142 | The row's genus field should match the first word of the scientific name. | vaecinium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アケボノソウ | Swertia bimaculata | アカネ科 | 157 | The row's genus field should match the first word of the scientific name. | swertia |
+| 78 | genus_scientific_conflicts_with_scientific_name | アサガオガラクサ | Evolvulus alsinoides | キョウチクトウ科 | 166 | The row's genus field should match the first word of the scientific name. | evolvulus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アサマリンドウ | Gentiana sikokiana | アカネ科 | 155 | The row's genus field should match the first word of the scientific name. | gentiana |
+| 78 | genus_scientific_conflicts_with_scientific_name | アシカキ | Leersia japoniea | イネ科 | 147 | The row's genus field should match the first word of the scientific name. | leersia |
+| 78 | genus_scientific_conflicts_with_scientific_name | アシタカツツジ | Rhododendron komiyamae | ツツジ科 | 137 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | genus_scientific_conflicts_with_scientific_name | アシボン | Mierostegium vimineum | イネ科 | 169 | The row's genus field should match the first word of the scientific name. | mierostegium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アズマザサ | Sasaella ramosa | イネ科 | 146 | The row's genus field should match the first word of the scientific name. | sasaella |
+| 78 | genus_scientific_conflicts_with_scientific_name | アズマシャクナゲ | Rhododendron degronianum | ツツジ科 | 136 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | genus_scientific_conflicts_with_scientific_name | アズマツメクサ | Tillaea aguatiea | ベンケイソウ科 | 215 | The row's genus field should match the first word of the scientific name. | tillaea |
+| 78 | genus_scientific_conflicts_with_scientific_name | アズマネザサ | Pleioblastus chino | イネ科 | 145 | The row's genus field should match the first word of the scientific name. | pleioblastus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アズマホシクサ | Erioeanlon takae | ホシクサ科 | 108 | The row's genus field should match the first word of the scientific name. | erioeanlon |
+| 78 | genus_scientific_conflicts_with_scientific_name | アズマレイジンソウ | Aconitum pteroeaule | キンポウゲ科 | 184 | The row's genus field should match the first word of the scientific name. | aconitum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アズミトリカブト | Aconitum azumiense | キンポウゲ科 | 184 | The row's genus field should match the first word of the scientific name. | aconitum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アセビ | Pieris japonica | ツツジ科 | 141 | The row's genus field should match the first word of the scientific name. | pieris |
+| 78 | genus_scientific_conflicts_with_scientific_name | アダン | Pandanus odoratissimus | タコノキ科 | 61 | The row's genus field should match the first word of the scientific name. | pandanus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アツバクコ | Lycium sandwicense | ナス科 | 170 | The row's genus field should match the first word of the scientific name. | lycium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アツバシマザクラ | Leptopetalum paclyplyllam | アカネ科 | 150 | The row's genus field should match the first word of the scientific name. | leptopetalum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アツモリソウ | Cypripedium macranthos | ラン科 | 75 | The row's genus field should match the first word of the scientific name. | cypripedium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アプノメ | Dopatrium junceum | オオバコ科 | 185 | The row's genus field should match the first word of the scientific name. | dopatrium |
+| 78 | genus_scientific_conflicts_with_scientific_name | アベトウヒレン | Saussurea kurosawae | キク科 | 258 | The row's genus field should match the first word of the scientific name. | saussurea |
+| 78 | genus_scientific_conflicts_with_scientific_name | アマギツツジ | Rhododendron amagianum | ツツジ科 | 137 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | genus_scientific_conflicts_with_scientific_name | アマクサミツバツツジ | Rhododendron amakusaense | ツツジ科 | 138 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | genus_scientific_conflicts_with_scientific_name | アマシバ | Symplocos formosana | ハイノキ科 | 126 | The row's genus field should match the first word of the scientific name. | symplocos |
+| 78 | genus_scientific_conflicts_with_scientific_name | アマミイケマ | Cynanchum boudieri | キョウチクトウ科 | 160 | The row's genus field should match the first word of the scientific name. | cynanchum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アマミチャルメルソウ | Mitella amamiana | ユキノシタ科 | 208 | The row's genus field should match the first word of the scientific name. | mitella |
+| 78 | genus_scientific_conflicts_with_scientific_name | アマミナキリスゲ | Cares tabatae | カヤツリグサ科 | 118 | The row's genus field should match the first word of the scientific name. | cares |
+| 78 | genus_scientific_conflicts_with_scientific_name | アマミナツヅタ | Parthenocissus heterophylla | ブドウ科 | 218 | The row's genus field should match the first word of the scientific name. | parthenocissus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アミガサギリ | Alchornea liukiuensis | トウダイグサ科 | 297 | The row's genus field should match the first word of the scientific name. | alchornea |
+| 78 | genus_scientific_conflicts_with_scientific_name | アラゲタデ | Persiearia pulehra | タデ科 | 87 | The row's genus field should match the first word of the scientific name. | persiearia |
+| 78 | genus_scientific_conflicts_with_scientific_name | アラゲナツハゼ | Vaecinfum cilatum | ツツジ科 | 142 | The row's genus field should match the first word of the scientific name. | vaecinfum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アラゲヒョウタンボク | Lonicera strophiophora | スイカズラ科 | 313 | The row's genus field should match the first word of the scientific name. | lonicera |
+| 78 | genus_scientific_conflicts_with_scientific_name | アラサワトウヒレン | Saussurea yanagitae | キク科 | 257 | The row's genus field should match the first word of the scientific name. | saussurea |
+| 78 | genus_scientific_conflicts_with_scientific_name | アラシグサ | Boykinia lyeoetonifolia | ユキノシタ科 | 206 | The row's genus field should match the first word of the scientific name. | boykinia |
+| 78 | genus_scientific_conflicts_with_scientific_name | アリドオシ | Damnaeantihus indieus | アカネ科 | 146 | The row's genus field should match the first word of the scientific name. | damnaeantihus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アリドオシラン | Myrmechis japoniea | ラン科 | 83 | The row's genus field should match the first word of the scientific name. | myrmechis |
+| 78 | genus_scientific_conflicts_with_scientific_name | アリノトウグサ | Gonoearpus mieranthus | アリノトウグサ科 | 216 | The row's genus field should match the first word of the scientific name. | gonoearpus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アリマグミ | Elaeagaus murakamiana | グミ科 | 246 | The row's genus field should match the first word of the scientific name. | elaeagaus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アリモリソウ | Codonacantlus pauciflorus | キツネノマゴ科 | 223 | The row's genus field should match the first word of the scientific name. | codonacantlus |
+| 78 | genus_scientific_conflicts_with_scientific_name | アワガエリ | Pheum panieulatum | イネ科 | 156 | The row's genus field should match the first word of the scientific name. | pheum |
+| 78 | genus_scientific_conflicts_with_scientific_name | アワムヨウラン | Leeanorehis trachyeaula | ラン科 | 82 | The row's genus field should match the first word of the scientific name. | leeanorehis |
+| 78 | genus_scientific_conflicts_with_scientific_name | アンズ | Prunus armeniaca | バラ科 | 276 | The row's genus field should match the first word of the scientific name. | prunus |
+| 78 | genus_scientific_conflicts_with_scientific_name | イイデトリカブト | Aconitum idemontanum | キンポウゲ科 | 184 | The row's genus field should match the first word of the scientific name. | aconitum |
+| 78 | genus_scientific_conflicts_with_scientific_name | イイヌマムカゴ | Platanthera iinumae | ラン科 | 86 | The row's genus field should match the first word of the scientific name. | platanthera |
+| 78 | genus_scientific_conflicts_with_scientific_name | イガガヤツリ | Cyperus polystachyos | カヤツリグサ科 | 130 | The row's genus field should match the first word of the scientific name. | cyperus |
+| 78 | genus_scientific_conflicts_with_scientific_name | イシガキカラスウリ | Trichosanthes homophylla | ウリ科 | 290 | The row's genus field should match the first word of the scientific name. | trichosanthes |
+| 78 | genus_scientific_conflicts_with_scientific_name | イシモチソウ | Drosera peltata | タデ科 | 91 | The row's genus field should match the first word of the scientific name. | drosera |
+| 78 | genus_scientific_conflicts_with_scientific_name | イズカニコウモリ | Parasenecio amagiensis | キク科 | 271 | The row's genus field should match the first word of the scientific name. | parasenecio |
+| 78 | genus_scientific_conflicts_with_scientific_name | イズセンリョウ | Maesa japonica | サクラソウ科 | 121 | The row's genus field should match the first word of the scientific name. | maesa |
+| 78 | genus_scientific_conflicts_with_scientific_name | イズドコロ | Dioseorea izuensis | ヤマノイモ科 | 59 | The row's genus field should match the first word of the scientific name. | dioseorea |
+| 78 | genus_scientific_conflicts_with_scientific_name | イゼナガヤ | Eriachne armitti | イネ科 | 163 | The row's genus field should match the first word of the scientific name. | eriachne |
+| 78 | genus_scientific_conflicts_with_scientific_name | イソギク | Chrysanthemum pacificum | キク科 | 283 | The row's genus field should match the first word of the scientific name. | chrysanthemum |
+| 78 | genus_scientific_conflicts_with_scientific_name | イソツツジ | Rhododendron diversipilosum | ツツジ科 | 135 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | genus_scientific_conflicts_with_scientific_name | イソフジ | Sophora tomentosa | ハマビシ科 | 239 | The row's genus field should match the first word of the scientific name. | sophora |
+| 78 | genus_scientific_conflicts_with_scientific_name | イソホウキギ | Bassia seoparia | ヒユ科 | 101 | The row's genus field should match the first word of the scientific name. | bassia |
+| 78 | genus_scientific_conflicts_with_scientific_name | イタチガヤ | Pogonatherum crinitum | イネ科 | 172 | The row's genus field should match the first word of the scientific name. | pogonatherum |
+| 78 | genus_scientific_conflicts_with_scientific_name | イチゲイチヤクソウ | Moneses unillora | ツツジ科 | 131 | The row's genus field should match the first word of the scientific name. | moneses |
+| 78 | genus_scientific_conflicts_with_scientific_name | イチゴツナギ | Poa sphondylodes | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | genus_scientific_conflicts_with_scientific_name | イチジク | Ficus carica | クワ科 | 254 | The row's genus field should match the first word of the scientific name. | ficus |
+| 78 | genus_scientific_conflicts_with_scientific_name | イチョウバイカモ | Ranunculus nipponieus | キンポウゲ科 | 193 | The row's genus field should match the first word of the scientific name. | ranunculus |
+| 78 | genus_scientific_conflicts_with_scientific_name | イトイチゴツナギ | Poa matsumurne | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | genus_scientific_conflicts_with_scientific_name | イトイヌノハナヒゲ | Rhyuchospora faberi | カヤツリグサ科 | 136 | The row's genus field should match the first word of the scientific name. | rhyuchospora |
+| 78 | genus_scientific_conflicts_with_scientific_name | イトキンスゲ | Cares hakkodensis | カヤツリグサ科 | 115 | The row's genus field should match the first word of the scientific name. | cares |
+| 78 | genus_scientific_conflicts_with_scientific_name | イトハナビテンツキ | Bulbostylis densa | カヤツリグサ科 | 113 | The row's genus field should match the first word of the scientific name. | bulbostylis |
+| 78 | genus_scientific_conflicts_with_scientific_name | イトモ | Potamogeton berehtoldii | ヒルムシロ科 | 53 | The row's genus field should match the first word of the scientific name. | potamogeton |
+| 78 | genus_scientific_conflicts_with_scientific_name | イトラッキョウ | Allum virgunculae | ヒガンバナ科 | 94 | The row's genus field should match the first word of the scientific name. | allum |
+| 78 | genus_scientific_conflicts_with_scientific_name | イナトウヒレン | Saussurea inaensis | キク科 | 256 | The row's genus field should match the first word of the scientific name. | saussurea |
+| 78 | genus_scientific_conflicts_with_scientific_name | イナモリソウ | Pseudopysis depressa | アカネ科 | 151 | The row's genus field should match the first word of the scientific name. | pseudopysis |
+| 78 | genus_scientific_conflicts_with_scientific_name | イヌイトモ | Potamogeton obtusifolius | ヒルムシロ科 | 53 | The row's genus field should match the first word of the scientific name. | potamogeton |
+| 78 | genus_scientific_conflicts_with_scientific_name | イヌガシ | Neolitsea aciculata | クスノキ科 | 38 | The row's genus field should match the first word of the scientific name. | neolitsea |
+| 78 | genus_scientific_conflicts_with_scientific_name | イヌセンプリ | Swertia tosaensis | アカネ科 | 157 | The row's genus field should match the first word of the scientific name. | swertia |
+| 78 | genus_scientific_conflicts_with_scientific_name | イヌノハナヒゲ | Rlyuchospora japonica | カヤツリグサ科 | 136 | The row's genus field should match the first word of the scientific name. | rlyuchospora |
 
-## Top 120 Raw CSV Findings
+## Top 100 Raw CSV Findings
 
 | Score | Scope | Category | Plant | Scientific name | Family | Page | Reason | Expected/check |
 | ---: | --- | --- | --- | --- | --- | ---: | --- | --- |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アオツヅラフジ | Cocculus orbiculatus | ケシ科 | 472 | The same Japanese plant name appears with multiple families. | ケシ科 / ツヅラフジ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アオノリュウゼツラン | Agave americana | ヒガンバナ科 | 392 | The same Japanese plant name appears with multiple families. | クサスギカズラ科 / ヒガンバナ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アカギ | Biscbofa iavanica | トウダイグサ科 | 636 | The same Japanese plant name appears with multiple families. | コミカンソウ科 / トウダイグサ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アカミノルイヨウショウマ | Actnea erythurocarpa | メギ科 | 476 | The same Japanese plant name appears with multiple families. | キンポウゲ科 / メギ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アキカラマツ | Thalictrun mumnss var | キンボウゲ科 | 495 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アキグミ | Elneagnus unbellata var. ubellata | ヒメハギ科 | 548 | The same Japanese plant name appears with multiple families. | グミ科 / ヒメハギ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アキニレ | Ulmus parvifolia | クロウメモドキ科 | 557 | The same Japanese plant name appears with multiple families. | クロウメモドキ科 / ニレ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アギナシ | Sagittaria aginasti | チシマゼキショウ科 | 349 | The same Japanese plant name appears with multiple families. | オモダカ科 / チシマゼキショウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アケビ | Akebia guinsta | ケシ科 | 471 | The same Japanese plant name appears with multiple families. | アケビ科 / ケシ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アズマツメクサ | Tillaea aquatica | ユキノシタ科 | 514 | The same Japanese plant name appears with multiple families. | ベンケイソウ科 / ユキノシタ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アズマレイジンソウ | Aconitusn pterocaule vas | キンボウゲ科 | 477 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アダン | Pandanus odoratissimuus | ホンゴウソウ科 | 357 | The same Japanese plant name appears with multiple families. | タコノキ科 / ホンゴウソウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | アマモ | Zostera maina | トチカガミ科 | 352 | The same Japanese plant name appears with multiple families. | アマモ科 / トチカガミ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イイデトリカブト | Aconitun iidemontantm | キンボウゲ科 | 478 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イシガキカラスウリ | Trichosantbes homophylla var. ishigakiensis | ドクウツギ科 | 619 | The same Japanese plant name appears with multiple families. | ウリ科 / ドクウツギ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イシガキソウ | Sciaphila multiflora | ヤマノイモ科 | 356 | The same Japanese plant name appears with multiple families. | ホンゴウソウ科 / ヤマノイモ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イソフジ | Sophota tomentosa | ブドウ科 | 526 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イタチササゲ | Lathynus davidii | ブドウ科 | 531 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イタビカズラ | Ficus stumentosa subep | クワ科 | 559 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イチハツ | Iris tectonum | ラン科 | 388 | The same Japanese plant name appears with multiple families. | アヤメ科 / ラン科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イチョウバイカモ | Ramuaculus tppoacus vat | キンボウゲ科 | 490 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イトキンスゲ | Carex hakkodensis | イグサ科 | 408 | The same Japanese plant name appears with multiple families. | イグサ科 / カヤツリグサ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イトキンボウゲ | Rantnculus reptans | キンボウゲ科 | 490 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イトラッキョウ | Alliuun vir gunculae | ススキノキ科 | 390 | The same Japanese plant name appears with multiple families. | ススキノキ科 / ヒガンバナ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イヌハギ | Lespedeza tomeatosa | ブドウ科 | 545 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イラクサ | Urtica thuabergians | クワ科 | 563 | The same Japanese plant name appears with multiple families. | イラクサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イリオモテクマタケラン | Alpinia fabellata | タヌキアヤメ科 | 402 | The same Japanese plant name appears with multiple families. | ショウガ科 / タヌキアヤメ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | イワネコノメソウ | Churysospleniamn echints | スグリ科 | 506 | The same Japanese plant name appears with multiple families. | スグリ科 / ユキノシタ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ウチワツナギ | Plyllodium pulchellum | ブドウ科 | 547 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ウミショウブ | Enhiatus acoroides | オモダカ科 | 350 | The same Japanese plant name appears with multiple families. | オモダカ科 / トチカガミ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ウミヒルモ | Haloplita ovalis | オモダカ科 | 350 | The same Japanese plant name appears with multiple families. | オモダカ科 / トチカガミ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ウリカワ | Sagittaria pygnses | チシマゼキショウ科 | 349 | The same Japanese plant name appears with multiple families. | オモダカ科 / チシマゼキショウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エゾノホソバトリカブト | Acotitm yuparense var | キンボウゲ科 | 477 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エゾノリュウキンカ | Calttha fstulosa | キンボウゲ科 | 481 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エゾノレンリソウ | Lathvmuss palustris | ブドウ科 | 532 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エダウチタヌキマメ | Crotalaria wcinella subsp. elliptica | ブドウ科 | 528 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エノキマメ | Flemingia mscroplylla var | ブドウ科 | 537 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エビアマモ | Plyilospadix japcaicus | トチカガミ科 | 352 | The same Japanese plant name appears with multiple families. | アマモ科 / トチカガミ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エビスグサ | Senna obtusifolia | ブドウ科 | 525 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エビラフジ | Vicin venosa subsp. cuspidata | ブドウ科 | 531 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | エンジュ | Styphonolobta japonscum | ブドウ科 | 527 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオイタビ | Ficus punila | クワ科 | 560 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオクサボタン | Clemstis speciosa | キンボウゲ科 | 484 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオゴカヨウオウレン | Coptis mantose | キンボウゲ科 | 483 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオバアコウ | Ficus caulocarpa | クワ科 | 559 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオバタケシマラン | Strepopus amplexifolits var | サルトリイバラ科 | 362 | The same Japanese plant name appears with multiple families. | サルトリイバラ科 / ユリ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオバタンキリマメ | Rlyuchosia acumninatifolia | ブドウ科 | 538 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオバノセンナ | Seuna sophaera | ブドウ科 | 525 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオヤマイチジク | Ficus iidana | クワ科 | 561 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オオレイジンソウ | Aconittan inuauae | キンボウゲ科 | 477 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オカメザサ | Shibataea kuaasaca | カヤツリグサ科 | 441 | The same Japanese plant name appears with multiple families. | イネ科 / カヤツリグサ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オガサワラグワ | Monus boninensis | クワ科 | 561 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オキナワセンニンソウ | Cleastis alsomitnifolis | キンボウゲ科 | 486 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オグラノフサモ | Myriophaylfumn oguaeuse | ベンケイソウ科 | 520 | The same Japanese plant name appears with multiple families. | アリノトウグサ科 / ベンケイソウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オモダカ | Sagitaria trifolia | チシマゼキショウ科 | 349 | The same Japanese plant name appears with multiple families. | オモダカ科 / チシマゼキショウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | オヤマノエンドウ | Oxytropts japonica vat | ブドウ科 | 534 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カカツガユ | Maclura cochunchunensts | クワ科 | 561 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カキノハグサ | Polygala reini | ブドウ科 | 548 | The same Japanese plant name appears with multiple families. | ヒメハギ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カジノキ | Broussonetia papynifera | クワ科 | 562 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カスマグサ | Vicaa tetrasperma | ブドウ科 | 530 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カタバミ | Oxalis comiculata | ニシキギ科 | 627 | The same Japanese plant name appears with multiple families. | カタバミ科 / ニシキギ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カナムグラ | Humaulus scandens | ニレ科 | 557 | The same Japanese plant name appears with multiple families. | アサ科 / ニレ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カラスキバサンキライ | Heterosmilax japcnuca | シュロソウ科 | 360 | The same Japanese plant name appears with multiple families. | サルトリイバラ科 / シュロソウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カラハナソウ | Hunlus lupalus var | ニレ科 | 557 | The same Japanese plant name appears with multiple families. | アサ科 / ニレ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カラフトイワスゲ | Cares nupestis | イグサ科 | 408 | The same Japanese plant name appears with multiple families. | イグサ科 / カヤツリグサ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カラマツソウ | Thnlictnun aguilegifoliama var. intermiediumn | キンボウゲ科 | 493 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | カワツルモ | Ruppia martimn | アマモ科 | 353 | The same Japanese plant name appears with multiple families. | アマモ科 / カワツルモ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ガシャモク | Potamogeton fucens | アマモ科 | 352 | The same Japanese plant name appears with multiple families. | アマモ科 / ヒルムシロ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ガッサントリカブト | Aconituan gassanense | キンボウゲ科 | 478 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キイイトラッキョウ | Alliumn kiense | ススキノキ科 | 390 | The same Japanese plant name appears with multiple families. | ススキノキ科 / ヒガンバナ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キカラスウリ | Thichosanthes kirilowii vas | ドクウツギ科 | 619 | The same Japanese plant name appears with multiple families. | ウリ科 / ドクウツギ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キタダケキンボウゲ | Rantnculus kitadakeanus | キンボウゲ科 | 491 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キタヤマオウレン | Copbs iitayamensts | キンボウゲ科 | 483 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キツネノボタン | Rantnculus silerifolinus vat | キンボウゲ科 | 493 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キハギ | Leipedeza buergeni | ブドウ科 | 544 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キバナサバノオ | Dichocarpum pterigionocaudatum | キンボウゲ科 | 482 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キバナチゴユリ | Disporum futescens | シュロソウ科 | 360 | The same Japanese plant name appears with multiple families. | イヌサフラン科 / シュロソウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キバナノアツモリソウ | Cypripedinum yataleantmn | ユリ科 | 367 | The same Japanese plant name appears with multiple families. | ユリ科 / ラン科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キヨミトリカブト | Aconittam kiyomiense | キンボウゲ科 | 478 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キリギシソウ | Calliaathemmum kinigisbiense | キンボウゲ科 | 489 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キリシマシャクジョウ | Bumsmnia nepalensis | キンコウカ科 | 354 | The same Japanese plant name appears with multiple families. | キンコウカ科 / ヒナノシャクジョウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | キンスゲ | Carex pyrenaica var. altior | イグサ科 | 408 | The same Japanese plant name appears with multiple families. | イグサ科 / カヤツリグサ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ギョウジャニンニク | Allium victorialis subsp. platyplyllumn | ススキノキ科 | 390 | The same Japanese plant name appears with multiple families. | ススキノキ科 / ヒガンバナ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クサスギカズラ | Asparagus cochinchinensis | ヒガンバナ科 | 393 | The same Japanese plant name appears with multiple families. | クサスギカズラ科 / ヒガンバナ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クサフジ | Vicia cracca | ブドウ科 | 530 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クスノキ | Cinnamomum campbora | ハスノハギリ科 | 335 | The same Japanese plant name appears with multiple families. | クスノキ科 / ハスノハギリ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クズ | Puetana lobata subsp. lobata | ブドウ科 | 541 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クマガイソウ | Cypripedinm japonicum var | ユリ科 | 367 | The same Japanese plant name appears with multiple families. | ユリ科 / ラン科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クロバナハンショウヅル | Clematis fusca | キンボウゲ科 | 486 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クロボウモドキ | Monoon linkinense | モクレン科 | 334 | The same Japanese plant name appears with multiple families. | バンレイシ科 / モクレン科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クロムヨウラン | Lecanorclus mgncans | ユリ科 | 368 | The same Japanese plant name appears with multiple families. | ユリ科 / ラン科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | クワクサ | Fatoua wllosa | クワ科 | 561 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ケカラスウリ | Trichosanthes ovigera var. ovigera | ドクウツギ科 | 620 | The same Japanese plant name appears with multiple families. | ウリ科 / ドクウツギ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ケグワ | Monus cathayana | クワ科 | 561 | The same Japanese plant name appears with multiple families. | アサ科 / クワ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コアマモ | Zottera japoaica | トチカガミ科 | 352 | The same Japanese plant name appears with multiple families. | アマモ科 / トチカガミ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コウモリカズラ | Menispermt dauricum | ケシ科 | 472 | The same Japanese plant name appears with multiple families. | ケシ科 / ツヅラフジ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コウヤシロカネソウ | Dichocapum mumsjirianum | キンボウゲ科 | 482 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コウヤハンショウヅル | Clematis obvallata var. obvallata | キンボウゲ科 | 485 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コキツネノボタン | Ranuncultus chinensis | キンボウゲ科 | 492 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コゴメカラマツ | Thalictrua microgpermum | キンボウゲ科 | 494 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コセリバオウレン | Coptis japonica var. japonica | キンボウゲ科 | 482 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コバイケイソウ | Veratrum stamaneu var | タコノキ科 | 358 | The same Japanese plant name appears with multiple families. | シュロソウ科 / タコノキ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | コマガタケスグリ | Ribes japonicun | ズイナ科 | 505 | The same Japanese plant name appears with multiple families. | スグリ科 / ズイナ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サイコクサバノオ | Dichoxarpam wnivalve | キンボウゲ科 | 481 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サバノオ | Dichocarpumn dicarpon | キンボウゲ科 | 481 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サンインシロカネソウ | Dichocarpuam sarmentosum | キンボウゲ科 | 482 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サンヨウブシ | Aconitua sanyoense | キンボウゲ科 | 478 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | サンリンソウ | Anemope stolonnin | キンボウゲ科 | 488 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ザリコミ | Ribes maxinsowiczianum | ズイナ科 | 505 | The same Japanese plant name appears with multiple families. | スグリ科 / ズイナ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シオデ | Smilax npana | シュロソウ科 | 360 | The same Japanese plant name appears with multiple families. | サルトリイバラ科 / シュロソウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シキンカラマツ | Thalictrum rocbebeueauen | キンボウゲ科 | 494 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シギンカラマツ | Thalictrumn actaesfoluma | キンボウゲ科 | 495 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シナガワハギ | Mehlotus ofhcmalss subsp. busveolens | ブドウ科 | 528 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シバネム | Sunithia ciliata | ブドウ科 | 543 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シベリアメドハギ | Lesgedeza jucea | ブドウ科 | 545 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シマイボクサ | Murdannia loriformns | ツュクサ科 | 401 | The same Japanese plant name appears with multiple families. | ツュクサ科 / ツユクサ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シマホルトノキ | Elaeocarpus pbotinifolius | カタバミ科 | 628 | The same Japanese plant name appears with multiple families. | カタバミ科 / ホルトノキ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シャジクソウ | Trifolitmn luupinaster | ブドウ科 | 529 | The same Japanese plant name appears with multiple families. | ハマビシ科 / ブドウ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | シュウメイギク | Anemnone hnugehensts var. japoaica | キンボウゲ科 | 487 | The same Japanese plant name appears with multiple families. | キンボウゲ科 / キンポウゲ科 |
-| 90 | raw_only_no_profile_facts | duplicate_name_family_conflict | ショウブ | Aconus calamts | クスノキ科 | 341 | The same Japanese plant name appears with multiple families. | クスノキ科 / ショウブ科 |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アイナエ | Mitrasaeme pygmaea | マチン科 | 158 | The row's genus field should match the first word of the scientific name. | mitrasaeme |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アイヌソモソモ | Poa fauriei | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオイカズラ | Streptolirion lineare | ツユクサ科 | 103 | The row's genus field should match the first word of the scientific name. | streptolirion |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオイチゴツナギ | Poa alta | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオウキクサ | Lemna aoukikusa | サトイモ科 | 44 | The row's genus field should match the first word of the scientific name. | lemna |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオガヤツリ | Cyperus nipponieus | カヤツリグサ科 | 131 | The row's genus field should match the first word of the scientific name. | cyperus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオキラン | Epipogium japonieum | ラン科 | 77 | The row's genus field should match the first word of the scientific name. | epipogium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオギリ | Firmiana simnplex | アオイ科 | 61 | The row's genus field should match the first word of the scientific name. | firmiana |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオスゲ | Cares leueochlora | カヤツリグサ科 | 123 | The row's genus field should match the first word of the scientific name. | cares |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオチドリ | Dactylorhiza viridis | ラン科 | 76 | The row's genus field should match the first word of the scientific name. | dactylorhiza |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオテンツキ | Fimnbristylis dipsacea | カヤツリグサ科 | 134 | The row's genus field should match the first word of the scientific name. | fimnbristylis |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオノイワレンゲ | Orostachys malacophylla | ベンケイソウ科 | 213 | The row's genus field should match the first word of the scientific name. | orostachys |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオノツガザクラ | Plyllodoce aleutica | ツツジ科 | 133 | The row's genus field should match the first word of the scientific name. | plyllodoce |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオバナハイノキ | Symplocos liukiuensis | ハイノキ科 | 126 | The row's genus field should match the first word of the scientific name. | symplocos |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオバノキ | Symplocos cochinchinensis | ハイノキ科 | 126 | The row's genus field should match the first word of the scientific name. | symplocos |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオミズ | Pilea pumila | イラクサ科 | 259 | The row's genus field should match the first word of the scientific name. | pilea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アオヤギソウ | Veratrum maackii | シュロソウ科 | 63 | The row's genus field should match the first word of the scientific name. | veratrum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アカササゲ | Vigna vexillata | ハマビシ科 | 243 | The row's genus field should match the first word of the scientific name. | vigna |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アカミズキ | Wendlandia formosana | アカネ科 | 153 | The row's genus field should match the first word of the scientific name. | wendlandia |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アカミノイヌホオズキ | Solanum villlosum | ナス科 | 173 | The row's genus field should match the first word of the scientific name. | solanum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アカミノルイヨウショウマ | Actaea erythroearpa | キンポウゲ科 | 185 | The row's genus field should match the first word of the scientific name. | actaea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アカモノ | Gaultheria adenothrix | ツツジ科 | 140 | The row's genus field should match the first word of the scientific name. | gaultheria |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アカヤシオ | Rhododendron pentaphyllum | ツツジ科 | 136 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アキザキナギラン | Cymbidium aspidistrifolium | ラン科 | 75 | The row's genus field should match the first word of the scientific name. | cymbidium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アキニレ | Ulmus parvifolia | ニレ科 | 250 | The row's genus field should match the first word of the scientific name. | ulmus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アキノコハマギク | Chrysanthemum arcticum | キク科 | 282 | The row's genus field should match the first word of the scientific name. | chrysanthemum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アキノハハコグサ | Pseudognaphalium lypoleucum | キク科 | 287 | The row's genus field should match the first word of the scientific name. | pseudognaphalium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アギナシ | Sagittaria aginashi | オモダカ科 | 48 | The row's genus field should match the first word of the scientific name. | sagittaria |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アクシバ | Vaecinium japonieu | ツツジ科 | 142 | The row's genus field should match the first word of the scientific name. | vaecinium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アケボノソウ | Swertia bimaculata | アカネ科 | 157 | The row's genus field should match the first word of the scientific name. | swertia |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アサガオガラクサ | Evolvulus alsinoides | キョウチクトウ科 | 166 | The row's genus field should match the first word of the scientific name. | evolvulus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アサマリンドウ | Gentiana sikokiana | アカネ科 | 155 | The row's genus field should match the first word of the scientific name. | gentiana |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アシカキ | Leersia japoniea | イネ科 | 147 | The row's genus field should match the first word of the scientific name. | leersia |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アシタカツツジ | Rhododendron komiyamae | ツツジ科 | 137 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アシボン | Mierostegium vimineum | イネ科 | 169 | The row's genus field should match the first word of the scientific name. | mierostegium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アズマザサ | Sasaella ramosa | イネ科 | 146 | The row's genus field should match the first word of the scientific name. | sasaella |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アズマシャクナゲ | Rhododendron degronianum | ツツジ科 | 136 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アズマツメクサ | Tillaea aguatiea | ベンケイソウ科 | 215 | The row's genus field should match the first word of the scientific name. | tillaea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アズマネザサ | Pleioblastus chino | イネ科 | 145 | The row's genus field should match the first word of the scientific name. | pleioblastus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アズマホシクサ | Erioeanlon takae | ホシクサ科 | 108 | The row's genus field should match the first word of the scientific name. | erioeanlon |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アズマレイジンソウ | Aconitum pteroeaule | キンポウゲ科 | 184 | The row's genus field should match the first word of the scientific name. | aconitum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アズミトリカブト | Aconitum azumiense | キンポウゲ科 | 184 | The row's genus field should match the first word of the scientific name. | aconitum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アセビ | Pieris japonica | ツツジ科 | 141 | The row's genus field should match the first word of the scientific name. | pieris |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アダン | Pandanus odoratissimus | タコノキ科 | 61 | The row's genus field should match the first word of the scientific name. | pandanus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アツバクコ | Lycium sandwicense | ナス科 | 170 | The row's genus field should match the first word of the scientific name. | lycium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アツバシマザクラ | Leptopetalum paclyplyllam | アカネ科 | 150 | The row's genus field should match the first word of the scientific name. | leptopetalum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アツモリソウ | Cypripedium macranthos | ラン科 | 75 | The row's genus field should match the first word of the scientific name. | cypripedium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アプノメ | Dopatrium junceum | オオバコ科 | 185 | The row's genus field should match the first word of the scientific name. | dopatrium |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アベトウヒレン | Saussurea kurosawae | キク科 | 258 | The row's genus field should match the first word of the scientific name. | saussurea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アマギツツジ | Rhododendron amagianum | ツツジ科 | 137 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アマクサミツバツツジ | Rhododendron amakusaense | ツツジ科 | 138 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アマシバ | Symplocos formosana | ハイノキ科 | 126 | The row's genus field should match the first word of the scientific name. | symplocos |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アマミイケマ | Cynanchum boudieri | キョウチクトウ科 | 160 | The row's genus field should match the first word of the scientific name. | cynanchum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アマミチャルメルソウ | Mitella amamiana | ユキノシタ科 | 208 | The row's genus field should match the first word of the scientific name. | mitella |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アマミナキリスゲ | Cares tabatae | カヤツリグサ科 | 118 | The row's genus field should match the first word of the scientific name. | cares |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アマミナツヅタ | Parthenocissus heterophylla | ブドウ科 | 218 | The row's genus field should match the first word of the scientific name. | parthenocissus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アミガサギリ | Alchornea liukiuensis | トウダイグサ科 | 297 | The row's genus field should match the first word of the scientific name. | alchornea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アラゲタデ | Persiearia pulehra | タデ科 | 87 | The row's genus field should match the first word of the scientific name. | persiearia |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アラゲナツハゼ | Vaecinfum cilatum | ツツジ科 | 142 | The row's genus field should match the first word of the scientific name. | vaecinfum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アラゲヒョウタンボク | Lonicera strophiophora | スイカズラ科 | 313 | The row's genus field should match the first word of the scientific name. | lonicera |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アラサワトウヒレン | Saussurea yanagitae | キク科 | 257 | The row's genus field should match the first word of the scientific name. | saussurea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アラシグサ | Boykinia lyeoetonifolia | ユキノシタ科 | 206 | The row's genus field should match the first word of the scientific name. | boykinia |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アリドオシ | Damnaeantihus indieus | アカネ科 | 146 | The row's genus field should match the first word of the scientific name. | damnaeantihus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アリドオシラン | Myrmechis japoniea | ラン科 | 83 | The row's genus field should match the first word of the scientific name. | myrmechis |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アリノトウグサ | Gonoearpus mieranthus | アリノトウグサ科 | 216 | The row's genus field should match the first word of the scientific name. | gonoearpus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アリマグミ | Elaeagaus murakamiana | グミ科 | 246 | The row's genus field should match the first word of the scientific name. | elaeagaus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アリモリソウ | Codonacantlus pauciflorus | キツネノマゴ科 | 223 | The row's genus field should match the first word of the scientific name. | codonacantlus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アワガエリ | Pheum panieulatum | イネ科 | 156 | The row's genus field should match the first word of the scientific name. | pheum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アワムヨウラン | Leeanorehis trachyeaula | ラン科 | 82 | The row's genus field should match the first word of the scientific name. | leeanorehis |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | アンズ | Prunus armeniaca | バラ科 | 276 | The row's genus field should match the first word of the scientific name. | prunus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イイデトリカブト | Aconitum idemontanum | キンポウゲ科 | 184 | The row's genus field should match the first word of the scientific name. | aconitum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イイヌマムカゴ | Platanthera iinumae | ラン科 | 86 | The row's genus field should match the first word of the scientific name. | platanthera |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イガガヤツリ | Cyperus polystachyos | カヤツリグサ科 | 130 | The row's genus field should match the first word of the scientific name. | cyperus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イシガキカラスウリ | Trichosanthes homophylla | ウリ科 | 290 | The row's genus field should match the first word of the scientific name. | trichosanthes |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イシモチソウ | Drosera peltata | タデ科 | 91 | The row's genus field should match the first word of the scientific name. | drosera |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イズカニコウモリ | Parasenecio amagiensis | キク科 | 271 | The row's genus field should match the first word of the scientific name. | parasenecio |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イズセンリョウ | Maesa japonica | サクラソウ科 | 121 | The row's genus field should match the first word of the scientific name. | maesa |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イズドコロ | Dioseorea izuensis | ヤマノイモ科 | 59 | The row's genus field should match the first word of the scientific name. | dioseorea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イゼナガヤ | Eriachne armitti | イネ科 | 163 | The row's genus field should match the first word of the scientific name. | eriachne |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イソギク | Chrysanthemum pacificum | キク科 | 283 | The row's genus field should match the first word of the scientific name. | chrysanthemum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イソツツジ | Rhododendron diversipilosum | ツツジ科 | 135 | The row's genus field should match the first word of the scientific name. | rhododendron |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イソフジ | Sophora tomentosa | ハマビシ科 | 239 | The row's genus field should match the first word of the scientific name. | sophora |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イソホウキギ | Bassia seoparia | ヒユ科 | 101 | The row's genus field should match the first word of the scientific name. | bassia |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イタチガヤ | Pogonatherum crinitum | イネ科 | 172 | The row's genus field should match the first word of the scientific name. | pogonatherum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イチゲイチヤクソウ | Moneses unillora | ツツジ科 | 131 | The row's genus field should match the first word of the scientific name. | moneses |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イチゴツナギ | Poa sphondylodes | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イチジク | Ficus carica | クワ科 | 254 | The row's genus field should match the first word of the scientific name. | ficus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イチョウバイカモ | Ranunculus nipponieus | キンポウゲ科 | 193 | The row's genus field should match the first word of the scientific name. | ranunculus |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イトイチゴツナギ | Poa matsumurne | イネ科 | 157 | The row's genus field should match the first word of the scientific name. | poa |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イトイヌノハナヒゲ | Rhyuchospora faberi | カヤツリグサ科 | 136 | The row's genus field should match the first word of the scientific name. | rhyuchospora |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イトキンスゲ | Cares hakkodensis | カヤツリグサ科 | 115 | The row's genus field should match the first word of the scientific name. | cares |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イトハナビテンツキ | Bulbostylis densa | カヤツリグサ科 | 113 | The row's genus field should match the first word of the scientific name. | bulbostylis |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イトモ | Potamogeton berehtoldii | ヒルムシロ科 | 53 | The row's genus field should match the first word of the scientific name. | potamogeton |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イトラッキョウ | Allum virgunculae | ヒガンバナ科 | 94 | The row's genus field should match the first word of the scientific name. | allum |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イナトウヒレン | Saussurea inaensis | キク科 | 256 | The row's genus field should match the first word of the scientific name. | saussurea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イナモリソウ | Pseudopysis depressa | アカネ科 | 151 | The row's genus field should match the first word of the scientific name. | pseudopysis |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イヌイトモ | Potamogeton obtusifolius | ヒルムシロ科 | 53 | The row's genus field should match the first word of the scientific name. | potamogeton |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イヌガシ | Neolitsea aciculata | クスノキ科 | 38 | The row's genus field should match the first word of the scientific name. | neolitsea |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イヌセンプリ | Swertia tosaensis | アカネ科 | 157 | The row's genus field should match the first word of the scientific name. | swertia |
+| 78 | profile_candidate | genus_scientific_conflicts_with_scientific_name | イヌノハナヒゲ | Rlyuchospora japonica | カヤツリグサ科 | 136 | The row's genus field should match the first word of the scientific name. | rlyuchospora |

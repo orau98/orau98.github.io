@@ -122,7 +122,30 @@ export const isFlowerVisitRecord = (record) => {
   return isAdultOrUnknown && partCompact && partCompact.includes('花');
 };
 
-const PLANT_PROFILE_FACT_FIELDS = ['habit', 'height', 'flowerPeriod', 'distribution', 'habitat'];
+const PLANT_PROFILE_FACT_FIELDS = [
+  'habit',
+  'height',
+  'flowerPeriod',
+  'distribution',
+  'habitat',
+  'distinguishingFeatures',
+];
+
+export function collectPlantPageNames(hostPlantsMap = {}, plantDetails = {}) {
+  const hostNames = hostPlantsMap instanceof Map
+    ? [...hostPlantsMap.keys()]
+    : Object.keys(hostPlantsMap || {});
+  const profileNames = Object.entries(plantDetails || {})
+    // Profile-only plants remain searchable in the SPA through plantDetails.
+    // Generate extra static pages only when the original-PDF audit recovered
+    // identification content; emitting every profile-only plant would exceed
+    // the GitHub Pages size budget without changing the in-app experience.
+    .filter(([, detail]) => cleanString(detail?.profile?.distinguishingFeatures))
+    .map(([name]) => name);
+  return [...new Set([...hostNames, ...profileNames])]
+    .filter(Boolean)
+    .sort((left, right) => left.localeCompare(right, 'ja'));
+}
 
 const GENUS_JP_CORRECTIONS = new Map([
   ['クロッグ属', 'クロツグ属'],
@@ -266,6 +289,9 @@ export function normalizePlantProfileRows(rows = []) {
         flowerPeriod: cleanString(row?.flower_period),
         distribution: cleanString(row?.distribution),
         habitat: cleanString(row?.habitat),
+        similarTaxa: cleanString(row?.similar_taxa),
+        distinguishingFeatures: cleanString(row?.distinguishing_features),
+        printedPage: cleanString(row?.printed_page),
         source: cleanString(row?.source),
         page: cleanString(row?.page),
         extractionMethod: cleanString(row?.extraction_method),
@@ -357,10 +383,18 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
   plantProfiles.forEach((profile) => {
     const profileHasFacts = plantProfileFactScore(profile) > 0;
     if (!profileHasFacts) return;
-    const aliasCanonical =
-      aliasToCanonical[profile.name] ||
-      aliasToCanonical[normalizePlantNameLite(profile.name)] ||
-      profile.name;
+    // If the profile name itself is a YList key, keep that exact taxon. Some
+    // names are both accepted species-level entries and aliases of an
+    // infraspecific entry (for example ゴヨウマツ → ヒメコマツ). Sending an
+    // original-PDF profile through the alias map would hide it from the page
+    // whose source heading actually bears that name.
+    const aliasCanonical = ylistPlants[profile.name]
+      ? profile.name
+      : (
+        aliasToCanonical[profile.name] ||
+        aliasToCanonical[normalizePlantNameLite(profile.name)] ||
+        profile.name
+      );
     const preserveProfileTaxonomy = profileConflictsWithYlistAlias(profile, aliasCanonical, ylistPlants);
     const canonical = preserveProfileTaxonomy ? profile.name : aliasCanonical;
     const yDetailForProfile = preserveProfileTaxonomy
@@ -393,6 +427,9 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
       flowerPeriod: profile.flowerPeriod,
       distribution: profile.distribution,
       habitat: profile.habitat,
+      similarTaxa: profile.similarTaxa,
+      distinguishingFeatures: profile.distinguishingFeatures,
+      printedPage: profile.printedPage,
       genusJp: profileGenusJpSupported(profile, yDetailForProfile) ? profile.genusJp : '',
       extractionMethod: profile.extractionMethod,
     };
