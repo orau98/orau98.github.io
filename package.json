@@ -53,7 +53,7 @@
     "repair:literature-record-integrity": "node scripts/repair-literature-record-integrity.mjs",
     "prebuild": "npm run check:wildplants-audit && npm run validate-normalized && npm run sync:public-insects && npm run build:data-lite && npm run build:image-index && npm run build:plant-image-index && npm run build:images:responsive && npm run generate-meta:all && npm run generate-sitemap",
     "deploy": "echo 'Use GitHub Actions: push to main to deploy.'",
-    "build:data-lite": "node scripts/build-data-lite.mjs",
+    "build:data-lite": "npm run check:wildplants-audit && node scripts/build-data-lite.mjs",
     "build:image-index": "node scripts/build-image-index.mjs",
     "sync:public-insects": "node scripts/sync-public-insects-csv.mjs",
     "audit:image-resolution": "node scripts/audit-insect-image-resolution.mjs",

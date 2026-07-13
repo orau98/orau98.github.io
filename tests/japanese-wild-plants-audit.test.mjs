@@ -883,6 +883,8 @@ test('the production profile is byte-idempotent and a same-count substituted led
 
 test('local builds and GitHub Pages fail closed when the wild-plant audit drifts', () => {
   const pkg = JSON.parse(fs.readFileSync(PACKAGE_PATH, 'utf8'));
+  const deployWorkflow = fs.readFileSync(DEPLOY_PATH, 'utf8');
   assert.match(pkg.scripts.prebuild, /npm run check:wildplants-audit/u);
-  assert.match(fs.readFileSync(DEPLOY_PATH, 'utf8'), /run: npm run check:wildplants-audit/u);
+  assert.match(pkg.scripts['build:data-lite'], /npm run check:wildplants-audit/u);
+  assert.match(deployWorkflow, /run: npm run build:data-lite/u);
 });
