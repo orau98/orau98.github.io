@@ -131,6 +131,57 @@ const PLANT_PROFILE_FACT_FIELDS = [
   'distinguishingFeatures',
 ];
 
+const PLANT_PROFILE_INDEX_REQUIRED_FIELDS = [
+  'habit',
+  'height',
+  'flowerPeriod',
+  'distribution',
+  'habitat',
+  'similarTaxa',
+  'distinguishingFeatures',
+];
+
+// OCRで長音・範囲記号の「～」「-」が漢数字の「一」へ化けた例や、
+// 末尾が欠けた「本州（岩手県以）」など、原典照合が必要な既知の破損を除外する。
+const PLANT_PROFILE_OCR_CORRUPTION_PATTERNS = [
+  /[0-9０-９]\s*一\s*[0-9０-９]/u,
+  /以[）)]/u,
+  /�/u,
+];
+
+/**
+ * 原典確認済みで、単独の検索入口として十分な独自情報を持つ植物プロフィールだけを
+ * index 対象にする。OCR候補をそのまま公開しないため、形態・花期・分布・生育環境・
+ * 類似種・識別形質がすべて揃い、識別欄と本文欄の双方が原PDF目視確認済みのものに限る。
+ */
+export function isIndexablePlantProfile(profile = {}, detail = {}) {
+  const hasSourceEvidence =
+    Boolean(cleanString(profile?.source)) &&
+    Boolean(cleanString(profile?.page)) &&
+    Boolean(cleanString(profile?.printedPage));
+  if (!hasSourceEvidence) return false;
+
+  const extractionMethod = cleanString(profile?.extractionMethod);
+  const hasIdentificationReview = /識別欄は原PDF画像目視確認/u.test(extractionMethod);
+  const hasBodyReview = /本文欄は原PDF画像目視確認/u.test(extractionMethod);
+  if (!hasIdentificationReview || !hasBodyReview) return false;
+
+  if (!PLANT_PROFILE_INDEX_REQUIRED_FIELDS.every((field) => cleanString(profile?.[field]))) {
+    return false;
+  }
+
+  const scientificName = cleanString(profile?.scientificName || detail?.scientificName);
+  const family = cleanString(
+    profile?.family || detail?.family || detail?.familyName,
+  );
+  if (!scientificName || !family) return false;
+
+  const auditedText = PLANT_PROFILE_INDEX_REQUIRED_FIELDS
+    .map((field) => cleanString(profile?.[field]))
+    .join('\n');
+  return !PLANT_PROFILE_OCR_CORRUPTION_PATTERNS.some((pattern) => pattern.test(auditedText));
+}
+
 export function collectPlantPageNames(hostPlantsMap = {}, plantDetails = {}) {
   const hostNames = hostPlantsMap instanceof Map
     ? [...hostPlantsMap.keys()]
@@ -138,9 +189,10 @@ export function collectPlantPageNames(hostPlantsMap = {}, plantDetails = {}) {
   const profileNames = Object.entries(plantDetails || {})
     // Profile-only plants remain searchable in the SPA through plantDetails.
     // Generate extra static pages only when the original-PDF audit recovered
-    // identification content; emitting every profile-only plant would exceed
-    // the GitHub Pages size budget without changing the in-app experience.
-    .filter(([, detail]) => cleanString(detail?.profile?.distinguishingFeatures))
+    // identification content. Indexability is judged separately by
+    // isIndexablePlantProfile, so short profiles keep a stable noindex URL.
+    .filter(([, detail]) => [detail?.profile, ...(detail?.additionalProfiles || [])]
+      .some((profile) => cleanString(profile?.distinguishingFeatures)))
     .map(([name]) => name);
   return [...new Set([...hostNames, ...profileNames])]
     .filter(Boolean)
@@ -228,6 +280,46 @@ const isBetterPlantProfile = (candidate, current) => {
     return candidatePage < currentPage;
   }
   return false;
+};
+
+const compareProfilesForCanonical = (left, right, canonicalName) => {
+  const leftExact = left?.name === canonicalName ? 1 : 0;
+  const rightExact = right?.name === canonicalName ? 1 : 0;
+  if (leftExact !== rightExact) return rightExact - leftExact;
+
+  const scoreDifference = plantProfileScore(right) - plantProfileScore(left);
+  if (scoreDifference !== 0) return scoreDifference;
+
+  const leftPage = Number.parseInt(left?.page, 10);
+  const rightPage = Number.parseInt(right?.page, 10);
+  if (Number.isFinite(leftPage) && Number.isFinite(rightPage) && leftPage !== rightPage) {
+    return leftPage - rightPage;
+  }
+  return cleanString(left?.name).localeCompare(cleanString(right?.name), 'ja');
+};
+
+const serializePlantProfile = (profile, canonicalName, includeSourceIdentity = false) => {
+  const serialized = {
+    source: profile.source,
+    page: profile.page,
+    habit: profile.habit,
+    height: profile.height,
+    flowerPeriod: profile.flowerPeriod,
+    distribution: profile.distribution,
+    habitat: profile.habitat,
+    similarTaxa: profile.similarTaxa,
+    distinguishingFeatures: profile.distinguishingFeatures,
+    printedPage: profile.printedPage,
+    genusJp: profile.genusJp,
+    extractionMethod: profile.extractionMethod,
+  };
+  if (includeSourceIdentity || profile.name !== canonicalName) {
+    serialized.sourcePlantName = profile.name;
+    serialized.scientificName = profile.scientificName;
+    serialized.family = profile.family;
+    serialized.familyLatin = profile.familyLatin;
+  }
+  return serialized;
 };
 
 export function buildFlowerVisitPlantDataset(allInsects = [], ylistLite = {}) {
@@ -321,6 +413,7 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
         scientificName: '',
         genus: '',
         profile: null,
+        profiles: [],
         profileHasFacts: false,
         preserveProfileTaxonomy: false,
         preserveAliasTaxonomy: false,
@@ -419,20 +512,10 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
     if (canonical !== profile.name && !aliasToCanonical[profile.name]) {
       aliasToCanonical[profile.name] = canonical;
     }
-    detail.profile = {
-      source: profile.source,
-      page: profile.page,
-      habit: profile.habit,
-      height: profile.height,
-      flowerPeriod: profile.flowerPeriod,
-      distribution: profile.distribution,
-      habitat: profile.habitat,
-      similarTaxa: profile.similarTaxa,
-      distinguishingFeatures: profile.distinguishingFeatures,
-      printedPage: profile.printedPage,
+    detail.profiles.push({
+      ...profile,
       genusJp: profileGenusJpSupported(profile, yDetailForProfile) ? profile.genusJp : '',
-      extractionMethod: profile.extractionMethod,
-    };
+    });
     detail.profileHasFacts = true;
   });
 
@@ -469,6 +552,15 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
     const aliases = Array.from(detail.aliases)
       .filter(Boolean)
       .sort((a, b) => a.localeCompare(b, 'ja'));
+    const sortedProfiles = (detail.profiles || [])
+      .slice()
+      .sort((left, right) => compareProfilesForCanonical(left, right, name));
+    const primaryProfile = sortedProfiles[0]
+      ? serializePlantProfile(sortedProfiles[0], name)
+      : null;
+    const additionalProfiles = sortedProfiles
+      .slice(1)
+      .map((profile) => serializePlantProfile(profile, name, true));
     plantDetails[name] = {
       name,
       family: detail.family || detail.familyName || '',
@@ -478,7 +570,8 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
       orderLatin: detail.orderLatin || '',
       scientificName: detail.scientificName || '',
       genus: detail.genus || '',
-      profile: detail.profile || null,
+      profile: primaryProfile,
+      ...(additionalProfiles.length > 0 ? { additionalProfiles } : {}),
       aliases,
     };
   });

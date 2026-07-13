@@ -722,6 +722,96 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     return rows;
   }, [plantProfile, details, isEnglish, familyLabel]);
 
+  const additionalPlantProfileEntries = useMemo(() => {
+    if (isFamily || isOrder || isGenus || !Array.isArray(details?.additionalProfiles)) {
+      return [];
+    }
+
+    const labels = isEnglish
+      ? {
+          sourcePlantName: 'Source plant name',
+          scientificName: 'Source scientific name',
+          family: 'Source family',
+          genus: 'Genus',
+          habit: 'Habit',
+          height: 'Size',
+          flowerPeriod: 'Flowering',
+          distribution: 'Distribution',
+          habitat: 'Habitat',
+          similarTaxa: 'Compared with',
+          distinguishingFeatures: 'Identification',
+        }
+      : {
+          sourcePlantName: '出典上の植物名',
+          scientificName: '出典上の学名',
+          family: '出典上の科名',
+          genus: '属',
+          habit: '生活型',
+          height: '大きさ',
+          flowerPeriod: '花期',
+          distribution: '分布',
+          habitat: '生育環境',
+          similarTaxa: '比較対象',
+          distinguishingFeatures: '類似種との見分け方',
+        };
+    const missingValue = isEnglish ? 'Not stated in this profile' : 'このプロフィールには記載なし';
+
+    return details.additionalProfiles
+      .filter((profile) => profile && typeof profile === 'object')
+      .map((profile, index) => {
+        const sourcePlantName = normalizePlantProfileText(profile.sourcePlantName) || missingValue;
+        const scientificName = String(profile.scientificName || '').trim();
+        const family = [profile.family, profile.familyLatin]
+          .map((value) => String(value || '').trim())
+          .filter((value, valueIndex, values) => value && values.indexOf(value) === valueIndex)
+          .join(' / ');
+        const identityFacts = [
+          {
+            key: 'sourcePlantName',
+            label: labels.sourcePlantName,
+            value: sourcePlantName,
+          },
+          {
+            key: 'scientificName',
+            label: labels.scientificName,
+            value: scientificName || missingValue,
+            isScientificName: Boolean(scientificName),
+          },
+          {
+            key: 'family',
+            label: labels.family,
+            value: family || missingValue,
+          },
+        ];
+        const profileFacts = [
+          ['genus', profile.genusJp],
+          ['habit', profile.habit],
+          ['height', profile.height],
+          ['flowerPeriod', profile.flowerPeriod],
+          ['distribution', profile.distribution],
+          ['habitat', profile.habitat],
+          ['similarTaxa', profile.similarTaxa],
+          ['distinguishingFeatures', profile.distinguishingFeatures],
+        ]
+          .map(([key, value]) => ({
+            key,
+            label: labels[key],
+            value: normalizePlantProfileText(value),
+          }))
+          .filter((item) => item.value);
+
+        return {
+          key: [profile.sourcePlantName, profile.source, profile.page, profile.printedPage, index]
+            .filter((value) => value !== undefined && value !== null && value !== '')
+            .join(':'),
+          profile,
+          sourcePlantName,
+          identityFacts,
+          profileFacts,
+        };
+      });
+  }, [details, isEnglish, isFamily, isGenus, isOrder]);
+
   const classificationGroups = useMemo(() => {
     if (!isOrder || !Array.isArray(classificationMembers) || classificationMembers.length === 0) return [];
     const grouped = new Map();
@@ -740,6 +830,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
 
   // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
   const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
+  const hasPlantProfileContent = Boolean(
+    plantProfile || additionalPlantProfileEntries.length > 0,
+  );
   // displayLatinは和名URLでは和名のままなので、そのケースでは分類データの学名を採用する。
   // これがないと英語ページのh1が和名になり、直下の「Japanese name: 〜」と同文重複していた
   const primaryPlantName = isEnglish
@@ -760,7 +853,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     ? (isEnglish ? `${primaryPlantName} plant index | ${EN_SITE_NAME}` : `${decodedPlantName}の植物一覧 | 昆虫植物図鑑`)
     : isEnglish
       ? `${primaryPlantName} | Plant profile from Japan`
-      : `${decodedPlantName} - 食草植物の詳細 | 昆虫植物図鑑`;
+      : hasPlantProfileContent
+        ? `${decodedPlantName} - 植物プロフィールと関連昆虫 | 昆虫植物図鑑`
+        : `${decodedPlantName} - 食草植物の詳細 | 昆虫植物図鑑`;
   const pageDesc = isFamily
     ? (isEnglish ? `${primaryPlantName}. Browse plants in this group and the insects linked to them.` : `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`)
     : isOrder
@@ -769,7 +864,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     ? (isEnglish ? `${primaryPlantName}. Browse plants in this group and the insects linked to them.` : `${decodedPlantName}に属する植物${count}の一覧と、各植物を利用する昆虫情報。`)
     : isEnglish
       ? `${primaryPlantName}. ${japaneseReference || 'Japanese names are shown only as local references.'} Review the related insects, photos, and network links for this plant.`
-      : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
+      : hasPlantProfileContent
+        ? `${decodedPlantName}の形態・分布・類似種との見分け方（${familyLabel || '植物'}）と、当サイトに登録済みの関連昆虫・写真を掲載。`
+        : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
   const canonicalPlantName = resolvedCanonicalName || decodedPlantName;
   const quizFocusHref = canonicalPlantName
     ? `${localizePath('/quiz', locale)}?mode=plant-to-insect&style=photo&focusPlant=${encodeURIComponent(canonicalPlantName)}`
@@ -1908,6 +2005,47 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
               </div>
             </section>
           )}
+          {additionalPlantProfileEntries.map((entry, index) => (
+            <section
+              id={`plant-profile-additional-${index + 1}`}
+              key={entry.key}
+              className="scroll-mt-24"
+            >
+              <div className="rounded-card border border-line bg-surface p-5 shadow-e1">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                  {isEnglish ? 'Source-specific profile' : '出典上の別プロフィール'}
+                </p>
+                <h2 className="mb-4 text-xl font-bold text-slate-800 dark:text-slate-100">
+                  {isEnglish
+                    ? `Profile recorded as ${entry.sourcePlantName}`
+                    : `「${entry.sourcePlantName}」としての植物情報`}
+                </h2>
+                <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+                  {[...entry.identityFacts, ...entry.profileFacts].map((item) => (
+                    <div
+                      key={item.key}
+                      className={`border-b border-slate-200/70 pb-3 dark:border-slate-800 ${item.key === 'distinguishingFeatures' ? 'sm:col-span-2' : ''}`}
+                    >
+                      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                        {item.label}
+                      </dt>
+                      <dd className="mt-1 text-sm leading-6 text-slate-800 dark:text-slate-100">
+                        {item.isScientificName
+                          ? formatScientificNameReact(item.value)
+                          : item.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <SourceCitation
+                  sources={buildSourceLabel(entry.profile)}
+                  isEnglish={isEnglish}
+                  resolveLinks={false}
+                  className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
+                />
+              </div>
+            </section>
+          ))}
         </div>
       </div>
 

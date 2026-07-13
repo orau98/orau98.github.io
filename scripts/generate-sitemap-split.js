@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { META_PAGE_SECTIONS } from '../src/utils/siteTaxonomy.js';
+import { isIndexablePlantProfile } from './lib/dataLiteBuilders.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -207,7 +208,7 @@ function generateSplitSitemaps() {
   // lastmod を使っていたが、内容が変わらないのに毎月日付が転がる虚偽シグナルは
   // Google に lastmod 全体を無視される要因になるため廃止した。
   // 充実度の差別化は changefreq（weekly/monthly）にのみ反映する。
-  const META_CONTENT_LASTMOD = '2026-06-02';
+  const META_CONTENT_LASTMOD = '2026-07-13';
 
   const normalizedDataDir = path.join(__dirname, '../normalized_data');
   const hostplantCountMap = buildHostplantCountMap(
@@ -500,6 +501,26 @@ function generateSplitSitemaps() {
       .sort(compareDiscoverySeedUrls)
       .slice(0, limit);
 
+  const plantDetailsPath = path.join(
+    __dirname,
+    '../public/assets/data-lite/plant-details.json',
+  );
+  const plantDetailsForDiscovery = fs.existsSync(plantDetailsPath)
+    ? JSON.parse(fs.readFileSync(plantDetailsPath, 'utf8'))
+    : {};
+  const plantProfileDiscoveryUrls = (sitemaps.plant || []).filter((entry) => {
+    try {
+      const filename = decodeURIComponent(path.basename(new URL(entry.loc).pathname));
+      const plantName = filename.replace(/\.html$/u, '');
+      const detail = plantDetailsForDiscovery[plantName];
+      const profiles = [detail?.profile, ...(detail?.additionalProfiles || [])]
+        .filter(Boolean);
+      return profiles.some((profile) => isIndexablePlantProfile(profile, detail));
+    } catch {
+      return false;
+    }
+  });
+
   const buildSearchConsoleDiscoverySeed = () => dedupeUrls([
     ...sitemaps.main,
     ...sitemaps['en-main'],
@@ -507,6 +528,7 @@ function generateSplitSitemaps() {
     // split sitemap inventory. Add a bounded high-value seed of indexable meta
     // pages so species and plant profile URLs are submitted directly too.
     ...takeDiscoverySeedUrls('moth', 500),
+    ...plantProfileDiscoveryUrls,
     ...takeDiscoverySeedUrls('plant', 220),
     ...takeDiscoverySeedUrls('longhornbeetle', 120),
     ...takeDiscoverySeedUrls('barkbeetle', 100),
