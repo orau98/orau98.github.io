@@ -1917,7 +1917,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const plantOgDescription = `${displayPlantName}を食草とする昆虫: ${ogInsects}${ogInsectsSuffix}。利用昆虫${relatedInsects.length}種の生態・食草関係。`.replace(/"/g, '');
   // --- 植物ページ description テンプレート生成終わり ---
 
-  const explorerSearchPath = buildExplorerSearchPath('plants', displayPlantName);
+  // 植物プロフィールの読者は、同じ植物カードをもう一度見るのではなく、
+  // その植物を利用する昆虫を探しに来ている。昆虫タブの食草検索へ直接つなぐ。
+  const explorerSearchPath = buildExplorerSearchPath('insects', displayPlantName);
   const plantPageUrl = `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html`;
   const plantTitle = `${displayPlantName}につく虫・幼虫${relatedInsects.length}種｜食草記録と出典｜昆虫植物図鑑`;
   const plantKeywords = `${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}`;
@@ -2077,7 +2079,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         </span>
         <span class="meta-site-logo-text">昆虫植物図鑑</span>
       </a>
-      <a href="${safePlantExplorerSearchPath}" class="meta-site-header-link">図鑑で検索 →</a>
+      <a href="${safePlantExplorerSearchPath}" class="meta-site-header-link">この植物を利用する昆虫を見る →</a>
     </div>
   </header>
 
@@ -2192,7 +2194,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
 	    
 	    <section class="navigation">
       <a href="/" class="back-link">図鑑トップへ</a>
-      <a href="${safePlantExplorerSearchPath}" class="detail-link">図鑑で検索</a>
+      <a href="${safePlantExplorerSearchPath}" class="detail-link">関連昆虫を図鑑で見る</a>
     </section>
   </div>
   
@@ -2968,6 +2970,15 @@ async function generateMetaPages() {
       outputPath: path.join(publicDir, 'guides', 'host-plant-search.html'),
       lang: 'ja',
       title: '食草・寄主植物から昆虫を探す | 昆虫植物図鑑',
+      targetPath: '/meta/plant/index.html',
+      verifyTarget: false,
+    });
+    // GA4で現在も実流入を確認した旧カテゴリURL。削除済みの量産本文は
+    // 復元せず、現行の植物一覧へ恒久移転して404流入を回収する。
+    writePermanentGuideRedirect({
+      outputPath: path.join(publicDir, 'guides', 'categories', 'vegetables.html'),
+      lang: 'ja',
+      title: '野菜につく虫・幼虫 | 昆虫植物図鑑',
       targetPath: '/meta/plant/index.html',
       verifyTarget: false,
     });

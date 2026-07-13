@@ -599,6 +599,10 @@ const legacyGuideChecks = [
     target: 'https://orau98.github.io/meta/plant/%E3%82%B1%E3%83%A4%E3%82%AD.html',
   },
   {
+    source: path.join('guides', 'categories', 'vegetables.html'),
+    target: 'https://orau98.github.io/meta/plant/index.html',
+  },
+  {
     source: path.join('guides', 'host-plant-search.html'),
     target: 'https://orau98.github.io/meta/plant/index.html',
   },
@@ -618,6 +622,19 @@ for (const { source, target, targetPrefix } of legacyGuideChecks) {
     assert(html.includes(`rel="canonical" href="${targetPrefix}`), `${source} canonical target mismatch`);
   }
 }
+
+const kunugiPlantMetaHtml = readDistText(path.join('meta', 'plant', 'クヌギ.html'));
+const kunugiInsectSearchHref = '/?tab=insects&amp;q=%E3%82%AF%E3%83%8C%E3%82%AE';
+assert(
+  kunugiPlantMetaHtml.includes(kunugiInsectSearchHref) &&
+    kunugiPlantMetaHtml.includes('この植物を利用する昆虫を見る') &&
+    kunugiPlantMetaHtml.includes('関連昆虫を図鑑で見る'),
+  'plant profiles must continue into the SPA insect results for that host plant',
+);
+assert(
+  !kunugiPlantMetaHtml.includes('/?tab=plants&amp;q=%E3%82%AF%E3%83%8C%E3%82%AE'),
+  'plant profiles must not send readers back to the same plant card search',
+);
 
 const defaultSocialJpgPath = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const defaultSocialJpgFile = path.join(
