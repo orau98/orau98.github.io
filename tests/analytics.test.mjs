@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import { getPageViewPath, trackPageView } from '../src/utils/analytics.js';
+
+test('page_view path uses pathname only', () => {
+  assert.equal(
+    getPageViewPath({ pathname: '/', search: '?tab=plants&q=コナラ', hash: '#results' }),
+    '/',
+  );
+  assert.equal(
+    getPageViewPath({ pathname: '/moth/species-1', search: '?from=search' }),
+    '/moth/species-1',
+  );
+});
+
+test('trackPageView sends one real route path without search or hash', () => {
+  const previousWindow = globalThis.window;
+  const previousDocument = globalThis.document;
+  const calls = [];
+
+  globalThis.window = {
+    location: { origin: 'https://orau98.github.io' },
+    gtag: (...args) => calls.push(args),
+  };
+  globalThis.document = { title: 'テストページ' };
+
+  try {
+    assert.equal(
+      trackPageView({
+        pathname: '/plant/コナラ',
+        search: '?tab=plants&q=コナラ',
+        hash: '#related-insects',
+      }),
+      true,
+    );
+    assert.equal(calls.length, 1);
+    assert.deepEqual(calls[0].slice(0, 2), ['event', 'page_view']);
+    assert.equal(calls[0][2].page_path, '/plant/コナラ');
+    assert.equal(calls[0][2].page_location, 'https://orau98.github.io/plant/%E3%82%B3%E3%83%8A%E3%83%A9');
+  } finally {
+    globalThis.window = previousWindow;
+    globalThis.document = previousDocument;
+  }
+});
