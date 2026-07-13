@@ -143,10 +143,10 @@ const DEFERRED_ADS_SCRIPT = MANUAL_AD_SLOTS.detail ? `<script>
 const PRESERVED_EN_STATIC_FILES = Object.freeze([]);
 
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
-  ? fs.readdirSync(INSECT_RESIZED_DIR).filter((file) => file.match(/\.(320|640|1024)\.jpg$/i))
+  ? fs.readdirSync(INSECT_RESIZED_DIR).filter((file) => file.match(/\.(320|640|1024)\.(?:jpg|webp)$/i))
   : [];
 const insectResizedBaseSet = new Set(
-  insectResizedFiles.map((file) => file.replace(/\.(320|640|1024)\.jpg$/i, '')),
+  insectResizedFiles.map((file) => file.replace(/\.(320|640|1024)\.(?:jpg|webp)$/i, '')),
 );
 const insectResizedEntries = buildNormalizedEntries(insectResizedBaseSet);
 
@@ -420,9 +420,11 @@ function resolveInsectImageUrl(insect) {
   for (const base of resolvedBases) {
     if (!insectResizedBaseSet.has(base)) continue;
     for (const width of [1024, 640, 320]) {
-      const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.jpg`);
-      if (fs.existsSync(resizedPath)) {
-        return `/images/resized/insects/${encodeURIComponent(base)}.${width}.jpg`;
+      for (const format of ['webp', 'jpg']) {
+        const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.${format}`);
+        if (fs.existsSync(resizedPath)) {
+          return `/images/resized/insects/${encodeURIComponent(base)}.${width}.${format}`;
+        }
       }
     }
   }

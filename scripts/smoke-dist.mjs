@@ -619,6 +619,43 @@ for (const { source, target, targetPrefix } of legacyGuideChecks) {
   }
 }
 
+const defaultSocialJpgPath = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+const defaultSocialJpgFile = path.join(
+  DIST_DIR,
+  'images',
+  'resized',
+  'insects',
+  'Cucullia_argentea.1024.jpg',
+);
+assert(
+  fs.existsSync(defaultSocialJpgFile) && fs.statSync(defaultSocialJpgFile).size > 0,
+  'missing retained JPEG used for default social metadata',
+);
+const rootHtml = readDistText('index.html');
+assert(rootHtml.includes(defaultSocialJpgPath), 'root metadata must use the retained social JPEG');
+if (!RESPONSIVE_IMAGES_SKIPPED) {
+  assert(
+    !fs.existsSync(path.join(
+      DIST_DIR,
+      'images',
+      'resized',
+      'insects',
+      'Acronicta_alni.1024.jpg',
+    )),
+    'duplicate insect JPEG should be pruned when a WebP equivalent exists',
+  );
+  assert(
+    fs.existsSync(path.join(
+      DIST_DIR,
+      'images',
+      'resized',
+      'insects',
+      'Acronicta_alni.1024.webp',
+    )),
+    'legacy JPEG-only sources must receive a deployed WebP variant',
+  );
+}
+
 const okinagusaImagePath = '/images/resized/plants/%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5.1024.jpg';
 const okinagusaImageFile = path.join(DIST_DIR, 'images', 'resized', 'plants', 'オキナグサ.1024.jpg');
 if (!RESPONSIVE_IMAGES_SKIPPED) {

@@ -1,6 +1,7 @@
 import { absUrl } from '../utils/origin';
 import { createSafeInsectFilename } from '../utils/image';
 import { getMappedScientificFilename } from '../utils/insectImageMappings';
+import { buildResizedImageUrl } from '../utils/imageSrcset';
 import {
   INSECT_SECTION_CONFIGS,
   buildInsectMetaPagePath,
@@ -52,7 +53,13 @@ const buildInsectImageObject = (insect, caption, description) => {
   if (!safeFilename) return null;
   return {
     "@type": "ImageObject",
-    "url": absUrl(`/images/resized/insects/${encodeURIComponent(safeFilename)}.1024.jpg`),
+    "url": absUrl(buildResizedImageUrl({
+      baseUrl: '/',
+      folder: 'insects',
+      filename: safeFilename,
+      width: 1024,
+      query: '',
+    })),
     "caption": caption,
     "description": description,
   };

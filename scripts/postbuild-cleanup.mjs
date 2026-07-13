@@ -10,6 +10,7 @@ const EN_SITE_NAME = 'Insects and Host Plants of Japan';
 const EN_HOME_DESCRIPTION = 'Explore insects and host plants recorded in Japan. Search moths, butterflies, beetles, bark beetles, aphids, and host plants by scientific name, Japanese name, plant name, or taxonomy.';
 const EN_HOME_KEYWORDS = 'Japanese insects, host plants, larval host plants, moths, butterflies, beetles, bark beetles, aphids, plant-insect relationships, Japan biodiversity, scientific names';
 const DEFAULT_SOCIAL_IMAGE_URL = `${BASE_ORIGIN}/images/resized/insects/Cucullia_argentea.1024.jpg`;
+const RETAINED_INSECT_JPEGS = new Set(['Cucullia_argentea.1024.jpg']);
 const DEFAULT_SOCIAL_IMAGE_ALT_EN = 'Cucullia argentea on Insects and Host Plants of Japan';
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
 const ADSENSE_SCRIPT_URL = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
@@ -724,12 +725,14 @@ const getDirectorySizeBytes = (dirPath) => {
 
 const formatMiB = (bytes) => `${(bytes / (1024 * 1024)).toFixed(1)} MiB`;
 
-const pruneUnusedInsectAvifVariants = () => {
+const pruneRedundantInsectImageVariants = () => {
   const rootDir = path.join('dist', 'images', 'resized', 'insects');
   if (!fs.existsSync(rootDir)) return;
 
-  let removedCount = 0;
-  let removedBytes = 0;
+  const removed = {
+    avif: { count: 0, bytes: 0 },
+    jpg: { count: 0, bytes: 0 },
+  };
   const stack = [rootDir];
   while (stack.length > 0) {
     const current = stack.pop();
@@ -738,15 +741,25 @@ const pruneUnusedInsectAvifVariants = () => {
       const fullPath = path.join(current, entry.name);
       if (entry.isDirectory()) {
         stack.push(fullPath);
-      } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.avif')) {
-        removedBytes += fs.statSync(fullPath).size;
+      } else if (entry.isFile()) {
+        const lowerName = entry.name.toLowerCase();
+        const isAvif = lowerName.endsWith('.avif');
+        const isRedundantJpg = lowerName.endsWith('.jpg') &&
+          !RETAINED_INSECT_JPEGS.has(entry.name) &&
+          fs.existsSync(fullPath.slice(0, -4) + '.webp');
+        if (!isAvif && !isRedundantJpg) continue;
+        const kind = isAvif ? 'avif' : 'jpg';
+        removed[kind].bytes += fs.statSync(fullPath).size;
         fs.rmSync(fullPath, { force: true });
-        removedCount++;
+        removed[kind].count++;
       }
     }
   }
   console.log(
-    `[postbuild] Removed ${removedCount} unused insect AVIF variant(s) (${formatMiB(removedBytes)}).`,
+    `[postbuild] Removed ${removed.avif.count} unused insect AVIF variant(s) (${formatMiB(removed.avif.bytes)}).`,
+  );
+  console.log(
+    `[postbuild] Removed ${removed.jpg.count} duplicate insect JPEG fallback(s) with WebP equivalents (${formatMiB(removed.jpg.bytes)}).`,
   );
 };
 
@@ -801,5 +814,5 @@ ensureSpaRouteShells();
 ensureInsectProfileRouteShells();
 ensurePlantProfileRouteShells();
 syncGeneratedDiscoveryArtifacts();
-pruneUnusedInsectAvifVariants();
+pruneRedundantInsectImageVariants();
 assertPagesSizeBudget();

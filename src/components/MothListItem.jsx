@@ -92,7 +92,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           filename: finalImageFilename,
           width: 640,
           query: assetVersionQuery,
-          format: 'jpg',
         }),
         buildResizedImageUrl({
           baseUrl: normalizedBase,
@@ -100,7 +99,6 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           filename: finalImageFilename,
           width: 320,
           query: assetVersionQuery,
-          format: 'jpg',
         }),
       ].filter((url, index, list) => url && url !== responsiveImage?.src && list.indexOf(url) === index)
     : [];

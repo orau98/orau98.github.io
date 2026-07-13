@@ -7,67 +7,30 @@ const normalizeResizedImageFormat = (value = 'jpg') => {
   return normalized || 'jpg';
 };
 
-const JPG_ONLY_INSECT_IMAGE_NAMES = new Set([
-  'Acronicta_alni',
-  'Acropteris_iphiata',
-  'Actebia_praecurrens',
-  'Actias_aliena',
-  'Albocosta_triangularis',
-  'Ambulyx_ochracea',
-  'Aromia_bungii',
-  'Bhadorcosma_lonicerae',
-  'Botyodes_principalis',
-  'Cnephasia_stephensiana',
-  'Cyrtoclytus_caproides',
-  'Enarmonia_flammeata',
-  'Epiblema_strenuana',
-  'Epodonta_lineata',
-  'Eugnathia_pulcherrima',
-  'Eugoa_grisea',
-  'Euplexia_angusta',
-  'Gesonia_fallax',
-  'Hedya_inouei',
-  'Hypostrotia_cinerea',
-  'Lamprodila_vivata',
-  'Lethe_diana',
-  'Lithophane_plumbeolimbata',
-  'Lomaspilis_marginata',
-  'Menophra_senilis',
-  'Mythimna_flavostigma',
-  'Neoanathamna_nipponica',
-  'Pandemis_monticolana',
-  'Polygonia_c',
-  'Psacothea_hilaris',
-  'Pygopteryx_suava',
-  'Rusicada_leucolopha',
-  'Xerodes_rufescentarius',
-  'Xestia_fuscostigma',
-  'Xestia_semiherbida',
-  'Zizeeria_maha',
-]);
-
-const shouldUseJpgFallbackOnly = (folder, filename) =>
-  folder === 'insects' && JPG_ONLY_INSECT_IMAGE_NAMES.has(filename);
+export const getResizedImageFallbackFormat = (folder) =>
+  folder === 'insects' ? 'webp' : 'jpg';
 
 export function buildResizedImageUrl({
-  baseUrl = import.meta.env.BASE_URL || '/',
+  baseUrl = import.meta.env?.BASE_URL || '/',
   folder = 'insects',
   filename,
   width = 1024,
   query,
-  format = 'jpg',
+  format,
   ext,
 }) {
   if (!filename) return '';
   const safeBase = normalizeAssetBase(baseUrl);
-  const ver = import.meta.env.VITE_ASSET_VERSION || '';
+  const ver = import.meta.env?.VITE_ASSET_VERSION || '';
   const qs = typeof query === 'string' ? query : (ver ? `?v=${ver}` : '');
-  const outputFormat = normalizeResizedImageFormat(format || ext || 'jpg');
+  const outputFormat = normalizeResizedImageFormat(
+    format || ext || getResizedImageFallbackFormat(folder, filename),
+  );
   return `${safeBase}images/resized/${folder}/${encodeURIComponent(filename)}.${width}.${outputFormat}${qs}`;
 }
 
 export function buildResponsiveSrcset({
-  baseUrl = import.meta.env.BASE_URL || '/',
+  baseUrl = import.meta.env?.BASE_URL || '/',
   folder = 'insects',
   filename,
   ext = '.jpg',
@@ -78,7 +41,7 @@ export function buildResponsiveSrcset({
 }) {
   if (!filename) return {};
   const safeBase = normalizeAssetBase(baseUrl);
-  const ver = import.meta.env.VITE_ASSET_VERSION || '';
+  const ver = import.meta.env?.VITE_ASSET_VERSION || '';
   const qs = typeof query === 'string' ? query : (ver ? `?v=${ver}` : '');
   const normalizedWidths = Array.isArray(widths) && widths.length
     ? Array.from(new Set(widths)).sort((a, b) => a - b)
@@ -112,7 +75,7 @@ export function buildResponsiveSrcset({
 }
 
 export function buildResponsivePicture({
-  baseUrl = import.meta.env.BASE_URL || '/',
+  baseUrl = import.meta.env?.BASE_URL || '/',
   folder = 'insects',
   filename,
   widths = [320, 640, 1024],
@@ -121,8 +84,8 @@ export function buildResponsivePicture({
   sourceFormats,
 }) {
   if (!filename) return { src: '', srcSet: '', sizes, sources: [] };
-  const jpgFallbackOnly = shouldUseJpgFallbackOnly(folder, filename);
-  const defaultSourceFormats = folder === 'insects' ? ['webp'] : ['avif', 'webp'];
+  const fallbackFormat = getResizedImageFallbackFormat(folder, filename);
+  const defaultSourceFormats = folder === 'insects' ? [] : ['avif', 'webp'];
   const fallback = buildResponsiveSrcset({
     baseUrl,
     folder,
@@ -130,14 +93,12 @@ export function buildResponsivePicture({
     widths,
     sizes,
     query,
-    format: 'jpg',
+    format: fallbackFormat,
   });
-  const formats = jpgFallbackOnly
-    ? []
-    : (Array.isArray(sourceFormats)
-      ? Array.from(new Set(sourceFormats.map(normalizeResizedImageFormat)))
-          .filter((format) => format && format !== 'jpg')
-      : defaultSourceFormats);
+  const formats = Array.isArray(sourceFormats)
+    ? Array.from(new Set(sourceFormats.map(normalizeResizedImageFormat)))
+        .filter((format) => format && format !== fallbackFormat)
+    : defaultSourceFormats;
   return {
     ...fallback,
     sources: formats.map((type) => ({

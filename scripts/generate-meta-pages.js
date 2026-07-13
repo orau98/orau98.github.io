@@ -79,10 +79,10 @@ const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
-  ? fs.readdirSync(INSECT_RESIZED_DIR).filter(file => file.match(/\.(320|640|1024)\.jpg$/i))
+  ? fs.readdirSync(INSECT_RESIZED_DIR).filter(file => file.match(/\.(320|640|1024)\.(?:jpg|webp)$/i))
   : [];
 const insectResizedBaseSet = new Set(
-  insectResizedFiles.map(file => file.replace(/\.(320|640|1024)\.jpg$/i, '')),
+  insectResizedFiles.map(file => file.replace(/\.(320|640|1024)\.(?:jpg|webp)$/i, '')),
 );
 const insectResizedEntries = buildNormalizedEntries(insectResizedBaseSet);
 
@@ -515,21 +515,26 @@ function buildResponsivePicture({ dir, base, alt, aboveFold = false }) {
   const decodedBase = decodeURIComponent(String(base || ''));
   if (!decodedBase) return '';
   const dirAbs = path.join(PUBLIC_DIR_ABS, 'images/resized', dir);
-  const widths = RESIZED_HERO_WIDTHS.filter((w) =>
-    fs.existsSync(path.join(dirAbs, `${decodedBase}.${w}.jpg`)),
+  const preferredFallbackFormat = dir === 'insects' ? 'webp' : 'jpg';
+  const preferredWidths = RESIZED_HERO_WIDTHS.filter((w) =>
+    fs.existsSync(path.join(dirAbs, `${decodedBase}.${w}.${preferredFallbackFormat}`)),
   );
+  const fallbackFormat = preferredWidths.length ? preferredFallbackFormat : 'jpg';
+  const widths = preferredWidths.length
+    ? preferredWidths
+    : RESIZED_HERO_WIDTHS.filter((w) => fs.existsSync(path.join(dirAbs, `${decodedBase}.${w}.jpg`)));
   if (!widths.length) return '';
   const enc = encodeURIComponent(decodedBase);
   const maxW = Math.max(...widths);
   const srcset = (fmt, formatWidths = widths) =>
     formatWidths.map((w) => `/images/resized/${dir}/${enc}.${w}.${fmt} ${w}w`).join(', ');
   const sizesAttr = '(max-width: 640px) 100vw, 640px';
-  const fallback = `/images/resized/${dir}/${enc}.${maxW}.jpg`;
+  const fallback = `/images/resized/${dir}/${enc}.${maxW}.${fallbackFormat}`;
   const dims = readJpegSize(path.join(dirAbs, `${decodedBase}.${maxW}.jpg`));
   const dimAttrs = dims ? ` width="${dims.width}" height="${dims.height}"` : '';
   const loadAttrs = aboveFold ? 'decoding="async" fetchpriority="high"' : 'loading="lazy" decoding="async"';
   const safeAlt = escapeRedirectHtml(alt);
-  const sourceFormats = dir === 'insects' ? ['webp'] : ['avif', 'webp'];
+  const sourceFormats = dir === 'insects' ? [] : ['avif', 'webp'];
   const sources = sourceFormats.flatMap((fmt) => {
     const formatWidths = widths.filter((w) =>
       fs.existsSync(path.join(dirAbs, `${decodedBase}.${w}.${fmt}`)),
@@ -539,7 +544,7 @@ function buildResponsivePicture({ dir, base, alt, aboveFold = false }) {
   });
   return `<picture>
 ${sources.join('\n')}
-                    <img src="${fallback}"${dimAttrs} alt="${safeAlt}" ${loadAttrs} style="max-width:100%;height:auto;">
+                    <img src="${fallback}" srcset="${srcset(fallbackFormat)}" sizes="${sizesAttr}"${dimAttrs} alt="${safeAlt}" ${loadAttrs} style="max-width:100%;height:auto;">
                   </picture>`;
 }
 
@@ -1076,9 +1081,11 @@ function resolveInsectImageUrl(insect) {
   for (const base of resolvedBases) {
     if (!insectResizedBaseSet.has(base)) continue;
     for (const width of [1024, 640, 320]) {
-      const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.jpg`);
-      if (fs.existsSync(resizedPath)) {
-        return `/images/resized/insects/${encodeURIComponent(base)}.${width}.jpg`;
+      for (const format of ['webp', 'jpg']) {
+        const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.${format}`);
+        if (fs.existsSync(resizedPath)) {
+          return `/images/resized/insects/${encodeURIComponent(base)}.${width}.${format}`;
+        }
       }
     }
   }
@@ -1086,9 +1093,11 @@ function resolveInsectImageUrl(insect) {
     if (!base || !insectResizedBaseSet.has(base)) continue;
     if (insectResizedBaseSet.has(base)) {
       for (const width of [1024, 640, 320]) {
-        const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.jpg`);
-        if (fs.existsSync(resizedPath)) {
-          return `/images/resized/insects/${encodeURIComponent(base)}.${width}.jpg`;
+        for (const format of ['webp', 'jpg']) {
+          const resizedPath = path.join(INSECT_RESIZED_DIR, `${base}.${width}.${format}`);
+          if (fs.existsSync(resizedPath)) {
+            return `/images/resized/insects/${encodeURIComponent(base)}.${width}.${format}`;
+          }
         }
       }
     }
@@ -1300,10 +1309,10 @@ function generateInsectHTML(insect, type, enSlugEntry = null, hostPlantsMap = nu
   const citationSummaryHtml = renderCitationSummaryHtml(citationEntries);
   const citationListHtml = renderCitationListHtml(citationEntries);
   const imageUrl = resolveInsectImageUrl(insect);
-  // ヒーロー画像のベース名（/images/resized/insects/<enc>.<w>.jpg → <enc>）。
+  // ヒーロー画像のベース名（/images/resized/insects/<enc>.<w>.<format> → <enc>）。
   // レスポンシブ <picture> と preload の生成に使う。
   const insectImageBase = (() => {
-    const m = /\/images\/resized\/insects\/(.+)\.(?:320|640|1024)\.jpg$/.exec(imageUrl || '');
+    const m = /\/images\/resized\/insects\/(.+)\.(?:320|640|1024)\.(?:jpg|webp)$/.exec(imageUrl || '');
     return m ? m[1] : '';
   })();
   const heroPreloadHtml = insectImageBase

@@ -62,7 +62,7 @@ const INSECT_ORDER_LABELS = Object.freeze({
   leafbeetle: { ja: 'コウチュウ目', en: 'Coleoptera' },
   aphid: { ja: 'カメムシ目', en: 'Hemiptera' },
 });
-const RESIZED_INSECT_IMAGE_RE = /\/images\/resized\/insects\/([^/?#]+)\.(320|640|1024)\.jpg/i;
+const RESIZED_INSECT_IMAGE_RE = /\/images\/resized\/insects\/([^/?#]+)\.(320|640|1024)\.(?:jpg|webp)/i;
 
 const escapeRegExp = (value = '') => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
