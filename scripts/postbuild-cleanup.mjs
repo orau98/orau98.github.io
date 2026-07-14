@@ -227,6 +227,18 @@ const extractSpaAssetTags = (indexHtml) => {
     .join('\n');
 };
 
+const extractSiteIconTags = (indexHtml) => {
+  const headMatch = String(indexHtml || '').match(/<head[^>]*>([\s\S]*?)<\/head>/i);
+  const headHtml = headMatch?.[1] || '';
+  return Array.from(headHtml.matchAll(/<link\b[^>]*>/gi))
+    .map((match) => match[0].trim())
+    .filter((tag) =>
+      /\brel=["'](?:icon|alternate icon|shortcut icon|apple-touch-icon|manifest)["']/i.test(tag),
+    )
+    .map((tag) => `    ${tag}`)
+    .join('\n');
+};
+
 const replaceJsonLdBlocks = (html, structuredData) => {
   if (!Array.isArray(structuredData) || structuredData.length === 0) return html;
   const scripts = structuredData.map(renderJsonLdScript).join('\n');
@@ -373,6 +385,10 @@ const buildInsectProfileRouteShell = ({
   if (!assetTags) {
     throw new Error('SPA asset tags are missing from dist/index.html');
   }
+  const siteIconTags = extractSiteIconTags(indexHtml);
+  if (!siteIconTags) {
+    throw new Error('Site icon tags are missing from dist/index.html');
+  }
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -392,6 +408,7 @@ const buildInsectProfileRouteShell = ({
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+${siteIconTags}
     <title>${escapeHtmlText(title)}</title>
     <meta name="description" content="${escapeHtmlAttr(description)}">
     <meta name="robots" content="${escapeHtmlAttr(robotsContent)}">
@@ -550,12 +567,16 @@ const buildPlantProfileRouteShell = (
   const route = buildPlantRouteMetadata(plantName, locale, canonicalPath, canonicalIndexable);
   const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
   const assetTags = extractSpaAssetTags(indexHtml);
+  const siteIconTags = extractSiteIconTags(indexHtml);
   if (!assetTags) {
     const routeFlag = `    <script>${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>\n`;
     const html = buildSpaRouteShell(indexHtml, route);
     return html.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER)
       ? html
       : html.replace('</head>', `${routeFlag}  </head>`);
+  }
+  if (!siteIconTags) {
+    throw new Error('Site icon tags are missing from dist/index.html');
   }
 
   const alternateLinks = route.alternates
@@ -581,6 +602,7 @@ const buildPlantProfileRouteShell = (
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+${siteIconTags}
     <title>${escapeHtmlText(route.title)}</title>
     <meta name="description" content="${escapeHtmlAttr(route.description)}">
     <meta name="robots" content="${escapeHtmlAttr(route.robotsContent || SPA_ROUTE_INDEX_ROBOTS)}">

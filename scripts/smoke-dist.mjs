@@ -27,6 +27,12 @@ const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
 const REQUIRED_FILES = [
   'index.html',
   '.nojekyll',
+  'favicon.ico',
+  'favicon-48.png',
+  'favicon-192.png',
+  'favicon.svg',
+  'apple-touch-icon.png',
+  'site.webmanifest',
   'quiz/index.html',
   'en/index.html',
   'en/quiz/index.html',
@@ -104,6 +110,21 @@ function hasIndexFollowRobots(html) {
     !tokens.has('nofollow');
 }
 
+const SITE_ICON_VERSION = '5';
+const REQUIRED_SITE_ICON_HREFS = [
+  `/favicon-48.png?v=${SITE_ICON_VERSION}`,
+  `/favicon.svg?v=${SITE_ICON_VERSION}`,
+  `/favicon-192.png?v=${SITE_ICON_VERSION}`,
+  `/apple-touch-icon.png?v=${SITE_ICON_VERSION}`,
+  `/site.webmanifest?v=${SITE_ICON_VERSION}`,
+];
+
+function assertSiteIconLinks(html, sourcePath) {
+  for (const href of REQUIRED_SITE_ICON_HREFS) {
+    assert(html.includes(`href="${href}"`), `${sourcePath} is missing site icon link: ${href}`);
+  }
+}
+
 assert(
   hasIndexFollowRobots('<meta content="index, follow" name="robots">'),
   'robots parser must accept index, follow regardless of attribute order',
@@ -131,6 +152,21 @@ for (const relativePath of REQUIRED_FILES) {
   const fullPath = path.join(DIST_DIR, relativePath);
   assert(fs.existsSync(fullPath), `missing dist artifact: ${relativePath}`);
 }
+
+const faviconIco = fs.readFileSync(path.join(DIST_DIR, 'favicon.ico'));
+assert(
+  faviconIco.length > 6 &&
+    faviconIco.readUInt16LE(0) === 0 &&
+    faviconIco.readUInt16LE(2) === 1,
+  'favicon.ico must be a valid Windows icon resource',
+);
+const siteManifest = readDistJson('site.webmanifest');
+assert(
+  Array.isArray(siteManifest.icons) &&
+    siteManifest.icons.length > 0 &&
+    siteManifest.icons.every(({ src }) => String(src).endsWith(`?v=${SITE_ICON_VERSION}`)),
+  'site.webmanifest must point to the cache-busted leaf icon set',
+);
 
 for (const relativePath of ['robots.txt', 'sitemap.xml', 'sitemap-en-moth.xml']) {
   const publicPath = path.join(ROOT, 'public', relativePath);
@@ -161,6 +197,7 @@ assert(
 );
 
 const japaneseHomeHtml = readDistText('index.html');
+assertSiteIconLinks(japaneseHomeHtml, 'index.html');
 const japaneseHomeBody = japaneseHomeHtml.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
 const japaneseHomeNoscript = japaneseHomeBody.match(/<noscript>([\s\S]*?)<\/noscript>/i)?.[1] || '';
 assert(
@@ -283,6 +320,7 @@ assert(
   'missing オキナグサ plant app route',
 );
 const okinagusaRouteHtml = readDistText(okinagusaRoutePath);
+assertSiteIconLinks(okinagusaRouteHtml, okinagusaRoutePath);
 assert(
   okinagusaRouteHtml.includes('window.__PLANT_ROUTE_SHELL__') &&
     okinagusaRouteHtml.includes('/assets/index-') &&
@@ -429,6 +467,7 @@ for (const segment of insectProfileSegments) {
   });
   assert(decodedRoute, `${segment} must include at least one decoded shared SPA route`);
   const decodedRouteHtml = readDistText(path.join(segment, decodedRoute.name, 'index.html'));
+  assertSiteIconLinks(decodedRouteHtml, `${segment}/${decodedRoute.name}/index.html`);
   assert(
     decodedRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
       decodedRouteHtml.includes('/assets/index-') &&
