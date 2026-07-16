@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { getReferenceMetaList } from '../../utils/sourceLinks';
+import { isAmazonAssociateUrl } from '../../utils/amazonAssociates';
 import { cx } from './cx';
 
 const splitPlain = (sources) =>
@@ -42,14 +43,21 @@ export default function SourceCitation({
         <Fragment key={`${displayLabel}-${i}`}>
           {i > 0 && <span className="text-ink-subtle">, </span>}
           {link ? (
-            <a
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline decoration-line underline-offset-2 transition-colors hover:text-ink hover:decoration-ink-muted"
-            >
-              {displayLabel}
-            </a>
+            <>
+              <a
+                href={link}
+                target="_blank"
+                rel={isAmazonAssociateUrl(link) ? 'sponsored noopener noreferrer' : 'noopener noreferrer'}
+                className="underline decoration-line underline-offset-2 transition-colors hover:text-ink hover:decoration-ink-muted"
+              >
+                {displayLabel}
+              </a>
+              {isAmazonAssociateUrl(link) && (
+                <span className="text-ink-subtle">
+                  {isEnglish ? ' (Amazon Associate link)' : '（Amazonアソシエイトリンク）'}
+                </span>
+              )}
+            </>
           ) : (
             <span>{displayLabel}</span>
           )}

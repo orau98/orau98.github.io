@@ -9,6 +9,10 @@ import { ExplorerStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
+import {
+  AMAZON_ASSOCIATES_DISCLOSURE,
+  isAmazonAssociateUrl,
+} from "./utils/amazonAssociates";
 import useSeoMeta from "./hooks/useSeoMeta";
 import useDebounce from "./hooks/useDebounce";
 import useInsectImageIndex from "./hooks/useInsectImageIndex";
@@ -201,7 +205,7 @@ const renderBibliographyTitle = (titlePlain, href) => {
       <a
         href={href}
         target="_blank"
-        rel="noopener noreferrer"
+        rel={isAmazonAssociateUrl(href) ? "sponsored noopener noreferrer" : "noopener noreferrer"}
         className="underline decoration-slate-300 hover:decoration-slate-500 hover:text-emerald-600 transition-colors"
       >
         {titlePlain}
@@ -548,6 +552,9 @@ const InsectsHostPlantExplorer = memo(
         policySummary: isEnglish
           ? "This site publishes curated insect-plant relationship data compiled from field guides and academic literature. Please verify the original references for academic use."
           : "図鑑・文献ベースで整理した「昆虫と植物の関係データ」を公開しています。学術利用時は必ず原典をご確認ください。",
+        amazonAssociatesDisclosure: isEnglish
+          ? AMAZON_ASSOCIATES_DISCLOSURE.en
+          : AMAZON_ASSOCIATES_DISCLOSURE.ja,
         policyToggle: (open) => (isEnglish ? (open ? "Hide details" : "Show full policy") : (open ? "詳細を閉じる" : "詳細ポリシーを表示")),
         introTitle: isEnglish ? "Introduction" : "はじめに",
         introBody: isEnglish
@@ -2162,6 +2169,9 @@ const InsectsHostPlantExplorer = memo(
                       <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         {infoUi.policySummary}
                       </p>
+                      <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        {infoUi.amazonAssociatesDisclosure}
+                      </p>
                       <button
                         type="button"
                         onClick={() => setShowAboutDetails((v) => !v)}
@@ -2331,7 +2341,7 @@ const InsectsHostPlantExplorer = memo(
                                               <a
                                                 href={href}
                                                 target="_blank"
-                                                rel="noopener noreferrer"
+                                                rel={isAmazonAssociateUrl(href) ? "sponsored noopener noreferrer" : "noopener noreferrer"}
                                                 className="underline decoration-slate-300 hover:decoration-slate-500 hover:text-emerald-600 transition-colors"
                                               >
                                                 {titlePlain}
@@ -2375,7 +2385,7 @@ const InsectsHostPlantExplorer = memo(
                                                 <a
                                                   href={href}
                                                   target="_blank"
-                                                  rel="noopener noreferrer"
+                                                  rel={isAmazonAssociateUrl(href) ? "sponsored noopener noreferrer" : "noopener noreferrer"}
                                                   className="underline decoration-slate-300 hover:decoration-slate-500 hover:text-emerald-600 transition-colors"
                                                 >
                                                   {titlePlain}
