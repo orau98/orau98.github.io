@@ -25,6 +25,7 @@ import {
 } from './lib/englishNaming.mjs';
 import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
+import { buildAnalyticsHeadTags } from './lib/analyticsHeadTags.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,13 +80,7 @@ const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-69820515334732
 const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
 const GA_MEASUREMENT_ID = process.env.VITE_GA_MEASUREMENT_ID || 'G-MFEQF99G0H';
-const GA_HEAD_TAGS = `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '${GA_MEASUREMENT_ID}');
-</script>`;
+const GA_HEAD_TAGS = buildAnalyticsHeadTags(GA_MEASUREMENT_ID);
 
 const buildLegacyInsectSlug = (displayName, insectId) => {
   const normalizedName = cleanString(displayName);
