@@ -1,3 +1,5 @@
+import { buildAmazonBookUrl } from './amazonAssociates.js';
+
 // 書誌情報（主要出典）
 // 可能な範囲で安全に分かっている情報のみを記載。著者名・発行年など未確認項目は省略。
 export const bibliography = [
@@ -11,7 +13,7 @@ export const bibliography = [
     size: '31cm',
     isbn10: '405403845X',
     isbn13: '978-4-05-403845-5',
-    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000011161861',
+    url: buildAmazonBookUrl('405403845X'),
     note: '第1巻'
   },
   {
@@ -74,7 +76,7 @@ export const bibliography = [
     size: '31cm',
     isbn10: '4054038468',
     isbn13: '978-4-05-403846-2',
-    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000011161867',
+    url: buildAmazonBookUrl('4054038468'),
     note: '第2巻'
   },
   {
@@ -87,8 +89,21 @@ export const bibliography = [
     size: '31cm',
     isbn10: '405405109X',
     isbn13: '978-4-05-405109-6',
-    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I024199485',
+    url: buildAmazonBookUrl('405405109X'),
     note: '第3巻'
+  },
+  {
+    key: 'nihonsan-garui-hyojun-4',
+    title: '日本産蛾類標準図鑑 4',
+    editors: ['那須 義次', '広渡 俊哉', '岸田 泰則'],
+    year: '2013',
+    publisher: '学研教育出版',
+    pages: '552p',
+    size: '31cm',
+    isbn10: '4054051103',
+    isbn13: '978-4-05-405110-2',
+    url: buildAmazonBookUrl('4054051103'),
+    note: '第4巻'
   },
   {
     key: 'hana-wo-otozureru-gatachi',
@@ -101,7 +116,7 @@ export const bibliography = [
     size: '31cm',
     isbn10: '490264908X',
     isbn13: '978-4-902649-08-6',
-    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000009933125'
+    url: buildAmazonBookUrl('490264908X')
   },
   {
     key: 'nihon-no-fuyushaku',
@@ -129,15 +144,29 @@ export const bibliography = [
     authors: ['那須 義次'],
     year: '2021',
     publisher: '日本蛾類学会',
-    place: 'つくば'
+    place: 'つくば',
+    pages: '171p',
+    url: 'https://www.moth.jp/pubs/special'
   },
   {
     key: 'nihon-no-hamakiga-2',
     title: '日本のハマキガ 2',
     authors: ['那須 義次'],
-    year: '2023',
+    year: '2022',
     publisher: '日本蛾類学会',
-    place: 'つくば'
+    place: 'つくば',
+    pages: '88p',
+    url: 'https://www.moth.jp/pubs/special'
+  },
+  {
+    key: 'nihon-no-hamakiga-3',
+    title: '日本のハマキガ 3',
+    authors: ['那須 義次'],
+    year: '2024',
+    publisher: '日本蛾類学会',
+    place: 'つくば',
+    pages: '155p',
+    url: 'https://www.moth.jp/pubs/special'
   },
   {
     key: 'nihonsan-tamamushi-daizukan',
@@ -148,7 +177,7 @@ export const bibliography = [
     pages: '206p',
     size: '31cm',
     isbn13: '978-4-943955-07-8',
-    url: 'https://www.mushi-sha.co.jp/shopdetail/000000000496/'
+    url: buildAmazonBookUrl('494395507X')
   },
   {
     key: 'hamushi-handbook',
@@ -160,7 +189,7 @@ export const bibliography = [
     size: '19cm',
     isbn10: '4829981229',
     isbn13: '978-4-8299-8122-1',
-    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I025611359'
+    url: buildAmazonBookUrl('4829981229')
   },
   {
     key: 'nihonsan-hamushi-seitai-obogaki',
@@ -441,7 +470,7 @@ export const bibliography = [
     pages: '818p',
     size: '27cm',
     isbn13: '978-4-486-01741-7',
-    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283'
+    url: buildAmazonBookUrl('4486017412')
   },
   {
     key: 'nihonsan-chorui-hyojun',
@@ -453,7 +482,7 @@ export const bibliography = [
     size: '31cm',
     isbn10: '4052022963',
     isbn13: '978-4-05-202296-8',
-    url: 'https://hon.gakken.jp/book/1320229601'
+    url: buildAmazonBookUrl('4052022963')
   },
   {
     key: 'nihon-genshoku-aburamushi',
@@ -464,7 +493,19 @@ export const bibliography = [
     pages: '545p',
     isbn10: '4881370170',
     isbn13: '978-4-88137-017-9',
-    url: 'https://ci.nii.ac.jp/ncid/BN0139061X'
+    url: buildAmazonBookUrl('4881370170')
+  },
+  {
+    key: 'nihon-konchu-mokuroku-4',
+    title: '日本昆虫目録 第4巻 準新翅類',
+    editors: ['日本昆虫目録編集委員会'],
+    year: '2016',
+    publisher: '日本昆虫学会',
+    pages: '629p',
+    size: '27cm',
+    isbn10: '4434218220',
+    isbn13: '978-4-434-21822-4',
+    url: buildAmazonBookUrl('4434218220')
   },
   {
     key: 'nihon-no-kiriga',

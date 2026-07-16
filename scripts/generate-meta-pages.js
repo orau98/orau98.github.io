@@ -21,6 +21,10 @@ import {
 import { bibliography } from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
 import {
+  AMAZON_ASSOCIATES_DISCLOSURE,
+  isAmazonAssociateUrl,
+} from '../src/utils/amazonAssociates.js';
+import {
   getPublicHostPlantNote,
   getPublicHostPlantSectionNote,
 } from '../src/utils/publicHostPlantNotes.js';
@@ -240,13 +244,28 @@ function formatCitationHtml(entry, rawReference = '') {
   const display = formatCitationPlain(entry, rawReference);
   const link = entry?.url || getSourceLink(rawReference);
   const label = escapeRedirectHtml(display);
-  return link
-    ? `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="noopener noreferrer">${label}</a></cite>`
-    : `<cite>${label}</cite>`;
+  if (!link) return `<cite>${label}</cite>`;
+
+  const isAssociate = isAmazonAssociateUrl(link);
+  const rel = isAssociate ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
+  const associateLabel = isAssociate
+    ? '<span class="amazon-associate-link-label">（Amazonアソシエイトリンク）</span>'
+    : '';
+  return `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${label}</a>${associateLabel}</cite>`;
 }
 
 function formatCitationShortHtml(entry, rawReference = '') {
   return formatCitationHtml(entry, rawReference);
+}
+
+function renderAmazonAssociatesDisclosureHtml(citationEntries = []) {
+  const hasAssociateLink = citationEntries.some(({ entry, rawReference }) => {
+    const link = entry?.url || getSourceLink(rawReference);
+    return isAmazonAssociateUrl(link);
+  });
+  if (!hasAssociateLink) return '';
+
+  return `<p class="amazon-associates-disclosure">${escapeRedirectHtml(AMAZON_ASSOCIATES_DISCLOSURE.ja)}</p>`;
 }
 
 function buildCitationEntriesFromReferences(rawReferences = []) {
@@ -1790,6 +1809,7 @@ function generateInsectHTML(
       <a href="/" class="back-link">図鑑トップへ</a>
       <a href="${safeExplorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
+    ${renderAmazonAssociatesDisclosureHtml(citationEntries)}
   </div>
   
   <script>
@@ -2399,6 +2419,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       <a href="/" class="back-link">図鑑トップへ</a>
       <a href="${safePlantActionPath}" class="detail-link">${safePlantFooterActionLabel}</a>
     </section>
+    ${renderAmazonAssociatesDisclosureHtml(citationEntries)}
   </div>
   
   <script>

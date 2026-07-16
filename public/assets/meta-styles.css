@@ -276,6 +276,19 @@ li a { font-weight: 500; }
   gap: 10px;
 }
 
+.amazon-associates-disclosure {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.amazon-associate-link-label {
+  margin-left: 0.25em;
+  color: var(--muted);
+  font-size: 0.82em;
+}
+
 .back-link,
 .detail-link {
   display: inline-flex;
