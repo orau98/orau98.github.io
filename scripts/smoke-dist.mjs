@@ -37,6 +37,10 @@ const REQUIRED_FILES = [
   'quiz/index.html',
   'en/index.html',
   'en/quiz/index.html',
+  'moth/index.html',
+  'plant/index.html',
+  'en/moth/index.html',
+  'en/plant/index.html',
   'meta/butterfly/index.html',
   'meta/moth/index.html',
   'meta/plant/index.html',
@@ -234,6 +238,56 @@ assert(
 
 const japaneseHomeHtml = readDistText('index.html');
 assertSiteIconLinks(japaneseHomeHtml, 'index.html');
+
+// GA計測の回帰防止:
+// (1) すべての着地ページ（ホーム・ハブシェル・種/植物ルートシェル）に
+//     gtagローダが載っていること。シェルに無いと詳細URL直リンクの
+//     セッションが丸ごと未計測になる。
+// (2) index.html は js/config を page_view より先にキューへ積むこと。
+//     順序が逆だと直帰セッションの初回 page_view が GA4 で破棄され得る。
+const GA_LOADER_URL = 'https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H';
+const assertAnalyticsLoader = (html, sourcePath) => {
+  assert(
+    html.includes(GA_LOADER_URL) && html.includes('window.dataLayer'),
+    `${sourcePath} must include the Google Analytics loader`,
+  );
+};
+assertAnalyticsLoader(japaneseHomeHtml, 'index.html');
+{
+  const configPosition = japaneseHomeHtml.indexOf("window.gtag('config', 'G-MFEQF99G0H'");
+  const loaderPosition = japaneseHomeHtml.indexOf('var loadAnalytics');
+  assert(
+    configPosition !== -1 && loaderPosition !== -1 && configPosition < loaderPosition,
+    "index.html must queue gtag('js')/gtag('config') before the deferred loader so the first page_view is never processed ahead of config",
+  );
+}
+for (const shellPath of [
+  'moth/index.html',
+  'plant/index.html',
+  'en/moth/index.html',
+  'en/plant/index.html',
+  'en/index.html',
+  'quiz/index.html',
+  '404.html',
+]) {
+  assertAnalyticsLoader(readDistText(shellPath), shellPath);
+}
+
+const hubShellChecks = [
+  { file: 'moth/index.html', canonical: 'https://orau98.github.io/moth/' },
+  { file: 'plant/index.html', canonical: 'https://orau98.github.io/plant/' },
+  { file: 'en/moth/index.html', canonical: 'https://orau98.github.io/en/moth/' },
+  { file: 'en/plant/index.html', canonical: 'https://orau98.github.io/en/plant/' },
+];
+for (const { file, canonical } of hubShellChecks) {
+  const hubHtml = readDistText(file);
+  assert(
+    hasIndexFollowRobots(hubHtml) &&
+      hubHtml.includes(`rel="canonical" href="${canonical}"`) &&
+      !/http-equiv=["']refresh["']/i.test(hubHtml),
+    `hub shell must be indexable and self-canonical: ${file}`,
+  );
+}
 const japaneseHomeBody = japaneseHomeHtml.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
 const japaneseHomeNoscript = japaneseHomeBody.match(/<noscript>([\s\S]*?)<\/noscript>/i)?.[1] || '';
 assert(
@@ -405,6 +459,7 @@ assert(
 );
 const okinagusaRouteHtml = readDistText(okinagusaRoutePath);
 assertSiteIconLinks(okinagusaRouteHtml, okinagusaRoutePath);
+assertAnalyticsLoader(okinagusaRouteHtml, okinagusaRoutePath);
 assert(
   okinagusaRouteHtml.includes('window.__PLANT_ROUTE_SHELL__') &&
     okinagusaRouteHtml.includes('/assets/index-') &&
@@ -552,6 +607,7 @@ for (const segment of insectProfileSegments) {
   assert(decodedRoute, `${segment} must include at least one decoded shared SPA route`);
   const decodedRouteHtml = readDistText(path.join(segment, decodedRoute.name, 'index.html'));
   assertSiteIconLinks(decodedRouteHtml, `${segment}/${decodedRoute.name}/index.html`);
+  assertAnalyticsLoader(decodedRouteHtml, `${segment}/${decodedRoute.name}/index.html`);
   assert(
     decodedRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
       decodedRouteHtml.includes('/assets/index-') &&
@@ -597,6 +653,10 @@ for (const section of INSECT_SECTION_CONFIGS) {
           !/http-equiv=["']refresh["']/i.test(routeHtml) &&
           !routeHtml.includes('window.location.replace'),
         `${locale} app route must render the React detail without redirecting: ${routePath}`,
+      );
+      assert(
+        routeHtml.includes(GA_LOADER_URL),
+        `${locale} app route must include the Google Analytics loader: ${routePath}`,
       );
       const canonicalHref = routeHtml.match(
         /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i,

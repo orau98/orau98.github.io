@@ -292,6 +292,40 @@ function generateSplitSitemaps() {
     { changefreq: 'weekly', priority: '0.8', targetKey: 'en-main' },
   );
 
+  // 一覧ハブ（SPAルート）。postbuild-cleanup.mjs が dist に静的シェルを
+  // 書き出すため 200 で配信される。lastmod は quiz と同じく index.html 基準。
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/moth/',
+    topLevelFile,
+    { changefreq: 'weekly', priority: '0.8' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/plant/',
+    topLevelFile,
+    { changefreq: 'weekly', priority: '0.8' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/moth/',
+    topLevelFile,
+    { changefreq: 'weekly', priority: '0.7', targetKey: 'en-main' },
+  );
+
+  addStaticPageToMain(
+    sitemaps,
+    baseUrl,
+    '/en/plant/',
+    topLevelFile,
+    { changefreq: 'weekly', priority: '0.7', targetKey: 'en-main' },
+  );
+
   addStaticPageToMain(
     sitemaps,
     baseUrl,
@@ -302,8 +336,9 @@ function generateSplitSitemaps() {
 
 
   // NOTE:
-  // GitHub Pages の SPA ルート（/moth/... など）は HTTP 404 になるため、
-  // 検索エンジン向けのサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。
+  // 静的シェルの無い SPA ルートは HTTP 404 になるため、種・植物単位の
+  // 検索エンジン向けサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。
+  // （一覧ハブ /moth/ 等は postbuild-cleanup.mjs のシェル生成対象なので上で登録済み）
   const addMetaDirToSitemap = ({ key, dir, routePrefix, priority, includeIndexInMain = true }) => {
     const absDir = path.join(__dirname, dir);
     if (!fs.existsSync(absDir)) {

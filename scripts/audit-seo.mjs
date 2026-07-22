@@ -591,13 +591,29 @@ const legacyRouteDirs = [
   'en/plant',
 ];
 
+// 一覧ハブ（/moth/・/plant/・/en/moth/・/en/plant/）は種・植物単位の
+// ルートシェルとは別物の検索入口ページ。個別ルート用バリデータには
+// かけず、通常ページとしてメタ要件（title/canonical/OGP/JSON-LD）を検証する。
+const hubShellRelativePaths = new Set([
+  path.join(DIST_DIR, 'moth', 'index.html'),
+  path.join(DIST_DIR, 'plant', 'index.html'),
+  path.join(DIST_DIR, 'en', 'moth', 'index.html'),
+  path.join(DIST_DIR, 'en', 'plant', 'index.html'),
+]);
+for (const hubPath of hubShellRelativePaths) {
+  ensure(fs.existsSync(hubPath), `${path.relative(ROOT, hubPath)} hub shell not found`);
+  if (fs.existsSync(hubPath)) {
+    validateHtml(hubPath, readFile(hubPath));
+  }
+}
+
 let legacyRedirectFilesCount = 0;
 for (const relativeDir of legacyRouteDirs) {
   const dirPath = path.join(DIST_DIR, relativeDir);
   ensure(fs.existsSync(dirPath), `dist/${relativeDir} redirect directory not found`);
   if (!fs.existsSync(dirPath)) continue;
   const redirectFiles = collectHtmlFiles(dirPath).filter(
-    (filePath) => path.basename(filePath) === 'index.html',
+    (filePath) => path.basename(filePath) === 'index.html' && !hubShellRelativePaths.has(filePath),
   );
   ensure(redirectFiles.length > 0, `dist/${relativeDir} redirect pages not found`);
   legacyRedirectFilesCount += redirectFiles.length;

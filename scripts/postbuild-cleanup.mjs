@@ -40,8 +40,8 @@ const EN_HOME_NOSCRIPT = `    <noscript>
           <div>
             <h2 style="font-size: 1rem; margin: 0 0 6px; color: #064e3b;">Interactive tools</h2>
             <ul style="margin: 0 0 0 18px; padding: 0;">
-              <li><a href="/en/moth">Insect search</a></li>
-              <li><a href="/en/plant">Plant search</a></li>
+              <li><a href="/en/moth/">Insect search</a></li>
+              <li><a href="/en/plant/">Plant search</a></li>
               <li><a href="/en/quiz/">Four-choice quiz</a></li>
             </ul>
           </div>
@@ -86,6 +86,8 @@ const EN_HOME_STRUCTURED_DATA = [
     ],
   },
 ];
+const SPA_ROUTE_INDEX_ROBOTS = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+const SPA_ROUTE_NOINDEX_ROBOTS = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const SPA_ROUTE_SHELLS = [
   {
     segments: ['en'],
@@ -109,6 +111,130 @@ const SPA_ROUTE_SHELLS = [
     imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
     noscriptHtml: EN_HOME_NOSCRIPT,
     structuredData: EN_HOME_STRUCTURED_DATA,
+    requireAdsenseScript: true,
+  },
+  // 一覧ハブ（SPAの実ルート）。シェルが無いと GitHub Pages は noindex の
+  // 404.html で応答し、検索エンジンからの着地ページとして機能しない。
+  // 実体はディレクトリ（配下に種別シェルが入る）のため、canonical・hreflang は
+  // quiz と同様に末尾スラッシュ付きへ統一する。
+  {
+    segments: ['moth'],
+    lang: 'ja',
+    title: '昆虫から食草を検索｜蛾・蝶・甲虫・アブラムシ | 昆虫植物図鑑',
+    description: '日本産の蛾・蝶・タマムシ・カミキリムシ・キクイムシ・ハムシ・アブラムシ10,000種超を和名・学名から検索し、幼虫の食草・食樹・寄主植物を調べられます。',
+    canonicalPath: '/moth/',
+    alternates: [
+      { hreflang: 'ja', path: '/moth/' },
+      { hreflang: 'en', path: '/en/moth/' },
+      { hreflang: 'x-default', path: '/moth/' },
+    ],
+    ogTitle: '昆虫から食草を検索 | 昆虫植物図鑑',
+    ogDescription: '日本産昆虫10,000種超を和名・学名から検索し、幼虫の食草・寄主植物を調べられます。',
+    robotsContent: SPA_ROUTE_INDEX_ROBOTS,
+    structuredData: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: '昆虫から食草を検索 | 昆虫植物図鑑',
+        description: '日本産の蛾・蝶・タマムシ・カミキリムシ・キクイムシ・ハムシ・アブラムシを検索し、幼虫の食草・寄主植物を調べられる検索ページ。',
+        url: `${BASE_ORIGIN}/moth/`,
+        inLanguage: 'ja',
+        isPartOf: { '@type': 'WebSite', name: '昆虫植物図鑑', url: `${BASE_ORIGIN}/` },
+      },
+    ],
+    requireAdsenseScript: true,
+  },
+  {
+    segments: ['plant'],
+    lang: 'ja',
+    title: '植物から昆虫を逆引き検索｜この植物につく虫 | 昆虫植物図鑑',
+    description: '植物名・科名から、その植物を食草・食樹・寄主として利用する蛾・蝶・カミキリムシ・ハムシ・アブラムシなどの昆虫を逆引き検索できます。庭木や野草につく虫調べにも。',
+    canonicalPath: '/plant/',
+    alternates: [
+      { hreflang: 'ja', path: '/plant/' },
+      { hreflang: 'en', path: '/en/plant/' },
+      { hreflang: 'x-default', path: '/plant/' },
+    ],
+    ogTitle: '植物から昆虫を逆引き検索 | 昆虫植物図鑑',
+    ogDescription: '植物名から、その植物を食草・寄主として利用する昆虫を逆引き検索できます。',
+    robotsContent: SPA_ROUTE_INDEX_ROBOTS,
+    structuredData: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: '植物から昆虫を逆引き検索 | 昆虫植物図鑑',
+        description: '植物名・科名から、その植物を利用する昆虫を逆引き検索できる検索ページ。',
+        url: `${BASE_ORIGIN}/plant/`,
+        inLanguage: 'ja',
+        isPartOf: { '@type': 'WebSite', name: '昆虫植物図鑑', url: `${BASE_ORIGIN}/` },
+      },
+    ],
+    requireAdsenseScript: true,
+  },
+  {
+    segments: ['en', 'moth'],
+    lang: 'en',
+    title: `Insect Search | ${EN_SITE_NAME}`,
+    description: 'Search over 10,000 Japanese moths, butterflies, beetles, bark beetles, leaf beetles, and aphids by name and find their larval host plants.',
+    canonicalPath: '/en/moth/',
+    alternates: [
+      { hreflang: 'ja', path: '/moth/' },
+      { hreflang: 'en', path: '/en/moth/' },
+      { hreflang: 'x-default', path: '/moth/' },
+    ],
+    appName: EN_SITE_NAME,
+    appleTitle: EN_SITE_NAME,
+    ogTitle: `Insect Search | ${EN_SITE_NAME}`,
+    ogDescription: 'Search Japanese insects by name and find their larval host plants.',
+    siteName: EN_SITE_NAME,
+    author: EN_SITE_NAME,
+    ogLocale: 'en_US',
+    imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
+    robotsContent: SPA_ROUTE_INDEX_ROBOTS,
+    structuredData: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: `Insect Search | ${EN_SITE_NAME}`,
+        description: 'Search Japanese insects by name and find their larval host plants.',
+        url: `${BASE_ORIGIN}/en/moth/`,
+        inLanguage: 'en',
+        isPartOf: { '@type': 'WebSite', name: EN_SITE_NAME, url: `${BASE_ORIGIN}/en/` },
+      },
+    ],
+    requireAdsenseScript: true,
+  },
+  {
+    segments: ['en', 'plant'],
+    lang: 'en',
+    title: `Plant Search | ${EN_SITE_NAME}`,
+    description: 'Look up a plant to find the moths, butterflies, beetles, and aphids recorded from it in Japan.',
+    canonicalPath: '/en/plant/',
+    alternates: [
+      { hreflang: 'ja', path: '/plant/' },
+      { hreflang: 'en', path: '/en/plant/' },
+      { hreflang: 'x-default', path: '/plant/' },
+    ],
+    appName: EN_SITE_NAME,
+    appleTitle: EN_SITE_NAME,
+    ogTitle: `Plant Search | ${EN_SITE_NAME}`,
+    ogDescription: 'Look up a plant to find the Japanese insects recorded from it.',
+    siteName: EN_SITE_NAME,
+    author: EN_SITE_NAME,
+    ogLocale: 'en_US',
+    imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
+    robotsContent: SPA_ROUTE_INDEX_ROBOTS,
+    structuredData: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: `Plant Search | ${EN_SITE_NAME}`,
+        description: 'Look up a plant to find the Japanese insects recorded from it.',
+        url: `${BASE_ORIGIN}/en/plant/`,
+        inLanguage: 'en',
+        isPartOf: { '@type': 'WebSite', name: EN_SITE_NAME, url: `${BASE_ORIGIN}/en/` },
+      },
+    ],
     requireAdsenseScript: true,
   },
   {
@@ -145,8 +271,6 @@ const SPA_ROUTE_SHELLS = [
 ];
 const PLANT_PROFILE_ROUTE_SHELL_MARKER = 'window.__PLANT_ROUTE_SHELL__';
 const INSECT_PROFILE_ROUTE_SHELL_MARKER = 'window.__INSECT_ROUTE_SHELL__';
-const SPA_ROUTE_INDEX_ROBOTS = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
-const SPA_ROUTE_NOINDEX_ROBOTS = 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
@@ -224,6 +348,18 @@ const extractSpaAssetTags = (indexHtml) => {
     /<link\b[^>]+href="\/assets\/[^"]+"[^>]*>|<script\b[^>]+src="\/assets\/[^"]+"[^>]*>\s*<\/script>/gi,
   ))
     .map((match) => `    ${match[0].trim()}`)
+    .join('\n');
+};
+
+// GA計測は index.html のインラインローダ（gtagスタブ+遅延ロード）が唯一のソース。
+// 種・植物のルートシェルは index.html を継承しない独自テンプレートのため、
+// これを抽出して埋め込まないと、詳細URL直リンクのセッションが丸ごと未計測になる。
+const extractAnalyticsLoaderScript = (indexHtml) => {
+  const headMatch = String(indexHtml || '').match(/<head[^>]*>([\s\S]*?)<\/head>/i);
+  const headHtml = headMatch?.[1] || '';
+  return Array.from(headHtml.matchAll(/<script(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/gi))
+    .map((match) => match[0].trim())
+    .filter((tag) => tag.includes('googletagmanager'))
     .join('\n');
 };
 
@@ -389,6 +525,10 @@ const buildInsectProfileRouteShell = ({
   if (!siteIconTags) {
     throw new Error('Site icon tags are missing from dist/index.html');
   }
+  const analyticsScript = extractAnalyticsLoaderScript(indexHtml);
+  if (!analyticsScript) {
+    throw new Error('Analytics loader script is missing from dist/index.html');
+  }
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -422,6 +562,7 @@ ${siteIconTags}
     <meta name="twitter:description" content="${escapeHtmlAttr(description)}">
 ${renderJsonLdScript(structuredData)}
     <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${INSECT_PROFILE_ROUTE_SHELL_MARKER} = true;</script>
+    ${analyticsScript}
 ${assetTags}
   </head>
   <body>
@@ -578,6 +719,10 @@ const buildPlantProfileRouteShell = (
   if (!siteIconTags) {
     throw new Error('Site icon tags are missing from dist/index.html');
   }
+  const analyticsScript = extractAnalyticsLoaderScript(indexHtml);
+  if (!analyticsScript) {
+    throw new Error('Analytics loader script is missing from dist/index.html');
+  }
 
   const alternateLinks = route.alternates
     .map(({ hreflang, path: routePath }) =>
@@ -617,6 +762,7 @@ ${alternateLinks}
     <meta name="twitter:description" content="${escapeHtmlAttr(route.ogDescription)}">
 ${renderJsonLdScript(structuredData)}
     <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>
+    ${analyticsScript}
 ${assetTags}
   </head>
   <body>

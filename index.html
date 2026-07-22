@@ -160,6 +160,8 @@
         { "@type": "SiteNavigationElement", "name": "カミキリムシの食樹・種一覧", "url": "https://orau98.github.io/meta/longhornbeetle/index.html" },
         { "@type": "SiteNavigationElement", "name": "ハムシの食草・種一覧", "url": "https://orau98.github.io/meta/leafbeetle/index.html" },
         { "@type": "SiteNavigationElement", "name": "食草・寄主植物の一覧", "url": "https://orau98.github.io/meta/plant/index.html" },
+        { "@type": "SiteNavigationElement", "name": "昆虫から食草を検索", "url": "https://orau98.github.io/moth/" },
+        { "@type": "SiteNavigationElement", "name": "植物から昆虫を逆引き検索", "url": "https://orau98.github.io/plant/" },
         { "@type": "SiteNavigationElement", "name": "サイトマップ", "url": "https://orau98.github.io/sitemap.html" }
       ]
     }
@@ -179,6 +181,13 @@
 
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    // js/config は公式スニペットと同じくライブラリロード前にキューへ積む。
+    // かつては gtag.js の onload 内で config していたが、その順序だと
+    // PageViewTracker の初回 page_view が config より先に dataLayer へ入り、
+    // 直帰セッションのPVがGA4で破棄され得る。
+    // page_view はSPA側の PageViewTracker に一本化する。
+    window.gtag('js', new Date());
+    window.gtag('config', 'G-MFEQF99G0H', { send_page_view: false });
 
     var loadAnalytics = function () {
       if (analyticsLoaded) return;
@@ -186,12 +195,6 @@
       var analytics = document.createElement('script');
       analytics.async = true;
       analytics.src = 'https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H';
-      analytics.onload = function () {
-        window.gtag('js', new Date());
-        // page_view はSPA側の PageViewTracker に一本化する。
-        // gtag スタブは先頭で定義済みなので、初回分も dataLayer 経由で確実に届く。
-        window.gtag('config', 'G-MFEQF99G0H', { send_page_view: false });
-      };
       document.head.appendChild(analytics);
     };
 
@@ -283,6 +286,7 @@
           </div>
         </section>
         <p style="margin: 0 0 8px; color: #333;">より多くのURLは <a href="/sitemap.html">HTMLサイトマップ</a> や <a href="/sitemap.xml">XMLサイトマップ</a> から参照できます。</p>
+        <p style="margin: 0 0 8px; color: #333;"><a href="/moth/">昆虫から食草を検索</a>、<a href="/plant/">植物から昆虫を逆引き検索</a> もあります。</p>
         <p style="margin: 0; color: #333;">検索機能を直接開く場合は <a href="/?q=%E3%82%AD%E3%83%BC%E3%83%AF%E3%83%BC%E3%83%89">/?q=キーワード</a> を指定してください。</p>
       </section>
     </noscript>
