@@ -28,11 +28,17 @@ const StaticPageLink = ({ href, className, children }) => {
 const Footer = ({ locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const metaBase = isEnglish ? 'en/meta' : 'meta';
+  // 検索ハブは自己canonicalの静的シェルを持つ着地ページ（/moth/・/plant/）。
+  // 末尾スラッシュ付きで書かないと GitHub Pages 直リンク時に301を挟む。
   const appLinks = isEnglish
     ? [
+        { to: '/en/moth/', label: 'Insect search' },
+        { to: '/en/plant/', label: 'Plant search' },
         { to: localizePath('/quiz', locale), label: 'Four-choice quiz' },
       ]
     : [
+        { to: '/moth/', label: '昆虫から食草を検索' },
+        { to: '/plant/', label: '植物から昆虫を逆引き検索' },
         { to: localizePath('/quiz', locale), label: '4択図鑑' },
       ];
   const hubLink = (segment, label) => ({
