@@ -313,6 +313,48 @@ const escapeHtmlText = (value) => String(value)
   .replace(/</g, '&lt;')
   .replace(/>/g, '&gt;');
 
+const decodeHtmlEntities = (value = '') => String(value)
+  .replace(/&quot;/g, '"')
+  .replace(/&#39;|&apos;/g, "'")
+  .replace(/&lt;/g, '<')
+  .replace(/&gt;/g, '>')
+  .replace(/&amp;/g, '&');
+
+const extractProfileHead = (html = '') => {
+  const title = decodeHtmlEntities(html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]?.trim() || '');
+  const readMeta = (attribute, key) => {
+    const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const first = new RegExp(`<meta\\s+[^>]*${attribute}=["']${escapedKey}["'][^>]*content=["']([^"']*)["'][^>]*>`, 'i');
+    const second = new RegExp(`<meta\\s+[^>]*content=["']([^"']*)["'][^>]*${attribute}=["']${escapedKey}["'][^>]*>`, 'i');
+    return decodeHtmlEntities(html.match(first)?.[1] || html.match(second)?.[1] || '');
+  };
+  const alternateLinks = Array.from(
+    html.matchAll(/<link\s+rel=["']alternate["'][^>]*hreflang=["'][^"']+["'][^>]*>/gi),
+    (match) => match[0],
+  ).join('\n    ');
+  const jsonLdScripts = Array.from(
+    html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi),
+    (match) => match[0],
+  ).join('\n    ');
+  return {
+    title,
+    description: readMeta('name', 'description'),
+    ogTitle: readMeta('property', 'og:title'),
+    ogDescription: readMeta('property', 'og:description'),
+    ogType: readMeta('property', 'og:type'),
+    ogLocale: readMeta('property', 'og:locale'),
+    ogImage: readMeta('property', 'og:image'),
+    ogImageAlt: readMeta('property', 'og:image:alt'),
+    twitterCard: readMeta('name', 'twitter:card'),
+    twitterTitle: readMeta('name', 'twitter:title'),
+    twitterDescription: readMeta('name', 'twitter:description'),
+    twitterImage: readMeta('name', 'twitter:image'),
+    twitterImageAlt: readMeta('name', 'twitter:image:alt'),
+    alternateLinks,
+    jsonLdScripts,
+  };
+};
+
 const replaceMetaContent = (html, attr, key, content) => {
   const pattern = new RegExp(
     `<meta\\s+${attr}="${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"\\s+content="[^"]*"\\s*\\/?>`,
@@ -355,12 +397,8 @@ const extractSpaAssetTags = (indexHtml) => {
 // 種・植物のルートシェルは index.html を継承しない独自テンプレートのため、
 // これを抽出して埋め込まないと、詳細URL直リンクのセッションが丸ごと未計測になる。
 const extractAnalyticsLoaderScript = (indexHtml) => {
-  const headMatch = String(indexHtml || '').match(/<head[^>]*>([\s\S]*?)<\/head>/i);
-  const headHtml = headMatch?.[1] || '';
-  return Array.from(headHtml.matchAll(/<script(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/gi))
-    .map((match) => match[0].trim())
-    .filter((tag) => tag.includes('googletagmanager'))
-    .join('\n');
+  if (!String(indexHtml || '').includes('G-MFEQF99G0H')) return '';
+  return '<script src="/assets/analytics-loader.js" data-measurement-id="G-MFEQF99G0H" data-send-page-view="false"></script>';
 };
 
 const extractSiteIconTags = (indexHtml) => {
@@ -501,21 +539,22 @@ const buildInsectProfileRouteShell = ({
   routeName,
   routeSegment,
   locale,
-  canonicalPath,
   canonicalIndexable,
+  profileHtml,
 }) => {
   const isEnglish = locale === 'en';
   const siteName = isEnglish ? EN_SITE_NAME : '昆虫植物図鑑';
-  const title = isEnglish
+  const profileHead = extractProfileHead(profileHtml);
+  const fallbackTitle = isEnglish
     ? `${routeName} | Insect profile | ${siteName}`
     : `${routeName} | 昆虫詳細 - ${siteName}`;
-  const description = isEnglish
+  const fallbackDescription = isEnglish
     ? `Interactive insect profile for ${routeName}, including host plants, adult season, photographs, and ecological links.`
     : `${routeName}の食草・食樹、発生時期、写真、生態情報、植物との関係を表示する昆虫詳細ページ。`;
-  const canonicalUrl = new URL(
-    canonicalPath || `/${isEnglish ? 'en/' : ''}meta/${routeSegment}/${encodeURIComponent(routeName)}.html`,
-    BASE_ORIGIN,
-  ).href;
+  const title = profileHead.title || fallbackTitle;
+  const description = profileHead.description || fallbackDescription;
+  const canonicalPath = `/${isEnglish ? 'en/' : ''}${routeSegment}/${encodeURIComponent(routeName)}/`;
+  const canonicalUrl = new URL(canonicalPath, BASE_ORIGIN).href;
   const robotsContent = canonicalIndexable ? SPA_ROUTE_INDEX_ROBOTS : SPA_ROUTE_NOINDEX_ROBOTS;
   const assetTags = extractSpaAssetTags(indexHtml);
   if (!assetTags) {
@@ -553,14 +592,20 @@ ${siteIconTags}
     <meta name="description" content="${escapeHtmlAttr(description)}">
     <meta name="robots" content="${escapeHtmlAttr(robotsContent)}">
     <link rel="canonical" href="${escapeHtmlAttr(canonicalUrl)}">
-    <meta property="og:title" content="${escapeHtmlAttr(title)}">
-    <meta property="og:description" content="${escapeHtmlAttr(description)}">
+    ${profileHead.alternateLinks}
+    <meta property="og:title" content="${escapeHtmlAttr(profileHead.ogTitle || title)}">
+    <meta property="og:description" content="${escapeHtmlAttr(profileHead.ogDescription || description)}">
     <meta property="og:url" content="${escapeHtmlAttr(canonicalUrl)}">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${escapeHtmlAttr(title)}">
-    <meta name="twitter:description" content="${escapeHtmlAttr(description)}">
-${renderJsonLdScript(structuredData)}
+    <meta property="og:type" content="${escapeHtmlAttr(profileHead.ogType || 'article')}">
+    ${profileHead.ogLocale ? `<meta property="og:locale" content="${escapeHtmlAttr(profileHead.ogLocale)}">` : ''}
+    ${profileHead.ogImage ? `<meta property="og:image" content="${escapeHtmlAttr(profileHead.ogImage)}">` : ''}
+    ${profileHead.ogImageAlt ? `<meta property="og:image:alt" content="${escapeHtmlAttr(profileHead.ogImageAlt)}">` : ''}
+    <meta name="twitter:card" content="${escapeHtmlAttr(profileHead.twitterCard || 'summary_large_image')}">
+    <meta name="twitter:title" content="${escapeHtmlAttr(profileHead.twitterTitle || title)}">
+    <meta name="twitter:description" content="${escapeHtmlAttr(profileHead.twitterDescription || description)}">
+    ${profileHead.twitterImage ? `<meta name="twitter:image" content="${escapeHtmlAttr(profileHead.twitterImage)}">` : ''}
+    ${profileHead.twitterImageAlt ? `<meta name="twitter:image:alt" content="${escapeHtmlAttr(profileHead.twitterImageAlt)}">` : ''}
+${profileHead.jsonLdScripts || renderJsonLdScript(structuredData)}
     <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${INSECT_PROFILE_ROUTE_SHELL_MARKER} = true;</script>
     ${analyticsScript}
 ${assetTags}
@@ -612,13 +657,12 @@ const ensureInsectProfileRouteShells = () => {
           preservedTaxonomyRedirects++;
           continue;
         }
-        let canonicalPath = '';
         let canonicalIndexable = false;
+        let profileHtml = '';
         const canonicalHref = sourceHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
         if (canonicalHref) {
           const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
           if (canonicalUrl.origin === BASE_ORIGIN) {
-            canonicalPath = canonicalUrl.pathname;
             const canonicalFile = path.join(
               'dist',
               ...canonicalUrl.pathname
@@ -627,6 +671,7 @@ const ensureInsectProfileRouteShells = () => {
                 .map((segment) => decodeRouteSegment(segment)),
             );
             const canonicalHtml = readTextIfExists(canonicalFile);
+            profileHtml = canonicalHtml;
             canonicalIndexable = Boolean(
               canonicalHtml && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml),
             );
@@ -640,8 +685,8 @@ const ensureInsectProfileRouteShells = () => {
           routeName: decodedName,
           routeSegment,
           locale,
-          canonicalPath,
           canonicalIndexable,
+          profileHtml,
         });
         fs.mkdirSync(targetDir, { recursive: true });
         if (readTextIfExists(targetIndex) !== shellHtml) {
@@ -663,38 +708,43 @@ const ensureInsectProfileRouteShells = () => {
   }
 };
 
-const buildPlantRouteMetadata = (plantName, locale, canonicalPath, canonicalIndexable) => {
+const buildPlantRouteMetadata = (plantName, locale, canonicalIndexable, profileHtml = '') => {
   const encodedPlantName = encodeURIComponent(plantName);
+  const profileHead = extractProfileHead(profileHtml);
   if (locale === 'en') {
+    const fallbackTitle = `${plantName} | Plant Profile | ${EN_SITE_NAME}`;
+    const fallbackDescription = `Interactive plant profile for ${plantName}, showing recorded plant-insect relationships from Japan.`;
     return {
       lang: 'en',
-      title: `${plantName} | Plant Profile | ${EN_SITE_NAME}`,
-      description: `Interactive plant profile for ${plantName}, showing recorded plant-insect relationships from Japan.`,
-      canonicalPath: canonicalPath || `/en/plant/${encodedPlantName}`,
-      // The canonical English meta page owns the reciprocal hreflang set.
-      // This interactive duplicate only needs to consolidate into that page.
+      title: profileHead.title || fallbackTitle,
+      description: profileHead.description || fallbackDescription,
+      canonicalPath: `/en/plant/${encodedPlantName}/`,
       alternates: [],
       appName: EN_SITE_NAME,
       appleTitle: EN_SITE_NAME,
-      ogTitle: `${plantName} | Plant Profile | ${EN_SITE_NAME}`,
-      ogDescription: `Explore insects recorded from ${plantName} and related host-plant records from Japan.`,
+      ogTitle: profileHead.ogTitle || profileHead.title || fallbackTitle,
+      ogDescription: profileHead.ogDescription || profileHead.description || fallbackDescription,
       siteName: EN_SITE_NAME,
       author: EN_SITE_NAME,
       keywords: `${plantName}, Japanese host plants, plant-insect relationships, Japan biodiversity`,
       ogLocale: 'en_US',
       imageAlt: DEFAULT_SOCIAL_IMAGE_ALT_EN,
       robotsContent: canonicalIndexable ? SPA_ROUTE_INDEX_ROBOTS : SPA_ROUTE_NOINDEX_ROBOTS,
+      profileHead,
     };
   }
+  const fallbackTitle = `${plantName} | 昆虫植物図鑑`;
+  const fallbackDescription = `${plantName}を利用する昆虫と食草・訪花関係を検索できる昆虫植物図鑑の植物詳細ページ。`;
   return {
     lang: 'ja',
-    title: `${plantName} | 昆虫植物図鑑`,
-    description: `${plantName}を利用する昆虫と食草・訪花関係を検索できる昆虫植物図鑑の植物詳細ページ。`,
-    canonicalPath: canonicalPath || `/meta/plant/${encodedPlantName}.html`,
+    title: profileHead.title || fallbackTitle,
+    description: profileHead.description || fallbackDescription,
+    canonicalPath: `/plant/${encodedPlantName}/`,
     alternates: [],
-    ogTitle: `${plantName} | 昆虫植物図鑑`,
-    ogDescription: `${plantName}を利用する昆虫と食草・訪花関係を検索できます。`,
+    ogTitle: profileHead.ogTitle || profileHead.title || fallbackTitle,
+    ogDescription: profileHead.ogDescription || profileHead.description || fallbackDescription,
     robotsContent: canonicalIndexable ? SPA_ROUTE_INDEX_ROBOTS : SPA_ROUTE_NOINDEX_ROBOTS,
+    profileHead,
   };
 };
 
@@ -702,10 +752,10 @@ const buildPlantProfileRouteShell = (
   indexHtml,
   plantName,
   locale = 'ja',
-  canonicalPath = '',
   canonicalIndexable = false,
+  profileHtml = '',
 ) => {
-  const route = buildPlantRouteMetadata(plantName, locale, canonicalPath, canonicalIndexable);
+  const route = buildPlantRouteMetadata(plantName, locale, canonicalIndexable, profileHtml);
   const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
   const assetTags = extractSpaAssetTags(indexHtml);
   const siteIconTags = extractSiteIconTags(indexHtml);
@@ -724,10 +774,7 @@ const buildPlantProfileRouteShell = (
     throw new Error('Analytics loader script is missing from dist/index.html');
   }
 
-  const alternateLinks = route.alternates
-    .map(({ hreflang, path: routePath }) =>
-      `    <link rel="alternate" hreflang="${escapeHtmlAttr(hreflang)}" href="${escapeHtmlAttr(`${BASE_ORIGIN}${routePath}`)}">`)
-    .join('\n');
+  const alternateLinks = route.profileHead.alternateLinks;
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -756,11 +803,16 @@ ${alternateLinks}
     <meta property="og:title" content="${escapeHtmlAttr(route.ogTitle)}">
     <meta property="og:description" content="${escapeHtmlAttr(route.ogDescription)}">
     <meta property="og:url" content="${escapeHtmlAttr(canonicalUrl)}">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${escapeHtmlAttr(route.ogTitle)}">
-    <meta name="twitter:description" content="${escapeHtmlAttr(route.ogDescription)}">
-${renderJsonLdScript(structuredData)}
+    <meta property="og:type" content="${escapeHtmlAttr(route.profileHead.ogType || 'article')}">
+    ${route.profileHead.ogLocale ? `<meta property="og:locale" content="${escapeHtmlAttr(route.profileHead.ogLocale)}">` : ''}
+    ${route.profileHead.ogImage ? `<meta property="og:image" content="${escapeHtmlAttr(route.profileHead.ogImage)}">` : ''}
+    ${route.profileHead.ogImageAlt ? `<meta property="og:image:alt" content="${escapeHtmlAttr(route.profileHead.ogImageAlt)}">` : ''}
+    <meta name="twitter:card" content="${escapeHtmlAttr(route.profileHead.twitterCard || 'summary_large_image')}">
+    <meta name="twitter:title" content="${escapeHtmlAttr(route.profileHead.twitterTitle || route.ogTitle)}">
+    <meta name="twitter:description" content="${escapeHtmlAttr(route.profileHead.twitterDescription || route.ogDescription)}">
+    ${route.profileHead.twitterImage ? `<meta name="twitter:image" content="${escapeHtmlAttr(route.profileHead.twitterImage)}">` : ''}
+    ${route.profileHead.twitterImageAlt ? `<meta name="twitter:image:alt" content="${escapeHtmlAttr(route.profileHead.twitterImageAlt)}">` : ''}
+${route.profileHead.jsonLdScripts || renderJsonLdScript(structuredData)}
     <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>
     ${analyticsScript}
 ${assetTags}
@@ -797,15 +849,14 @@ const collectExistingPlantRouteIndexes = (baseDir) => {
     .map((entry) => {
       const plantName = decodeRouteSegment(entry.name);
       const indexPath = path.join(baseDir, entry.name, 'index.html');
-      let canonicalPath = '';
       let canonicalIndexable = false;
+      let profileHtml = '';
       try {
         const sourceHtml = fs.readFileSync(indexPath, 'utf8');
         const canonicalHref = sourceHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
         if (canonicalHref) {
           const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
           if (canonicalUrl.origin === BASE_ORIGIN) {
-            canonicalPath = canonicalUrl.pathname;
             const targetSegments = canonicalUrl.pathname
               .replace(/^\/+/, '')
               .split('/')
@@ -813,6 +864,7 @@ const collectExistingPlantRouteIndexes = (baseDir) => {
             if (targetSegments.every((segment) => isSafeRouteSegment(segment))) {
               const canonicalFile = path.join('dist', ...targetSegments);
               const canonicalHtml = readTextIfExists(canonicalFile);
+              profileHtml = canonicalHtml;
               canonicalIndexable = Boolean(
                 canonicalHtml && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml),
               );
@@ -822,8 +874,8 @@ const collectExistingPlantRouteIndexes = (baseDir) => {
       } catch {}
       return {
         plantName,
-        canonicalPath,
         canonicalIndexable,
+        profileHtml,
         sourceDir: path.join(baseDir, entry.name),
         targetDir: path.join(baseDir, plantName),
         indexPath,
@@ -846,14 +898,14 @@ const ensurePlantProfileRouteShells = () => {
 
     for (const { baseDir, locale } of routeGroups) {
       const routes = collectExistingPlantRouteIndexes(baseDir);
-      for (const { plantName, canonicalPath, canonicalIndexable, sourceDir, targetDir } of routes) {
+      for (const { plantName, canonicalIndexable, profileHtml, sourceDir, targetDir } of routes) {
         const routeIndexPath = path.join(targetDir, 'index.html');
         const shellHtml = buildPlantProfileRouteShell(
           indexHtml,
           plantName,
           locale,
-          canonicalPath,
           canonicalIndexable,
+          profileHtml,
         );
         fs.mkdirSync(targetDir, { recursive: true });
         if (readTextIfExists(routeIndexPath) !== shellHtml) {

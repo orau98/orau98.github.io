@@ -172,9 +172,36 @@
     <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
 <script>
   (function () {
+    var measurementId = 'G-MFEQF99G0H';
+    var persistentKey = 'orau98.analytics.optOut';
+    var sessionKey = 'orau98.analytics.qaSession';
+    var params;
+    try {
+      params = new URLSearchParams(window.location.search || '');
+    } catch (e) {
+      params = new URLSearchParams();
+    }
+
+    var analyticsMode = params.get('analytics');
+    var qaMode = params.get('qa');
+    var analyticsDisabled = analyticsMode === 'off' || qaMode === '1';
+    try {
+      if (analyticsMode === 'on') {
+        localStorage.removeItem(persistentKey);
+        sessionStorage.removeItem(sessionKey);
+        analyticsDisabled = false;
+      } else {
+        if (analyticsMode === 'off') localStorage.setItem(persistentKey, '1');
+        if (qaMode === '1') sessionStorage.setItem(sessionKey, '1');
+        if (qaMode === '0') sessionStorage.removeItem(sessionKey);
+        analyticsDisabled = analyticsDisabled || localStorage.getItem(persistentKey) === '1' || sessionStorage.getItem(sessionKey) === '1';
+      }
+    } catch (e) {}
+    window['ga-disable-' + measurementId] = analyticsDisabled;
+
     var hostname = window.location.hostname;
     var isLocalPreview = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
-    if (isLocalPreview) return;
+    if (isLocalPreview || analyticsDisabled) return;
 
     var analyticsLoaded = false;
     var scheduled = false;

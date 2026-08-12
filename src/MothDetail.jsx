@@ -11,7 +11,6 @@ import SourceCitation from './components/ui/SourceCitation';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, BarkBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
-import useSeoRouteMap from './hooks/useSeoRouteMap';
 import useNearViewport from './hooks/useNearViewport';
 import {
   EN_SITE_NAME,
@@ -32,7 +31,7 @@ import {
   resolveImageBaseCandidates,
 } from './utils/insectImageResolver';
 import { splitJapaneseNameAliases } from './utils/insectNameAliases';
-import { buildInsectMetaPagePath, buildPlantPath, getInsectSectionConfig } from './utils/siteTaxonomy';
+import { buildPlantPath, getInsectSectionConfig } from './utils/siteTaxonomy';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import EnhancedHostPlantDisplay from './components/EnhancedHostPlantDisplay';
 import RelatedInsectsSection from './components/RelatedInsectsSection';
@@ -113,8 +112,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
   const isEnglish = isEnglishLocale(locale);
-  const englishInsectRouteMap = useSeoRouteMap('insects');
-
   const isDevelopment = typeof import.meta !== 'undefined' && import.meta.env && !!import.meta.env.DEV;
   const allowDebugLogs = isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
   
@@ -764,23 +761,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     { rank: 'genus', label: genusChipLabel },
   ]);
   const canonicalHref = moth
-    ? absUrl(
-      isEnglish
-        ? (
-          englishInsectRouteMap[moth.id] ||
-          localizePath(location.pathname || buildInsectPath(moth, locale), locale)
-        )
-        : buildInsectMetaPagePath(moth.type, moth.id, routeType || 'moth')
-    )
+    ? absUrl(buildInsectPath(moth, locale))
     : undefined;
   const alternateJaHref = moth
-    ? absUrl(buildInsectMetaPagePath(moth.type, moth.id, routeType || 'moth', 'ja'))
+    ? absUrl(buildInsectPath(moth, 'ja'))
     : absUrl(localizePath(location.pathname, 'ja'));
   const alternateEnHref = moth
-    ? absUrl(
-      englishInsectRouteMap[moth.id] ||
-      localizePath(location.pathname, 'en')
-    )
+    ? absUrl(buildInsectPath(moth, 'en'))
     : absUrl(localizePath(location.pathname, 'en'));
   const pageTitle = moth
     ? (isEnglish

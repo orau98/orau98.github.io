@@ -9,9 +9,11 @@ import {
   resolveImageBaseCandidates,
 } from '../src/utils/insectImageResolver.js';
 import {
+  buildPlantPath,
   INSECT_SECTION_CONFIGS,
   META_PAGE_SECTIONS,
 } from '../src/utils/siteTaxonomy.js';
+import { buildInsectPath } from '../src/utils/insectSlug.js';
 import {
   comparePlantImageDisplayPriority,
   createSafePlantFilename,
@@ -42,6 +44,7 @@ import {
   createPlantMetaTargetResolver,
   hasNoindexRobotsMeta,
 } from './lib/metaPageLinks.mjs';
+import { buildAnalyticsHeadTags } from './lib/analyticsHeadTags.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -72,6 +75,7 @@ const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
+const SEO_ROUTE_MAP_PLANTS_PATH = path.join(__dirname, '../public/seo-route-map.plants.json');
 const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plant-details.json');
 const KAMIKIRI_AUDIT_PATH = path.join(
   __dirname,
@@ -135,6 +139,32 @@ for (const section of INSECT_SECTION_CONFIGS) {
 }
 
 const plantDetailIndex = readJsonOrEmpty(PLANT_DETAILS_PATH);
+
+function buildJapaneseInsectPath(insect, fallbackType = 'moth') {
+  const runtimeRoute = runtimeInsectRouteById.get(String(insect?.id || '').trim());
+  const routeName = String(
+    runtimeRoute?.name || insect?.routeName || insect?.name || insect?.japaneseName || '',
+  ).trim();
+  return buildInsectPath({
+    id: insect?.id,
+    type: runtimeRoute?.type || insect?.type || fallbackType,
+    routeName,
+    name: routeName,
+  }, 'ja');
+}
+
+function buildEnglishInsectPath(insect, fallbackType = 'moth') {
+  const runtimeRoute = runtimeInsectRouteById.get(String(insect?.id || '').trim());
+  const routeName = String(
+    runtimeRoute?.name || insect?.routeName || insect?.name || insect?.japaneseName || '',
+  ).trim();
+  return buildInsectPath({
+    id: insect?.id,
+    type: runtimeRoute?.type || insect?.type || fallbackType,
+    routeName,
+    name: routeName,
+  }, 'en');
+}
 
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -366,13 +396,7 @@ const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-69820515334732
 const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
 const GA_MEASUREMENT_ID = process.env.VITE_GA_MEASUREMENT_ID || 'G-MFEQF99G0H';
-const GA_HEAD_TAGS = `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '${GA_MEASUREMENT_ID}');
-</script>`;
+const GA_HEAD_TAGS = buildAnalyticsHeadTags(GA_MEASUREMENT_ID);
 
 const buildLegacyInsectSlug = (displayName, insectId) => {
   const normalizedName = String(displayName || '').trim();
@@ -1246,6 +1270,19 @@ function buildEnglishSlugMaps() {
     }
   }
 
+  if (fs.existsSync(SEO_ROUTE_MAP_PLANTS_PATH)) {
+    try {
+      const routeMap = JSON.parse(fs.readFileSync(SEO_ROUTE_MAP_PLANTS_PATH, 'utf-8'));
+      Object.entries(routeMap).forEach(([plantName, href]) => {
+        const match = String(href).match(/^\/en\/meta\/plant\/([^/]+)\.html$/);
+        if (!match || !isIndexableEnglishMetaHref(href)) return;
+        plantNameToEnSlug.set(plantName, decodeURIComponent(match[1]));
+      });
+    } catch (_e) {
+      // Existing English pages are still scanned below as a fallback.
+    }
+  }
+
   const enMetaDir = path.join(__dirname, '../public/en/meta');
   if (!fs.existsSync(enMetaDir)) {
     return { insectIdToEnSlug, plantNameToEnSlug };
@@ -1287,8 +1324,8 @@ function buildEnglishSlugMaps() {
       try {
         const content = fs.readFileSync(path.join(plantDir, file), 'utf-8');
         if (hasNoindexRobotsMeta(content)) continue;
-        // Japanese page link: href="/meta/plant/{plantName}.html"
-        const jaPageMatch = content.match(/href="\/meta\/plant\/([^"]+)\.html"/);
+        // Japanese page link: href="/plant/{plantName}/"
+        const jaPageMatch = content.match(/href="\/plant\/([^"]+)\/"/);
         if (jaPageMatch) {
           const plantName = decodeURIComponent(jaPageMatch[1]);
           plantNameToEnSlug.set(plantName, slug);
@@ -1431,12 +1468,7 @@ function generateInsectHTML(
   ]);
   const enAlternatePath = (() => {
     if (!enSlugEntry) return '';
-    if (typeof enSlugEntry === 'string') {
-      return `/en/meta/${type}/${encodeURIComponent(enSlugEntry)}.html`;
-    }
-    if (enSlugEntry.href) return enSlugEntry.href;
-    if (!enSlugEntry.slug) return '';
-    return `/en/meta/${enSlugEntry.type || type}/${encodeURIComponent(enSlugEntry.slug)}.html`;
+    return buildEnglishInsectPath(insect, type);
   })();
 
   // --- description テンプレート生成 ---
@@ -1527,7 +1559,7 @@ function generateInsectHTML(
   // --- description テンプレート生成終わり ---
 
   const explorerSearchPath = buildExplorerSearchPath('insects', insect.japaneseName);
-  const insectPageUrl = `${BASE_ORIGIN}/meta/${type}/${insect.id}.html`;
+  const insectPageUrl = `${BASE_ORIGIN}${buildJapaneseInsectPath(insect, type)}`;
   const familyTitlePart = familyName ? `（${familyName}）` : '';
   const insectTitle = hostPlantsArray.length > 0
     ? `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`
@@ -1765,7 +1797,7 @@ function generateInsectHTML(
               return `<li>${label}${familyLabel}</li>`;
             }
             const safeTargetName = targetName.replace(/[/\\?%*:|"<>]/g, '-');
-            return `<li><a href="/meta/plant/${encodeURIComponent(safeTargetName)}.html">${label}</a>${familyLabel}</li>`;
+            return `<li><a href="${buildPlantPath(safeTargetName, 'ja')}">${label}</a>${familyLabel}</li>`;
           }).join('')}
         </ul>
         ${renderHostPlantGuideLinks(hostPlantsArray)}` : `
@@ -2102,7 +2134,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const plantProfileTopicSummary = getPlantProfileTopicLabels(profileForMetadata || {})
     .slice(0, 3)
     .join('・') || '特徴';
-  const plantPageUrl = `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonicalName)}.html`;
+  const plantPageUrl = `${BASE_ORIGIN}${buildPlantPath(safeCanonicalName, 'ja')}`;
   const plantTitle = hasRelatedInsects
     ? `${displayPlantName}につく虫・幼虫${relatedInsects.length}種｜食草記録と出典｜昆虫植物図鑑`
     : `${displayPlantName}の${plantProfileTopicSummary}｜植物プロフィール｜昆虫植物図鑑`;
@@ -2260,7 +2292,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="keywords" content="${safePlantKeywords}">
   <link rel="canonical" href="${safePlantPageUrl}">
   <link rel="alternate" hreflang="ja" href="${safePlantPageUrl}">
-  ${enSlug ? `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}/en/meta/plant/${encodeURIComponent(enSlug)}.html">
+  ${enSlug ? `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${buildPlantPath(safeCanonicalName, 'en')}">
   ` : ''}<link rel="alternate" hreflang="x-default" href="${safePlantPageUrl}">
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 
@@ -2319,7 +2351,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       <h3>代表的な関連昆虫</h3>
       <ul>
         ${relatedInsects.slice(0, 3).map(insect => `
-          <li><a href="/meta/${getInsectMetaRouteType(insect)}/${insect.id}.html">${insect.japaneseName}</a>（${insect.scientificName}）</li>
+          <li><a href="${buildJapaneseInsectPath(insect, getInsectMetaRouteType(insect))}">${insect.japaneseName}</a>（${insect.scientificName}）</li>
         `).join('')}
       </ul>
     </section>` : ''}
@@ -2375,7 +2407,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
         ${Object.entries(insectsByType)
           .filter(([_type, insects]) => insects.length > 0)
           .map(([type, insects]) => 
-            `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => `<a href=\"/meta/${getInsectMetaRouteType(i)}/${i.id}.html\">${i.japaneseName}</a>`).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
+            `<p><strong>${typeNames[type]}</strong>では${insects.length}種が確認されており、${insects.slice(0, 3).map(i => `<a href=\"${buildJapaneseInsectPath(i, getInsectMetaRouteType(i))}\">${i.japaneseName}</a>`).join('、')}${insects.length > 3 ? 'などが' : 'が'}この植物を利用しています。</p>`
           ).join('')}
         ${citationListHtml ? `
         <h4>出典</h4>
@@ -2406,7 +2438,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
           ${insects.map(insect => `
           <li>
             <div class="insect-name">
-              <a href="/meta/${getInsectMetaRouteType(insect)}/${insect.id}.html">${insect.japaneseName}</a>
+              <a href="${buildJapaneseInsectPath(insect, getInsectMetaRouteType(insect))}">${insect.japaneseName}</a>
             </div>
             <div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>
           </li>`).join('')}
@@ -3757,7 +3789,7 @@ ${pagerHtml}
             .slice()
             .sort((a, b) => jaSort(a.name, b.name))
             .map((plant) => ({
-              href: `/meta/plant/${encodeURIComponent(plant.file)}.html`,
+              href: buildPlantPath(plant.file, 'ja'),
               label: plant.name.replace(/\([^)]+科\)$/, '').trim() || plant.name,
             })),
         }));
@@ -3788,7 +3820,7 @@ ${pagerHtml}
             item: {
               '@type': 'WebPage',
               name: p.name,
-              url: `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(p.file)}.html`,
+              url: `${BASE_ORIGIN}${buildPlantPath(p.file, 'ja')}`,
             },
           })),
         },
@@ -3799,7 +3831,7 @@ ${pagerHtml}
         const items = plants
           .map(p => {
             const displayName = p.name.replace(/\([^)]+科\)$/, '').trim() || p.name;
-            return `<li><a href="/meta/plant/${encodeURIComponent(p.file)}.html">${displayName}</a></li>`;
+            return `<li><a href="${buildPlantPath(p.file, 'ja')}">${displayName}</a></li>`;
           })
           .join('\n          ');
         return `<section class="family-group">
@@ -3895,14 +3927,14 @@ ${headerHtml}
               .slice()
               .sort((a, b) => jaSort(a.name, b.name))
               .map((species) => ({
-                href: `/meta/${sec.dir}/${encodeURIComponent(species.id)}.html`,
+                href: buildJapaneseInsectPath(species, sec.dir),
                 label: species.name,
               })),
           }))
         : [{
             family: '',
             items: flatItems.map((species) => ({
-              href: `/meta/${sec.dir}/${encodeURIComponent(species.id)}.html`,
+              href: buildJapaneseInsectPath(species, sec.dir),
               label: species.name,
             })),
           }];
@@ -3939,7 +3971,7 @@ ${headerHtml}
           item: {
             '@type': 'WebPage',
             name: item.name,
-            url: `${BASE_ORIGIN}/meta/${sec.dir}/${encodeURIComponent(item.id)}.html`,
+            url: `${BASE_ORIGIN}${buildJapaneseInsectPath(item, sec.dir)}`,
           },
         })),
       },
@@ -3955,7 +3987,7 @@ ${headerHtml}
           const items = speciesList
             .map(
               s =>
-                `<li><a href="/meta/${sec.dir}/${encodeURIComponent(s.id)}.html">${s.name}</a></li>`,
+                `<li><a href="${buildJapaneseInsectPath(s, sec.dir)}">${s.name}</a></li>`,
             )
             .join('\n          ');
           return `<section class="family-group">
@@ -3970,7 +4002,7 @@ ${headerHtml}
       const items = flatItems
         .map(
           s =>
-            `<li><a href="/meta/${sec.dir}/${encodeURIComponent(s.id)}.html">${s.name}</a></li>`,
+            `<li><a href="${buildJapaneseInsectPath(s, sec.dir)}">${s.name}</a></li>`,
         )
         .join('\n          ');
       mainContent = `<ul class="species-list" style="columns:3;gap:1rem;list-style:none;padding:0;">
@@ -3989,7 +4021,7 @@ ${headerHtml}
       ? (() => {
           const featuredItems = featuredButterflyHostPlants
             .map(({ name, file, count }) => `<li>
-            <a href="/meta/plant/${encodeURIComponent(file)}.html">
+            <a href="${buildPlantPath(file, 'ja')}">
               <span>${escapeRedirectHtml(name)}</span>
               <span class="host-plant-count">蝶${count}種</span>
             </a>
@@ -3997,7 +4029,7 @@ ${headerHtml}
             .join('\n          ');
           const directoryItems = butterflyHostPlants
             .map(({ name, file, count }) => `<li class="host-plant-directory-item" data-host-plant-name="${escapeRedirectHtml(name.normalize('NFKC').toLocaleLowerCase('ja'))}">
-            <a href="/meta/plant/${encodeURIComponent(file)}.html">${escapeRedirectHtml(name)}</a>
+            <a href="${buildPlantPath(file, 'ja')}">${escapeRedirectHtml(name)}</a>
             <span class="host-plant-count">${count}種</span>
           </li>`)
             .join('\n          ');

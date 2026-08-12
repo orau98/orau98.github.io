@@ -30,10 +30,20 @@ const collectHtmlFiles = (dirPath) => {
 const getTags = (html, tagName) =>
   html.match(new RegExp(`<${tagName}\\b[^>]*>`, 'gi')) || [];
 
+const decodeHtmlAttribute = (value) =>
+  String(value || '')
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number.parseInt(code, 10)))
+    .replace(/&quot;/gi, '"')
+    .replace(/&apos;|&#39;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&amp;/gi, '&');
+
 const parseAttributes = (tag) => {
   const attrs = {};
   tag.replace(/([:@\w-]+)\s*=\s*("([^"]*)"|'([^']*)')/g, (_, key, _quoted, dq, sq) => {
-    attrs[key.toLowerCase()] = dq ?? sq ?? '';
+    attrs[key.toLowerCase()] = decodeHtmlAttribute(dq ?? sq ?? '');
     return '';
   });
   return attrs;
@@ -168,9 +178,15 @@ const resolveSitePathToDistPath = (hrefOrPath) => {
     .map((segment) => decodeURIComponent(segment));
   const decodedPath = path.join(DIST_DIR, ...decodedSegments);
   const rawPath = path.join(DIST_DIR, ...rawSegments);
-  if (fs.existsSync(decodedPath)) return decodedPath;
-  if (fs.existsSync(rawPath)) return rawPath;
-  return decodedPath;
+  const resolveIndex = (candidate) => {
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
+      return path.join(candidate, 'index.html');
+    }
+    return candidate;
+  };
+  if (fs.existsSync(decodedPath)) return resolveIndex(decodedPath);
+  if (fs.existsSync(rawPath)) return resolveIndex(rawPath);
+  return pathname.endsWith('/') ? path.join(decodedPath, 'index.html') : decodedPath;
 };
 
 const resolveCanonicalToDistPath = (href) => resolveSitePathToDistPath(href);
@@ -212,8 +228,8 @@ const validateHtml = (filePath, html, options = {}) => {
   }
   if (options.requireAnalytics === true) {
     ensure(
-      html.includes('https://www.googletagmanager.com/gtag/js?id=G-MFEQF99G0H') &&
-        html.includes("gtag('config', 'G-MFEQF99G0H')"),
+      html.includes('src="/assets/analytics-loader.js"') &&
+        html.includes('data-measurement-id="G-MFEQF99G0H"'),
       `${relativePath}: missing static-page Google Analytics measurement`,
     );
   }
@@ -646,17 +662,17 @@ validateSitemapUrlSet(path.join(DIST_DIR, 'search-console-discovery-seed.xml'), 
   // 「シードが十分に埋まっている」ことの確認として閾値を1200件に調整
   minUrls: 1200,
   requiredPrefixes: [
-    `${SITE_ORIGIN}/meta/moth/`,
-    `${SITE_ORIGIN}/meta/plant/`,
-    `${SITE_ORIGIN}/en/meta/moth/`,
-    `${SITE_ORIGIN}/en/meta/plant/`,
+    `${SITE_ORIGIN}/moth/`,
+    `${SITE_ORIGIN}/plant/`,
+    `${SITE_ORIGIN}/en/moth/`,
+    `${SITE_ORIGIN}/en/plant/`,
   ],
 });
 validateSitemapUrlSet(path.join(DIST_DIR, 'sitemap-plant.xml'), {
   // 植物の正規ページ（基底名URL）は約1,400件。sitemap側のエイリアス除外
   // ロジックが正規ページを落とす回帰（過去に約100件まで激減）を検出する下限。
   minUrls: 1000,
-  requiredPrefixes: [`${SITE_ORIGIN}/meta/plant/`],
+  requiredPrefixes: [`${SITE_ORIGIN}/plant/`],
 });
 validateSpa404(path.join(DIST_DIR, '404.html'));
 
