@@ -10,6 +10,10 @@ const postbuildSource = fs.readFileSync(
   path.join(ROOT, 'scripts', 'postbuild-cleanup.mjs'),
   'utf8',
 );
+const sharedLoaderSource = fs.readFileSync(
+  path.join(ROOT, 'public', 'assets', 'analytics-loader.js'),
+  'utf8',
+);
 
 // GA4 は config より先に届いた page_view を破棄し得るため、公式スニペットと
 // 同じく js/config をライブラリロード前にキューへ積む順序を固定する。
@@ -55,4 +59,6 @@ test('postbuild route shell templates inject the extracted analytics loader', ()
     throwCount >= 2,
     'both shell builders must fail loudly when the analytics loader cannot be extracted',
   );
+  assert.match(postbuildSource, /data-send-page-view="false"/);
+  assert.match(sharedLoaderSource, /send_page_view: sendPageView/);
 });

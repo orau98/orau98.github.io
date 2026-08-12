@@ -2,10 +2,10 @@ import { absUrl } from '../utils/origin';
 import { createSafeInsectFilename } from '../utils/image';
 import { getMappedScientificFilename } from '../utils/insectImageMappings';
 import { buildResizedImageUrl } from '../utils/imageSrcset';
+import { buildInsectPath } from '../utils/insectSlug';
 import {
   INSECT_SECTION_CONFIGS,
-  buildInsectMetaPagePath,
-  buildPlantMetaPagePath,
+  buildPlantPath,
 } from '../utils/siteTaxonomy';
 
 const toJsonLd = (data) =>
@@ -75,7 +75,7 @@ const buildExplorerCanonicalUrl = (pathname = '/') => {
 export const MothStructuredData = ({ moth }) => {
   if (!moth) return null;
 
-  const detailUrl = absUrl(buildInsectMetaPagePath(moth.type, moth.id, 'moth'));
+  const detailUrl = absUrl(buildInsectPath(moth, 'ja'));
 
   // Normalize hostPlants to an array for safe operations
   const hostPlantsList = extractLarvalHostPlants(moth.hostPlantsDetailed, moth.hostPlants);
@@ -207,9 +207,7 @@ export const MothStructuredData = ({ moth }) => {
 export const ButterflyStructuredData = ({ butterfly }) => {
   if (!butterfly) return null;
 
-  const detailUrl = absUrl(
-    buildInsectMetaPagePath(butterfly.type, butterfly.id, 'butterfly'),
-  );
+  const detailUrl = absUrl(buildInsectPath(butterfly, 'ja'));
 
   const hostPlantsList = extractLarvalHostPlants(butterfly.hostPlantsDetailed, butterfly.hostPlants);
 
@@ -340,9 +338,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
 export const BeetleStructuredData = ({ beetle }) => {
   if (!beetle) return null;
 
-  const detailUrl = absUrl(
-    buildInsectMetaPagePath(beetle.type, beetle.id, 'beetle'),
-  );
+  const detailUrl = absUrl(buildInsectPath(beetle, 'ja'));
 
   const hostPlantsList = extractLarvalHostPlants(beetle.hostPlantsDetailed, beetle.hostPlants);
 
@@ -473,13 +469,7 @@ export const BeetleStructuredData = ({ beetle }) => {
 export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
   if (!longhornbeetle) return null;
 
-  const detailUrl = absUrl(
-    buildInsectMetaPagePath(
-      longhornbeetle.type,
-      longhornbeetle.id,
-      'longhornbeetle',
-    ),
-  );
+  const detailUrl = absUrl(buildInsectPath(longhornbeetle, 'ja'));
   const hostPlantsList = extractLarvalHostPlants(longhornbeetle.hostPlantsDetailed, longhornbeetle.hostPlants);
 
   const structuredData = {
@@ -604,13 +594,7 @@ export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
 export const BarkBeetleStructuredData = ({ barkbeetle }) => {
   if (!barkbeetle) return null;
 
-  const detailUrl = absUrl(
-    buildInsectMetaPagePath(
-      barkbeetle.type,
-      barkbeetle.id,
-      'barkbeetle',
-    ),
-  );
+  const detailUrl = absUrl(buildInsectPath(barkbeetle, 'ja'));
   const hostPlantsList = extractLarvalHostPlants(
     barkbeetle.hostPlantsDetailed,
     barkbeetle.hostPlants,
@@ -747,9 +731,7 @@ export const BarkBeetleStructuredData = ({ barkbeetle }) => {
 export const LeafBeetleStructuredData = ({ leafbeetle }) => {
   if (!leafbeetle) return null;
 
-  const detailUrl = absUrl(
-    buildInsectMetaPagePath(leafbeetle.type, leafbeetle.id, 'leafbeetle'),
-  );
+  const detailUrl = absUrl(buildInsectPath(leafbeetle, 'ja'));
 
   const hostPlantsList = extractLarvalHostPlants(leafbeetle.hostPlantsDetailed, leafbeetle.hostPlants);
 
@@ -898,9 +880,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
 export const AphidStructuredData = ({ aphid }) => {
   if (!aphid) return null;
 
-  const detailUrl = absUrl(
-    buildInsectMetaPagePath(aphid.type, aphid.id, 'aphid'),
-  );
+  const detailUrl = absUrl(buildInsectPath(aphid, 'ja'));
 
   const hostPlantsList = extractLarvalHostPlants(
     aphid.hostPlantsDetailed,
@@ -1028,7 +1008,7 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
   if (!plant) return null;
 
   const canonicalPlantName = plant.canonicalName || plant.name;
-  const plantMetaUrl = absUrl(buildPlantMetaPagePath(canonicalPlantName));
+  const plantMetaUrl = absUrl(buildPlantPath(canonicalPlantName, 'ja'));
 
   // Create comprehensive plant species schema with detailed information
   const structuredData = {
@@ -1247,7 +1227,7 @@ export const ExplorerStructuredData = ({
     listDescription = '昆虫一覧ページから参照できる代表的な昆虫メタページ';
     itemEntries = featuredInsects.slice(0, 10).map((insect) => ({
       name: insect?.name || insect?.japaneseName || '',
-      url: absUrl(buildInsectMetaPagePath(insect?.type, insect?.id, 'moth')),
+      url: absUrl(buildInsectPath(insect, 'ja')),
       description: insect?.scientificName || '',
     })).filter((entry) => entry.name && entry.url);
   } else if (pathname === '/plant') {
@@ -1255,7 +1235,7 @@ export const ExplorerStructuredData = ({
     listDescription = '植物一覧ページから参照できる代表的な植物メタページ';
     itemEntries = featuredPlants.slice(0, 10).map((plant) => ({
       name: plant?.name || '',
-      url: absUrl(buildPlantMetaPagePath(plant?.name)),
+      url: absUrl(buildPlantPath(plant?.name, 'ja')),
       description: Number.isFinite(plant?.count)
         ? `${plant.count}種の昆虫が関連`
         : '',

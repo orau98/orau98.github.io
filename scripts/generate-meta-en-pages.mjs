@@ -7,7 +7,8 @@ import {
   buildNormalizedEntries,
   resolveImageBaseCandidates,
 } from '../src/utils/insectImageResolver.js';
-import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { buildPlantPath, INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { comparePlantImageDisplayPriority } from '../src/utils/filename.js';
 import {
   cleanString,
@@ -25,6 +26,7 @@ import {
 } from './lib/englishNaming.mjs';
 import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
+import { buildAnalyticsHeadTags } from './lib/analyticsHeadTags.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,13 +81,7 @@ const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-69820515334732
 const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}" crossorigin="anonymous"></script>`;
 const GA_MEASUREMENT_ID = process.env.VITE_GA_MEASUREMENT_ID || 'G-MFEQF99G0H';
-const GA_HEAD_TAGS = `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '${GA_MEASUREMENT_ID}');
-</script>`;
+const GA_HEAD_TAGS = buildAnalyticsHeadTags(GA_MEASUREMENT_ID);
 
 const buildLegacyInsectSlug = (displayName, insectId) => {
   const normalizedName = cleanString(displayName);
@@ -587,7 +583,7 @@ function buildPlantListItems(hostPlantsArray, plantRecords, plantDetails, aliasT
     const record = plantRecords.get(canonical);
     const detail = normalizePlantDetail(canonical, plantDetails);
     const display = buildPlantDisplay(detail, canonical);
-    const href = record ? record.href : null;
+    const href = record ? buildPlantPath(canonical, 'en') : null;
     return {
       href,
       primaryName: display.primaryName,
@@ -601,7 +597,6 @@ function buildPlantListItems(hostPlantsArray, plantRecords, plantDetails, aliasT
 function buildEnglishInsectPage({
   insect,
   section,
-  englishSlug,
   plantRecords,
   plantDetails,
   aliasToCanonical,
@@ -627,10 +622,12 @@ function buildEnglishInsectPage({
     plantDetails,
     aliasToCanonical,
   );
-  const pagePath = `/en/meta/${section.routeSegment}/${encodeURIComponent(englishSlug)}.html`;
-  const japanesePagePath = resolveJapaneseInsectMetaPath(insect, section.routeSegment);
+  const japaneseMetaPath = resolveJapaneseInsectMetaPath(insect, section.routeSegment);
+  const cleanInsect = { ...insect, type: section.type };
+  const japanesePagePath = japaneseMetaPath ? buildInsectPath(cleanInsect, 'ja') : '';
+  const englishPagePath = buildInsectPath(cleanInsect, 'en');
   const japaneseNavigationPath = japanesePagePath || `/meta/${section.routeSegment}/index.html`;
-  const canonicalUrl = `${BASE_ORIGIN}${pagePath}`;
+  const canonicalUrl = `${BASE_ORIGIN}${englishPagePath}`;
   const seasonText = cleanString(insect.emergenceTime);
   const description = [
     japaneseReference,
@@ -727,7 +724,7 @@ function buildEnglishInsectPage({
   <meta name="description" content="${escapeAttr(description)}">
   <meta name="keywords" content="${escapeAttr([primaryName, scientificName, japaneseName, section.singularLabel, familyLabels.familyLatin || familyLabels.familyJapanese].filter(Boolean).join(', '))}">
   <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
-  ${buildAlternateLanguageLinks(japanesePagePath, pagePath)}
+  ${buildAlternateLanguageLinks(japanesePagePath, englishPagePath)}
   <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
   <meta property="og:title" content="${escapeAttr(title)}">
   <meta property="og:description" content="${escapeAttr(description)}">
@@ -844,14 +841,14 @@ function buildEnglishPlantPage({
   detail,
   relatedInsects,
   plantImageFiles,
-  plantRecord,
   insectEntriesById,
 }) {
   const display = buildPlantDisplay(detail, canonicalName);
-  const pagePath = plantRecord.href;
-  const japanesePagePath = resolveJapanesePlantMetaPath(canonicalName, detail);
+  const japaneseMetaPath = resolveJapanesePlantMetaPath(canonicalName, detail);
+  const japanesePagePath = japaneseMetaPath ? buildPlantPath(canonicalName, 'ja') : '';
+  const englishPagePath = buildPlantPath(canonicalName, 'en');
   const japaneseNavigationPath = japanesePagePath || '/meta/plant/index.html';
-  const canonicalUrl = `${BASE_ORIGIN}${pagePath}`;
+  const canonicalUrl = `${BASE_ORIGIN}${englishPagePath}`;
   const robotsContent = computePlantRobotsContent({ relatedInsects, plantImageFiles });
   const mainImageUrl = plantImageFiles.length > 0
     ? buildPlantResizedImageUrl(plantImageFiles[0])
@@ -901,7 +898,7 @@ function buildEnglishPlantPage({
   <meta name="description" content="${escapeAttr(description)}">
   <meta name="keywords" content="${escapeAttr([display.primaryName, display.scientificName, display.japaneseName, display.familyLatin, display.familyJapanese, 'host plant'].filter(Boolean).join(', '))}">
   <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
-  ${buildAlternateLanguageLinks(japanesePagePath, pagePath)}
+  ${buildAlternateLanguageLinks(japanesePagePath, englishPagePath)}
   <link rel="stylesheet" href="${EN_META_STYLE_PATH}">
   <meta property="og:title" content="${escapeAttr(title)}">
   <meta property="og:description" content="${escapeAttr(description)}">
@@ -997,7 +994,7 @@ function buildEnglishPlantPage({
                 fallback: insect.id,
               });
               const japaneseReference = buildJapaneseReferenceLabel(insect.name || insect.japaneseName);
-              const href = entry ? entry.href : null;
+              const href = entry ? entry.cleanHref : null;
               return `<li>
                 <div class="insect-name">${href ? `<a href="${escapeAttr(href)}">${escapeHtml(primaryName)}</a>` : escapeHtml(primaryName)}</div>
                 ${insect.scientificName && insect.scientificName !== primaryName ? `<div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>` : ''}
@@ -1099,7 +1096,7 @@ function buildEnglishSectionIndex(section, entries, pageNumber = 1) {
         ${paginationHtml}
         <ul style="list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;padding:0;margin:1rem 0 0;">
           ${pageEntries.map((entry) => `<li style="border:1px solid var(--color-border);border-radius:var(--radius-md);padding:0.9rem 1rem;">
-            <a href="${escapeAttr(entry.href)}" style="font-weight:700;display:block;margin-bottom:0.25rem;">${escapeHtml(entry.primaryName)}</a>
+            <a href="${escapeAttr(entry.cleanHref || entry.href)}" style="font-weight:700;display:block;margin-bottom:0.25rem;">${escapeHtml(entry.primaryName)}</a>
             ${entry.scientificName && entry.scientificName !== entry.primaryName ? `<div class="insect-scientific">${formatScientificNameHTML(entry.scientificName)}</div>` : ''}
             ${entry.japaneseReference ? `<div class="meta-note">${escapeHtml(entry.japaneseReference)}</div>` : ''}
           </li>`).join('\n          ')}
@@ -1286,7 +1283,6 @@ async function generateEnglishMetaPages() {
       const html = buildEnglishInsectPage({
         insect,
         section,
-        englishSlug: slug,
         plantRecords,
         plantDetails,
         aliasToCanonical,
@@ -1297,6 +1293,7 @@ async function generateEnglishMetaPages() {
         id: insect.id,
         type,
         href: `/en/meta/${type}/${encodeURIComponent(slug)}.html`,
+        cleanHref: buildInsectPath({ ...insect, type }, 'en'),
         primaryName: getPrimaryEnglishName({
           scientificName: insect.scientificName,
           japaneseName: insect.name || insect.japaneseName,
@@ -1414,7 +1411,6 @@ async function generateEnglishMetaPages() {
         detail: plantRecord.detail,
         relatedInsects,
         plantImageFiles,
-        plantRecord,
         insectEntriesById,
       });
       const outputPath = path.join(EN_META_DIR, 'plant', `${plantRecord.slug}.html`);
@@ -1422,6 +1418,7 @@ async function generateEnglishMetaPages() {
       const display = buildPlantDisplay(plantRecord.detail, plantRecord.canonicalName);
       plantEntries.push({
         href: plantRecord.href,
+        cleanHref: buildPlantPath(plantRecord.canonicalName, 'en'),
         primaryName: display.primaryName,
         scientificName: display.scientificName,
         japaneseReference: display.japaneseReference,

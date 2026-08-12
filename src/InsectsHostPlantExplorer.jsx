@@ -48,6 +48,11 @@ import {
   stripLocalePrefix,
 } from "./utils/locale";
 import { buildExplorerDetailContext } from "./utils/navState";
+import {
+  trackCrossSearch,
+  trackDetailSelection,
+  trackSearch,
+} from "./utils/analytics";
 
 const MothList = lazyWithRetry(() => import("./components/MothList"));
 const HostPlantList = lazyWithRetry(() => import("./components/HostPlantList"));
@@ -630,9 +635,10 @@ const InsectsHostPlantExplorer = memo(
       }, 300);
     };
 
-    const commitSearchValue = useCallback((value) => {
+    const commitSearchValue = useCallback((value, { source = "submit" } = {}) => {
       const nextValue = String(value || "");
       setSearchByTab((prev) => ({ ...prev, [activeTab]: nextValue }));
+      trackSearch({ query: nextValue, scope: activeTab, source });
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
       }
@@ -671,6 +677,11 @@ const InsectsHostPlantExplorer = memo(
     const crossSearchOtherTab = useCallback(() => {
       const term = (searchByTab[activeTab] || "").trim();
       const otherTab = activeTab === "insects" ? "plants" : "insects";
+      trackCrossSearch({
+        query: term,
+        fromScope: activeTab,
+        toScope: otherTab,
+      });
       setSearchByTab((prev) => ({ ...prev, [otherTab]: term }));
       setActiveTab(otherTab);
       if (searchTimeoutRef.current) {
@@ -1832,6 +1843,11 @@ const InsectsHostPlantExplorer = memo(
       // 特定の種・植物の候補（detailPath あり）は詳細ページへ直接遷移。
       // 「科で検索」などの集合候補は従来どおり検索を確定して一覧を絞り込む。
       if (selection && typeof selection === "object" && selection.detailPath) {
+        trackDetailSelection({
+          path: selection.detailPath,
+          contentType: selection.type || activeTab,
+          source: "search_suggestion",
+        });
         // 遷移後に検索デバウンスが発火して一覧へ引き戻さないよう先にクリアする
         if (searchTimeoutRef.current) {
           clearTimeout(searchTimeoutRef.current);
@@ -1864,7 +1880,7 @@ const InsectsHostPlantExplorer = memo(
         selection && typeof selection === "object"
           ? selection.value || selection.name || ""
           : selection;
-      commitSearchValue(value);
+      commitSearchValue(value, { source: "suggestion" });
     };
 
     // ARIA Tabsパターン: 矢印キーでタブを移動し、フォーカスも追従させる

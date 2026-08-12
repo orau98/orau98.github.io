@@ -886,7 +886,7 @@ const HostPlantList = ({
         .map((name, idx) => ({
           "@type": "ListItem",
           position: idx + 1,
-          url: absUrl(`/meta/plant/${encodeURIComponent(name)}.html`),
+          url: absUrl(buildPlantPath(name, locale)),
         }));
       const id = "itemlist-plant";
       let s = document.querySelector("#" + id);
@@ -908,7 +908,7 @@ const HostPlantList = ({
       const s = document.querySelector("#itemlist-plant");
       if (s) s.remove();
     };
-  }, [embedded, mergedHostPlants]);
+  }, [embedded, mergedHostPlants, locale]);
 
   // Pre-calculate plant image mapping to avoid O(N^2) during sort
   const plantImageMap = useMemo(() => {

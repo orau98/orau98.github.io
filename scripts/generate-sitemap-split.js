@@ -140,6 +140,18 @@ function isNonCanonicalPage(filePath) {
   }
 }
 
+function getCanonicalUrl(filePath, fallbackUrl, baseUrl) {
+  try {
+    const html = fs.readFileSync(filePath, 'utf-8');
+    const href = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+    if (!href) return fallbackUrl;
+    const canonical = new URL(href, baseUrl);
+    return canonical.origin === new URL(baseUrl).origin ? canonical.href : fallbackUrl;
+  } catch {
+    return fallbackUrl;
+  }
+}
+
 function buildRobotsTxt(baseUrl) {
   // 正規の入口は sitemap.xml（分割サイトマップのインデックス）。
   // discovery-seed は、Search Console が大量の分割サイトマップを発見しきれない
@@ -335,10 +347,8 @@ function generateSplitSitemaps() {
   );
 
 
-  // NOTE:
-  // 静的シェルの無い SPA ルートは HTTP 404 になるため、種・植物単位の
-  // 検索エンジン向けサイトマップは 200 を返す静的メタページ（/meta/.../*.html）を列挙する。
-  // （一覧ハブ /moth/ 等は postbuild-cleanup.mjs のシェル生成対象なので上で登録済み）
+  // 詳細ページのサイトマップURLは、静的メタページ自身が宣言するcanonicalを正とする。
+  // メタHTMLは旧URLの互換入口として残し、検索エンジンには200を返す短い詳細URLを送る。
   const addMetaDirToSitemap = ({ key, dir, routePrefix, priority, includeIndexInMain = true }) => {
     const absDir = path.join(__dirname, dir);
     if (!fs.existsSync(absDir)) {
@@ -389,7 +399,11 @@ function generateSplitSitemaps() {
         : isRichInsectPage(file.replace(/\.html$/i, ''));
 
       sitemaps[key].push({
-        loc: `${baseUrl}${routePrefix}${encodeFilename(file)}`,
+        loc: getCanonicalUrl(
+          path.join(absDir, file),
+          `${baseUrl}${routePrefix}${encodeFilename(file)}`,
+          baseUrl,
+        ),
         lastmod: META_CONTENT_LASTMOD,
         changefreq: isRich ? 'weekly' : 'monthly',
         priority,
@@ -560,8 +574,8 @@ function generateSplitSitemaps() {
     ...sitemaps.main,
     ...sitemaps['en-main'],
     // Search Console has previously been unreliable at discovering the large
-    // split sitemap inventory. Add a bounded high-value seed of indexable meta
-    // pages so species and plant profile URLs are submitted directly too.
+    // split sitemap inventory. Add a bounded high-value seed of canonical
+    // species and plant profile URLs so the preferred routes are submitted directly too.
     ...takeDiscoverySeedUrls('moth', 500),
     ...plantProfileDiscoveryUrls,
     ...takeDiscoverySeedUrls('plant', 220),

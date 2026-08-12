@@ -6,7 +6,6 @@ import { PlantStructuredData } from './components/StructuredData';
 import ImageModal from './components/ImageModal';
 import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
-import useSeoRouteMap from './hooks/useSeoRouteMap';
 import useNearViewport from './hooks/useNearViewport';
 import {
   EN_SITE_NAME,
@@ -53,7 +52,7 @@ import {
   NOINDEX_FOLLOW_ROBOTS,
   setRobotsMetaContent,
 } from './utils/robotsMeta';
-import { buildPlantMetaPagePath, buildPlantPath } from './utils/siteTaxonomy';
+import { buildPlantPath } from './utils/siteTaxonomy';
 import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -493,7 +492,6 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
 
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], barkbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja', insectPartitionsReady = true }) => {
   const isEnglish = isEnglishLocale(locale);
-  const englishPlantRouteMap = useSeoRouteMap('plants');
   const { plantName } = useParams();
   // useParamsの値はReact Routerが復号済み。ここでの再復号は %を含む値で
   // throwし得る（ChunkErrorBoundaryがチャンク障害と誤認してリロードループになる）
@@ -871,24 +869,10 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const quizFocusHref = canonicalPlantName
     ? `${localizePath('/quiz', locale)}?mode=plant-to-insect&style=photo&focusPlant=${encodeURIComponent(canonicalPlantName)}`
     : '';
-  const plantMetaPath = buildPlantMetaPagePath(canonicalPlantName, 'ja');
-  const englishPlantMetaPath =
-    !isFamily && !isOrder && !isGenus && canonicalPlantName
-      ? englishPlantRouteMap[canonicalPlantName]
-      : null;
-  const canonicalHref = absUrl(
-    isEnglish
-      ? (
-        englishPlantMetaPath ||
-        localizePath(location.pathname || buildPlantPath(canonicalPlantName, locale), locale)
-      )
-      : plantMetaPath
-  );
-  const alternateJaHref = absUrl(plantMetaPath);
-  const alternateEnHref = absUrl(
-    englishPlantMetaPath ||
-    localizePath(location.pathname, 'en')
-  );
+  const japanesePlantPath = buildPlantPath(canonicalPlantName, 'ja');
+  const canonicalHref = absUrl(buildPlantPath(canonicalPlantName, locale));
+  const alternateJaHref = absUrl(japanesePlantPath);
+  const alternateEnHref = absUrl(buildPlantPath(canonicalPlantName, 'en'));
   const shareUrl =
     canonicalHref ||
     (typeof window !== 'undefined' && window.location?.href) ||
@@ -996,7 +980,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         const items = (classificationMembers || []).slice(0, 10).map((name, idx) => ({
           "@type": "ListItem",
           position: idx + 1,
-          url: `${absUrl(`/meta/plant/${encodeURIComponent(name)}.html`)}`
+          url: absUrl(buildPlantPath(name, locale))
         }));
         s = document.createElement('script');
         s.id = id;
@@ -1014,7 +998,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       const s = document.querySelector('#itemlist-classification');
       if (s) s.remove();
     };
-  }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName]);
+  }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName, locale]);
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...barkbeetles, ...leafbeetles, ...aphids];
