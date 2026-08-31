@@ -336,6 +336,18 @@ const extractProfileHead = (html = '') => {
     html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi),
     (match) => match[0],
   ).join('\n    ');
+  const resourceLinks = Array.from(
+    html.matchAll(/<link\b[^>]*\brel=["'](?:stylesheet|preload)["'][^>]*>/gi),
+    (match) => match[0],
+  )
+    // Vite's hashed bundle tags are reinserted from dist/index.html below.
+    // Keeping them here as profile resources would duplicate one tag on every
+    // postbuild rerun and gradually inflate the Pages artifact.
+    .filter((tag) => (
+      !/\bhref=["'](?:https:\/\/orau98\.github\.io)?\/assets\/index-[^"']+\.css/i.test(tag) &&
+      !/\brel=["']preload["']/i.test(tag)
+    ))
+    .join('\n    ');
   return {
     title,
     description: readMeta('name', 'description'),
@@ -352,7 +364,22 @@ const extractProfileHead = (html = '') => {
     twitterImageAlt: readMeta('name', 'twitter:image:alt'),
     alternateLinks,
     jsonLdScripts,
+    resourceLinks,
   };
+};
+
+// Canonical profile routes must contain the same useful HTML as their legacy
+// /meta/ source before JavaScript runs. React still mounts into #root and
+// replaces this snapshot for interactive users, while crawlers and no-JS
+// clients receive the complete profile instead of an empty app shell.
+const extractProfileBody = (html = '') => {
+  const body = String(html || '').match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
+  const main = body.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
+  return main
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/>\s+</g, '><')
+    .trim();
 };
 
 const replaceMetaContent = (html, attr, key, content) => {
@@ -534,6 +561,16 @@ const INSECT_PROFILE_ROUTE_SEGMENTS = [
   'aphid',
 ];
 
+const INSECT_PROFILE_COLLECTION_KEYS = {
+  moth: 'moths',
+  butterfly: 'butterflies',
+  beetle: 'beetles',
+  longhornbeetle: 'longhornbeetles',
+  barkbeetle: 'barkbeetles',
+  leafbeetle: 'leafbeetles',
+  aphid: 'aphids',
+};
+
 const buildInsectProfileRouteShell = ({
   indexHtml,
   routeName,
@@ -545,6 +582,7 @@ const buildInsectProfileRouteShell = ({
   const isEnglish = locale === 'en';
   const siteName = isEnglish ? EN_SITE_NAME : '昆虫植物図鑑';
   const profileHead = extractProfileHead(profileHtml);
+  const staticProfileBody = extractProfileBody(profileHtml);
   const fallbackTitle = isEnglish
     ? `${routeName} | Insect profile | ${siteName}`
     : `${routeName} | 昆虫詳細 - ${siteName}`;
@@ -606,12 +644,13 @@ ${siteIconTags}
     ${profileHead.twitterImage ? `<meta name="twitter:image" content="${escapeHtmlAttr(profileHead.twitterImage)}">` : ''}
     ${profileHead.twitterImageAlt ? `<meta name="twitter:image:alt" content="${escapeHtmlAttr(profileHead.twitterImageAlt)}">` : ''}
 ${profileHead.jsonLdScripts || renderJsonLdScript(structuredData)}
+    ${profileHead.resourceLinks}
     <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${INSECT_PROFILE_ROUTE_SHELL_MARKER} = true;</script>
     ${analyticsScript}
 ${assetTags}
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"${staticProfileBody ? ' data-static-profile="insect"' : ''}>${staticProfileBody ? `\n${staticProfileBody}\n    ` : ''}</div>
   </body>
 </html>
 `;
@@ -630,18 +669,41 @@ const ensureInsectProfileRouteShells = () => {
         baseDir: path.join('dist', segment),
         locale: 'ja',
         routeSegment: segment,
+        collectionKey: INSECT_PROFILE_COLLECTION_KEYS[segment],
       })),
       ...INSECT_PROFILE_ROUTE_SEGMENTS.map((segment) => ({
         baseDir: path.join('dist', 'en', segment),
         locale: 'en',
         routeSegment: segment,
+        collectionKey: INSECT_PROFILE_COLLECTION_KEYS[segment],
       })),
     ];
+    let englishLegacyRouteMap = {};
+    try {
+      englishLegacyRouteMap = JSON.parse(
+        readTextIfExists(path.join('dist', 'seo-route-map.insects.json')) || '{}',
+      );
+    } catch {}
     let count = 0;
     let preservedTaxonomyRedirects = 0;
 
-    for (const { baseDir, locale, routeSegment } of routeGroups) {
+    for (const { baseDir, locale, routeSegment, collectionKey } of routeGroups) {
       if (!fs.existsSync(baseDir)) continue;
+      let routeInventory = [];
+      try {
+        routeInventory = JSON.parse(
+          readTextIfExists(
+            path.join('dist', 'assets', 'data-lite', `${collectionKey}.json`),
+          ) || '[]',
+        );
+      } catch {}
+      const routeToId = new Map();
+      for (const insect of routeInventory) {
+        for (const candidate of [insect.routeName, insect.name, insect.id]) {
+          const key = String(candidate || '').trim();
+          if (key && !routeToId.has(key)) routeToId.set(key, insect.id);
+        }
+      }
       const entries = fs.readdirSync(baseDir, { withFileTypes: true });
       for (const entry of entries) {
         if (!entry.isDirectory()) continue;
@@ -663,18 +725,49 @@ const ensureInsectProfileRouteShells = () => {
         if (canonicalHref) {
           const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
           if (canonicalUrl.origin === BASE_ORIGIN) {
-            const canonicalFile = path.join(
+            let canonicalFile = path.join(
               'dist',
               ...canonicalUrl.pathname
                 .replace(/^\/+/, '')
                 .split('/')
+                .filter(Boolean)
                 .map((segment) => decodeRouteSegment(segment)),
             );
+            if (canonicalUrl.pathname.endsWith('/')) {
+              canonicalFile = path.join(canonicalFile, 'index.html');
+            }
             const canonicalHtml = readTextIfExists(canonicalFile);
             profileHtml = canonicalHtml;
             canonicalIndexable = Boolean(
               canonicalHtml && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml),
             );
+          }
+        }
+        // Prefer the generated meta source on every run. A previously written
+        // canonical shell is useful as a fallback, but it should never become
+        // the source of truth for profile styles or structured content.
+        {
+          const insectId = routeToId.get(decodedName);
+          const mappedLegacyPath = locale === 'en' && insectId
+            ? englishLegacyRouteMap[insectId]
+            : insectId
+              ? `/meta/${routeSegment}/${insectId}.html`
+              : '';
+          if (mappedLegacyPath) {
+            const legacyProfileFile = path.join(
+              'dist',
+              ...String(mappedLegacyPath)
+                .replace(/^\/+/, '')
+                .split('/')
+                .filter(Boolean)
+                .map((segment) => decodeRouteSegment(segment)),
+            );
+            const legacyProfileHtml = readTextIfExists(legacyProfileFile);
+            if (legacyProfileHtml) {
+              profileHtml = legacyProfileHtml;
+              canonicalIndexable = !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i
+                .test(legacyProfileHtml);
+            }
           }
         }
 
@@ -756,12 +849,19 @@ const buildPlantProfileRouteShell = (
   profileHtml = '',
 ) => {
   const route = buildPlantRouteMetadata(plantName, locale, canonicalIndexable, profileHtml);
+  const staticProfileBody = extractProfileBody(profileHtml);
   const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
   const assetTags = extractSpaAssetTags(indexHtml);
   const siteIconTags = extractSiteIconTags(indexHtml);
   if (!assetTags) {
     const routeFlag = `    <script>${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>\n`;
-    const html = buildSpaRouteShell(indexHtml, route);
+    let html = buildSpaRouteShell(indexHtml, route);
+    if (staticProfileBody) {
+      html = html.replace(
+        '<div id="root"></div>',
+        `<div id="root" data-static-profile="plant">\n${staticProfileBody}\n    </div>`,
+      );
+    }
     return html.includes(PLANT_PROFILE_ROUTE_SHELL_MARKER)
       ? html
       : html.replace('</head>', `${routeFlag}  </head>`);
@@ -813,12 +913,13 @@ ${alternateLinks}
     ${route.profileHead.twitterImage ? `<meta name="twitter:image" content="${escapeHtmlAttr(route.profileHead.twitterImage)}">` : ''}
     ${route.profileHead.twitterImageAlt ? `<meta name="twitter:image:alt" content="${escapeHtmlAttr(route.profileHead.twitterImageAlt)}">` : ''}
 ${route.profileHead.jsonLdScripts || renderJsonLdScript(structuredData)}
+    ${route.profileHead.resourceLinks}
     <script>${canonicalIndexable ? '' : 'window.__SEO_FORCE_NOINDEX__ = true; '}${PLANT_PROFILE_ROUTE_SHELL_MARKER} = ${JSON.stringify(plantName)};</script>
     ${analyticsScript}
 ${assetTags}
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"${staticProfileBody ? ' data-static-profile="plant"' : ''}>${staticProfileBody ? `\n${staticProfileBody}\n    ` : ''}</div>
   </body>
 </html>
 `;
@@ -826,6 +927,7 @@ ${assetTags}
 
 const readTextIfExists = (filePath) => {
   if (!fs.existsSync(filePath)) return '';
+  if (!fs.statSync(filePath).isFile()) return '';
   return fs.readFileSync(filePath, 'utf8');
 };
 
@@ -842,7 +944,7 @@ const isSafeRouteSegment = (segment) => {
   return Boolean(value && !/[\/\\\0]/.test(value));
 };
 
-const collectExistingPlantRouteIndexes = (baseDir) => {
+const collectExistingPlantRouteIndexes = (baseDir, locale, legacyRouteMap = {}) => {
   if (!fs.existsSync(baseDir)) return [];
   return fs.readdirSync(baseDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -860,15 +962,42 @@ const collectExistingPlantRouteIndexes = (baseDir) => {
             const targetSegments = canonicalUrl.pathname
               .replace(/^\/+/, '')
               .split('/')
+              .filter(Boolean)
               .map((segment) => decodeRouteSegment(segment));
             if (targetSegments.every((segment) => isSafeRouteSegment(segment))) {
-              const canonicalFile = path.join('dist', ...targetSegments);
+              let canonicalFile = path.join('dist', ...targetSegments);
+              if (canonicalUrl.pathname.endsWith('/')) {
+                canonicalFile = path.join(canonicalFile, 'index.html');
+              }
               const canonicalHtml = readTextIfExists(canonicalFile);
               profileHtml = canonicalHtml;
               canonicalIndexable = Boolean(
                 canonicalHtml && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(canonicalHtml),
               );
             }
+          }
+        }
+        // Always refresh from the generated meta document when it exists so
+        // repeated postbuilds preserve profile CSS and the latest content.
+        {
+          const mappedLegacyPath = locale === 'en' ? legacyRouteMap[plantName] : '';
+          const legacyProfileFile = mappedLegacyPath
+            ? path.join(
+              'dist',
+              ...String(mappedLegacyPath)
+                .replace(/^\/+/, '')
+                .split('/')
+                .filter(Boolean)
+                .map((segment) => decodeRouteSegment(segment)),
+            )
+            : locale === 'en'
+              ? path.join('dist', 'en', 'meta', 'plant', `${plantName}.html`)
+              : path.join('dist', 'meta', 'plant', `${plantName}.html`);
+          const legacyProfileHtml = readTextIfExists(legacyProfileFile);
+          if (legacyProfileHtml) {
+            profileHtml = legacyProfileHtml;
+            canonicalIndexable = !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i
+              .test(legacyProfileHtml);
           }
         }
       } catch {}
@@ -894,10 +1023,20 @@ const ensurePlantProfileRouteShells = () => {
       { baseDir: path.join('dist', 'plant'), locale: 'ja' },
       { baseDir: path.join('dist', 'en', 'plant'), locale: 'en' },
     ];
+    let englishLegacyRouteMap = {};
+    try {
+      englishLegacyRouteMap = JSON.parse(
+        readTextIfExists(path.join('dist', 'seo-route-map.plants.json')) || '{}',
+      );
+    } catch {}
     let count = 0;
 
     for (const { baseDir, locale } of routeGroups) {
-      const routes = collectExistingPlantRouteIndexes(baseDir);
+      const routes = collectExistingPlantRouteIndexes(
+        baseDir,
+        locale,
+        locale === 'en' ? englishLegacyRouteMap : {},
+      );
       for (const { plantName, canonicalIndexable, profileHtml, sourceDir, targetDir } of routes) {
         const routeIndexPath = path.join(targetDir, 'index.html');
         const shellHtml = buildPlantProfileRouteShell(

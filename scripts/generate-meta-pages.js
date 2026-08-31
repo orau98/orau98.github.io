@@ -240,6 +240,13 @@ function formatCitationAuthors(authors = []) {
   return authors.join('・');
 }
 
+function formatCitationContributors(entry = {}) {
+  const authors = formatCitationAuthors(entry.authors);
+  if (authors) return authors;
+  const editors = formatCitationAuthors(entry.editors);
+  return editors ? `${editors}（編）` : '';
+}
+
 function findBibliographyEntry(rawReference = '') {
   const raw = String(rawReference || '').trim();
   if (!raw) return null;
@@ -262,12 +269,35 @@ function extractAuthorYearLabel(rawReference = '') {
   return normalizeReference(raw) || raw;
 }
 
+function formatCitationShortPlain(entry, rawReference = '') {
+  if (!entry) return extractAuthorYearLabel(rawReference);
+
+  const contributors = formatCitationContributors(entry);
+  if (contributors && entry.year) return `${contributors} (${entry.year})`;
+  return contributors || entry.year || entry.title || extractAuthorYearLabel(rawReference);
+}
+
 function formatCitationPlain(entry, rawReference = '') {
   if (!entry) return extractAuthorYearLabel(rawReference);
 
-  const authors = formatCitationAuthors(entry.authors);
-  if (authors && entry.year) return `${authors} (${entry.year})`;
-  return authors || entry.year || entry.title || extractAuthorYearLabel(rawReference);
+  const contributors = formatCitationContributors(entry);
+  const contributorYear = [contributors, entry.year ? `(${entry.year})` : '']
+    .filter(Boolean)
+    .join(' ');
+  const title = [entry.title, entry.note].filter(Boolean).join(' — ');
+  const publication = entry.journal
+    ? [entry.journal, entry.issue ? `第${entry.issue}号` : '', entry.pages ? `pp. ${entry.pages}` : '']
+      .filter(Boolean)
+      .join(' ')
+    : [entry.publisher, entry.place, entry.pages].filter(Boolean).join('、');
+  const isbn = entry.isbn13 || entry.isbn10;
+
+  return [
+    contributorYear,
+    title,
+    publication,
+    isbn ? `ISBN ${isbn}` : '',
+  ].filter(Boolean).join('。');
 }
 
 function formatCitationHtml(entry, rawReference = '') {
@@ -277,15 +307,26 @@ function formatCitationHtml(entry, rawReference = '') {
   if (!link) return `<cite>${label}</cite>`;
 
   const isAssociate = isAmazonAssociateUrl(link);
-  const rel = isAssociate ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
+  const rel = isAssociate ? 'sponsored nofollow noopener noreferrer' : 'noopener noreferrer';
+  const linkLabel = isAssociate ? '購入先' : '出典ページ';
+  const associateLabel = isAssociate
+    ? '<span class="amazon-associate-link-label">（Amazonアソシエイトリンク）</span>'
+    : '';
+  return `<cite><span class="citation-bibliography">${label}</span> <a class="citation-source-link" href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${linkLabel}</a>${associateLabel}</cite>`;
+}
+
+function formatCitationShortHtml(entry, rawReference = '') {
+  const display = formatCitationShortPlain(entry, rawReference);
+  const link = entry?.url || getSourceLink(rawReference);
+  const label = escapeRedirectHtml(display);
+  if (!link) return `<cite>${label}</cite>`;
+
+  const isAssociate = isAmazonAssociateUrl(link);
+  const rel = isAssociate ? 'sponsored nofollow noopener noreferrer' : 'noopener noreferrer';
   const associateLabel = isAssociate
     ? '<span class="amazon-associate-link-label">（Amazonアソシエイトリンク）</span>'
     : '';
   return `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${label}</a>${associateLabel}</cite>`;
-}
-
-function formatCitationShortHtml(entry, rawReference = '') {
-  return formatCitationHtml(entry, rawReference);
 }
 
 function renderAmazonAssociatesDisclosureHtml(citationEntries = []) {

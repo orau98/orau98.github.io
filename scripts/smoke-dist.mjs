@@ -500,8 +500,10 @@ assertAnalyticsLoader(okinagusaRouteHtml, okinagusaRoutePath);
 assert(
   okinagusaRouteHtml.includes('window.__PLANT_ROUTE_SHELL__') &&
     okinagusaRouteHtml.includes('/assets/index-') &&
-    okinagusaRouteHtml.includes('<div id="root"></div>'),
-  'オキナグサ direct route must serve the Japanese SPA plant shell',
+    okinagusaRouteHtml.includes('/assets/meta-styles.css?v=4') &&
+    okinagusaRouteHtml.includes('<div id="root" data-static-profile="plant">') &&
+    okinagusaRouteHtml.includes('<main class="meta-content">'),
+  'オキナグサ direct route must serve static profile content plus the Japanese SPA',
 );
 assert(
   !/http-equiv=["']refresh["']/i.test(okinagusaRouteHtml),
@@ -606,8 +608,9 @@ assert(
   okinagusaEnglishRouteHtml.includes('window.__PLANT_ROUTE_SHELL__') &&
     okinagusaEnglishRouteHtml.includes('<html lang="en"') &&
     okinagusaEnglishRouteHtml.includes('/assets/index-') &&
-    okinagusaEnglishRouteHtml.includes('<div id="root"></div>'),
-  'English オキナグサ direct route must serve the English SPA plant shell',
+    okinagusaEnglishRouteHtml.includes('<div id="root" data-static-profile="plant">') &&
+    okinagusaEnglishRouteHtml.includes('<main class="meta-content">'),
+  'English オキナグサ direct route must serve static profile content plus the English SPA',
 );
 assert(
   !/http-equiv=["']refresh["']/i.test(okinagusaEnglishRouteHtml),
@@ -628,6 +631,28 @@ const insectProfileSegments = [
   'leafbeetle',
   'aphid',
 ];
+
+// Species/profile discovery must use only the short canonical namespace.
+// Legacy /meta/ documents stay live for inbound links, but submitting them in
+// the same sitemap would keep Google's canonical choice split indefinitely.
+for (const segment of [...new Set([...insectProfileSegments, 'plant'])]) {
+  const sitemapHtml = readDistText(`sitemap-${segment}.xml`);
+  const legacyProfilePattern = segment === 'plant'
+    ? /<loc>https:\/\/orau98\.github\.io\/meta\/plant\/(?!page-\d+\.html<\/loc>)[^<]+\.html<\/loc>/u
+    : new RegExp(
+      `<loc>https://orau98\\.github\\.io/meta/${segment}/species-[^<]+\\.html</loc>`,
+      'u',
+    );
+  assert(
+    !legacyProfilePattern.test(sitemapHtml),
+    `sitemap-${segment}.xml must not submit legacy /meta/ profile URLs`,
+  );
+  assert(
+    sitemapHtml.includes(`<loc>https://orau98.github.io/${segment}/`),
+    `sitemap-${segment}.xml must submit canonical /${segment}/ profile URLs`,
+  );
+}
+
 for (const segment of insectProfileSegments) {
   const routeDir = path.join(DIST_DIR, segment);
   const routeDirectories = fs.readdirSync(routeDir, { withFileTypes: true })
@@ -648,9 +673,10 @@ for (const segment of insectProfileSegments) {
   assert(
     decodedRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
       decodedRouteHtml.includes('/assets/index-') &&
-      decodedRouteHtml.includes('<div id="root"></div>') &&
+      decodedRouteHtml.includes('<div id="root" data-static-profile="insect">') &&
+      decodedRouteHtml.includes('<main class="meta-content">') &&
       decodedRouteHtml.includes(`https://orau98.github.io/${segment}/`),
-    `${segment} shared route must serve a self-canonical SPA detail shell`,
+    `${segment} shared route must serve static profile content plus a self-canonical SPA`,
   );
   assert(
     !/http-equiv=["']refresh["']/i.test(decodedRouteHtml) &&
@@ -662,10 +688,29 @@ for (const segment of insectProfileSegments) {
 const aoAtsubaRouteHtml = readDistText(path.join('moth', 'アオアツバ', 'index.html'));
 assert(
   aoAtsubaRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
-    aoAtsubaRouteHtml.includes('<div id="root"></div>') &&
+    aoAtsubaRouteHtml.includes('/assets/meta-styles.css?v=4') &&
+    aoAtsubaRouteHtml.includes('<div id="root" data-static-profile="insect">') &&
+    aoAtsubaRouteHtml.includes('<main class="meta-content">') &&
     !/http-equiv=["']refresh["']/i.test(aoAtsubaRouteHtml) &&
     !aoAtsubaRouteHtml.includes('window.location.replace'),
-  'アオアツバ reload route must keep the React insect detail instead of redirecting to /meta/',
+  'アオアツバ reload route must expose static content and keep the React detail instead of redirecting to /meta/',
+);
+
+const citationSourceHtml = readDistText(path.join('meta', 'moth', 'species-1599.html'));
+const citationCanonicalHtml = readDistText(
+  path.join('moth', 'ヒメアトスカシバ', 'index.html'),
+);
+assert(
+  citationSourceHtml.includes('<span class="citation-bibliography">') &&
+    citationSourceHtml.includes('ISBN 978-4-05-405109-6') &&
+    citationSourceHtml.includes('>購入先</a>') &&
+    citationSourceHtml.includes('rel="sponsored nofollow noopener noreferrer"'),
+  'profile references must separate full bibliography text from affiliate purchase links',
+);
+assert(
+  citationCanonicalHtml.includes('<span class="citation-bibliography">') &&
+    citationCanonicalHtml.includes('ISBN 978-4-05-405109-6'),
+  'canonical profile snapshots must preserve complete bibliography details',
 );
 
 const englishRouteMap = englishRouteMaps.insects;
@@ -684,13 +729,21 @@ for (const section of INSECT_SECTION_CONFIGS) {
         `${locale} app route has no static entry: ${routePath} (${insect.id})`,
       );
       const routeHtml = fs.readFileSync(routeFile, 'utf8');
+      const routeNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(routeHtml);
+      const mappedEnglishTarget = englishRouteMap[insect.id];
       assert(
         routeHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
-          routeHtml.includes('<div id="root"></div>') &&
           !/http-equiv=["']refresh["']/i.test(routeHtml) &&
           !routeHtml.includes('window.location.replace'),
         `${locale} app route must render the React detail without redirecting: ${routePath}`,
       );
+      if (locale === 'ja' || mappedEnglishTarget) {
+        assert(
+          routeHtml.includes('<div id="root" data-static-profile="insect">') &&
+            routeHtml.includes('<main class="meta-content">'),
+          `${locale} app route with a generated profile must expose static content: ${routePath}`,
+        );
+      }
       assert(
         routeHtml.includes(SHARED_ANALYTICS_LOADER),
         `${locale} app route must include the Google Analytics loader: ${routePath}`,
@@ -704,8 +757,6 @@ for (const section of INSECT_SECTION_CONFIGS) {
         canonicalHref === expectedCanonicalHref,
         `${locale} app route must be self-canonical: ${routePath} -> ${canonicalHref}`,
       );
-      const routeNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(routeHtml);
-      const mappedEnglishTarget = englishRouteMap[insect.id];
       if (locale === 'en' && mappedEnglishTarget) {
         const sourceProfileHtml = readDistText(mappedEnglishTarget.replace(/^\/+/, ''));
         const sourceNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(sourceProfileHtml);
