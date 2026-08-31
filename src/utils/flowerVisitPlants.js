@@ -1,4 +1,4 @@
-import { isPlantHostRecord } from './hostResource';
+import { isPlantHostRecord } from './hostResource.js';
 
 export const isFlowerVisitRecord = (record) => {
   if (!record) return false;
@@ -24,6 +24,14 @@ export const buildFlowerVisitMap = (insects = []) => {
     if (!insect) return;
     const insectName = (insect.name || insect.japaneseName || '').trim();
     if (!insectName) return;
+    if (Array.isArray(insect.flowerVisitPlants)) {
+      insect.flowerVisitPlants.forEach((rawPlant) => {
+        const plantName = normalizeFlowerVisitPlant(String(rawPlant || '').trim());
+        if (!plantName || plantName === '不明') return;
+        if (!map[plantName]) map[plantName] = [];
+        if (!map[plantName].includes(insectName)) map[plantName].push(insectName);
+      });
+    }
     const records = insect.hostPlantsDetailed;
     if (!Array.isArray(records) || records.length === 0) return;
     records.forEach((record) => {

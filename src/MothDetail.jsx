@@ -165,7 +165,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   
   // Check if data is still loading
   const totalDataLoaded = moths.length + butterflies.length + beetles.length + longhornbeetles.length + barkbeetles.length + leafbeetles.length + aphids.length;
-  const isDataLoading = totalDataLoaded === 0;
+  const isAnyInsectDataLoading = totalDataLoaded === 0;
   
   // Add debug logging for アオバシャチホコ
   if (decodedRouteParam === 'species-4601' || decodedRouteParam === 'catalog-3123' || mappedInsectId === 'species-4601') {
@@ -174,7 +174,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       mappedId: mappedInsectId,
       hasMapping: !!idMapping[decodedRouteParam],
       idMappingTable: idMapping,
-      isDataLoading: isDataLoading,
+      isDataLoading: isAnyInsectDataLoading,
       totalDataLoaded: totalDataLoaded
     });
   }
@@ -242,6 +242,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       moth = findBySlugOrName(parsed.name);
     }
   }
+
+  // 一覧用catalogは検索・カード表示に必要な項目だけを持つ。
+  // 個別種ではAppが該当分類の完全データへ差し替えるまで詳細骨格を維持する。
+  const isDataLoading = isAnyInsectDataLoading || moth?._detail === false;
 
   const resolvedInsectId = moth?.id || resolveInsectId(mappedInsectId);
   // 各分類ごとのID（構造化データ用）

@@ -88,6 +88,9 @@ const RUNTIME_DATA_FILES = [
   'assets/data-lite/barkbeetles.json',
   'assets/data-lite/leafbeetles.json',
   'assets/data-lite/aphids.json',
+  ...INSECT_SECTION_CONFIGS.map(
+    (section) => `assets/data-lite/catalog/${section.collectionKey}.json`,
+  ),
   'assets/data-lite/hostplants.json',
   'assets/data-lite/plant-details.json',
   'assets/data-lite/flower-visit-plants.json',
@@ -413,6 +416,30 @@ assert(
 
 const mothsLite = readDistJson('assets/data-lite/moths.json');
 assert(Array.isArray(mothsLite) && mothsLite.length > 0, 'moths.json must be a non-empty array');
+const mothsCatalog = readDistJson('assets/data-lite/catalog/moths.json');
+assert(
+  Array.isArray(mothsCatalog) && mothsCatalog.length === mothsLite.length,
+  'catalog/moths.json must preserve every moth list entry',
+);
+assert(
+  mothsCatalog.every(
+    (record) =>
+      record?._detail === false &&
+      !Object.hasOwn(record, 'hostPlantsDetailed') &&
+      !Object.hasOwn(record, 'generalNotes') &&
+      !Object.hasOwn(record, 'emergenceTimeDetailed'),
+  ),
+  'catalog records must exclude detail-only literature payloads',
+);
+assert(
+  mothsLite.every((record) => record?._detail === true),
+  'full insect partitions must be marked as detail-ready',
+);
+assert(
+  fs.statSync(path.join(DIST_DIR, 'assets/data-lite/catalog/moths.json')).size <
+    fs.statSync(path.join(DIST_DIR, 'assets/data-lite/moths.json')).size * 0.7,
+  'moth catalog must remain materially smaller than the detail partition',
+);
 
 const csvHeaderChecks = [
   { file: 'insects.csv', columns: ['insect_id'] },

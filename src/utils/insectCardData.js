@@ -1,4 +1,4 @@
-import { isPlantHostRecord } from './hostResource';
+import { isPlantHostRecord } from './hostResource.js';
 
 // 昆虫カード（一覧・コンパクト表示）で使う食草/訪花の表示用データ整形。
 // MothList と MothListItem の双方から参照するため独立モジュールに置く。
@@ -54,6 +54,14 @@ export const buildPlantDisplayData = (moth) => {
         .map((plant) => cleanPlantName(String(plant || '').trim()))
         .filter(Boolean);
     }
+  }
+
+  if (Array.isArray(moth?.flowerVisitPlants)) {
+    flowerNames.push(
+      ...moth.flowerVisitPlants
+        .map((plant) => cleanPlantName(String(plant || '').trim()))
+        .filter(Boolean),
+    );
   }
 
   return {

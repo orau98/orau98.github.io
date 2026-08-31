@@ -290,7 +290,9 @@ async function build() {
     }
   }
 
-  // Slim each record for list/search use
+// Full records remain the compatibility/detail payload. The explorer uses the
+// separate catalog payload below so it does not parse literature notes and
+// detailed host records for every species on first view.
 const slim = (arr) => (arr || []).map(i => ({
     id: i.id,
     name: i.name,
@@ -306,11 +308,37 @@ const slim = (arr) => (arr || []).map(i => ({
     generalNotes: Array.isArray(i.generalNotes) ? i.generalNotes : [],
     emergenceTimeDetailed: Array.isArray(i.emergenceTimeDetailed) ? i.emergenceTimeDetailed : [],
     notes: i.notes || '',
-    emergenceTime: i.emergenceTime || ''
+    emergenceTime: i.emergenceTime || '',
+    _detail: true,
+  }));
+
+  const catalogSlim = (arr) => (arr || []).map((i) => ({
+    id: i.id,
+    name: i.name,
+    routeName: i.routeName || '',
+    scientificName: i.scientificName,
+    scientificFilename: i.scientificFilename || '',
+    alternativeNames: i.alternativeNames || '',
+    synonyms: i.synonyms || '',
+    type: i.type,
+    classification: i.classification || {},
+    hostPlants: Array.isArray(i.hostPlants) ? i.hostPlants.slice() : [],
+    flowerVisitPlants: Array.from(new Set(
+      (Array.isArray(i.hostPlantsDetailed) ? i.hostPlantsDetailed : [])
+        .filter((record) => record?.isFlowerVisit === true)
+        .map((record) => record.displayName || record.name || '')
+        .filter(Boolean),
+    )),
+    notes: i.notes || '',
+    emergenceTime: i.emergenceTime || '',
+    _detail: false,
   }));
 
   const slimmedCollections = Object.fromEntries(
     INSECT_COLLECTION_KEYS.map((key) => [key, slim(normalized[key])]),
+  );
+  const catalogCollections = Object.fromEntries(
+    INSECT_COLLECTION_KEYS.map((key) => [key, catalogSlim(normalized[key])]),
   );
 
   // Ensure output dir
@@ -318,6 +346,7 @@ const slim = (arr) => (arr || []).map(i => ({
   // Write split files for lazy loading
   const write = (name, data) => {
     const p = path.join(OUT_DIR, name);
+    fs.mkdirSync(path.dirname(p), { recursive: true });
     fs.writeFileSync(p, JSON.stringify(data), 'utf-8');
     const size = fs.statSync(p).size;
     console.log('[data-lite] wrote', p, `size=${size} bytes`);
@@ -325,6 +354,7 @@ const slim = (arr) => (arr || []).map(i => ({
 
   INSECT_COLLECTION_KEYS.forEach((key) => {
     write(`${key}.json`, slimmedCollections[key]);
+    write(path.join('catalog', `${key}.json`), catalogCollections[key]);
   });
 
   // Build and write full dataset for runtime consumption
@@ -408,6 +438,7 @@ const slim = (arr) => (arr || []).map(i => ({
   const dataVersion = createHash('sha256')
     .update(JSON.stringify({
       slimmedCollections,
+      catalogCollections,
       hostPlants: fullHostPlants,
       plantDetails,
       flowerVisitPlants,

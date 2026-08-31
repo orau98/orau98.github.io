@@ -1033,8 +1033,8 @@ const InsectsHostPlantExplorer = memo(
       Object.keys(flowerVisitPlants || {}).forEach((name) => {
         if (name) names.add(name);
       });
-      return names.size;
-    }, [hostPlants, flowerVisitPlants]);
+      return Math.max(names.size, Number(summaryCounts?.hostPlants) || 0);
+    }, [hostPlants, flowerVisitPlants, summaryCounts?.hostPlants]);
     // 逆引き動線のラベル: 検索語を保持して反対カテゴリへ誘導する。
     // 件数は親側では正確に算出できない（各リストが内部に独自フィルタ＋別名正規化マージを持ち、
     // 植物詳細は遅延ロード）ため、誤った数字を出さないよう数字なしの行動リンクにしている。
