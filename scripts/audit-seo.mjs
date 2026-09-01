@@ -302,7 +302,7 @@ const validateInsectRouteHtml = (filePath, html) => {
     `${relativePath}: insect detail route must use the SPA shell`,
   );
   ensure(
-    html.includes('<div id="root"></div>'),
+    /<div\s+id=["']root["'](?:\s[^>]*)?>/i.test(html),
     `${relativePath}: insect detail route is missing the React root`,
   );
   ensure(
