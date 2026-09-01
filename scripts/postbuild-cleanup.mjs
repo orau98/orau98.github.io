@@ -1127,6 +1127,15 @@ const assertPagesSizeBudget = () => {
   const sizeBytes = getDirectorySizeBytes(distDir);
   console.log(`[postbuild] dist size after cleanup: ${formatMiB(sizeBytes)}`);
   if (sizeBytes > MAX_PAGES_DIST_BYTES) {
+    const responsiveImagesSkipped = /^(?:1|true)$/i.test(
+      String(process.env.SKIP_RESPONSIVE_IMAGES || ''),
+    );
+    if (responsiveImagesSkipped) {
+      console.warn(
+        `[postbuild] Size budget is advisory because responsive image generation was skipped: ${formatMiB(sizeBytes)} > ${formatMiB(MAX_PAGES_DIST_BYTES)}. The deploy workflow must enforce the budget after generating WebP variants.`,
+      );
+      return;
+    }
     throw new Error(
       `dist is still too large for GitHub Pages safety budget: ${formatMiB(sizeBytes)} > ${formatMiB(MAX_PAGES_DIST_BYTES)}.`,
     );
