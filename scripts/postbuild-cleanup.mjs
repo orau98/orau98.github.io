@@ -22,19 +22,13 @@ const EN_HOME_NOSCRIPT = `    <noscript>
           <div>
             <h2 style="font-size: 1rem; margin: 0 0 6px; color: #064e3b;">Browse insects</h2>
             <ul style="margin: 0 0 0 18px; padding: 0;">
-              <li><a href="/en/meta/moth/index.html">Moths</a></li>
-              <li><a href="/en/meta/butterfly/index.html">Butterflies</a></li>
-              <li><a href="/en/meta/beetle/index.html">Jewel beetles</a></li>
-              <li><a href="/en/meta/longhornbeetle/index.html">Longhorn beetles</a></li>
-              <li><a href="/en/meta/barkbeetle/index.html">Bark beetles</a></li>
-              <li><a href="/en/meta/leafbeetle/index.html">Leaf beetles</a></li>
-              <li><a href="/en/meta/aphid/index.html">Aphids</a></li>
+              <li><a href="/en/moth/">Insect search</a></li>
             </ul>
           </div>
           <div>
             <h2 style="font-size: 1rem; margin: 0 0 6px; color: #064e3b;">Browse plants</h2>
             <ul style="margin: 0 0 0 18px; padding: 0;">
-              <li><a href="/en/meta/plant/index.html">Plant pages</a></li>
+              <li><a href="/en/plant/">Plant search</a></li>
             </ul>
           </div>
           <div>
@@ -80,8 +74,8 @@ const EN_HOME_STRUCTURED_DATA = [
   {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'SiteNavigationElement', name: 'Insects', url: `${BASE_ORIGIN}/en/meta/moth/index.html` },
-      { '@type': 'SiteNavigationElement', name: 'Plants', url: `${BASE_ORIGIN}/en/meta/plant/index.html` },
+      { '@type': 'SiteNavigationElement', name: 'Insects', url: `${BASE_ORIGIN}/en/moth/` },
+      { '@type': 'SiteNavigationElement', name: 'Plants', url: `${BASE_ORIGIN}/en/plant/` },
       { '@type': 'SiteNavigationElement', name: 'Four-choice quiz', url: `${BASE_ORIGIN}/en/quiz/` },
     ],
   },
@@ -271,6 +265,7 @@ const SPA_ROUTE_SHELLS = [
 ];
 const PLANT_PROFILE_ROUTE_SHELL_MARKER = 'window.__PLANT_ROUTE_SHELL__';
 const INSECT_PROFILE_ROUTE_SHELL_MARKER = 'window.__INSECT_ROUTE_SHELL__';
+const LEGACY_META_COMPATIBILITY_MARKER = 'window.__LEGACY_META_COMPATIBILITY__';
 const targets = [
   // Serve only generated responsive insect images on GitHub Pages.
   path.join('dist', 'images', 'insects'),
@@ -659,6 +654,10 @@ ${assetTags}
 // The generators create route inventories before Vite knows the hashed asset
 // names. Replace those intermediate redirect files with lightweight SPA entry
 // shells so a direct visit or reload keeps the same React detail experience.
+const extractCanonicalHref = (html = '') => String(html || '').match(
+  /<link\s+rel=["']canonical["']\s+href=(?:"([^"]+)"|'([^']+)')/i,
+)?.slice(1).find(Boolean) || '';
+
 const ensureInsectProfileRouteShells = () => {
   try {
     const indexPath = path.join('dist', 'index.html');
@@ -721,7 +720,7 @@ const ensureInsectProfileRouteShells = () => {
         }
         let canonicalIndexable = false;
         let profileHtml = '';
-        const canonicalHref = sourceHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+        const canonicalHref = extractCanonicalHref(sourceHtml);
         if (canonicalHref) {
           const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
           if (canonicalUrl.origin === BASE_ORIGIN) {
@@ -763,7 +762,7 @@ const ensureInsectProfileRouteShells = () => {
                 .map((segment) => decodeRouteSegment(segment)),
             );
             const legacyProfileHtml = readTextIfExists(legacyProfileFile);
-            if (legacyProfileHtml) {
+            if (legacyProfileHtml && !legacyProfileHtml.includes(LEGACY_META_COMPATIBILITY_MARKER)) {
               profileHtml = legacyProfileHtml;
               canonicalIndexable = !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i
                 .test(legacyProfileHtml);
@@ -955,7 +954,7 @@ const collectExistingPlantRouteIndexes = (baseDir, locale, legacyRouteMap = {}) 
       let profileHtml = '';
       try {
         const sourceHtml = fs.readFileSync(indexPath, 'utf8');
-        const canonicalHref = sourceHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+        const canonicalHref = extractCanonicalHref(sourceHtml);
         if (canonicalHref) {
           const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
           if (canonicalUrl.origin === BASE_ORIGIN) {
@@ -994,7 +993,7 @@ const collectExistingPlantRouteIndexes = (baseDir, locale, legacyRouteMap = {}) 
               ? path.join('dist', 'en', 'meta', 'plant', `${plantName}.html`)
               : path.join('dist', 'meta', 'plant', `${plantName}.html`);
           const legacyProfileHtml = readTextIfExists(legacyProfileFile);
-          if (legacyProfileHtml) {
+          if (legacyProfileHtml && !legacyProfileHtml.includes(LEGACY_META_COMPATIBILITY_MARKER)) {
             profileHtml = legacyProfileHtml;
             canonicalIndexable = !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i
               .test(legacyProfileHtml);
@@ -1061,6 +1060,164 @@ const ensurePlantProfileRouteShells = () => {
   } catch (error) {
     console.warn('[postbuild] Failed to sync plant profile SPA route shells:', error?.message || error);
   }
+};
+
+const LEGACY_META_DETAIL_ROUTE_PATTERN = /^\/(?:en\/)?(?:moth|butterfly|beetle|longhornbeetle|barkbeetle|leafbeetle|aphid|plant)\/[^/]+\/$/;
+
+const collectHtmlFiles = (rootDir) => {
+  if (!fs.existsSync(rootDir)) return [];
+  const files = [];
+  const stack = [rootDir];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) stack.push(fullPath);
+      else if (entry.isFile() && entry.name.endsWith('.html')) files.push(fullPath);
+    }
+  }
+  return files.sort((a, b) => a.localeCompare(b, 'en'));
+};
+
+const extractCanonicalPath = (html = '') => {
+  const rawHref = html.match(/<link\s+rel=["']canonical["'][^>]*href=(["'])(.*?)\1/i)?.[2];
+  const href = rawHref
+    ?.replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/(?:&#39;|&#x27;)/gi, "'");
+  if (!href) return '';
+  const url = new URL(href, BASE_ORIGIN);
+  return url.origin === BASE_ORIGIN ? url.pathname : '';
+};
+
+const legacyMetaPathToFile = (pathname) => {
+  const segments = pathname
+    .replace(/^\/+/, '')
+    .split('/')
+    .filter(Boolean)
+    .map((segment) => decodeRouteSegment(segment));
+  return segments.every((segment) => isSafeRouteSegment(segment))
+    ? path.join('dist', ...segments)
+    : '';
+};
+
+const resolveLegacyMetaDetailTarget = (sourceFile) => {
+  let currentFile = sourceFile;
+  const visited = new Set();
+  for (let depth = 0; depth < 8; depth++) {
+    const html = readTextIfExists(currentFile);
+    const canonicalPath = extractCanonicalPath(html);
+    if (LEGACY_META_DETAIL_ROUTE_PATTERN.test(canonicalPath)) return canonicalPath;
+    if (!/^\/(?:en\/)?meta\//.test(canonicalPath)) return '';
+    const nextFile = legacyMetaPathToFile(canonicalPath);
+    if (!nextFile || visited.has(nextFile)) return '';
+    visited.add(nextFile);
+    currentFile = nextFile;
+  }
+  return '';
+};
+
+const legacyMetaHubTarget = (sourceFile) => {
+  const relative = path.relative('dist', sourceFile).split(path.sep);
+  const isEnglish = relative[0] === 'en';
+  const sectionIndex = isEnglish ? 2 : 1;
+  const section = relative[sectionIndex];
+  return `/${isEnglish ? 'en/' : ''}${section === 'plant' ? 'plant' : 'moth'}/`;
+};
+
+const cleanRouteShellFile = (targetPath) => {
+  const segments = targetPath
+    .replace(/^\/+|\/+$/g, '')
+    .split('/')
+    .filter(Boolean)
+    .map((segment) => decodeRouteSegment(segment));
+  return path.join('dist', ...segments, 'index.html');
+};
+
+const buildLegacyMetaCompatibilityShell = ({ cleanHtml, sourceHtml, sourcePath, targetPath }) => {
+  const sourceNoindex = /<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(sourceHtml);
+  let html = cleanHtml.replace(
+    /<div\s+id=["']root["'][^>]*>[\s\S]*<\/div>\s*<\/body>/i,
+    '<div id="root"></div>\n  </body>',
+  ).replace(
+    /^[^\S\r\n]*<link\b[^>\r\n]*meta-styles\.css[^>\r\n]*>\s*$/gim,
+    '',
+  );
+  if (!html.includes('<div id="root"></div>')) {
+    throw new Error(`Unable to reduce legacy compatibility shell for ${sourcePath}`);
+  }
+  if (sourceNoindex) {
+    html = html.replace(
+      /(<meta\s+name=["']robots["'][^>]*content=["'])[^"']*(["'])/i,
+      `$1${SPA_ROUTE_NOINDEX_ROBOTS}$2`,
+    );
+  }
+  const bootstrap = `
+    <script>
+      ${LEGACY_META_COMPATIBILITY_MARKER} = true;
+      window.__LEGACY_META_ENTRY_PATH__ = ${JSON.stringify(sourcePath)};
+      window.__LEGACY_META_TARGET_PATH__ = ${JSON.stringify(targetPath)};
+      window.history.replaceState(
+        window.history.state,
+        '',
+        window.__LEGACY_META_TARGET_PATH__ + window.location.search + window.location.hash
+      );
+    </script>`;
+  const noscript = `<noscript><p><a href="${escapeHtmlAttr(targetPath)}">Continue to the current page</a></p></noscript>`;
+  return html
+    .replace(/<head([^>]*)>/i, `<head$1>${bootstrap}`)
+    .replace('</body>', `  ${noscript}\n  </body>`);
+};
+
+// Keep every published /meta/ URL as a 200-compatible entry point while the
+// clean URL is canonical. Visitors receive the same React shell, and the URL
+// is normalized without a reload so query strings and fragments survive.
+const ensureLegacyMetaCompatibilityShells = () => {
+  const roots = [path.join('dist', 'meta'), path.join('dist', 'en', 'meta')];
+  // This pagination URL was previously published. The current English moth
+  // inventory needs only four pages, but the fifth URL remains a compatibility
+  // entry so existing external links do not regress to the Pages 404 shell.
+  const retiredHubAliases = [path.join('dist', 'en', 'meta', 'moth', 'page-5.html')];
+  const sourceFiles = roots.flatMap(collectHtmlFiles);
+  for (const aliasFile of retiredHubAliases) {
+    if (!sourceFiles.includes(aliasFile)) sourceFiles.push(aliasFile);
+  }
+  let detailCount = 0;
+  let hubCount = 0;
+  let noindexCount = 0;
+
+  for (const sourceFile of sourceFiles.sort((a, b) => a.localeCompare(b, 'en'))) {
+    const sourceHtml = readTextIfExists(sourceFile);
+    const basename = path.basename(sourceFile);
+    const isHub = basename === 'index.html' || /^page-\d+\.html$/i.test(basename);
+    const targetPath = isHub
+      ? legacyMetaHubTarget(sourceFile)
+      : resolveLegacyMetaDetailTarget(sourceFile);
+    if (!targetPath) {
+      throw new Error(`Unable to resolve clean route for ${sourceFile}`);
+    }
+    const targetFile = cleanRouteShellFile(targetPath);
+    const cleanHtml = readTextIfExists(targetFile);
+    if (!cleanHtml || !/<div\s+id=["']root["'][^>]*>/i.test(cleanHtml)) {
+      throw new Error(`React route shell is missing for ${sourceFile}: ${targetFile}`);
+    }
+    const sourcePath = `/${path.relative('dist', sourceFile).split(path.sep).map(encodeURIComponent).join('/')}`;
+    const shellHtml = buildLegacyMetaCompatibilityShell({
+      cleanHtml,
+      sourceHtml,
+      sourcePath,
+      targetPath,
+    });
+    fs.mkdirSync(path.dirname(sourceFile), { recursive: true });
+    fs.writeFileSync(sourceFile, shellHtml, 'utf8');
+    if (isHub) hubCount++;
+    else detailCount++;
+    if (/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(sourceHtml)) noindexCount++;
+  }
+
+  console.log(`[postbuild] Synced ${detailCount} legacy meta detail compatibility shell(s).`);
+  console.log(`[postbuild] Synced ${hubCount} legacy meta hub compatibility shell(s).`);
+  console.log(`[postbuild] Preserved noindex on ${noindexCount} legacy meta alias shell(s).`);
 };
 
 const getDirectorySizeBytes = (dirPath) => {
@@ -1181,6 +1338,7 @@ ensureSpa404();
 ensureSpaRouteShells();
 ensureInsectProfileRouteShells();
 ensurePlantProfileRouteShells();
+ensureLegacyMetaCompatibilityShells();
 syncGeneratedDiscoveryArtifacts();
 pruneRedundantInsectImageVariants();
 assertPagesSizeBudget();

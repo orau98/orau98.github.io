@@ -66,8 +66,8 @@ const buildInsectImageObject = (insect, caption, description) => {
 };
 
 const buildExplorerCanonicalUrl = (pathname = '/') => {
-  if (pathname === '/moth') return absUrl('/meta/moth/index.html');
-  if (pathname === '/plant') return absUrl('/meta/plant/index.html');
+  if (pathname === '/moth') return absUrl('/moth/');
+  if (pathname === '/plant') return absUrl('/plant/');
   return absUrl('/');
 };
 
@@ -184,7 +184,7 @@ export const MothStructuredData = ({ moth }) => {
         "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/meta/moth/index.html')
+        "item": absUrl('/moth/')
       },
       {
         "@type": "ListItem",
@@ -315,7 +315,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
         "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/meta/butterfly/index.html')
+        "item": absUrl('/moth/')
       },
       {
         "@type": "ListItem",
@@ -446,7 +446,7 @@ export const BeetleStructuredData = ({ beetle }) => {
         "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/meta/beetle/index.html')
+        "item": absUrl('/moth/')
       },
       {
         "@type": "ListItem",
@@ -572,7 +572,7 @@ export const LonghornBeetleStructuredData = ({ longhornbeetle }) => {
         "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/meta/longhornbeetle/index.html')
+        "item": absUrl('/moth/')
       },
       {
         "@type": "ListItem",
@@ -708,7 +708,7 @@ export const BarkBeetleStructuredData = ({ barkbeetle }) => {
         '@type': 'ListItem',
         position: 2,
         name: 'キクイムシ',
-        item: absUrl('/meta/barkbeetle/index.html'),
+        item: absUrl('/moth/'),
       },
       {
         '@type': 'ListItem',
@@ -858,7 +858,7 @@ export const LeafBeetleStructuredData = ({ leafbeetle }) => {
         "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/meta/leafbeetle/index.html')
+        "item": absUrl('/moth/')
       },
       {
         "@type": "ListItem",
@@ -984,7 +984,7 @@ export const AphidStructuredData = ({ aphid }) => {
         "@type": "ListItem",
         "position": 2,
         "name": "昆虫",
-        "item": absUrl('/meta/aphid/index.html')
+        "item": absUrl('/moth/')
       },
       {
         "@type": "ListItem",
@@ -1105,7 +1105,7 @@ export const PlantStructuredData = ({ plant, relatedInsects }) => {
         "@type": "ListItem", 
         "position": 2,
         "name": "植物",
-        "item": absUrl('/meta/plant/index.html')
+        "item": absUrl('/plant/')
       },
       {
         "@type": "ListItem",
@@ -1244,12 +1244,12 @@ export const ExplorerStructuredData = ({
     itemEntries = [
       ...INSECT_SECTION_CONFIGS.map((section) => ({
         name: `${section.label} ${counts[section.collectionKey] || 0}種`,
-        url: absUrl(`/meta/${section.routeSegment}/index.html`),
+        url: absUrl('/moth/'),
         description: `${section.label}のメタページ一覧`,
       })),
       {
         name: `植物 ${counts.hostPlants || 0}種`,
-        url: absUrl('/meta/plant/index.html'),
+        url: absUrl('/plant/'),
         description: '食草・訪花植物のメタページ一覧',
       },
     ];

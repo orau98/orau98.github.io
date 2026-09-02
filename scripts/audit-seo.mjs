@@ -6,6 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.join(__dirname, '..');
 const DIST_DIR = path.join(ROOT, 'dist');
+const PUBLIC_DIR = path.join(ROOT, 'public');
 const SITE_ORIGIN = 'https://orau98.github.io';
 
 const failures = [];
@@ -525,13 +526,45 @@ const validateInternalMetaLinks = (filePath, html) => {
 
 const validateMetaFile = (filePath) => {
   const html = readFile(filePath);
-  if (isRedirectStub(html)) {
-    validateLegacyRedirectHtml(filePath, html);
-  } else {
-    validateHtml(filePath, html, { requireAnalytics: true });
-    recordHreflangEntry(filePath, html);
-    validateInternalMetaLinks(filePath, html);
+  const relativePath = path.relative(ROOT, filePath);
+  validateHtml(filePath, html);
+  ensure(
+    html.includes('window.__LEGACY_META_COMPATIBILITY__') &&
+      html.includes('window.__LEGACY_META_ENTRY_PATH__') &&
+      html.includes('window.__LEGACY_META_TARGET_PATH__'),
+    `${relativePath}: missing legacy meta compatibility context`,
+  );
+  ensure(html.includes('<div id="root"></div>'), `${relativePath}: missing empty React root`);
+  ensure(html.includes('/assets/index-'), `${relativePath}: missing React assets`);
+  ensure(html.includes('window.history.replaceState'), `${relativePath}: missing history normalization`);
+  ensure(
+    html.includes('window.location.search + window.location.hash'),
+    `${relativePath}: query/hash preservation is missing`,
+  );
+  ensure(!getMetaHttpEquivContent(html, 'refresh'), `${relativePath}: meta refresh must be retired`);
+  ensure(!/window\.location\.replace\(/.test(html), `${relativePath}: location.replace must be retired`);
+  ensure(!html.includes('meta-styles.css'), `${relativePath}: old static design stylesheet remains`);
+  const canonical = getLinkHref(html, 'canonical');
+  const ogUrl = getMetaContent(html, 'property', 'og:url');
+  ensure(!/^https:\/\/orau98\.github\.io\/(?:en\/)?meta\//.test(canonical), `${relativePath}: canonical is not clean`);
+  ensure(!/^https:\/\/orau98\.github\.io\/(?:en\/)?meta\//.test(ogUrl), `${relativePath}: og:url is not clean`);
+  ensure(
+    !getJsonLdBlocks(html).some((block) => /https:\/\/orau98\.github\.io\/(?:en\/)?meta\//.test(block)),
+    `${relativePath}: JSON-LD contains a legacy meta URL`,
+  );
+
+  const publicSource = path.join(PUBLIC_DIR, path.relative(DIST_DIR, filePath));
+  if (fs.existsSync(publicSource)) {
+    const sourceRobots = getMetaContent(readFile(publicSource), 'name', 'robots');
+    if (sourceRobots.includes('noindex')) {
+      ensure(
+        getMetaContent(html, 'name', 'robots').includes('noindex'),
+        `${relativePath}: source noindex alias became indexable`,
+      );
+    }
   }
+  recordHreflangEntry(filePath, html);
+  validateInternalMetaLinks(filePath, html);
 };
 
 for (const filePath of metaFiles) {
@@ -548,6 +581,19 @@ if (fs.existsSync(englishMetaDir)) {
     validateMetaFile(filePath);
   }
 }
+
+const allLegacyMetaFiles = [...metaFiles, ...englishMetaFiles];
+const legacyHubFiles = allLegacyMetaFiles.filter((filePath) =>
+  /^(?:index|page-\d+)\.html$/i.test(path.basename(filePath)),
+);
+ensure(
+  allLegacyMetaFiles.length - legacyHubFiles.length === 29583,
+  `legacy meta detail inventory mismatch: expected 29583, got ${allLegacyMetaFiles.length - legacyHubFiles.length}`,
+);
+ensure(
+  legacyHubFiles.length === 37,
+  `legacy meta hub inventory mismatch: expected 37, got ${legacyHubFiles.length}`,
+);
 
 // hreflang 相互整合: 別言語ページを hreflang で指す場合、相手側からも
 // hreflang で指し返されていないと Google はアノテーション自体を無視する。
@@ -674,6 +720,14 @@ validateSitemapUrlSet(path.join(DIST_DIR, 'sitemap-plant.xml'), {
   minUrls: 1000,
   requiredPrefixes: [`${SITE_ORIGIN}/plant/`],
 });
+for (const entry of fs.readdirSync(DIST_DIR, { withFileTypes: true })) {
+  if (!entry.isFile() || !/^sitemap.*\.xml$/i.test(entry.name)) continue;
+  const sitemapBody = readFile(path.join(DIST_DIR, entry.name));
+  ensure(
+    !/<loc>https:\/\/orau98\.github\.io\/(?:en\/)?meta\//.test(sitemapBody),
+    `dist/${entry.name}: legacy meta URL remains in sitemap`,
+  );
+}
 validateSpa404(path.join(DIST_DIR, '404.html'));
 
 if (failures.length > 0) {

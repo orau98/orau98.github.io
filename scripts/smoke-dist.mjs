@@ -12,6 +12,7 @@ import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
+const PUBLIC_DIR = path.join(ROOT, 'public');
 const RESPONSIVE_IMAGES_SKIPPED = process.env.SKIP_RESPONSIVE_IMAGES === '1';
 const KAMIKIRI_AUDIT_PATH = path.join(
   ROOT,
@@ -145,6 +146,24 @@ assert(
 
 const readDistText = (relativePath) =>
   fs.readFileSync(path.join(DIST_DIR, relativePath), 'utf8');
+const readPublicText = (relativePath) =>
+  fs.readFileSync(path.join(PUBLIC_DIR, relativePath), 'utf8');
+
+const assertLegacyMetaCompatibility = (html, sourcePath) => {
+  const canonicalHref = html.match(
+    /<link\s+rel=["']canonical["'][^>]*href=(?:"([^"]+)"|'([^']+)')/i,
+  )?.slice(1).find(Boolean) || '';
+  assert(
+    html.includes('window.__LEGACY_META_COMPATIBILITY__') &&
+      html.includes('window.history.replaceState') &&
+      html.includes('window.location.search + window.location.hash') &&
+      html.includes('<div id="root"></div>') &&
+      !/http-equiv=["']refresh["']/i.test(html) &&
+      !/window\.location\.replace\(/.test(html) &&
+      !/https:\/\/orau98\.github\.io\/(?:en\/)?meta\//.test(canonicalHref),
+    `${sourcePath} must enter the clean React route without a redirect reload`,
+  );
+};
 
 const siteUrlToDistRelativeFile = (href) => {
   const pathname = decodeURIComponent(new URL(href, 'https://orau98.github.io').pathname);
@@ -306,9 +325,9 @@ const japaneseHomeNoscript = japaneseHomeBody.match(/<noscript>([\s\S]*?)<\/nosc
 assert(
   japaneseHomeNoscript.includes('JavaScript が無効な環境では') &&
     japaneseHomeNoscript.includes('植物・科から探す') &&
-    japaneseHomeNoscript.includes('/meta/moth/index.html') &&
-    japaneseHomeNoscript.includes('/meta/butterfly/index.html') &&
-    japaneseHomeNoscript.includes('/meta/plant/index.html'),
+    japaneseHomeNoscript.includes('/moth/') &&
+    japaneseHomeNoscript.includes('/plant/') &&
+    !japaneseHomeNoscript.includes('/meta/'),
   'Japanese home must retain generic static navigation when JavaScript is unavailable',
 );
 
@@ -327,11 +346,17 @@ for (const targetUrl of staticIndexTargets) {
     `static index target is missing: ${targetUrl}`,
   );
   const targetHtml = readDistText(targetPath);
+  const cleanHubUrl = targetUrl.startsWith('/en/')
+    ? targetUrl.includes('/plant/') ? '/en/plant/' : '/en/moth/'
+    : targetUrl.includes('/plant/') ? '/plant/' : '/moth/';
   assert(
-    hasIndexFollowRobots(targetHtml) &&
-      targetHtml.includes(`rel="canonical" href="https://orau98.github.io${targetUrl}"`) &&
-      !/http-equiv=["']refresh["']/i.test(targetHtml),
-    `static index must be indexable, self-canonical, and direct: ${targetUrl}`,
+    targetHtml.includes('window.__LEGACY_META_COMPATIBILITY__') &&
+      targetHtml.includes('<div id="root"></div>') &&
+      targetHtml.includes(`rel="canonical" href="https://orau98.github.io${cleanHubUrl}"`) &&
+      targetHtml.includes('window.history.replaceState') &&
+      !/http-equiv=["']refresh["']/i.test(targetHtml) &&
+      !/window\.location\.replace\(/.test(targetHtml),
+    `legacy index must enter the clean React hub without reloading: ${targetUrl}`,
   );
 }
 
@@ -373,7 +398,7 @@ const exactScientificPlantLinkCases = [
   },
 ];
 for (const { source, scientificName, canonicalName } of exactScientificPlantLinkCases) {
-  const html = readDistText(source);
+  const html = readPublicText(source);
   const canonicalHref = `/plant/${encodeURIComponent(canonicalName)}/`;
   const invalidHref = `/plant/${encodeURIComponent(scientificName)}/`;
   assert(
@@ -382,7 +407,7 @@ for (const { source, scientificName, canonicalName } of exactScientificPlantLink
   );
 }
 
-const unresolvedScientificPlantHtml = readDistText('meta/moth/species-0352.html');
+const unresolvedScientificPlantHtml = readPublicText('meta/moth/species-0352.html');
 assert(
   unresolvedScientificPlantHtml.includes('Artemisia laciniata') &&
     !unresolvedScientificPlantHtml.includes(
@@ -515,7 +540,7 @@ assert(
   'オキナグサ interactive route must be the self-canonical plant profile',
 );
 
-const identificationProfileHtml = readDistText('meta/plant/グスクカンアオイ.html');
+const identificationProfileHtml = readPublicText('meta/plant/グスクカンアオイ.html');
 assert(
   identificationProfileHtml.includes('類似種との見分け方') &&
     identificationProfileHtml.includes('比較対象') &&
@@ -525,7 +550,7 @@ assert(
 
 const indexableProfileName = 'アカミノルイヨウショウマ';
 const indexableProfileRelativePath = `meta/plant/${indexableProfileName}.html`;
-const indexableProfileHtml = readDistText(indexableProfileRelativePath);
+const indexableProfileHtml = readPublicText(indexableProfileRelativePath);
 const indexableProfileUrl = `https://orau98.github.io/plant/${encodeURIComponent(indexableProfileName)}/`;
 assert(
   hasIndexFollowRobots(indexableProfileHtml) &&
@@ -549,7 +574,7 @@ assert(
 );
 
 const thinProfileName = 'ナガバギシギシ';
-const thinProfileHtml = readDistText(`meta/plant/${thinProfileName}.html`);
+const thinProfileHtml = readPublicText(`meta/plant/${thinProfileName}.html`);
 const thinProfileUrl = `https://orau98.github.io/plant/${encodeURIComponent(thinProfileName)}/`;
 assert(
   !hasIndexFollowRobots(thinProfileHtml) &&
@@ -557,9 +582,9 @@ assert(
   'an identification-only thin profile must remain noindex',
 );
 
-const plantHubHtml = fs.readdirSync(path.join(DIST_DIR, 'meta', 'plant'))
-  .filter((file) => /^index(?:-\d+)?\.html$/.test(file))
-  .map((file) => readDistText(path.join('meta', 'plant', file)))
+const plantHubHtml = fs.readdirSync(path.join(PUBLIC_DIR, 'meta', 'plant'))
+  .filter((file) => /^(?:index|page-\d+)\.html$/.test(file))
+  .map((file) => readPublicText(path.join('meta', 'plant', file)))
   .join('\n');
 const plantSitemapHtml = readDistText('sitemap-plant.xml');
 const discoverySeedHtml = readDistText('search-console-discovery-seed.xml');
@@ -584,7 +609,7 @@ assert(
 );
 
 const kihadaDetail = readDistJson('assets/data-lite/plant-details.json').キハダ;
-const kihadaProfileHtml = readDistText('meta/plant/キハダ.html');
+const kihadaProfileHtml = readPublicText('meta/plant/キハダ.html');
 assert(
   kihadaDetail?.profile?.habit === '落葉高木' &&
     kihadaDetail?.additionalProfiles?.[0]?.sourcePlantName === 'ミヤマキハダ' &&
@@ -696,15 +721,14 @@ assert(
   'アオアツバ reload route must expose static content and keep the React detail instead of redirecting to /meta/',
 );
 
-const citationSourceHtml = readDistText(path.join('meta', 'moth', 'species-1599.html'));
 const citationCanonicalHtml = readDistText(
   path.join('moth', 'ヒメアトスカシバ', 'index.html'),
 );
 assert(
-  citationSourceHtml.includes('<span class="citation-bibliography">') &&
-    citationSourceHtml.includes('ISBN 978-4-05-405109-6') &&
-    citationSourceHtml.includes('>購入先</a>') &&
-    citationSourceHtml.includes('rel="sponsored nofollow noopener noreferrer"'),
+  citationCanonicalHtml.includes('<span class="citation-bibliography">') &&
+    citationCanonicalHtml.includes('ISBN 978-4-05-405109-6') &&
+    citationCanonicalHtml.includes('>購入先</a>') &&
+    citationCanonicalHtml.includes('rel="sponsored nofollow noopener noreferrer"'),
   'profile references must separate full bibliography text from affiliate purchase links',
 );
 assert(
@@ -758,11 +782,9 @@ for (const section of INSECT_SECTION_CONFIGS) {
         `${locale} app route must be self-canonical: ${routePath} -> ${canonicalHref}`,
       );
       if (locale === 'en' && mappedEnglishTarget) {
-        const sourceProfileHtml = readDistText(mappedEnglishTarget.replace(/^\/+/, ''));
-        const sourceNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(sourceProfileHtml);
         assert(
-          routeNoindex === sourceNoindex,
-          `${locale} app route robots must match its source profile: ${routePath}`,
+          !routeNoindex,
+          `${locale} mapped app route must remain indexable: ${routePath}`,
         );
       } else if (locale === 'en') {
         assert(
@@ -776,7 +798,7 @@ for (const section of INSECT_SECTION_CONFIGS) {
             path.join(DIST_DIR, 'meta', candidate, `${insect.id}.html`),
           ));
         assert(sourceProfileSegment, `missing Japanese source profile for ${insect.id}`);
-        const sourceProfileHtml = readDistText(`meta/${sourceProfileSegment}/${insect.id}.html`);
+        const sourceProfileHtml = readPublicText(`meta/${sourceProfileSegment}/${insect.id}.html`);
         const sourceNoindex = /name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(sourceProfileHtml);
         assert(
           routeNoindex === sourceNoindex,
@@ -811,7 +833,7 @@ assert(
   'insect names containing a slash must fall back to a stable id route',
 );
 
-const englishMothHubDir = path.join(DIST_DIR, 'en', 'meta', 'moth');
+const englishMothHubDir = path.join(PUBLIC_DIR, 'en', 'meta', 'moth');
 const englishMothHubFiles = fs.readdirSync(englishMothHubDir)
   .filter((filename) => filename === 'index.html' || /^page-\d+\.html$/.test(filename))
   .sort();
@@ -822,7 +844,7 @@ assert(
 const englishMothHubLinks = new Set(
   englishMothHubFiles
     .flatMap((filename) => Array.from(
-      readDistText(path.join('en', 'meta', 'moth', filename))
+      readPublicText(path.join('en', 'meta', 'moth', filename))
         .matchAll(/href=["']([^"']+)["']/g),
       (match) => match[1],
     )),
@@ -831,7 +853,7 @@ const missingEnglishMothHubLinks = fs.readdirSync(englishMothHubDir)
   .filter((filename) => filename.endsWith('.html'))
   .filter((filename) => filename !== 'index.html' && !/^page-\d+\.html$/.test(filename))
   .filter((filename) => {
-    const html = readDistText(path.join('en', 'meta', 'moth', filename));
+    const html = readPublicText(path.join('en', 'meta', 'moth', filename));
     if (!/name=["']robots["'] content=["']index, follow/i.test(html)) return false;
     const canonicalHref = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
     return !canonicalHref || !englishMothHubLinks.has(new URL(canonicalHref).pathname);
@@ -841,7 +863,7 @@ assert(
   `English moth index leaves ${missingEnglishMothHubLinks.length} indexable profile(s) unlinked`,
 );
 
-const butterflyHubHtml = readDistText(path.join('meta', 'butterfly', 'index.html'));
+const butterflyHubHtml = readPublicText(path.join('meta', 'butterfly', 'index.html'));
 assert(
   butterflyHubHtml.includes('<title>蝶の食草一覧｜植物名と蝶の名前から探す｜昆虫植物図鑑</title>') &&
     butterflyHubHtml.includes('<h1>蝶の食草一覧</h1>') &&
@@ -928,7 +950,7 @@ for (const { href, name, count } of hostPlantDirectory) {
       .split('/')
       .filter(Boolean)
       .at(-1);
-    const sourcePlantHtml = readDistText(`meta/plant/${sourcePlantName}.html`);
+    const sourcePlantHtml = readPublicText(`meta/plant/${sourcePlantName}.html`);
     assert(
       sourcePlantHtml.includes(`<strong>蝶</strong>では${count}種`),
       `featured count must match the ${name} plant profile`,
@@ -938,7 +960,7 @@ for (const { href, name, count } of hostPlantDirectory) {
 
 for (const segment of insectProfileSegments.filter((segment) => segment !== 'butterfly')) {
   assert(
-    !readDistText(path.join('meta', segment, 'index.html'))
+    !readPublicText(path.join('meta', segment, 'index.html'))
       .includes('data-butterfly-host-plant-directory'),
     `${segment} hub must not inherit the butterfly-only host-plant directory`,
   );
@@ -966,19 +988,19 @@ for (const localePrefix of ['', 'en']) {
 const legacyGuideChecks = [
   {
     source: path.join('guides', 'plants', 'keyaki.html'),
-    target: 'https://orau98.github.io/meta/plant/%E3%82%B1%E3%83%A4%E3%82%AD.html',
+    target: 'https://orau98.github.io/plant/%E3%82%B1%E3%83%A4%E3%82%AD/',
   },
   {
     source: path.join('guides', 'categories', 'vegetables.html'),
-    target: 'https://orau98.github.io/meta/plant/index.html',
+    target: 'https://orau98.github.io/plant/',
   },
   {
     source: path.join('guides', 'host-plant-search.html'),
-    target: 'https://orau98.github.io/meta/plant/index.html',
+    target: 'https://orau98.github.io/plant/',
   },
   {
     source: path.join('en', 'guides', 'plants', 'fuji.html'),
-    targetPrefix: 'https://orau98.github.io/en/meta/plant/',
+    targetPrefix: 'https://orau98.github.io/en/plant/',
   },
 ];
 for (const { source, target, targetPrefix } of legacyGuideChecks) {
@@ -993,7 +1015,7 @@ for (const { source, target, targetPrefix } of legacyGuideChecks) {
   }
 }
 
-const kunugiPlantMetaHtml = readDistText(path.join('meta', 'plant', 'クヌギ.html'));
+const kunugiPlantMetaHtml = readPublicText(path.join('meta', 'plant', 'クヌギ.html'));
 const kunugiInsectSearchHref = '/?tab=insects&amp;q=%E3%82%AF%E3%83%8C%E3%82%AE';
 assert(
   kunugiPlantMetaHtml.includes(kunugiInsectSearchHref) &&
@@ -1084,11 +1106,12 @@ for (const redirect of mergedKamikiriRedirects) {
   const jaRelativePath = path.join('meta', 'longhornbeetle', `${redirect.duplicateId}.html`);
   assert(fs.existsSync(path.join(DIST_DIR, jaRelativePath)), `missing merged ID redirect: ${jaRelativePath}`);
   const jaHtml = readDistText(jaRelativePath);
+  const jaSourceHtml = readPublicText(jaRelativePath);
+  const jaCleanTarget = jaHtml.match(/<link\s+rel=["']canonical["'][^>]*href=["']([^"']+)/i)?.[1];
   const jaTarget = `https://orau98.github.io/meta/longhornbeetle/${redirect.canonicalId}.html`;
-  assert(/http-equiv=["']refresh["']/i.test(jaHtml), `${jaRelativePath} must refresh immediately`);
-  assert(jaHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} canonical mismatch`);
-  assert(jaHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} migration marker missing`);
-  assert(!/noindex/i.test(jaHtml), `${jaRelativePath} migration must remain crawlable`);
+  assertLegacyMetaCompatibility(jaHtml, jaRelativePath);
+  assert(jaSourceHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} source canonical mismatch`);
+  assert(jaSourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} source migration marker missing`);
   assert(
     !japaneseLonghornSitemap.includes(`/meta/longhornbeetle/${redirect.duplicateId}.html`),
     `${jaRelativePath} migration URL must not be submitted in the sitemap`,
@@ -1099,15 +1122,16 @@ for (const redirect of mergedKamikiriRedirects) {
   const enRelativePath = path.join('en', 'meta', 'longhornbeetle', `${legacyScientificSlug}.html`);
   assert(fs.existsSync(path.join(DIST_DIR, enRelativePath)), `missing merged English redirect: ${enRelativePath}`);
   const enHtml = readDistText(enRelativePath);
-  const enTarget = validateEnglishRedirectCanonical({
-    html: enHtml,
+  const enSourceHtml = readPublicText(enRelativePath);
+  const enCleanTarget = enHtml.match(/<link\s+rel=["']canonical["'][^>]*href=["']([^"']+)/i)?.[1];
+  validateEnglishRedirectCanonical({
+    html: enSourceHtml,
     mappedTargetPath: englishTargetPath,
     sourcePath: enRelativePath,
     type: 'longhornbeetle',
   });
-  assert(/http-equiv=["']refresh["']/i.test(enHtml), `${enRelativePath} must refresh immediately`);
-  assert(enHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} migration marker missing`);
-  assert(!/noindex/i.test(enHtml), `${enRelativePath} migration must remain crawlable`);
+  assertLegacyMetaCompatibility(enHtml, enRelativePath);
+  assert(enSourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} source migration marker missing`);
   assert(
     !englishLonghornSitemap.includes(`/en/meta/longhornbeetle/${legacyScientificSlug}.html`),
     `${enRelativePath} migration URL must not be submitted in the sitemap`,
@@ -1121,8 +1145,8 @@ for (const redirect of mergedKamikiriRedirects) {
       ? redirect.duplicateId
       : legacyName;
     for (const { prefix, target, label } of [
-      { prefix: [], target: jaTarget, label: 'Japanese' },
-      { prefix: ['en'], target: enTarget, label: 'English' },
+      { prefix: [], target: jaCleanTarget, label: 'Japanese' },
+      { prefix: ['en'], target: enCleanTarget, label: 'English' },
     ]) {
       const namedRelativePath = path.join(
         ...prefix,
@@ -1177,11 +1201,12 @@ for (const redirect of mergedLeafBeetleRedirects) {
     `missing merged leaf-beetle ID redirect: ${jaRelativePath}`,
   );
   const jaHtml = readDistText(jaRelativePath);
+  const jaSourceHtml = readPublicText(jaRelativePath);
+  const jaCleanTarget = jaHtml.match(/<link\s+rel=["']canonical["'][^>]*href=["']([^"']+)/i)?.[1];
   const jaTarget = `https://orau98.github.io/meta/leafbeetle/${redirect.canonicalId}.html`;
-  assert(/http-equiv=["']refresh["']/i.test(jaHtml), `${jaRelativePath} must refresh immediately`);
-  assert(jaHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} canonical mismatch`);
-  assert(jaHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} migration marker missing`);
-  assert(!/noindex/i.test(jaHtml), `${jaRelativePath} migration must remain crawlable`);
+  assertLegacyMetaCompatibility(jaHtml, jaRelativePath);
+  assert(jaSourceHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} source canonical mismatch`);
+  assert(jaSourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} source migration marker missing`);
   assert(
     !japaneseLeafBeetleSitemap.includes(`/meta/leafbeetle/${redirect.duplicateId}.html`),
     `${jaRelativePath} migration URL must not be submitted in the sitemap`,
@@ -1195,15 +1220,16 @@ for (const redirect of mergedLeafBeetleRedirects) {
     `missing merged leaf-beetle English redirect: ${enRelativePath}`,
   );
   const enHtml = readDistText(enRelativePath);
-  const enTarget = validateEnglishRedirectCanonical({
-    html: enHtml,
+  const enSourceHtml = readPublicText(enRelativePath);
+  const enCleanTarget = enHtml.match(/<link\s+rel=["']canonical["'][^>]*href=["']([^"']+)/i)?.[1];
+  validateEnglishRedirectCanonical({
+    html: enSourceHtml,
     mappedTargetPath: englishTargetPath,
     sourcePath: enRelativePath,
     type: 'leafbeetle',
   });
-  assert(/http-equiv=["']refresh["']/i.test(enHtml), `${enRelativePath} must refresh immediately`);
-  assert(enHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} migration marker missing`);
-  assert(!/noindex/i.test(enHtml), `${enRelativePath} migration must remain crawlable`);
+  assertLegacyMetaCompatibility(enHtml, enRelativePath);
+  assert(enSourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${enRelativePath} source migration marker missing`);
   assert(
     !englishLeafBeetleSitemap.includes(`/en/meta/leafbeetle/${legacyScientificSlug}.html`),
     `${enRelativePath} migration URL must not be submitted in the sitemap`,
@@ -1217,8 +1243,8 @@ for (const redirect of mergedLeafBeetleRedirects) {
       ? redirect.duplicateId
       : legacyName;
     for (const { prefix, target, label } of [
-      { prefix: [], target: jaTarget, label: 'Japanese' },
-      { prefix: ['en'], target: enTarget, label: 'English' },
+      { prefix: [], target: jaCleanTarget, label: 'Japanese' },
+      { prefix: ['en'], target: enCleanTarget, label: 'English' },
     ]) {
       const namedRelativePath = path.join(
         ...prefix,
@@ -1262,11 +1288,11 @@ for (const redirect of mergedButterflyRedirects) {
   const jaRelativePath = path.join('meta', 'butterfly', `${redirect.duplicateId}.html`);
   assert(fs.existsSync(path.join(DIST_DIR, jaRelativePath)), `missing merged butterfly ID redirect: ${jaRelativePath}`);
   const jaHtml = readDistText(jaRelativePath);
+  const jaSourceHtml = readPublicText(jaRelativePath);
   const jaTarget = `https://orau98.github.io/meta/butterfly/${redirect.canonicalId}.html`;
-  assert(/http-equiv=["']refresh["']/i.test(jaHtml), `${jaRelativePath} must refresh immediately`);
-  assert(jaHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} canonical mismatch`);
-  assert(jaHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} migration marker missing`);
-  assert(!/noindex/i.test(jaHtml), `${jaRelativePath} migration must remain crawlable`);
+  assertLegacyMetaCompatibility(jaHtml, jaRelativePath);
+  assert(jaSourceHtml.includes(`rel="canonical" href="${jaTarget}"`), `${jaRelativePath} source canonical mismatch`);
+  assert(jaSourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} source migration marker missing`);
   assert(
     !japaneseButterflySitemap.includes(`/meta/butterfly/${redirect.duplicateId}.html`),
     `${jaRelativePath} migration URL must not be submitted in the sitemap`,

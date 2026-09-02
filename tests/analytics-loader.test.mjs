@@ -62,3 +62,11 @@ test('postbuild route shell templates inject the extracted analytics loader', ()
   assert.match(postbuildSource, /data-send-page-view="false"/);
   assert.match(sharedLoaderSource, /send_page_view: sendPageView/);
 });
+
+test('legacy meta compatibility normalizes with history and exposes analytics context', () => {
+  assert.match(postbuildSource, /window\.history\.replaceState/);
+  assert.match(postbuildSource, /window\.location\.search \+ window\.location\.hash/);
+  assert.match(postbuildSource, /__LEGACY_META_ENTRY_PATH__/);
+  assert.match(postbuildSource, /__LEGACY_META_TARGET_PATH__/);
+  assert.doesNotMatch(postbuildSource, /window\.location\.replace\(/);
+});

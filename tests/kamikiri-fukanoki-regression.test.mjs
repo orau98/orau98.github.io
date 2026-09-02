@@ -280,8 +280,12 @@ test('generated public フカノキ data and meta pages include recovered longho
   if (fs.existsSync(legacyFamilyPage)) {
     const legacyHtml = fs.readFileSync(legacyFamilyPage, 'utf8');
     assert.match(legacyHtml, /name="robots" content="noindex/, `${legacyFamilyPage} should be noindex`);
-    // canonicalは絶対URL（https://orau98.github.io/meta/plant/...）で出力される
-    assert.match(legacyHtml, /rel="canonical" href="https:\/\/orau98\.github\.io\/meta\/plant\/[^"]+\.html"/, `${legacyFamilyPage} should redirect to the canonical page`);
+    // 旧 /meta/ URL も、移行後の正規URLである clean route を canonical にする。
+    const expectedCanonical = `https://orau98.github.io/plant/${encodeURIComponent('フカノキ')}/`;
+    assert.ok(
+      legacyHtml.includes(`rel="canonical" href="${expectedCanonical}"`),
+      `${legacyFamilyPage} should point canonical to the clean route`,
+    );
   }
 });
 
