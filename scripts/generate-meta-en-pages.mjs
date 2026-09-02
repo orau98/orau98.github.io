@@ -626,7 +626,7 @@ function buildEnglishInsectPage({
   const cleanInsect = { ...insect, type: section.type };
   const japanesePagePath = japaneseMetaPath ? buildInsectPath(cleanInsect, 'ja') : '';
   const englishPagePath = buildInsectPath(cleanInsect, 'en');
-  const japaneseNavigationPath = japanesePagePath || `/meta/${section.routeSegment}/index.html`;
+  const japaneseNavigationPath = japanesePagePath || '/moth/';
   const canonicalUrl = `${BASE_ORIGIN}${englishPagePath}`;
   const seasonText = cleanString(insect.emergenceTime);
   const description = [
@@ -701,7 +701,7 @@ function buildEnglishInsectPage({
         '@type': 'ListItem',
         position: 2,
         name: section.pluralLabel,
-        item: `${BASE_ORIGIN}/en/meta/${section.routeSegment}/index.html`,
+        item: `${BASE_ORIGIN}/en/moth/`,
       },
       {
         '@type': 'ListItem',
@@ -760,7 +760,7 @@ function buildEnglishInsectPage({
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
         <li><a href="/en/">${escapeHtml(EN_SITE_NAME)}</a></li>
-        <li><a href="/en/meta/${escapeAttr(section.routeSegment)}/index.html">${escapeHtml(section.pluralLabel)}</a></li>
+        <li><a href="/en/moth/">${escapeHtml(section.pluralLabel)}</a></li>
         <li aria-current="page">${escapeHtml(primaryName)}</li>
       </ol>
     </nav>
@@ -828,7 +828,7 @@ function buildEnglishInsectPage({
     </main>
 
     <section class="navigation">
-      <a href="/en/meta/${escapeAttr(section.routeSegment)}/index.html" class="back-link">Browse ${escapeHtml(section.pluralLabel)}</a>
+      <a href="/en/moth/" class="back-link">Browse ${escapeHtml(section.pluralLabel)}</a>
       <a href="${escapeAttr(japaneseNavigationPath)}" class="detail-link">Open Japanese page</a>
     </section>
   </div>
@@ -847,7 +847,7 @@ function buildEnglishPlantPage({
   const japaneseMetaPath = resolveJapanesePlantMetaPath(canonicalName, detail);
   const japanesePagePath = japaneseMetaPath ? buildPlantPath(canonicalName, 'ja') : '';
   const englishPagePath = buildPlantPath(canonicalName, 'en');
-  const japaneseNavigationPath = japanesePagePath || '/meta/plant/index.html';
+  const japaneseNavigationPath = japanesePagePath || '/plant/';
   const canonicalUrl = `${BASE_ORIGIN}${englishPagePath}`;
   const robotsContent = computePlantRobotsContent({ relatedInsects, plantImageFiles });
   const mainImageUrl = plantImageFiles.length > 0
@@ -933,7 +933,7 @@ function buildEnglishPlantPage({
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
         <li><a href="/en/">${escapeHtml(EN_SITE_NAME)}</a></li>
-        <li><a href="/en/meta/plant/index.html">Plants</a></li>
+        <li><a href="/en/plant/">Plants</a></li>
         <li aria-current="page">${escapeHtml(display.primaryName)}</li>
       </ol>
     </nav>
@@ -1008,7 +1008,7 @@ function buildEnglishPlantPage({
     </main>
 
     <section class="navigation">
-      <a href="/en/meta/plant/index.html" class="back-link">Browse Plants</a>
+      <a href="/en/plant/" class="back-link">Browse Plants</a>
       <a href="${escapeAttr(japaneseNavigationPath)}" class="detail-link">Open Japanese page</a>
     </section>
   </div>
@@ -1199,14 +1199,8 @@ function buildEnglishHomePage(counts) {
       <section class="quick-links">
         <h3>Browse English pages</h3>
         <ul>
-          <li><a href="/en/meta/moth/index.html">Moths</a></li>
-          <li><a href="/en/meta/butterfly/index.html">Butterflies</a></li>
-          <li><a href="/en/meta/beetle/index.html">Jewel beetles</a></li>
-          <li><a href="/en/meta/longhornbeetle/index.html">Longhorn beetles</a></li>
-          <li><a href="/en/meta/barkbeetle/index.html">Bark beetles</a></li>
-          <li><a href="/en/meta/leafbeetle/index.html">Leaf beetles</a></li>
-          <li><a href="/en/meta/aphid/index.html">Aphids</a></li>
-          <li><a href="/en/meta/plant/index.html">Plants</a></li>
+          <li><a href="/en/moth/">Insects</a></li>
+          <li><a href="/en/plant/">Plants</a></li>
         </ul>
       </section>
     </main>
@@ -1385,7 +1379,7 @@ async function generateEnglishMetaPages() {
     ].filter((name) => name && !canonicalRouteNames.has(cleanString(name))))) {
       queueLegacyRedirect(
         `/en/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.duplicateId)}/index.html`,
-        canonical.href,
+        canonical.cleanHref,
         title,
         'taxonomy-merge',
       );

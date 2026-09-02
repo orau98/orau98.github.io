@@ -1195,12 +1195,12 @@ const InsectsHostPlantExplorer = memo(
                 counts.aphids,
               )} of aphids by Japanese name, scientific name, or taxonomy.`
             : `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、キクイムシ ${counts.barkbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種を和名/学名/分類で検索できます。`,
-          canonical: absUrl(localizePath("/meta/moth/index.html", locale)),
+          canonical: absUrl(localizePath("/moth/", locale)),
           breadcrumbItems: [
             { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
             {
               name: isEnglish ? "Insects" : "昆虫",
-              url: absUrl(localizePath("/meta/moth/index.html", locale)),
+              url: absUrl(localizePath("/moth/", locale)),
             },
           ],
         };
@@ -1215,12 +1215,12 @@ const InsectsHostPlantExplorer = memo(
                 counts.hostPlants,
               )} of host plants and flower-visit plants recorded in Japan, then review the related insects for each plant.`
             : `植物一覧ページ。食草・訪花植物 ${counts.hostPlants}種を和名/学名/分類で検索し、関連昆虫を確認できます。`,
-          canonical: absUrl(localizePath("/meta/plant/index.html", locale)),
+          canonical: absUrl(localizePath("/plant/", locale)),
           breadcrumbItems: [
             { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
             {
               name: isEnglish ? "Plants" : "植物",
-              url: absUrl(localizePath("/meta/plant/index.html", locale)),
+              url: absUrl(localizePath("/plant/", locale)),
             },
           ],
         };

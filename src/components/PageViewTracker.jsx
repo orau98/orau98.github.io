@@ -4,6 +4,7 @@ import {
   getPageViewPath,
   syncAnalyticsPreference,
   trackDetailSelection,
+  trackLegacyMetaLanding,
   trackPageView,
 } from '../utils/analytics';
 import { isKnownDetailPath } from '../utils/siteTaxonomy';
@@ -13,6 +14,7 @@ const TRACK_DELAY_MS = 80;
 export default function PageViewTracker() {
   const location = useLocation();
   const lastTrackedPathRef = useRef('');
+  const legacyLandingTrackedRef = useRef(false);
 
   useEffect(() => {
     syncAnalyticsPreference({ search: location.search });
@@ -23,6 +25,13 @@ export default function PageViewTracker() {
     if (!pagePath || pagePath === lastTrackedPathRef.current) return undefined;
 
     const timerId = window.setTimeout(() => {
+      if (!legacyLandingTrackedRef.current && window.__LEGACY_META_COMPATIBILITY__) {
+        const legacyTracked = trackLegacyMetaLanding({
+          sourcePath: window.__LEGACY_META_ENTRY_PATH__,
+          targetPath: window.__LEGACY_META_TARGET_PATH__ || location.pathname,
+        });
+        if (legacyTracked) legacyLandingTrackedRef.current = true;
+      }
       const tracked = trackPageView({ pathname: location.pathname });
       if (tracked) {
         lastTrackedPathRef.current = pagePath;

@@ -6,6 +6,7 @@ import {
   syncAnalyticsPreference,
   trackCrossSearch,
   trackDetailSelection,
+  trackLegacyMetaLanding,
   trackPageView,
   trackSearch,
 } from '../src/utils/analytics.js';
@@ -133,6 +134,34 @@ test('search and navigation events expose the engagement funnel', () => {
     assert.equal(calls[0][2].search_term, 'アオアツバ');
     assert.equal(calls[1][2].selection_source, 'search_suggestion');
     assert.equal(calls[2][2].to_scope, 'insects');
+  } finally {
+    globalThis.window = previousWindow;
+  }
+});
+
+test('legacy meta landing records only legacy and clean paths', () => {
+  const previousWindow = globalThis.window;
+  const calls = [];
+  globalThis.window = {
+    location: { origin: 'https://orau98.github.io', search: '?ref=external' },
+    localStorage: createStorage(),
+    sessionStorage: createStorage(),
+    gtag: (...args) => calls.push(args),
+  };
+
+  try {
+    assert.equal(
+      trackLegacyMetaLanding({
+        sourcePath: '/meta/moth/species-6016.html',
+        targetPath: '/moth/ホソバオビキリガ/',
+      }),
+      true,
+    );
+    assert.deepEqual(calls[0].slice(0, 2), ['event', 'legacy_meta_landing']);
+    assert.equal(calls[0][2].legacy_path, '/meta/moth/species-6016.html');
+    assert.equal(calls[0][2].clean_path, '/moth/ホソバオビキリガ/');
+    assert.equal(Object.hasOwn(calls[0][2], 'query'), false);
+    assert.equal(trackLegacyMetaLanding({ sourcePath: '', targetPath: '/' }), false);
   } finally {
     globalThis.window = previousWindow;
   }

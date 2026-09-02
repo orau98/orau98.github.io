@@ -104,6 +104,17 @@ export function trackPageView({ pathname = '/' } = {}) {
   });
 }
 
+export function trackLegacyMetaLanding({ sourcePath = '', targetPath = '' } = {}) {
+  const legacyPath = String(sourcePath || '').trim();
+  const cleanPath = String(targetPath || '').trim();
+  if (!legacyPath || !cleanPath) return false;
+
+  return trackEvent('legacy_meta_landing', {
+    legacy_path: legacyPath.slice(0, 200),
+    clean_path: cleanPath.slice(0, 200),
+  });
+}
+
 export function trackSearch({ query = '', scope = '', source = 'submit' } = {}) {
   const searchTerm = String(query || '').trim();
   if (!searchTerm) return false;

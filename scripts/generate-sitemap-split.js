@@ -349,7 +349,7 @@ function generateSplitSitemaps() {
 
   // 詳細ページのサイトマップURLは、静的メタページ自身が宣言するcanonicalを正とする。
   // メタHTMLは旧URLの互換入口として残し、検索エンジンには200を返す短い詳細URLを送る。
-  const addMetaDirToSitemap = ({ key, dir, routePrefix, priority, includeIndexInMain = true }) => {
+  const addMetaDirToSitemap = ({ key, dir, routePrefix, priority }) => {
     const absDir = path.join(__dirname, dir);
     if (!fs.existsSync(absDir)) {
       console.warn(`[sitemap] meta dir not found: ${absDir}`);
@@ -366,7 +366,7 @@ function generateSplitSitemaps() {
 
     const preFilterCount = files.length;
     files = files.filter((file) => {
-      if (file === 'index.html') return true;
+      if (file === 'index.html' || /^page-\d+\.html$/i.test(file)) return false;
       return !isNonCanonicalPage(path.join(absDir, file));
     });
     const removedNonCanonical = preFilterCount - files.length;
@@ -374,25 +374,11 @@ function generateSplitSitemaps() {
       console.log(`[sitemap] ${key}: excluded noncanonical pages = ${removedNonCanonical}`);
     }
 
-    // index.html はカテゴリの入口なので main に入れる（重複・分散を避ける）
-    if (includeIndexInMain && files.includes('index.html')) {
-      const indexPath = path.join(absDir, 'index.html');
-      const targetMain = routePrefix.startsWith('/en/') ? sitemaps['en-main'] : sitemaps.main;
-      targetMain.push({
-        loc: `${baseUrl}${routePrefix}index.html`,
-        lastmod: getFileLastmod(indexPath),
-        changefreq: 'weekly',
-        priority: '0.8',
-      });
-    }
-
     // key から植物ページか昆虫ページかを判定（英語版は "en-plant", "en-moth" 等）
     const isPlantSection = key === 'plant' || key === 'en-plant';
 
     let count = 0;
     files.forEach((file) => {
-      if (file === 'index.html') return;
-
       // changefreq: データが豊富なページは weekly、それ以外は monthly
       const isRich = isPlantSection
         ? isRichPlantPage(file)
@@ -421,7 +407,6 @@ function generateSplitSitemaps() {
         dir: `../public/meta/${section.dir}`,
         routePrefix: section.routePrefix,
         priority: section.priority,
-        includeIndexInMain: true,
       }),
     ]),
   );
@@ -433,7 +418,6 @@ function generateSplitSitemaps() {
         dir: `../public/en/meta/${section.dir}`,
         routePrefix: section.routePrefix,
         priority: section.priority,
-        includeIndexInMain: true,
       }),
     ]),
   );

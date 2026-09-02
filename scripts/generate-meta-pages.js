@@ -1408,7 +1408,7 @@ function renderCoOccurringInsects(insect, fallbackType, hostPlantsArray = [], ho
   if (!others.length) return '';
   const shown = others.slice(0, 20);
   const items = shown
-    .map((o) => `<li><a href="/meta/${o.type}/${encodeURIComponent(o.id)}.html">${o.name}</a></li>`)
+    .map((o) => `<li><a href="${buildJapaneseInsectPath(o, o.type)}">${o.name}</a></li>`)
     .join('');
   return `
       <section class="co-occurring">
@@ -1672,7 +1672,7 @@ function generateInsectHTML(
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: '昆虫植物図鑑', item: `${BASE_ORIGIN}/` },
-      { '@type': 'ListItem', position: 2, name: typeNames[type], item: `${BASE_ORIGIN}/meta/${type}/index.html` },
+      { '@type': 'ListItem', position: 2, name: typeNames[type], item: `${BASE_ORIGIN}/moth/` },
       { '@type': 'ListItem', position: 3, name: insect.japaneseName, item: insectPageUrl },
     ],
   };
@@ -1775,7 +1775,7 @@ function generateInsectHTML(
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
         <li><a href="/">昆虫植物図鑑</a></li>
-        <li><a href="/meta/${type}/index.html">${typeNames[type]}</a></li>
+        <li><a href="/moth/">${typeNames[type]}</a></li>
         <li aria-current="page">${insect.japaneseName}</li>
       </ol>
     </nav>
@@ -2270,7 +2270,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: '昆虫植物図鑑', item: `${BASE_ORIGIN}/` },
-      { '@type': 'ListItem', position: 2, name: '植物', item: `${BASE_ORIGIN}/meta/plant/index.html` },
+      { '@type': 'ListItem', position: 2, name: '植物', item: `${BASE_ORIGIN}/plant/` },
       { '@type': 'ListItem', position: 3, name: displayPlantName, item: plantPageUrl },
     ],
   };
@@ -2377,7 +2377,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     <nav class="breadcrumb" aria-label="breadcrumb">
       <ol>
         <li><a href="/">昆虫植物図鑑</a></li>
-        <li><a href="/meta/plant/index.html">植物</a></li>
+        <li><a href="/plant/">植物</a></li>
         <li aria-current="page">${displayPlantName}</li>
       </ol>
     </nav>
@@ -3141,6 +3141,7 @@ async function generateMetaPages() {
 
       const targetPath = `/meta/${canonical.type}/${redirect.canonicalId}.html`;
       const targetUrl = `${BASE_ORIGIN}${targetPath}`;
+      const cleanTargetPath = buildJapaneseInsectPath(canonical.insect, canonical.type);
       const title = `${redirect.legacyDisplayName} | 昆虫植物図鑑`;
       const duplicateOutputPath = path.join(
         __dirname,
@@ -3168,7 +3169,7 @@ async function generateMetaPages() {
       ].filter((name) => name && !canonicalRouteNames.has(String(name).trim())))) {
         queueLegacyRedirect(
           `/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.duplicateId)}/index.html`,
-          targetPath,
+          cleanTargetPath,
           title,
           'ja',
           'taxonomy-merge',
@@ -3211,7 +3212,7 @@ async function generateMetaPages() {
             lang: 'ja',
             title: `${plantName} | 昆虫植物図鑑`,
             // canonicalは絶対URL必須（相対だとSEO監査が失敗し、クローラにも曖昧）
-            targetUrl: `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safePlantName)}.html`,
+            targetUrl: `${BASE_ORIGIN}/plant/${encodeURIComponent(plantName)}/`,
           }));
         }
       }
@@ -3252,7 +3253,8 @@ async function generateMetaPages() {
         outputPath: path.join(legacyGuidePlantDir, `${legacySlug}.html`),
         lang: 'ja',
         title: `${plantName}につく虫 | 昆虫植物図鑑`,
-        targetPath: `/meta/plant/${encodeURIComponent(safePlantName)}.html`,
+        targetPath: `/plant/${encodeURIComponent(plantName)}/`,
+        verifyTarget: false,
       });
 
       const englishSlug = plantNameToEnSlug.get(safePlantName);
@@ -3261,7 +3263,8 @@ async function generateMetaPages() {
           outputPath: path.join(legacyEnglishGuidePlantDir, `${legacySlug}.html`),
           lang: 'en',
           title: `${plantName} host-plant insects | Insects and Host Plants of Japan`,
-          targetPath: `/en/meta/plant/${encodeURIComponent(englishSlug)}.html`,
+          targetPath: `/en/plant/${encodeURIComponent(plantName)}/`,
+          verifyTarget: false,
         });
       }
     }
@@ -3270,14 +3273,14 @@ async function generateMetaPages() {
       outputPath: path.join(legacyGuidePlantDir, 'index.html'),
       lang: 'ja',
       title: '植物から昆虫を探す | 昆虫植物図鑑',
-      targetPath: '/meta/plant/index.html',
+      targetPath: '/plant/',
       verifyTarget: false,
     });
     writePermanentGuideRedirect({
       outputPath: path.join(publicDir, 'guides', 'host-plant-search.html'),
       lang: 'ja',
       title: '食草・寄主植物から昆虫を探す | 昆虫植物図鑑',
-      targetPath: '/meta/plant/index.html',
+      targetPath: '/plant/',
       verifyTarget: false,
     });
     // GA4で現在も実流入を確認した旧カテゴリURL。削除済みの量産本文は
@@ -3286,7 +3289,7 @@ async function generateMetaPages() {
       outputPath: path.join(publicDir, 'guides', 'categories', 'vegetables.html'),
       lang: 'ja',
       title: '野菜につく虫・幼虫 | 昆虫植物図鑑',
-      targetPath: '/meta/plant/index.html',
+      targetPath: '/plant/',
       verifyTarget: false,
     });
 
