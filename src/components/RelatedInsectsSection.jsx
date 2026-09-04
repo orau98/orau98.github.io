@@ -7,7 +7,7 @@ import { buildPlantPath } from '../utils/siteTaxonomy';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import ImageWithFallback from './ImageWithFallback';
-import { resolvePlaceholderSubject } from './ui/NoPhotoPlaceholder';
+import { resolvePlaceholderSubject } from '../utils/placeholderSubject';
 import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja', plantDetails = {} }) => {

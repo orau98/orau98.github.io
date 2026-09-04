@@ -35,59 +35,32 @@ import {
   EXPLORER_ROUTE_CONFIGS,
   INSECT_COLLECTION_KEYS,
   INSECT_DETAIL_ROUTE_PATTERNS,
-  isExplorerRoutePath,
 } from './utils/siteTaxonomy';
 import { isStaticDocumentPath } from './utils/staticDocumentPaths';
 import { hasExplorerResultQuery } from './utils/explorerQueryParams';
 import {
-  getImmediateInsectCollectionKeys,
   getInsectDetailCollectionKey,
-  shouldLoadPlantPartitionsImmediately,
+  shouldLoadInsectPartitionsImmediately,
 } from './utils/insectDataLoading';
+import {
+  buildAppVersionSuffix,
+  buildDataLiteAssetUrl,
+  buildLiteSummaryCounts,
+  buildPartitionVersionSuffix,
+  getCollectionPartitionFile,
+  isDatasetCacheComplete,
+  isLiteIndexPayload,
+  normalizeDatasetPayload,
+  normalizePlantPartitions,
+  planInitialDataLoad,
+  selectCollectionKeysToLoad,
+} from './utils/dataLitePlan';
 
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
-
-const INSECT_DATA_IMMEDIATE_QUERY_PARAMS = [
-  'q',
-  'search',
-  'term',
-  'classification',
-  'page',
-  'ipage',
-  'ihost',
-  'ifamily',
-  'igenus',
-  'imonth',
-  'pfamily',
-  'porder',
-  'pvisit',
-];
-
-const hasImmediateInsectDataParams = (params) =>
-  INSECT_DATA_IMMEDIATE_QUERY_PARAMS.some((name) => params.has(name));
 
 // 静的パス強制遷移のループ検知窓。この時間内に同じURLで再びSPAが起動したら
 // 「サーバーが静的ファイルではなくSPAシェルを返している」と判断する
 const STATIC_DOC_NAV_LOOP_WINDOW_MS = 10000;
-
-const normalizeExplorerPath = (pathname = '') => {
-  const value = String(pathname || '/').split(/[?#]/)[0] || '/';
-  return value.length > 1 ? value.replace(/\/+$/, '') : value;
-};
-
-const getExplorerInitialTabForPath = (pathname = '') => {
-  const normalizedPath = normalizeExplorerPath(pathname);
-  const config = EXPLORER_ROUTE_CONFIGS.find(
-    ({ path }) => normalizeExplorerPath(path) === normalizedPath,
-  );
-  return config?.initialTab || null;
-};
-
-const shouldLoadInsectPartitionsImmediately = (pathname = '/', params = new URLSearchParams()) => {
-  if (!isExplorerRoutePath(pathname)) return true;
-  if (hasImmediateInsectDataParams(params)) return true;
-  return getExplorerInitialTabForPath(pathname) === 'insects';
-};
 
 function App() {
   const location = useLocation();
@@ -109,7 +82,6 @@ function App() {
   const [loadProgress, setLoadProgress] = useState(0);
   const [loadError, setLoadError] = useState(null);
   const [summaryCounts, setSummaryCounts] = useState(null);
-  const typesFetchStartedRef = useRef(false);
   const typesFetchPromiseRef = useRef(null);
   const ensureTypesLoaderRef = useRef(null);
   const ensurePlantsLoaderRef = useRef(null);
@@ -331,49 +303,22 @@ function App() {
 
   const hasDatasetRef = useRef(false);
   const applyDataset = (data = {}) => {
-    const mothArr = Array.isArray(data.moths) ? data.moths : [];
-    const butterflyArr = Array.isArray(data.butterflies) ? data.butterflies : [];
-    const beetleArr = Array.isArray(data.beetles) ? data.beetles : [];
-    const longhornArr = Array.isArray(data.longhornbeetles) ? data.longhornbeetles : [];
-    const barkArr = Array.isArray(data.barkbeetles) ? data.barkbeetles : [];
-    const leafArr = Array.isArray(data.leafbeetles) ? data.leafbeetles : [];
-    const aphidArr = Array.isArray(data.aphids) ? data.aphids : [];
-    setMoths(mothArr);
-    setButterflies(butterflyArr);
-    setBeetles(beetleArr);
-    setLonghornbeetles(longhornArr);
-    setBarkbeetles(barkArr);
-    setLeafbeetles(leafArr);
-    setAphids(aphidArr);
-    setHostPlants(data.hostPlants || {});
-    setFlowerVisitPlants(
-      data.flowerVisitPlants ||
-        buildFlowerVisitMap([
-          ...mothArr,
-          ...butterflyArr,
-          ...beetleArr,
-          ...longhornArr,
-          ...barkArr,
-          ...leafArr,
-          ...aphidArr,
-        ]),
-    );
-    setPlantDetails(data.plantDetails || {});
-    if (data.summaryCounts) {
-      setSummaryCounts(data.summaryCounts);
+    const normalized = normalizeDatasetPayload(data);
+    setMoths(normalized.collections.moths);
+    setButterflies(normalized.collections.butterflies);
+    setBeetles(normalized.collections.beetles);
+    setLonghornbeetles(normalized.collections.longhornbeetles);
+    setBarkbeetles(normalized.collections.barkbeetles);
+    setLeafbeetles(normalized.collections.leafbeetles);
+    setAphids(normalized.collections.aphids);
+    setHostPlants(normalized.hostPlants);
+    setFlowerVisitPlants(normalized.flowerVisitPlants);
+    setPlantDetails(normalized.plantDetails);
+    if (normalized.summaryCounts) {
+      setSummaryCounts(normalized.summaryCounts);
     }
-    const hasAny =
-      mothArr.length +
-        butterflyArr.length +
-        beetleArr.length +
-        longhornArr.length +
-        barkArr.length +
-        leafArr.length +
-        aphidArr.length >
-        0 ||
-      Object.keys(data.hostPlants || {}).length > 0;
-    hasDatasetRef.current = hasAny;
-    cacheLoadedRef.current = cacheLoadedRef.current || hasAny;
+    hasDatasetRef.current = normalized.hasAny;
+    cacheLoadedRef.current = cacheLoadedRef.current || normalized.hasAny;
   };
 
   useEffect(() => {
@@ -433,27 +378,13 @@ function App() {
           { retries: 4, delay: 300 },
         );
       const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
-      const appVersionSuffix = import.meta.env.DEV
-        ? `?v=${Date.now()}`
-        : APP_BUILD_ID
-          ? `?v=${encodeURIComponent(APP_BUILD_ID)}`
-          : '';
-      const fallbackVersionSuffix = appVersionSuffix;
-      const buildLiteSummaryCounts = (lite = {}) => ({
-        moths: Array.isArray(lite.moths) ? lite.moths.length : 0,
-        butterflies: Array.isArray(lite.butterflies) ? lite.butterflies.length : 0,
-        beetles: Array.isArray(lite.beetles) ? lite.beetles.length : 0,
-        longhornbeetles: Array.isArray(lite.longhornbeetles) ? lite.longhornbeetles.length : 0,
-        barkbeetles: Array.isArray(lite.barkbeetles) ? lite.barkbeetles.length : 0,
-        leafbeetles: Array.isArray(lite.leafbeetles) ? lite.leafbeetles.length : 0,
-        aphids: Array.isArray(lite.aphids) ? lite.aphids.length : 0,
-        hostPlants:
-          lite.hostPlants && typeof lite.hostPlants === 'object'
-            ? Object.keys(lite.hostPlants).length
-            : 0,
+      const appVersionSuffix = buildAppVersionSuffix({
+        isDevelopment,
+        buildId: APP_BUILD_ID,
       });
+      const fallbackVersionSuffix = appVersionSuffix;
       const applyLiteIndex = (lite) => {
-        if (!lite || !Array.isArray(lite.moths) || !Array.isArray(lite.butterflies)) return false;
+        if (!isLiteIndexPayload(lite)) return false;
         setLoadProgress(90);
         setMoths(lite.moths);
         setButterflies(lite.butterflies);
@@ -467,7 +398,6 @@ function App() {
         setSummaryCounts(lite.summaryCounts || buildLiteSummaryCounts(lite));
         setLoading(false);
         ensureTypesLoaderRef.current = () => {
-          typesFetchStartedRef.current = true;
           typesFetchPromiseRef.current = Promise.resolve(null);
         };
         return true;
@@ -475,7 +405,7 @@ function App() {
       const tryFullDataset = async (versionSuffix) => {
         try {
           const fullRes = await fetchWithRetry(
-            `${base}assets/data-lite/full-dataset.json${versionSuffix}`,
+            buildDataLiteAssetUrl(base, 'full-dataset.json', versionSuffix),
             { cache: cacheMode },
           );
           if (!shouldContinue()) return false;
@@ -489,7 +419,11 @@ function App() {
       };
       const tryLiteIndex = async (versionSuffix) => {
         try {
-          const liteUrl = `${base}assets/data-lite/index.json${versionSuffix || fallbackVersionSuffix}`;
+          const liteUrl = buildDataLiteAssetUrl(
+            base,
+            'index.json',
+            versionSuffix || fallbackVersionSuffix,
+          );
           const res = await fetchWithRetry(liteUrl, { cache: cacheMode });
           if (!shouldContinue()) return false;
           if (!res.ok) return false;
@@ -503,11 +437,15 @@ function App() {
       // Prefer split JSON in production and fall back to the combined index only if needed.
       try {
         setLoadProgress(10);
-        const manifestUrl = `${base}assets/data-lite/manifest.json${appVersionSuffix}`;
+        const manifestUrl = buildDataLiteAssetUrl(
+          base,
+          'manifest.json',
+          appVersionSuffix,
+        );
         // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
         const manifestRes = await fetchWithRetry(manifestUrl, { cache: cacheMode });
         if (!shouldContinue()) return;
-        let versionSuffix = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+        let versionSuffix = buildPartitionVersionSuffix({ isDevelopment });
         let manifest = null;
         let manifestVersion = null;
         if (manifestRes?.ok) {
@@ -519,14 +457,21 @@ function App() {
             setSummaryCounts((prev) => prev || manifest.counts);
             setLoading(false);
           }
-          versionSuffix = import.meta.env.DEV
-            ? `?v=${Date.now()}`
-            : manifestVersion
-              ? `?v=${manifestVersion}`
-              : '';
-          const hostUrl = `${base}assets/data-lite/hostplants.json${versionSuffix}`;
-          const plantDetailsUrl = `${base}assets/data-lite/plant-details.json${versionSuffix}`;
-          const flowerVisitUrl = `${base}assets/data-lite/flower-visit-plants.json${versionSuffix}`;
+          versionSuffix = buildPartitionVersionSuffix({
+            isDevelopment,
+            manifestVersion,
+          });
+          const hostUrl = buildDataLiteAssetUrl(base, 'hostplants.json', versionSuffix);
+          const plantDetailsUrl = buildDataLiteAssetUrl(
+            base,
+            'plant-details.json',
+            versionSuffix,
+          );
+          const flowerVisitUrl = buildDataLiteAssetUrl(
+            base,
+            'flower-visit-plants.json',
+            versionSuffix,
+          );
 
           if (manifest && manifest.counts) {
             cachedVersionRef.current = manifestVersion;
@@ -548,31 +493,25 @@ function App() {
                 fetchJsonOrNull(flowerVisitUrl, 'Flower-visit'),
               ]);
               if (!shouldContinue()) return null;
-              if (!hostMap || typeof hostMap !== 'object') return null;
+              const plantPayload = normalizePlantPartitions({
+                hostMap,
+                plantDetails: plantDetailsPayload,
+                flowerVisitPlants: flowerVisitPayload,
+              });
+              if (!plantPayload) return null;
 
-              plantDetailsLite =
-                plantDetailsPayload && typeof plantDetailsPayload === 'object'
-                  ? plantDetailsPayload
-                  : {};
-              const normalizedFlowerVisits =
-                flowerVisitPayload && typeof flowerVisitPayload === 'object'
-                  ? flowerVisitPayload
-                  : {};
-              setHostPlants(hostMap);
+              plantDetailsLite = plantPayload.plantDetails;
+              setHostPlants(plantPayload.hostMap);
               setPlantDetails(plantDetailsLite);
-              if (Object.keys(normalizedFlowerVisits).length > 0) {
-                setFlowerVisitPlants(normalizedFlowerVisits);
+              if (Object.keys(plantPayload.flowerVisitPlants).length > 0) {
+                setFlowerVisitPlants(plantPayload.flowerVisitPlants);
               }
               setSummaryCounts((prev) => ({
                 ...(prev || {}),
                 ...manifest.counts,
-                hostPlants: Object.keys(hostMap).length,
+                hostPlants: Object.keys(plantPayload.hostMap).length,
               }));
-              return {
-                hostMap,
-                plantDetails: plantDetailsLite,
-                flowerVisitPlants: normalizedFlowerVisits,
-              };
+              return plantPayload;
             };
 
             const startFetchPlants = () => {
@@ -595,11 +534,16 @@ function App() {
                 typeof window !== 'undefined' ? window.location.search || '' : '',
               );
             } catch {}
-            const loadPlantsImmediately = shouldLoadPlantPartitionsImmediately(
-              initialPathname,
-              initialParams,
-            );
-            const initialPlantsPromise = loadPlantsImmediately ? startFetchPlants() : null;
+            const initialLoadPlan = planInitialDataLoad({
+              pathname: initialPathname,
+              search: initialParams,
+              cacheLoaded: cacheLoadedRef.current,
+              cachedVersion,
+              manifestVersion,
+            });
+            const initialPlantsPromise = initialLoadPlan.loadPlantsImmediately
+              ? startFetchPlants()
+              : null;
 
             // 再訪時に即時復元できるよう、取得済みデータをアイドル時にIndexedDBへ保存する
             const scheduleDatasetCacheSave = (payload) => {
@@ -616,7 +560,6 @@ function App() {
             };
 
             // Reset fetch guards for fresh lifecycle
-            typesFetchStartedRef.current = false;
             typesFetchPromiseRef.current = null;
 
             const collectionConfigs = {
@@ -635,22 +578,18 @@ function App() {
               requestedKeys = INSECT_COLLECTION_KEYS,
               detailLevel = 'catalog',
             ) => {
-              const keys = requestedKeys.filter(
-                (key) => {
-                  if (!collectionConfigs[key]) return false;
-                  const currentLevel = loadedCollectionLevels.get(key);
-                  return !currentLevel || (detailLevel === 'full' && currentLevel !== 'full');
-                },
+              const keys = selectCollectionKeysToLoad(
+                requestedKeys,
+                loadedCollectionLevels,
+                detailLevel,
               );
               if (keys.length === 0) return {};
 
               const results = await Promise.all(
                 keys.map(async (key) => {
-                  const file = detailLevel === 'full'
-                    ? `${key}.json`
-                    : `catalog/${key}.json`;
+                  const file = getCollectionPartitionFile(key, detailLevel);
                   const response = await fetchWithRetry(
-                    `${base}assets/data-lite/${file}${versionSuffix}`,
+                    buildDataLiteAssetUrl(base, file, versionSuffix),
                     { cache: cacheMode },
                   );
                   if (!response?.ok) return [key, null];
@@ -682,10 +621,7 @@ function App() {
               }
               // IndexedDBへは7分類がすべて揃った時だけ保存する。
               // 個別種ページ用の部分データで完全なキャッシュを上書きしない。
-              if (
-                loadedCollectionLevels.size === INSECT_COLLECTION_KEYS.length &&
-                plantPayload?.hostMap
-              ) {
+              if (isDatasetCacheComplete(loadedCollectionLevels, plantPayload)) {
                 scheduleDatasetCacheSave({
                   ...loadedCollectionData,
                   hostPlants: plantPayload.hostMap,
@@ -704,7 +640,6 @@ function App() {
               requestedKeys = INSECT_COLLECTION_KEYS,
               detailLevel = 'catalog',
             ) => {
-              typesFetchStartedRef.current = true;
               // 直接個別種ページ→一覧のように要求が増えた場合も、先行取得の完了後に
               // 未取得分類だけを追加する。重複取得はloadedCollectionKeysで防ぐ。
               const previous = typesFetchPromiseRef.current || Promise.resolve(null);
@@ -721,55 +656,23 @@ function App() {
 
             ensureTypesLoaderRef.current = startFetchTypes;
 
-            let loadTypesImmediately = false;
-            try {
-              const params = new URLSearchParams(
-                typeof window !== 'undefined' ? window.location.search || '' : '',
-              );
-              const pathname = typeof window !== 'undefined' ? window.location.pathname || '/' : '/';
-              loadTypesImmediately = shouldLoadInsectPartitionsImmediately(pathname, params);
-            } catch (error) {
-              logger.debug('Failed to interpret route data need, fetching insects immediately:', error);
-              loadTypesImmediately = true;
-            }
-
-            // 版不一致のIndexedDBキャッシュから起動した場合、昆虫パーティションを
-            // 遅延させると「植物データは新版・昆虫データは旧版」の混在が
-            // セッション中固定化される（旧データ表示済みのため遅延ロードの
-            // 起動ガードにも弾かれる）。ルートに関係なく直ちに再取得して揃える
-            const cacheVersionMismatch = Boolean(
-              cacheLoadedRef.current &&
-              cachedVersion &&
-              manifestVersion &&
-              manifestVersion !== cachedVersion,
-            );
-            if (cacheVersionMismatch) {
-              loadTypesImmediately = true;
-            }
-
-            // 昆虫パーティションのダウンロードを植物系JSONと同時に開始する
-            let immediateCollectionKeys = INSECT_COLLECTION_KEYS;
-            try {
-              immediateCollectionKeys = getImmediateInsectCollectionKeys(
-                typeof window !== 'undefined' ? window.location.pathname || '/' : '/',
-              );
-            } catch {}
-            if (cacheVersionMismatch) {
-              immediateCollectionKeys = INSECT_COLLECTION_KEYS;
-            }
+            // 版不一致時は全分類を直ちに揃える。通常の個別種ページは該当分類の
+            // fullだけ、一覧は全分類のcatalogだけを取得する。
+            const {
+              loadPlantsImmediately,
+              loadTypesImmediately,
+              immediateCollectionKeys,
+              immediateDetailLevel,
+              followUpFullKey,
+            } = initialLoadPlan;
             let typesPromise = loadTypesImmediately
               ? startFetchTypes(
                   immediateCollectionKeys,
-                  immediateCollectionKeys.length === 1 ? 'full' : 'catalog',
+                  immediateDetailLevel,
                 )
               : null;
-            const initialDetailCollectionKey = getInsectDetailCollectionKey(initialPathname);
-            if (
-              loadTypesImmediately &&
-              initialDetailCollectionKey &&
-              immediateCollectionKeys.length > 1
-            ) {
-              typesPromise = startFetchTypes([initialDetailCollectionKey], 'full');
+            if (followUpFullKey) {
+              typesPromise = startFetchTypes([followUpFullKey], 'full');
             }
 
             const [plantPayload] = await Promise.all([
@@ -792,10 +695,10 @@ function App() {
           if (await tryFullDataset(versionSuffix)) return;
           if (await tryLiteIndex(versionSuffix)) return;
         } else {
-        // manifest.json が取得できなかった場合のフォールバック
-        if (await tryFullDataset(versionSuffix)) return;
-        if (await tryLiteIndex(versionSuffix)) return;
-      }
+          // manifest.json が取得できなかった場合のフォールバック
+          if (await tryFullDataset(versionSuffix)) return;
+          if (await tryLiteIndex(versionSuffix)) return;
+        }
       } catch (_) {
         if (await tryFullDataset(fallbackVersionSuffix)) return;
         if (await tryLiteIndex(fallbackVersionSuffix)) return;
@@ -878,103 +781,6 @@ function App() {
     if (!collectionKey || !ensureTypesLoaderRef.current) return;
     ensureTypesLoaderRef.current([collectionKey], 'full');
   }, [location.pathname]);
-
-  // Content protection measures (removed to improve UX/performance)
-  /*useEffect(() => {
-    // Disable right-click context menu
-    const handleContextMenu = (e) => {
-      e.preventDefault();
-      return false;
-    };
-
-    // Disable common keyboard shortcuts for copying/saving content
-    const handleKeyDown = (e) => {
-      // Disable F12 (Developer Tools)
-      if (e.key === 'F12') {
-        e.preventDefault();
-        return false;
-      }
-      
-      // Disable Ctrl+Shift+I (Developer Tools)
-      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-        e.preventDefault();
-        return false;
-      }
-      
-      // Disable Ctrl+Shift+J (Console)
-      if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-        e.preventDefault();
-        return false;
-      }
-      
-      // Disable Ctrl+U (View Source)
-      if (e.ctrlKey && e.key === 'u') {
-        e.preventDefault();
-        return false;
-      }
-      
-      // Disable Ctrl+S (Save Page)
-      if (e.ctrlKey && e.key === 's') {
-        e.preventDefault();
-        return false;
-      }
-      
-      // Disable Ctrl+A (Select All) - but allow in input fields
-      if (e.ctrlKey && e.key === 'a' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-        e.preventDefault();
-        return false;
-      }
-      
-      // Disable Ctrl+P (Print)
-      if (e.ctrlKey && e.key === 'p') {
-        e.preventDefault();
-        return false;
-      }
-    };
-
-    // Disable image dragging
-    const handleDragStart = (e) => {
-      if (e.target.tagName === 'IMG') {
-        e.preventDefault();
-        return false;
-      }
-    };
-
-    // Add event listeners
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('dragstart', handleDragStart);
-
-    // Basic dev tools detection - TEMPORARILY DISABLED FOR DEBUGGING
-    // let devtools = {
-    //   open: false,
-    //   orientation: null
-    // };
-    
-    // const threshold = 160;
-    // setInterval(() => {
-    //   if (window.outerHeight - window.innerHeight > threshold || 
-    //       window.outerWidth - window.innerWidth > threshold) {
-    //     if (!devtools.open) {
-    //       devtools.open = true;
-    //       console.clear();
-    //       allowDebugLogs && console.log('%c⚠️ 開発者ツールが検出されました', 'color: red; font-size: 20px; font-weight: bold;');
-    //       allowDebugLogs && console.log('%c研究用データの保護にご協力ください', 'color: orange; font-size: 14px;');
-    //     }
-    //   } else {
-    //     devtools.open = false;
-    //   }
-    // }, 500);
-
-    // Cleanup function
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('dragstart', handleDragStart);
-    };
-  }, []);*/
-
-  logger.debug("App rendering. Loading:", loading, "Moths count:", moths.length, "Theme:", theme);
 
   const hasLoadedInsectPartitions =
     moths.length +

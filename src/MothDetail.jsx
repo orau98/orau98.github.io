@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import InstagramIcon from './components/InstagramIcon';
 import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
-import { resolvePlaceholderSubject } from './components/ui/NoPhotoPlaceholder';
+import { resolvePlaceholderSubject } from './utils/placeholderSubject';
 import ImageModal from './components/ImageModal';
 import { DetailSkeleton } from './components/SkeletonLoader';
 import SourceCitation from './components/ui/SourceCitation';

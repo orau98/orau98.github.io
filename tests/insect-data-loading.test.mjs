@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   getImmediateInsectCollectionKeys,
   getInsectDetailCollectionKey,
+  shouldLoadInsectPartitionsImmediately,
   shouldLoadPlantPartitionsImmediately,
 } from '../src/utils/insectDataLoading.js';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
@@ -34,4 +35,16 @@ test('一覧・クイズ・植物ページは部分取得対象として誤判�
     assert.equal(getInsectDetailCollectionKey(pathname), null);
     assert.deepEqual(getImmediateInsectCollectionKeys(pathname), [...INSECT_COLLECTION_KEYS]);
   }
+});
+
+test('昆虫パーティションの即時取得条件を一覧タブと検索状態から判定する', () => {
+  assert.equal(shouldLoadInsectPartitionsImmediately('/'), true);
+  assert.equal(shouldLoadInsectPartitionsImmediately('/moth'), true);
+  assert.equal(shouldLoadInsectPartitionsImmediately('/plant'), false);
+  assert.equal(shouldLoadInsectPartitionsImmediately('/en/plant'), false);
+  assert.equal(
+    shouldLoadInsectPartitionsImmediately('/plant', new URLSearchParams('q=フジ')),
+    true,
+  );
+  assert.equal(shouldLoadInsectPartitionsImmediately('/moth/オオミズアオ/'), true);
 });

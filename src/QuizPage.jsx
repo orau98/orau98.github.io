@@ -11,7 +11,8 @@ import {
 } from '@heroicons/react/24/solid';
 import { Link, useSearchParams } from 'react-router-dom';
 import ImageWithFallback from './components/ImageWithFallback';
-import NoPhotoPlaceholder, { resolvePlaceholderSubject } from './components/ui/NoPhotoPlaceholder';
+import NoPhotoPlaceholder from './components/ui/NoPhotoPlaceholder';
+import { resolvePlaceholderSubject } from './utils/placeholderSubject';
 import SourceCitation from './components/ui/SourceCitation';
 import useInsectImageCandidates from './hooks/useInsectImageCandidates';
 import useSeoMeta from './hooks/useSeoMeta';
