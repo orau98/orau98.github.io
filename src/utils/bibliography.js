@@ -508,17 +508,6 @@ export const bibliography = [
     url: buildAmazonBookUrl('4434218220')
   },
   {
-    key: 'nihon-no-kiriga',
-    title: '日本の冬夜蛾 (キリガ)',
-    authors: ['小林 秀紀', '四方 圭一郎', '枝 恵太郎'],
-    year: '2016',
-    publisher: 'むし社',
-    pages: '112p',
-    size: '31cm',
-    isbn13: '978-4-943955-48-1',
-    url: 'https://www.mushi-sha.co.jp/shopdetail/000000000506/'
-  },
-  {
     key: 'tinea-21-2-kishida-2010',
     type: 'article',
     title: 'Descriptions of new species and new subspecies of Japanese Macrolepidoptera (1)',
@@ -652,6 +641,18 @@ export const bibliography = [
   }
 ,
   {
+    key: 'japanese-journal-entomology-61-2-teramoto-1993',
+    type: 'article',
+    title: 'Immature Stages of a Stictopterine Moth, Lophoptera hayesi (Lepidoptera, Noctuidae)',
+    authors: ['Teramoto, N.'],
+    year: '1993',
+    journal: 'Japanese Journal of Entomology',
+    volume: '61',
+    issue: '2',
+    pages: '197-202',
+    url: 'https://dl.ndl.go.jp/pid/10654502'
+  },
+  {
     key: 'ga-tsushin-103-yamamoto-1979',
     type: 'article',
     title: 'ミヤマオビキリガの幼虫',
@@ -659,17 +660,17 @@ export const bibliography = [
     year: '1979',
     journal: '蛾類通信',
     issue: '103',
-    pages: '14'
+    pages: '48'
   },
   {
     key: 'ga-tsushin-103-sugi-1979',
     type: 'article',
     title: 'リュウキュウキノカワガの幼期について',
-    authors: ['杉繁郎'],
+    authors: ['宮田保'],
     year: '1979',
     journal: '蛾類通信',
     issue: '103',
-    pages: '16'
+    pages: '37-39'
   },
   {
     key: 'ga-tsushin-108-iijima-1980',
@@ -679,7 +680,7 @@ export const bibliography = [
     year: '1980',
     journal: '蛾類通信',
     issue: '108',
-    pages: '13'
+    pages: '127'
   },
   {
     key: 'ga-tsushin-111-shimbo-1981',
@@ -704,12 +705,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-114-togashi-1982',
     type: 'article',
-    title: '石川県産蛾類の食草1',
+    title: '石川県産蛾類の食草 1',
     authors: ['富樫一次'],
-    year: '1982',
+    year: '1983',
     journal: '蛾類通信',
-    issue: '114',
-    pages: '214-216'
+    issue: '120',
+    pages: '315-316'
   },
   {
     key: 'ga-tsushin-114-ogi-1982',
@@ -724,12 +725,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-116-shimbo-1982',
     type: 'article',
-    title: '高山植物を食餌とする蛾の幼虫（4）',
+    title: '乗鞍岳高山帯の蛾 ならびに高山植物を食餌とする蛾の幼虫 (4)',
     authors: ['神保一義', '柳田慶浩'],
     year: '1982',
     journal: '蛾類通信',
     issue: '116',
-    pages: '246-258'
+    pages: '250-255'
   },
   {
     key: 'ga-tsushin-118-ohwada-1982b',
@@ -764,12 +765,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-121-togashi-1983',
     type: 'article',
-    title: '石川県産蛾類の食草2',
+    title: '石川県産蛾類の食草 2',
     authors: ['富樫一次'],
     year: '1983',
     journal: '蛾類通信',
     issue: '121',
-    pages: '4'
+    pages: '332-334'
   },
   {
     key: 'ga-tsushin-121-ogi-1983',
@@ -799,7 +800,7 @@ export const bibliography = [
     year: '1983',
     journal: '蛾類通信',
     issue: '123',
-    pages: '11'
+    pages: '371'
   },
   {
     key: 'ga-tsushin-124-watanabe-1984',
@@ -824,12 +825,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-126-gyotoku-1984',
     type: 'article',
-    title: 'クロモンシタバ幼虫の食草と採集資料',
+    title: 'クロモンシタバ幼虫の食樹と採集資料',
     authors: ['行徳直巳'],
     year: '1984',
     journal: '蛾類通信',
     issue: '126',
-    pages: '8-9'
+    pages: '7-9'
   },
   {
     key: 'ga-tsushin-126-togashi-1984',
@@ -854,12 +855,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-128-nakamura-1984',
     type: 'article',
-    title: 'ケンモンキリガの食草追加',
+    title: 'ケンモンキリガの食樹追加',
     authors: ['中村正直'],
     year: '1984',
     journal: '蛾類通信',
     issue: '128',
-    pages: '35-42'
+    pages: '34'
   },
   {
     key: 'ga-tsushin-129-ito-1984',
@@ -1004,12 +1005,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-137-togashi-1986',
     type: 'article',
-    title: '石川県産蛾類の食草5',
+    title: '石川県産蛾類の食草 5',
     authors: ['富樫一次'],
     year: '1986',
     journal: '蛾類通信',
     issue: '137',
-    pages: '7'
+    pages: '183-185'
   },
   {
     key: 'ga-tsushin-137-sato-1986',
@@ -1149,7 +1150,7 @@ export const bibliography = [
     year: '1989',
     journal: '蛾類通信',
     issue: '153',
-    pages: '2'
+    pages: '34-47'
   },
   {
     key: 'ga-tsushin-154-ogi-1989',
@@ -1165,11 +1166,11 @@ export const bibliography = [
     key: 'ga-tsushin-155-fujisawa-1989',
     type: 'article',
     title: '日本未記録のDepressaria（マルハキバガ科）4種の記録',
-    authors: ['藤沢勝利'],
+    authors: ['藤沢勝利', '亀田満'],
     year: '1989',
     journal: '蛾類通信',
     issue: '155',
-    pages: '1'
+    pages: '65-69'
   },
   {
     key: 'ga-tsushin-156-iwasaki-1989',
@@ -1214,12 +1215,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-158-watanabe-1990',
     type: 'article',
-    title: 'ビロードハマキの幼虫',
+    title: 'ヒメカンアオイについていたワイギンモンウワバとビロードハマキの幼虫',
     authors: ['渡辺一雄'],
     year: '1990',
     journal: '蛾類通信',
     issue: '158',
-    pages: '140-141'
+    pages: '139'
   },
   {
     key: 'ga-tsushin-159-nakamura-funakoshi-1990',
@@ -1294,12 +1295,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-169-sugi-1992a',
     type: 'article',
-    title: '台湾産Melapiaの一種',
+    title: '台湾産 Melapia の一種',
     authors: ['杉繁郎'],
     year: '1992',
     journal: '蛾類通信',
     issue: '169',
-    pages: '331-333'
+    pages: '330'
   },
   {
     key: 'ga-tsushin-170-nishihara-1992',
@@ -1349,17 +1350,17 @@ export const bibliography = [
     year: '1992',
     journal: '蛾類通信',
     issue: '171',
-    pages: '382-383'
+    pages: '381'
   },
   {
     key: 'ga-tsushin-174-nakamura-1993',
     type: 'article',
-    title: '針葉の葉に潜るコハモグリガの幼生期',
+    title: '針葉樹の葉に潜るコハモグリガの幼生期',
     authors: ['中村正直'],
     year: '1993',
     journal: '蛾類通信',
     issue: '174',
-    pages: '10-12'
+    pages: '426-429'
   },
   {
     key: 'ga-tsushin-175-sugi-yamamoto-1993',
@@ -1509,7 +1510,7 @@ export const bibliography = [
     year: '1997',
     journal: '蛾類通信',
     issue: '192',
-    pages: '275-285'
+    pages: '279'
   },
   {
     key: 'ga-tsushin-193-tominaga-1997',
@@ -1519,7 +1520,7 @@ export const bibliography = [
     year: '1997',
     journal: '蛾類通信',
     issue: '193',
-    pages: '10'
+    pages: '298'
   },
   {
     key: 'ga-tsushin-193-ogi-1997',
@@ -1574,12 +1575,12 @@ export const bibliography = [
   {
     key: 'ga-tsushin-197-sasaki-1998',
     type: 'article',
-    title: '日本未記録種トガリヒロバキバガ',
+    title: '日本産 Kitanola マダライラガ属の再検討と2新種の記載',
     authors: ['佐々木明夫'],
     year: '1998',
     journal: '蛾類通信',
-    issue: '197',
-    pages: '367'
+    issue: '200',
+    pages: '417-423'
   },
   {
     key: 'ga-tsushin-198-tanahara-1998a',
@@ -1635,11 +1636,11 @@ export const bibliography = [
     key: 'ga-tsushin-200-tanahara-e-1998',
     type: 'article',
     title: '沖縄本島におけるホウジャク属6種の幼虫と食草',
-    authors: ['棚原恵'],
+    authors: ['棚原功'],
     year: '1998',
     journal: '蛾類通信',
     issue: '200',
-    pages: '16'
+    pages: '430-432'
   },
   {
     key: 'ga-tsushin-200-tominaga-1998',
@@ -1709,7 +1710,7 @@ export const bibliography = [
     year: '1999',
     journal: '蛾類通信',
     issue: '202',
-    pages: '21-22'
+    pages: '20'
   },
   {
     key: 'ga-tsushin-202b-tominaga-1999',
@@ -1825,17 +1826,17 @@ export const bibliography = [
   {
     key: 'sayabane-1-栗原隆-2011',
     type: 'article',
-    title: 'ツヤナガタマムシの寄主植物について（短報）',
+    title: '【短報】ツヤナガタマムシの寄主植物の記録',
     authors: ['栗原隆', '福富宏和'],
     year: '2011',
     journal: 'さやばね ニューシリーズ',
     issue: '1',
-    pages: '27'
+    pages: '26-27'
   },
   {
     key: 'sayabane-1-福富宏和-2011',
     type: 'article',
-    title: '日本におけるツマキナガタマムシの寄主植物および西表島からの記録（短報）',
+    title: '【短報】日本におけるツマキナガタマムシの寄主植物および西表島からの記録',
     authors: ['福富宏和', '栗原隆'],
     year: '2011',
     journal: 'さやばね ニューシリーズ',
@@ -1954,16 +1955,6 @@ export const bibliography = [
   },
   {
     key: 'sayabane-10-鈴木亙-2013',
-    type: 'article',
-    title: '3種のコメツキダマシの食樹について（短報）',
-    authors: ['鈴木亙'],
-    year: '2013',
-    journal: 'さやばね ニューシリーズ',
-    issue: '10',
-    pages: '12'
-  },
-  {
-    key: 'sayabane-10-鈴木亙-2013-p12',
     type: 'article',
     title: '3種のコメツキダマシの食樹について（短報）',
     authors: ['鈴木亙'],

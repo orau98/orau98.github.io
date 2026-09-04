@@ -19,6 +19,7 @@ export const sourceLinks = {
   "日本原色アブラムシ図鑑": buildAmazonBookUrl('4881370170'),
   "日本昆虫目録 第4巻 準新翅類": buildAmazonBookUrl('4434218220'),
   "松本嘉幸 (2005)": "https://www.kahaku.go.jp/albums/abm.php?d=4893&f=abm00003991.pdf&n=p409.pdf",
+  "寺本憲之 (1993)": "https://dl.ndl.go.jp/pid/10654502",
   "Miyazaki (1988)": "https://dl.ndl.go.jp/pid/10653578",
   "Blackman & Eastop, Aphids on the World's Plants": "https://aphidsonworldsplants.info/d_aphids_s/",
   "Aphid Species File": "https://aphid.archive.speciesfile.org/Common/basic/Taxa.aspx?TaxonNameID=1166104",
