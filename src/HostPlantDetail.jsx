@@ -31,7 +31,7 @@ import {
 import useInsectImageIndex from './hooks/useInsectImageIndex';
 import { getAssetBase, getAssetVersionQuery } from './utils/assetPaths';
 import ImageWithFallback from './components/ImageWithFallback';
-import { resolvePlaceholderSubject } from './components/ui/NoPhotoPlaceholder';
+import { resolvePlaceholderSubject } from './utils/placeholderSubject';
 import {
   buildResponsivePicture,
   buildResizedImageUrl,

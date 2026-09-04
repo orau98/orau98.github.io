@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * 画像未掲載・読み込み失敗時のプレースホルダー。
  *
@@ -9,27 +7,6 @@ import React from 'react';
  * カメラバッジを重ねることで「この生き物の写真がまだ無い」ことを
  * 言葉に頼らず伝える。
  */
-
-/**
- * 昆虫の種別キー（siteTaxonomy の type）からシルエットを選ぶ。
- * 植物は 'plant' を渡す。
- */
-export const resolvePlaceholderSubject = (insectType) => {
-  switch (insectType) {
-    case 'beetle':
-    case 'longhornbeetle':
-    case 'barkbeetle':
-    case 'leafbeetle':
-    case 'aphid':
-      return 'bug';
-    case 'plant':
-      return 'sprout';
-    case 'moth':
-    case 'butterfly':
-    default:
-      return 'butterfly';
-  }
-};
 
 const SILHOUETTES = {
   // チョウ（蛾・蝶）

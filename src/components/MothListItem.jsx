@@ -10,7 +10,8 @@ import EmergenceTimeDisplay, { hasEmergencePeriods } from './EmergenceTimeDispla
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 import ImageWithFallback from './ImageWithFallback';
-import NoPhotoPlaceholder, { SubjectSilhouette, CameraGlyph, resolvePlaceholderSubject } from './ui/NoPhotoPlaceholder';
+import NoPhotoPlaceholder, { SubjectSilhouette, CameraGlyph } from './ui/NoPhotoPlaceholder';
+import { resolvePlaceholderSubject } from '../utils/placeholderSubject';
 import { Card, Badge } from './ui';
 import {
   buildResponsivePicture,
