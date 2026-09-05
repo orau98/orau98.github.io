@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fitNetworkBounds, groupNetwork, networkGroup, searchNetworkNodes, endpointId } from '../src/utils/networkView.js';
+import { fitNetworkBounds, groupNetwork, networkGroup, searchNetworkNodes, endpointId, NETWORK_PHOTO_SIZES, networkNodeRadius, containNetworkImage, networkPreviewCandidates } from '../src/utils/networkView.js';
 
 const plant = { id: 'plant:p', name: 'ハンノキ', type: 'plant-current', x: 0, y: 0 };
 const insect = (i, family = 'ヤガ科') => ({ id: `insect:${i}`, name: `昆虫${i}`, type: 'insect-host', x: Math.cos(i) * 160, y: Math.sin(i) * 160, raw: { classification: { familyJapanese: family, family: family === 'ヤガ科' ? 'Noctuidae' : 'Geometridae' } } });
@@ -104,3 +104,66 @@ test('empty and unpositioned graphs are safe; single nodes do not overzoom', () 
   assert.equal(fitNetworkBounds([plant], 20, 500), null);
   assert.ok(fitNetworkBounds([plant], 1200, 800).zoom <= 2.1);
 });
+
+test('photos default to 64-unit frames while unphotographed species stay compact', () => {
+  const photo = { ...insect(1), imgCandidates: ['/insect.320.webp'] };
+  assert.equal(networkNodeRadius(photo), 32);
+  assert.ok(networkNodeRadius(photo) > 12 * 2);
+  assert.equal(networkNodeRadius({ ...photo, type: 'insect-current' }), 40);
+  assert.equal(networkNodeRadius(insect(1)), 12);
+  assert.equal(networkNodeRadius(plant), 18);
+  assert.equal(networkNodeRadius({ type: 'group' }), 20);
+  assert.equal(networkNodeRadius(photo, 'invalid'), 32);
+  assert.deepEqual(NETWORK_PHOTO_SIZES.map(size => networkNodeRadius(photo, size.value)), [22, 32, 44]);
+});
+
+test('photo frames contain landscape and portrait images without stretching or cropping', () => {
+  for (const [width, height] of [[1600, 900], [900, 1600], [640, 640]]) {
+    const box = containNetworkImage(width, height, 32);
+    assert.equal(box.width / box.height, width / height);
+    assert.ok(box.width <= 64 && box.height <= 64);
+    assert.equal(Math.max(box.width, box.height), 64);
+    assert.equal(box.x, -box.width / 2);
+    assert.equal(box.y, -box.height / 2);
+  }
+  assert.equal(containNetworkImage(0, 400, 32), null);
+  assert.equal(containNetworkImage(400, 0, 32), null);
+});
+
+test('large photo previews prefer originals and high resolution while retaining all fallbacks', () => {
+  const candidates = ['/images/a.320.webp?v=1', '/images/a.640.webp?v=1', '/images/a.1024.webp?v=1', '/images/a.jpg', '/images/a.320.webp?v=1'];
+  const before = [...candidates];
+  assert.deepEqual(networkPreviewCandidates(candidates), [candidates[3], candidates[2], candidates[1], candidates[0]]);
+  assert.deepEqual(candidates, before);
+  assert.deepEqual(networkPreviewCandidates([]), []);
+});
+
+test('fitting a photographed network still produces visibly larger photos in each size mode', () => {
+  const nodes = makeData(8).nodes.map(node => ({ ...node, imgCandidates: ['/photo.640.webp'] }));
+  for (const [width, height] of [[1190, 640], [366, 250]]) {
+    const diameters = NETWORK_PHOTO_SIZES.map(size => {
+      const fit = fitNetworkBounds(nodes, width, height, undefined, size.value);
+      return fit.zoom * networkNodeRadius(nodes[1], size.value) * 2;
+    });
+    assert.ok(diameters[1] > diameters[0] * 1.15, JSON.stringify(diameters));
+    assert.ok(diameters[2] > diameters[1] * 1.15, JSON.stringify(diameters));
+  }
+});
+
+for (const size of NETWORK_PHOTO_SIZES) {
+  for (const [width, height] of [[1190, 640], [366, 250]]) {
+    test(`fitting includes enlarged photo frames and labels: ${size.value} at ${width}x${height}`, () => {
+      const nodes = makeData(8).nodes.map(node => ({ ...node, imgCandidates: ['/photo.640.webp'] }));
+      const fit = fitNetworkBounds(nodes, width, height, undefined, size.value);
+      assert.ok(fit.bounds.right - fit.bounds.left <= width - 32 + 0.001);
+      assert.ok(fit.bounds.bottom - fit.bounds.top <= height - 32 + 0.001);
+      for (const node of nodes) {
+        const radius = networkNodeRadius(node, size.value) * fit.zoom;
+        const x = (node.x - fit.x) * fit.zoom + width / 2;
+        const y = (node.y - fit.y) * fit.zoom + height / 2;
+        assert.ok(x - radius >= 0 && x + radius <= width);
+        assert.ok(y - radius >= 0 && y + radius <= height);
+      }
+    });
+  }
+}

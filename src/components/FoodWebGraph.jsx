@@ -1,5 +1,6 @@
 import { isFlowerVisitRecord } from '../utils/flowerVisitPlants.js';
 import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
 import useInsectImageIndex from '../hooks/useInsectImageIndex';
@@ -18,7 +19,9 @@ import { isNonPlantResourceName, isPlantHostRecord } from '../utils/hostResource
 import { isEnglishLocale } from '../utils/locale';
 import { buildPlantPath } from '../utils/siteTaxonomy';
 import InfoPopover from './InfoPopover';
-import { networkGroup, groupNetwork, searchNetworkNodes, fitNetworkBounds } from '../utils/networkView.js';
+import ImageWithFallback from './ImageWithFallback';
+import ImageModal from './ImageModal';
+import { networkGroup, groupNetwork, searchNetworkNodes, fitNetworkBounds, NETWORK_PHOTO_SIZES, networkNodeRadius, containNetworkImage, networkPreviewCandidates } from '../utils/networkView.js';
 
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
@@ -249,6 +252,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const [isCompactPanel, setIsCompactPanel] = useState(false);
   const [desktopControlsOpen, setDesktopControlsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [photoSize, setPhotoSize] = useState('large');
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [groupMode, setGroupMode] = useState('auto');
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const searchInputRef = useRef(null);
@@ -721,6 +726,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   useEffect(() => {
     setRelationFilter('all');
     setSearchQuery('');
+    setPhotoPreview(null);
     setGroupMode('auto');
     setExpandedGroups(new Set());
     setSelectedNodeId(null);
@@ -759,6 +765,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         return [
           buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 640, query: cacheBust }),
           buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 320, query: cacheBust }),
+          rawUrl,
         ];
       }
       return [detail.image];
@@ -778,6 +785,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 320, query: cacheBust }));
       urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 640, query: cacheBust }));
       urls.push(buildResizedImageUrl({ baseUrl: assetBase, folder: 'insects', filename: base, width: 1024, query: cacheBust }));
+      const sourceExtension = imageExtMap[base];
+      if (typeof sourceExtension === 'string' && /^\.(?:jpe?g|png|webp|avif)$/i.test(sourceExtension)) {
+        urls.push(`${assetBase}images/insects/${encodeURIComponent(base)}${sourceExtension}${cacheBust}`);
+      }
     }
     return urls;
   }, [assetBase, cacheBust, imageBaseSet, imageExtMap, normalizedImageEntries]);
@@ -1358,12 +1369,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       if (!context) return [...String(label)].length * 12;
       context.font = `${current ? '700 13' : '12'}px "Helvetica Neue", "Segoe UI", sans-serif`;
       return context.measureText(label).width;
-    });
+    }, photoSize);
     if (!fit) return;
     beginProgrammaticZoom(duration + 300);
     fgRef.current.centerAt(fit.x, fit.y, duration);
     fgRef.current.zoom(fit.zoom, duration);
-  }, [beginProgrammaticZoom, graphData.nodes, graphSize.width, graphSize.height]);
+  }, [beginProgrammaticZoom, graphData.nodes, graphSize.width, graphSize.height, photoSize]);
 
   const fitInitialView = fitGraphToViewport;
 
@@ -1376,8 +1387,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   // ノード（サムネ）同士の重なりを防ぐ衝突力。半径は描画半径＋ラベル余白ぶん
   const collideForce = useMemo(
-    () => createCollideForce((node) => (node?.type === 'group' ? 28 : node?.type?.includes('current') ? 24 : 17)),
-    []
+    () => createCollideForce((node) => networkNodeRadius(node, photoSize) * 1.5 + 5),
+    [photoSize]
   );
 
   useEffect(() => {
@@ -1558,11 +1569,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       plant: '#10b981'
     };
     const isCurrent = node.type.includes('current');
-    // 写真がノードの情報の主役なので大きめに描く。半径はグラフ座標系で固定し、
-    // ズームインすると画像も素直に拡大されるようにする
-    // （以前は1/√zoomで縮み、拡大しても写真がほとんど大きくならなかった）
-    const baseR = node.type === 'group' ? 20 : isCurrent ? 18 : 12;
-    const radius = baseR;
+    // Photo size is independent of graph zoom; empty nodes remain compact.
+    const radius = networkNodeRadius(node, photoSize);
     const inHighlight = highlightNodeIds.size > 0 && highlightNodeIds.has(node.id);
     const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
     const dim = dimByHighlight;
@@ -1609,17 +1617,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
     if (img) {
       ctx.save();
-      ctx.beginPath();
-      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
-      ctx.clip();
+      drawRoundedRect(ctx, node.x - radius, node.y - radius, radius * 2, radius * 2, 6 / globalScale);
       ctx.globalAlpha = alpha;
-      ctx.drawImage(img, node.x - radius, node.y - radius, radius * 2, radius * 2);
+      ctx.fillStyle = isDark ? '#1e293b' : '#fff';
+      ctx.fill();
+      ctx.clip();
+      const box = containNetworkImage(img.naturalWidth, img.naturalHeight, radius);
+      if (box) ctx.drawImage(img, node.x + box.x, node.y + box.y, box.width, box.height);
       ctx.restore();
       ctx.lineWidth = 1.2 / Math.sqrt(globalScale);
       ctx.strokeStyle = isDark ? 'rgba(226,232,240,0.35)' : 'rgba(15,23,42,0.35)';
       if (selectedNodeId === node.id) ctx.strokeStyle = isDark ? 'rgba(251,113,133,0.8)' : 'rgba(244,63,94,0.85)';
-      ctx.beginPath();
-      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+      drawRoundedRect(ctx, node.x - radius, node.y - radius, radius * 2, radius * 2, 6 / globalScale);
       ctx.stroke();
     } else {
       ctx.beginPath();
@@ -1637,8 +1646,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.save();
       ctx.lineWidth = 2.2 / Math.sqrt(globalScale);
       ctx.strokeStyle = isDark ? 'rgba(248,250,252,0.9)' : 'rgba(15,23,42,0.85)';
-      ctx.beginPath();
-      ctx.arc(node.x, node.y, radius * 1.35, 0, Math.PI * 2);
+      if (img) drawRoundedRect(ctx, node.x - radius * 1.12, node.y - radius * 1.12, radius * 2.24, radius * 2.24, 8 / globalScale);
+      else { ctx.beginPath(); ctx.arc(node.x, node.y, radius * 1.35, 0, Math.PI * 2); }
       ctx.stroke();
       ctx.restore();
     }
@@ -1653,18 +1662,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
     }
     ctx.restore();
-  }, [hoverNodeId, activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, highlightNodeIds, isDark, isEnglish, labelMode, primaryNeighborIds, selectedNodeId]);
+  }, [photoSize, hoverNodeId, activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, highlightNodeIds, isDark, isEnglish, labelMode, primaryNeighborIds, selectedNodeId]);
 
   const nodePointerAreaPaint = useCallback((node, color, ctx, globalScale) => {
-    const isCurrent = node.type.includes('current');
-    // 視覚半径(18/12)より広いタップ判定。ズームアウト時も画面上で最低約22pxを確保し、
-    // モバイルで小ノードを取りやすくする
-    const radius = Math.max((isCurrent ? 18 : 12) * 1.25, 22 / globalScale);
+    // Include the corners of photo frames and a minimum 44px touch target.
+    const radius = Math.max(networkNodeRadius(node, photoSize) * 1.5, 22 / globalScale);
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
     ctx.fill();
-  }, []);
+  }, [photoSize]);
 
   // zoom controls
   const zoomIn = useCallback(() => {
@@ -2111,7 +2118,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         {[...nodeGroups.current, ...nodeGroups.plants, ...nodeGroups.insects].map(node => (
           <button key={node.id} type="button" onClick={() => focusNodeById(node.id)} aria-pressed={selectedNodeId === node.id} className="mb-1 flex w-full items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-left text-sm hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800">
-            <span className={node.type.startsWith('plant') ? 'h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500' : 'h-2.5 w-2.5 shrink-0 rounded-full bg-sky-500'} aria-hidden="true" />
+            {node.imgCandidates?.length > 0
+              ? <ImageWithFallback candidates={node.imgCandidates} alt="" className="h-14 w-14 shrink-0 rounded-md bg-slate-50" fit="contain" />
+              : <span className={node.type.startsWith('plant') ? 'h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500' : 'h-2.5 w-2.5 shrink-0 rounded-full bg-sky-500'} aria-hidden="true" />}
             <span className="min-w-0"><span className="block font-semibold">{node.name}</span><span className="block text-xs text-slate-500 dark:text-slate-300">{node.type.includes('current') ? (isEnglish ? 'Current species' : '現在の種') : networkGroup(node, isEnglish).label}</span></span>
           </button>
         ))}
@@ -2190,6 +2199,16 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       {!panelCollapsed && (
         <>
           <div className={`mt-3 min-h-0 flex-1 ${isCompactPanel ? 'overflow-y-auto pr-1' : 'overflow-y-auto'}`}>
+            {selectedNode.imgCandidates?.length > 0 && <button
+              type="button"
+              data-network-photo-preview
+              className="mb-3 block w-full rounded-lg border border-slate-200 bg-slate-50 p-1 text-xs text-slate-700 hover:border-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+              onClick={() => setPhotoPreview({ id: selectedNode.id, label: selectedNode.name, alt: `${selectedNode.name}${isEnglish ? ' photograph' : 'の写真'}`, src: selectedNode.imgCandidates[0], originalCandidates: networkPreviewCandidates(selectedNode.imgCandidates) })}
+              aria-label={isEnglish ? `Enlarge photograph of ${selectedNode.name}` : `${selectedNode.name}の写真を大きく表示`}
+            >
+              <ImageWithFallback candidates={selectedNode.imgCandidates} alt="" className={isCompactPanel ? 'h-24 w-full' : 'h-44 w-full'} fit="contain" loading="eager" />
+              <span className="block py-1">{isEnglish ? 'Enlarge photograph' : '写真を大きく表示'}</span>
+            </button>}
             <div className="space-y-2">
               {selectedNode.type.startsWith('insect') ? (
                 <div className="space-y-3">
@@ -2333,6 +2352,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             <input ref={searchInputRef} type="search" value={searchQuery} onChange={event => { setSearchQuery(event.target.value); setNodeListOpen(true); }} onFocus={() => setNodeListOpen(true)} onKeyDown={event => { if (event.key === 'Escape') { setNodeListOpen(false); listButtonRef.current?.focus(); } }} placeholder={isEnglish ? 'Search species or family' : '種名・科名で探す'} className="h-9 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 text-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/25 dark:border-slate-600 dark:bg-slate-950" />
           </label>
           <button ref={listButtonRef} type="button" className={controlClass} aria-expanded={nodeListOpen} onClick={() => setNodeListOpen(previous => !previous)}>{isEnglish ? 'Species list' : '種の一覧'}</button>
+          <label className="flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 px-2 text-xs dark:border-slate-600">
+            <span>{isEnglish ? 'Photos' : '写真'}</span>
+            <select aria-label={isEnglish ? 'Photo size' : '写真サイズ'} value={photoSize} onChange={event => { markUserInteracted(); setPhotoSize(event.target.value); }} className="h-8 bg-transparent font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600">
+              {NETWORK_PHOTO_SIZES.map(size => <option key={size.value} value={size.value}>{isEnglish ? size.labelEn : size.label}</option>)}
+            </select>
+          </label>
           <button type="button" className={controlClass} onClick={resetView}>{isEnglish ? 'Fit view' : '全体表示'}</button>
           <button type="button" className={controlClass} onClick={zoomOut} aria-label={isEnglish ? 'Zoom out' : '縮小'}>−</button>
           <button type="button" className={controlClass} onClick={zoomIn} aria-label={isEnglish ? 'Zoom in' : '拡大'}>＋</button>
@@ -2435,7 +2460,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           {nodeListOpen ? nodeListPanel : <div className="h-full min-h-0 p-4">{selectionPanelContent}</div>}
         </aside>}
       </div>
-      {!guideDismissed && <div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 px-3 py-1.5 text-xs text-slate-600 dark:border-slate-700 dark:text-slate-300"><span>{isEnglish ? 'Select a species to see its relationships. Search also finds species inside groups.' : '種を選ぶと関係を表示。まとめた科の中の種も検索できます。'}</span><button type="button" className="p-1" aria-label={isEnglish ? 'Close guide' : 'ガイドを閉じる'} onClick={() => setGuideDismissed(true)}>✕</button></div>}
+      {!guideDismissed && <div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 px-3 py-1.5 text-xs text-slate-600 dark:border-slate-700 dark:text-slate-300"><span>{isEnglish ? 'Select a species for details and a larger photograph. Photo size can be changed independently of zoom.' : '種を選ぶと説明と大きな写真を表示。写真サイズは図のズームとは別に変えられます。'}</span><button type="button" className="p-1" aria-label={isEnglish ? 'Close guide' : 'ガイドを閉じる'} onClick={() => setGuideDismissed(true)}>✕</button></div>}
+      {photoPreview && typeof document !== 'undefined' && createPortal(<ImageModal image={photoPreview} isOpen onClose={() => setPhotoPreview(null)} locale={isEnglish ? 'en' : 'ja'} />, document.body)}
     </div>
   );
 });
