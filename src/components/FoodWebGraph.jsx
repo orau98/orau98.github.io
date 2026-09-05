@@ -21,7 +21,7 @@ import { buildPlantPath } from '../utils/siteTaxonomy';
 import InfoPopover from './InfoPopover';
 import ImageWithFallback from './ImageWithFallback';
 import ImageModal from './ImageModal';
-import { networkGroup, groupNetwork, searchNetworkNodes, fitNetworkBounds, NETWORK_PHOTO_SIZES, networkNodeRadius, containNetworkImage, networkPreviewCandidates } from '../utils/networkView.js';
+import { networkGroup, groupNetwork, searchNetworkNodes, fitNetworkBounds, NETWORK_PHOTO_SIZES, networkNodeRadius, coverNetworkImage, networkPreviewCandidates } from '../utils/networkView.js';
 
 // ネットワーク図: 画像がある種はサムネで表示。画像が無い場合は従来の円にフォールバック。
 // 依存の fetch 失敗や画像読み込み失敗があっても必ず描画が続くように防御的に実装。
@@ -1617,18 +1617,18 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
     if (img) {
       ctx.save();
-      drawRoundedRect(ctx, node.x - radius, node.y - radius, radius * 2, radius * 2, 6 / globalScale);
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = isDark ? '#1e293b' : '#fff';
-      ctx.fill();
       ctx.clip();
-      const box = containNetworkImage(img.naturalWidth, img.naturalHeight, radius);
+      const box = coverNetworkImage(img.naturalWidth, img.naturalHeight, radius);
       if (box) ctx.drawImage(img, node.x + box.x, node.y + box.y, box.width, box.height);
       ctx.restore();
       ctx.lineWidth = 1.2 / Math.sqrt(globalScale);
       ctx.strokeStyle = isDark ? 'rgba(226,232,240,0.35)' : 'rgba(15,23,42,0.35)';
       if (selectedNodeId === node.id) ctx.strokeStyle = isDark ? 'rgba(251,113,133,0.8)' : 'rgba(244,63,94,0.85)';
-      drawRoundedRect(ctx, node.x - radius, node.y - radius, radius * 2, radius * 2, 6 / globalScale);
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
       ctx.stroke();
     } else {
       ctx.beginPath();
@@ -1646,8 +1646,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.save();
       ctx.lineWidth = 2.2 / Math.sqrt(globalScale);
       ctx.strokeStyle = isDark ? 'rgba(248,250,252,0.9)' : 'rgba(15,23,42,0.85)';
-      if (img) drawRoundedRect(ctx, node.x - radius * 1.12, node.y - radius * 1.12, radius * 2.24, radius * 2.24, 8 / globalScale);
-      else { ctx.beginPath(); ctx.arc(node.x, node.y, radius * 1.35, 0, Math.PI * 2); }
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, radius * 1.35, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
     }
@@ -1665,7 +1665,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   }, [photoSize, hoverNodeId, activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, highlightNodeIds, isDark, isEnglish, labelMode, primaryNeighborIds, selectedNodeId]);
 
   const nodePointerAreaPaint = useCallback((node, color, ctx, globalScale) => {
-    // Include the corners of photo frames and a minimum 44px touch target.
+    // Include the circular photo and its halo, with a minimum 44px touch target.
     const radius = Math.max(networkNodeRadius(node, photoSize) * 1.5, 22 / globalScale);
     ctx.fillStyle = color;
     ctx.beginPath();

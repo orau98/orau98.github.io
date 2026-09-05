@@ -17,10 +17,11 @@ export const networkNodeRadius = (node, photoSize = 'large') => {
   return size.radius * (current ? 1.25 : 1);
 };
 
-// Preserve the complete photograph and its aspect ratio in the square frame.
-export const containNetworkImage = (width, height, radius) => {
+// Fill the circular crop without letterboxing or stretching. Full photographs
+// remain available in the separate image preview.
+export const coverNetworkImage = (width, height, radius) => {
   if (!(width > 0 && height > 0 && radius > 0)) return null;
-  const scale = radius * 2 / Math.max(width, height);
+  const scale = radius * 2 / Math.min(width, height);
   return { x: -width * scale / 2, y: -height * scale / 2, width: width * scale, height: height * scale };
 };
 
