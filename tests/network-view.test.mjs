@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fitNetworkBounds, groupNetwork, networkGroup, searchNetworkNodes, endpointId, NETWORK_PHOTO_SIZES, networkNodeRadius, containNetworkImage, networkPreviewCandidates } from '../src/utils/networkView.js';
+import { fitNetworkBounds, groupNetwork, networkGroup, searchNetworkNodes, endpointId, NETWORK_PHOTO_SIZES, networkNodeRadius, coverNetworkImage, networkPreviewCandidates } from '../src/utils/networkView.js';
 
 const plant = { id: 'plant:p', name: 'ハンノキ', type: 'plant-current', x: 0, y: 0 };
 const insect = (i, family = 'ヤガ科') => ({ id: `insect:${i}`, name: `昆虫${i}`, type: 'insect-host', x: Math.cos(i) * 160, y: Math.sin(i) * 160, raw: { classification: { familyJapanese: family, family: family === 'ヤガ科' ? 'Noctuidae' : 'Geometridae' } } });
@@ -117,17 +117,18 @@ test('photos default to 64-unit frames while unphotographed species stay compact
   assert.deepEqual(NETWORK_PHOTO_SIZES.map(size => networkNodeRadius(photo, size.value)), [22, 32, 44]);
 });
 
-test('photo frames contain landscape and portrait images without stretching or cropping', () => {
+test('circular photos cover the full diameter without letterboxing or stretching', () => {
   for (const [width, height] of [[1600, 900], [900, 1600], [640, 640]]) {
-    const box = containNetworkImage(width, height, 32);
+    const box = coverNetworkImage(width, height, 32);
     assert.equal(box.width / box.height, width / height);
-    assert.ok(box.width <= 64 && box.height <= 64);
-    assert.equal(Math.max(box.width, box.height), 64);
+    assert.ok(box.width >= 64 && box.height >= 64);
+    assert.equal(Math.min(box.width, box.height), 64);
     assert.equal(box.x, -box.width / 2);
     assert.equal(box.y, -box.height / 2);
   }
-  assert.equal(containNetworkImage(0, 400, 32), null);
-  assert.equal(containNetworkImage(400, 0, 32), null);
+  assert.equal(coverNetworkImage(0, 400, 32), null);
+  assert.equal(coverNetworkImage(400, 0, 32), null);
+  assert.equal(coverNetworkImage(400, 400, 0), null);
 });
 
 test('large photo previews prefer originals and high resolution while retaining all fallbacks', () => {
