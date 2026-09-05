@@ -1,8 +1,7 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
   pull_request:
     branches: [ main ]
 
@@ -28,11 +27,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests
-        run: npm test
-
-      - name: Data validation (normalized CSV)
-        run: npm run validate-normalized
+      - name: Validate source, lint and regression tests
+        run: npm run check:source
 
       - name: Sync runtime CSVs into public/
         run: npm run sync:public-insects
@@ -61,11 +57,5 @@ jobs:
       - name: Post-build cleanup
         run: node scripts/postbuild-cleanup.mjs
 
-      - name: Smoke check
-        run: npm run smoke:dist
-
-      - name: Audit image resolution
-        run: npm run audit:image-resolution
-
-      - name: Audit SEO output
-        run: npm run audit:seo
+      - name: Validate built artifact
+        run: npm run check:dist

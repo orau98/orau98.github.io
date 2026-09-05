@@ -1,3 +1,5 @@
+import { isFlowerVisitRecord } from '../../src/utils/flowerVisitPlants.js';
+export { isFlowerVisitRecord };
 import { isNonPlantResourceName, isPlantHostRecord } from '../../src/utils/hostResource.js';
 
 export { isNonPlantResourceName, isPlantHostRecord };
@@ -112,15 +114,7 @@ export const isValidPlantName = (plantName) => {
   return true;
 };
 
-export const isFlowerVisitRecord = (record) => {
-  if (!record) return false;
-  if (record.isFlowerVisit === true) return true;
-  const lifeStage = cleanString(record.lifeStage);
-  const plantPart = cleanString(record.plantPart);
-  const partCompact = plantPart.replace(/\s+/g, '');
-  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-  return isAdultOrUnknown && partCompact && partCompact.includes('花');
-};
+
 
 const PLANT_PROFILE_FACT_FIELDS = [
   'habit',

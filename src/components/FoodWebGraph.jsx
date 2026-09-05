@@ -1,3 +1,4 @@
+import { isFlowerVisitRecord } from '../utils/flowerVisitPlants.js';
 import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
@@ -196,14 +197,7 @@ const normalizePlantName = (name = '') =>
     .replace(/の(花|実|葉|枝|茎|根|蕾).*/, '')
     .trim();
 
-const isFlowerVisitRecord = (record) => {
-  if (!record) return false;
-  const lifeStage = (record.lifeStage || '').trim();
-  const plantPart = (record.plantPart || '').trim();
-  const partCompact = plantPart.replace(/\s+/g, '');
-  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-  return isAdultOrUnknown && partCompact && partCompact.includes('花');
-};
+
 
 const isGraphPlantRecord = (record, rawName = '') =>
   isPlantHostRecord(record) && !isNonPlantResourceName(rawName);

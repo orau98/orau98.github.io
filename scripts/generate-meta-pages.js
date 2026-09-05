@@ -1,3 +1,5 @@
+import { normalizeHostRecord } from '../src/utils/hostRecord.js';
+import { buildImageIndex } from './build-image-index.mjs';
 import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
@@ -27,12 +29,10 @@ import {
   isAmazonAssociateUrl,
 } from '../src/utils/amazonAssociates.js';
 import {
-  getPublicHostPlantNote,
   getPublicHostPlantSectionNote,
 } from '../src/utils/publicHostPlantNotes.js';
 import { normalizeJapaneseInsectName } from '../src/utils/insectNameAliases.js';
 import { buildSourceLabel as buildPlantProfileSourceLabel } from '../src/utils/plantProfileText.js';
-import { getHostResourceType } from '../src/utils/hostResource.js';
 import {
   collectPlantPageNames,
   isIndexablePlantProfile,
@@ -1554,7 +1554,7 @@ function generateInsectHTML(
     // 食草あり
     const plantListStr = hostPlantsArray.slice(0, 3).join('、');
     const plantSuffix = hostPlantsArray.length > 3 ? `など${hostPlantsArray.length}種` : `${hostPlantsArray.length}種`;
-    let desc = `${insect.japaneseName}（${familyName}）の幼虫の食草・食樹は${plantListStr}${plantSuffix}。`;
+    let desc = `${insect.japaneseName}（${familyName}）の食草・寄主植物の記録は${plantListStr}${plantSuffix}。`;
     if (hasEmergence && emergenceTimeVal) {
       desc += `成虫は${emergenceTimeVal}に出現。`;
     }
@@ -1861,13 +1861,7 @@ function generateInsectHTML(
         <h3>詳細説明</h3>
         <p>${insect.japaneseName}（学名：${formatScientificNameHTML(scientificName)}）は${familyName}に分類される${typeNames[type]}の一種です。</p>
         ${hostPlantsArray.length > 0 ? `
-        <p>幼虫は${hostPlantsArray.slice(0, 3).join('、')}${hostPlantsArray.length > 3 ? 'など' : ''}を食草として成長します。${
-          hostPlantsArray.length === 1
-            ? `知られている食草は${hostPlantsArray[0]}の1種で、特定の植物に依存する食性をもつと考えられます。`
-            : hostPlantsArray.length <= 5
-              ? `これまでに${hostPlantsArray.length}種の植物が食草として記録されています。`
-              : `${hostPlantsArray.length}種におよぶ幅広い植物を利用する多食性の種です。`
-        }</p>` : ''}
+        <p>本データベースには${hostPlantsArray.slice(0, 3).join('、')}${hostPlantsArray.length > 3 ? 'など' : ''}の利用記録が収録されています。収録件数は既知の寄主範囲全体や食性の狭さを示すものではありません。</p>` : ''}
         ${insect.remarks && insect.remarks.trim() ? `
         <h4>備考</h4>
         <p>${formatEnglishWordsInItalic(insect.remarks)}</p>` : ''}
@@ -2692,12 +2686,7 @@ async function generateMetaPages() {
       const insectId = row.insect_id;
       const plantName = row.plant_name;
       const plantFamily = normalizePlantFamilyLabel(row.plant_family || '');
-      const observationType = row.observation_type || '野外（国内）';
-      const resourceType = getHostResourceType(plantName);
-      const plantPart = row.plant_part || (resourceType === 'substrate' ? '' : '葉');
-      const lifeStage = row.life_stage || '幼虫';
-      const reference = row.reference || '';
-      const notes = getPublicHostPlantNote(row.notes || '');
+
       
       if (insectId && plantName) {
         if (!hostPlantsMapByInsectId.has(insectId)) {
@@ -2714,13 +2703,8 @@ async function generateMetaPages() {
           name: plantName,
           family: plantFamily,
           displayName: displayPlantName,
-          observationType,
-          plantPart,
-          lifeStage,
-          reference,
-          notes,
-          isDetailed: true,
-          resourceType
+          ...normalizeHostRecord(row),
+          family: plantFamily
         });
       }
     });
@@ -3460,86 +3444,7 @@ async function generateMetaPages() {
 function generateImageFileLists() {
   console.log('\n画像ファイルリストを生成中...');
   
-  // 昆虫画像ファイルリストの生成（和名から学名への変換を含む）
-  try {
-    const mothImagesDir = path.join(__dirname, '../public/images/insects');
-    if (fs.existsSync(mothImagesDir)) {
-      const nameMapping = new Map();
-      try {
-        // メインCSV（任意）を読み込んでマッピングを作成（無ければスキップ）
-        const csvPath = path.join(__dirname, '../public/ListMJ_hostplants_master.csv');
-        const csvContent = fs.readFileSync(csvPath, 'utf-8');
-        const csvData = Papa.parse(csvContent, { header: true, skipEmptyLines: true }).data;
-        csvData.forEach(row => {
-          const japaneseName = row['和名'] || row['属名'];
-          const scientificName = row['学名'];
-          const genus = row['属名'];
-          const species = row['種小名'];
-          if (japaneseName && scientificName) {
-            const scientificFilename = scientificName
-              .replace(/\s*\([^)]*\)\s*/g, '')
-              .replace(/\s+/g, '_')
-              .replace(/[,\.]/g, '');
-            nameMapping.set(japaneseName, scientificFilename);
-          } else if (japaneseName && genus && species) {
-            nameMapping.set(japaneseName, `${genus}_${species}`);
-          }
-        });
-      } catch (_e) {
-        console.warn('ListMJ_hostplants_master.csv が無いため、昆虫画像の和名→学名マッピングは手動追加分のみ使用します');
-      }
-      // 手動で追加する必要のあるマッピング（ファイル名変更対応）
-      nameMapping.set('ウスムラサキケンモン', 'Acronicta_subpurpurea_Matsumura');
-      nameMapping.set('オオマエベニトガリバ', 'Tethea_consimilis');
-      nameMapping.set('ショウブオオヨトウ', 'Helotropha_leucostigma');
-      nameMapping.set('シラオビキリガ', 'Cosmia_camptostigma');
-      nameMapping.set('シラホシキリガ', 'Cosmia_pyralina');
-      nameMapping.set('タカオキリガ', 'Pseudopanolis_takao');
-      nameMapping.set('ツマベニヒメハマキ', 'Phaecasiophora_roseana_2');
-      nameMapping.set('ナシキリガ', 'Cosmia_restituta_Walker_1857');
-      nameMapping.set('ニッコウケンモン', 'Craniophora_praeclara');
-      nameMapping.set('ニッコウシャチホコ', 'Shachia_circumscripta');
-      nameMapping.set('ノコメセダカヨトウ', 'Orthogonia_sera');
-      nameMapping.set('ハスモンヨトウ', 'Spodoptera_litura');
-      nameMapping.set('マエジロシャチホコ', 'Notodonta_albicosta');
-      nameMapping.set('クロハナコヤガ', 'Aventiola_pusilla');
-      nameMapping.set('フタスジエグリアツバ', 'Gonepatica_opalina');
-      nameMapping.set('ベニスズメ', 'Deilephila_elpenor');
-      nameMapping.set('ヒメスズメ', 'Deilephila_askoldensis');
-      nameMapping.set('マダラキボシキリガ', 'Dimorphicosmia_variegata');
-      nameMapping.set('ナシイラガ', 'Narosoideus_flavidorsalis');
-      nameMapping.set('ヨモギオオホソハマキ', 'Phtheochroides_clandestina');
-      nameMapping.set('アオマダラタマムシ', 'Nipponobuprestis_amabilis');
-      nameMapping.set('ルイスヒラタチビタマムシ', 'Habroloma_lewisii');
-
-      const imageExtensionPriority = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-      const mothImageFiles = fs.readdirSync(mothImagesDir)
-        .filter(file => file.match(/\.(jpg|jpeg|png|gif|webp)$/i));
-      const imageCandidatesByName = new Map();
-      mothImageFiles.forEach(file => {
-        const nameWithoutExt = file.replace(/\.[^.]+$/, '');
-        const extension = file.match(/\.[^.]+$/)[0].toLowerCase();
-        if (!imageCandidatesByName.has(nameWithoutExt)) {
-          imageCandidatesByName.set(nameWithoutExt, []);
-        }
-        imageCandidatesByName.get(nameWithoutExt).push(extension);
-      });
-      const mothImages = Array.from(imageCandidatesByName.keys()).sort();
-      const extensionMapping = {};
-      mothImages.forEach(nameWithoutExt => {
-        const extensions = Array.from(new Set(imageCandidatesByName.get(nameWithoutExt) || []));
-        extensions.sort((a, b) => imageExtensionPriority.indexOf(a) - imageExtensionPriority.indexOf(b));
-        extensionMapping[nameWithoutExt] = extensions[0] || '.jpg';
-      });
-      // クライアントの画像優先表示に必要なインデックスを公開ディレクトリに出力
-      fs.writeFileSync(path.join(__dirname, '../public/image_filenames.txt'), mothImages.join('\n') + '\n');
-      fs.writeFileSync(path.join(__dirname, '../public/image_extensions.json'), JSON.stringify(extensionMapping, null, 2) + '\n');
-      console.log(`- 昆虫画像リスト生成完了: ${mothImages.length}件`);
-      console.log(`- 画像拡張子マッピング生成完了: ${Object.keys(extensionMapping).length}件`);
-    }
-  } catch (error) {
-    console.error('昆虫画像ファイルリスト生成時にエラー:', error);
-  }
+  buildImageIndex();
 
   // 植物画像ファイルリストの生成（昆虫の失敗に関わらず続行）
   try {

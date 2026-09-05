@@ -34,8 +34,7 @@ const KIRIGA_SOURCE_PDF_FILE = '日本のキリガ.pdf';
 const KIRIGA_SOURCE_PDF_SHA256 = '8d6fdad849c967ec2ea5659fd1b455ea088e13d7bde74d936bbbea97586d703d';
 
 const candidates = [
-  path.join(ROOT, 'normalized_data'),
-  path.join(ROOT, 'public')
+  path.join(ROOT, 'normalized_data')
 ];
 
 const findExisting = (filename) => {
@@ -50,9 +49,9 @@ const insectsPath = findExisting('insects.csv');
 const hostplantsPath = findExisting('hostplants.csv');
 const notesPath = findExisting('general_notes.csv');
 
-if (!insectsPath) {
-  console.warn('[validate-normalized] insects.csv not found; skipping validation.');
-  process.exit(0);
+if (!insectsPath || !hostplantsPath || !notesPath) {
+  console.error('[validate-normalized] Required normalized CSV is missing; refusing validation.');
+  process.exit(1);
 }
 
 const parseCsv = (text) => {
@@ -238,6 +237,10 @@ const writeCsvReport = (filename, headers, rows) => {
 
 const insectsText = fs.readFileSync(insectsPath, 'utf-8');
 const insects = parseCsv(insectsText);
+if (insects.length === 0 || insects.some((row) => !cleanString(row.insect_id))) {
+  console.error('[validate-normalized] insects.csv is empty or contains a missing insect_id.');
+  process.exit(1);
+}
 const insectIdCounts = new Map();
 const insectsById = new Map();
 insects.forEach((row) => {
@@ -282,7 +285,7 @@ const suspiciousScientificNameRows = insects
 const taxonomyAssertionFailures = collectTaxonomyAssertionFailures(insects);
 const recordMissing = (source, row) => {
   const id = (row.insect_id || '').trim();
-  if (!id || insectIds.has(id)) return;
+  if (insectIds.has(id)) return;
   missingIds.push({ source, insect_id: id });
 };
 
@@ -684,12 +687,9 @@ if (fs.existsSync(NORMALIZED_INSECTS_PATH) && fs.existsSync(PUBLIC_INSECTS_PATH)
   }
 }
 
-const strict = process.env.STRICT_VALIDATE_NORMALIZED === '1';
 if (missingIds.length > 0) {
-  console.warn(`[validate-normalized] missing insect_id references: ${missingIds.length}`);
-  if (strict) {
-    process.exit(1);
-  }
+  console.error(`[validate-normalized] missing insect_id references: ${missingIds.length}`);
+  process.exit(1);
 }
 
 if (duplicateInsectIds.length > 0) {

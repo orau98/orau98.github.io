@@ -1,3 +1,4 @@
+import { isFlowerVisitRecord } from '../utils/flowerVisitPlants.js';
 import { absUrl } from '../utils/origin';
 import { createSafeInsectFilename } from '../utils/image';
 import { getMappedScientificFilename } from '../utils/insectImageMappings';
@@ -12,17 +13,9 @@ const toJsonLd = (data) =>
   JSON.stringify(data).replace(/</g, '\\u003c');
 
 const DATASET_DESCRIPTION =
-  '日本産の蛾・蝶・甲虫・アブラムシなど10,000種超について、幼虫の食草、寄主植物、成虫出現時期、植物との相互作用を検索できる昆虫食草データベースです。';
+  '日本産の蛾・蝶・甲虫・アブラムシなどについて、幼虫の食草、寄主植物、成虫出現時期、植物との相互作用を検索できる昆虫食草データベースです。';
 
-const isFlowerVisitRecord = (record) => {
-  if (!record) return false;
-  if (record.isFlowerVisit === true) return true;
-  const lifeStage = (record.lifeStage || '').trim();
-  const plantPart = (record.plantPart || '').trim();
-  const partCompact = plantPart.replace(/\s+/g, '');
-  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-  return isAdultOrUnknown && partCompact && partCompact.includes('花');
-};
+
 
 const extractLarvalHostPlants = (hostPlantsDetailed, hostPlantsFallback) => {
   if (Array.isArray(hostPlantsDetailed) && hostPlantsDetailed.length > 0) {
@@ -166,7 +159,7 @@ export const MothStructuredData = ({ moth }) => {
         "name": plant,
         "taxonomicRank": "species"
       },
-      "description": `${moth.name}の幼虫が${plant}を食草として利用`
+      "description": `${moth.name}が${plant}を食草として利用`
     }));
   }
 
@@ -297,7 +290,7 @@ export const ButterflyStructuredData = ({ butterfly }) => {
         "name": plant,
         "taxonomicRank": "species"
       },
-      "description": `${butterfly.name}の幼虫が${plant}を食草として利用`
+      "description": `${butterfly.name}が${plant}を食草として利用`
     }));
   }
 
