@@ -123,6 +123,7 @@ test('actual App: late fallback failures do not overwrite a successful user retr
   app.failed.delete('hostplants.json');
   await app.retry();
   assert.ok(app.route('/moth/:mothSlug'));
+  assert.equal(app.route('/moth/:mothSlug').insectPartitionsReady, true);
   app.release('full-dataset.json');
   await app.settle();
   assert.equal(app.hasAlert(), false);

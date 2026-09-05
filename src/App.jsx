@@ -470,7 +470,8 @@ function App() {
     };
   }, []);
 
-  // Reconcile every route, including plant/quiz links and navigation during bootstrap.
+  const routeDataReady = isRouteDataReady(partitionState, location.pathname, location.search);
+  // Reconcile every route, including recovery without a navigation event.
   useEffect(() => {
     const loader = partitionLoaderRef.current;
     let cancelled = false;
@@ -483,9 +484,8 @@ function App() {
           isRouteDataReady(loader.getState(), location.pathname, location.search)) loader.ensureTypes();
     });
     return () => { cancelled = true; };
-  }, [location.pathname, location.search, loaderGeneration]);
+  }, [location.pathname, location.search, loaderGeneration, routeDataReady]);
 
-  const routeDataReady = isRouteDataReady(partitionState, location.pathname, location.search);
   const visibleLoadError = loadError || getRouteDataError(partitionState, location.pathname);
   const hasLoadedInsectPartitions = INSECT_COLLECTION_KEYS.every(
     (key) => Boolean(partitionState.collectionLevels[key]),

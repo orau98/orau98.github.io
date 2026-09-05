@@ -60,9 +60,15 @@ export async function createAppHarness(initialPath, { failedFiles = [], cache = 
       useEffect(effect, deps) {
         const n = index++;
         const prev = hooks[n];
-        if (!prev || !deps || deps.some((x, k) => !Object.is(x, prev[k]))) {
-          hooks[n] = deps;
-          effects.push(effect);
+        if (!prev || !deps || deps.some((x, k) => !Object.is(x, prev.deps[k]))) {
+          const entry = { deps, cleanup: null };
+          hooks[n] = entry;
+          effects.push(() => {
+            prev?.cleanup?.();
+            if (prev) prev.cleanup = null;
+            entry.cleanup = effect();
+            return () => { entry.cleanup?.(); entry.cleanup = null; };
+          });
         }
       },
     },
@@ -141,6 +147,11 @@ export async function createAppHarness(initialPath, { failedFiles = [], cache = 
     },
     release(file) { paused.delete(file); releases.get(file)?.(); },
     dispose() { cleanups.forEach((cleanup) => cleanup()); },
-    async navigate(url){location.pathname=url;location.key=String(Number(location.key)+1);dirty=true;await settle();},
+    async navigate(url) {
+      state.location = { ...state.location, pathname: url, key: String(Number(state.location.key) + 1) };
+      context.window.location = state.location;
+      dirty = true;
+      await settle();
+    },
   };
 }
