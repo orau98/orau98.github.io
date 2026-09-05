@@ -115,7 +115,7 @@ const SPA_ROUTE_SHELLS = [
     segments: ['moth'],
     lang: 'ja',
     title: '昆虫から食草を検索｜蛾・蝶・甲虫・アブラムシ | 昆虫植物図鑑',
-    description: '日本産の蛾・蝶・タマムシ・カミキリムシ・キクイムシ・ハムシ・アブラムシ10,000種超を和名・学名から検索し、幼虫の食草・食樹・寄主植物を調べられます。',
+    description: '日本産の蛾・蝶・タマムシ・カミキリムシ・キクイムシ・ハムシ・アブラムシを和名・学名から検索し、幼虫の食草・食樹・寄主植物を調べられます。',
     canonicalPath: '/moth/',
     alternates: [
       { hreflang: 'ja', path: '/moth/' },
@@ -123,7 +123,7 @@ const SPA_ROUTE_SHELLS = [
       { hreflang: 'x-default', path: '/moth/' },
     ],
     ogTitle: '昆虫から食草を検索 | 昆虫植物図鑑',
-    ogDescription: '日本産昆虫10,000種超を和名・学名から検索し、幼虫の食草・寄主植物を調べられます。',
+    ogDescription: '日本産昆虫を和名・学名から検索し、幼虫の食草・寄主植物を調べられます。',
     robotsContent: SPA_ROUTE_INDEX_ROBOTS,
     structuredData: [
       {
@@ -169,7 +169,7 @@ const SPA_ROUTE_SHELLS = [
     segments: ['en', 'moth'],
     lang: 'en',
     title: `Insect Search | ${EN_SITE_NAME}`,
-    description: 'Search over 10,000 Japanese moths, butterflies, beetles, bark beetles, leaf beetles, and aphids by name and find their larval host plants.',
+    description: 'Search Japanese moths, butterflies, beetles, bark beetles, leaf beetles, and aphids by name and find their larval host plants.',
     canonicalPath: '/en/moth/',
     alternates: [
       { hreflang: 'ja', path: '/moth/' },

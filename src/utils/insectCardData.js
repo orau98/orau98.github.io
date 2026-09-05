@@ -1,3 +1,4 @@
+import { isFlowerVisitRecord } from './flowerVisitPlants.js';
 import { isPlantHostRecord } from './hostResource.js';
 
 // 昆虫カード（一覧・コンパクト表示）で使う食草/訪花の表示用データ整形。
@@ -6,15 +7,7 @@ import { isPlantHostRecord } from './hostResource.js';
 // カード上で食草/訪花名を何件まで出すか（超過分は「他N種」に集約してカード高を揃える）
 export const CARD_PLANT_PREVIEW_CAP = 6;
 
-const isFlowerVisitRecord = (record) => {
-  if (!record) return false;
-  if (record.isFlowerVisit === true) return true;
-  const lifeStage = (record.lifeStage || '').trim();
-  const plantPart = (record.plantPart || '').trim();
-  const partCompact = plantPart.replace(/\s+/g, '');
-  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-  return isAdultOrUnknown && partCompact && partCompact.includes('花');
-};
+
 
 export const cleanPlantName = (plant) => {
   if (!plant || typeof plant !== 'string') return '';

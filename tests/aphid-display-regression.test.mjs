@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 import { convertNormalizedDataToStandardFormat } from '../src/utils/normalizedDataParser.js';
 
-test('blank aphid life stages represent colonies and are not misclassified as adult flower visits', () => {
+test('blank aphid stages stay unspecified and are not misclassified as adult flower visits', () => {
   const converted = convertNormalizedDataToStandardFormat(
     [{
       insect_id: 'species-aphid-test',
@@ -32,6 +32,6 @@ test('blank aphid life stages represent colonies and are not misclassified as ad
   assert.ok(aphid);
   assert.equal(aphid.type, 'aphid');
   assert.equal(aphid.hostPlantsDetailed.length, 1);
-  assert.equal(aphid.hostPlantsDetailed[0].lifeStage, '成虫・幼虫');
+  assert.equal(aphid.hostPlantsDetailed[0].lifeStage, '');
   assert.equal(aphid.hostPlantsDetailed[0].isFlowerVisit, false);
 });

@@ -1,3 +1,4 @@
+import { isFlowerVisitRecord } from './utils/flowerVisitPlants.js';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import Papa from 'papaparse';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
@@ -1018,15 +1019,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     });
   }
   
-  const isFlowerVisitRecord = (record) => {
-    if (!record) return false;
-    if (record.isFlowerVisit === true) return true;
-    const lifeStage = (record.lifeStage || '').trim();
-    const plantPart = (record.plantPart || '').trim();
-    const partCompact = plantPart.replace(/\s+/g, '');
-    const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-    return isAdultOrUnknown && partCompact && partCompact.includes('花');
-  };
+
 
   const detailAliasNames = useMemo(() => {
     const aliasesRaw = resolvedPlantDetail?.aliases || resolvedPlantDetail?.aliasNames;
@@ -2120,7 +2113,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                   {/* 0種のチップはノイズになるだけなので出さない（「両方」と同じ扱い） */}
                   {hostPlantInsects.length > 0 && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-800 dark:bg-sky-900/30 dark:text-sky-200">
-                      {isEnglish ? `Larval hosts ${hostPlantInsects.length}` : `食草 ${hostPlantInsects.length}種`}
+                      {isEnglish ? `Host use ${hostPlantInsects.length}` : `食草 ${hostPlantInsects.length}種`}
                     </span>
                   )}
                   {flowerVisitInsects.length > 0 && (
@@ -2214,11 +2207,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                   {/* 「N種」に対しカードが少ないと混乱するため、写真あり件数を分けて明示する */}
                   {hostInsectGroups.withPhoto.length > 0 && hostInsectGroups.withoutPhoto.length > 0
                     ? (isEnglish
-                      ? `Insects using this plant as a larval host (${hostPlantInsects.length}, ${hostInsectGroups.withPhoto.length} with photos)`
-                      : `幼虫の食草として利用する昆虫 (全${hostPlantInsects.length}種・写真あり${hostInsectGroups.withPhoto.length}種)`)
+                      ? `Insects using this plant as a host (${hostPlantInsects.length}, ${hostInsectGroups.withPhoto.length} with photos)`
+                      : `食草・寄主として利用する昆虫 (全${hostPlantInsects.length}種・写真あり${hostInsectGroups.withPhoto.length}種)`)
                     : (isEnglish
-                      ? `Insects using this plant as a larval host (${hostPlantInsects.length})`
-                      : `幼虫の食草として利用する昆虫 (${hostPlantInsects.length}種)`)}
+                      ? `Insects using this plant as a host (${hostPlantInsects.length})`
+                      : `食草・寄主として利用する昆虫 (${hostPlantInsects.length}種)`)}
                 </h3>
                 {hostInsectGroups.withPhoto.length > 0 && (
                   <>

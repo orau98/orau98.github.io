@@ -37,9 +37,9 @@ export const parseIntegratedHostPlants = (row) => {
         name: plantName,
         family: plantFamily || '',
         displayName: displayName,
-        observationType: observationType || '野外（国内）',
-        plantPart: plantPart || '葉',
-        lifeStage: lifeStage || '幼虫',
+        observationType: observationType || '',
+        plantPart: plantPart || '',
+        lifeStage: lifeStage || '',
         reference: reference || '',
         notes: notes || '',
         isDetailed: true  // 詳細情報付きであることを示すフラグ
@@ -202,9 +202,9 @@ export const convertLegacyToIntegratedFormat = (legacyData, insectType = 'moth')
       name: plantText.replace(/（.*）$/, ''), // 科名を除去
       family: extractFamily(plantText),
       displayName: plantText,
-      observationType: '野外（国内）', // デフォルト
-      plantPart: '葉', // デフォルト
-      lifeStage: '幼虫', // デフォルト
+      observationType: '', // 既存データでは不明
+      plantPart: '',
+      lifeStage: '',
       reference: '', // 既存データでは不明
       notes: '',
       isDetailed: false // 推定データであることを示す

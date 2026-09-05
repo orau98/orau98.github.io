@@ -38,8 +38,8 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci --prefer-offline --no-audit --no-fund
 
-      - name: Validate normalized data
-        run: npm run validate-normalized
+      - name: Validate source, lint and regression tests
+        run: npm run check:source
 
       - name: Sync runtime CSVs into public/
         run: npm run sync:public-insects
@@ -72,8 +72,8 @@ jobs:
         run: |
           echo > dist/.nojekyll
 
-      - name: Smoke check
-        run: npm run smoke:dist
+      - name: Validate built artifact before upload
+        run: npm run check:dist
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -93,7 +93,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # Pages側のキュー混雑時にdeployment_queuedのまま既定の10分で
-          # タイムアウトすることがあるため、待機を30分まで許容する
-          timeout: 1800000

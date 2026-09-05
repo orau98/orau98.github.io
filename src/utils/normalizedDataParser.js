@@ -8,6 +8,7 @@
  * @returns {Object} - 分類群別に整理されたデータ
  */
 import logger from './logger.js';
+import { normalizeHostRecord } from './hostRecord.js';
 import { createSafeInsectFilename } from './image.js';
 import {
   normalizeJapaneseInsectName,
@@ -19,18 +20,13 @@ import {
 } from './siteTaxonomy.js';
 import { getHostResourceType, isPlantHostRecord } from './hostResource.js';
 import {
-  getPublicHostPlantNote,
   getPublicHostPlantSectionNote,
 } from './publicHostPlantNotes.js';
 
 export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsData, generalNotesData) => {
   const result = createEmptyInsectCollections(() => []);
   const dedupeMaps = createEmptyInsectCollections(() => new Map());
-  const insectRowsById = new Map(
-    (insectsData || [])
-      .map((row) => [(row?.insect_id || '').trim(), row])
-      .filter(([id]) => id)
-  );
+
 
   const normalizeScientificBase = (name = '') => {
     const s = (name || '').toString().trim();
@@ -188,39 +184,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       });
     }
     
-    const lifeStageRaw = (hp.life_stage || '').trim();
-    const plantPartRaw = (hp.plant_part || '').trim();
-    const referenceRaw = (hp.reference || '').trim();
-    const partCompact = plantPartRaw.replace(/\s+/g, '');
-    const linkedInsect = insectRowsById.get((hp.insect_id || '').trim());
-    const isAphid = (linkedInsect?.family || '').trim() === 'Aphididae'
-      || (linkedInsect?.family_jp || '').includes('アブラムシ');
-    // The aphid source describes colonies without separating adults and
-    // nymphs. Treating a blank stage as the site-wide larval default is
-    // biologically wrong and can also misclassify flower stalk feeding as an
-    // adult flower visit.
-    const resolvedLifeStage = lifeStageRaw || (isAphid ? '成虫・幼虫' : '幼虫');
-    const isAdultOrUnknown = !isAphid && (lifeStageRaw === '成虫' || lifeStageRaw === '');
-    const isFlowerVisit = isAdultOrUnknown && partCompact && partCompact.includes('花');
-    const preservesBlankPlantPart =
-      /^日本のハマキガ[123]$/.test(referenceRaw) ||
-      referenceRaw === '日本産カミキリムシ';
-    // 枯死木や菌類などの非植物資源に、植物向けの既定値「葉」を補わない。
-    const defaultPlantPart = resourceType === 'substrate' || preservesBlankPlantPart ? '' : '葉';
-
     hostPlantsByInsect[hp.insect_id].push({
-      name: rawName,
-      family: hp.plant_family || '',
-      displayName: displayName,
-      observationType: hp.observation_type || '野外（国内）',
-      // Keep display defaults but preserve flower-visit detection via isFlowerVisit flag.
-      plantPart: plantPartRaw || defaultPlantPart,
-      lifeStage: resolvedLifeStage,
-      reference: referenceRaw,
-      notes: getPublicHostPlantNote(hp.notes || ''),
-      isDetailed: true,
-      isFlowerVisit,
-      resourceType
+      ...normalizeHostRecord(hp),
+      displayName,
     });
   });
 
@@ -232,6 +198,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       generalNotesByInsect[note.insect_id] = [];
     }
     generalNotesByInsect[note.insect_id].push({
+      recordId: (note.record_id || '').trim(),
       type: note.note_type || note.type || '',
       content: note.content,
       reference: note.reference || '',

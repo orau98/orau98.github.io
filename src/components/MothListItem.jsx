@@ -6,7 +6,8 @@ import {
   repairScientificBinomial,
   dropSubspeciesEpithet,
 } from '../utils/scientificNameFormatter.jsx';
-import EmergenceTimeDisplay, { hasEmergencePeriods } from './EmergenceTimeDisplay';
+import EmergenceTimeDisplay from './EmergenceTimeDisplay';
+import { hasEmergencePeriods } from '../utils/emergenceTime.js';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 import ImageWithFallback from './ImageWithFallback';

@@ -61,9 +61,11 @@ export const getObservationTypePresentation = (observationType, isEnglish = fals
   const isDomesticFieldRecord = String(observationType || '').trim() === '野外（国内）';
   return {
     ...presentation,
-    label: isDomesticFieldRecord
-      ? (isEnglish ? 'Field' : '野外')
-      : presentation.labels[isEnglish ? 'en' : 'ja'],
+    label: !String(observationType || '').trim()
+      ? (isEnglish ? 'Not stated' : '未記載')
+      : isDomesticFieldRecord
+        ? (isEnglish ? 'Field' : '野外')
+        : presentation.labels[isEnglish ? 'en' : 'ja'],
   };
 };
 

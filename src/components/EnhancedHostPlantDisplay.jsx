@@ -1,3 +1,4 @@
+import { isFlowerVisitRecord } from '../utils/flowerVisitPlants.js';
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SourceCitation from './ui/SourceCitation';
@@ -109,15 +110,7 @@ const getPlantPartIcon = (plantPart) => {
 /**
  * 成虫の訪花記録かどうか
  */
-const isFlowerVisitRecord = (record) => {
-  if (!record) return false;
-  if (record.isFlowerVisit === true) return true;
-  const lifeStage = (record.lifeStage || '').trim();
-  const plantPart = (record.plantPart || '').trim();
-  const partCompact = plantPart.replace(/\s+/g, '');
-  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-  return isAdultOrUnknown && partCompact && partCompact.includes('花');
-};
+
 
 /**
  * 植物記録をグループ化する関数
@@ -137,6 +130,8 @@ const groupPlantsByName = (plants) => {
       };
     }
     groups[key].records.push({
+      isFlowerVisit: plant.isFlowerVisit,
+      recordId: plant.recordId,
       observationType: plant.observationType,
       plantPart: plant.plantPart,
       lifeStage: plant.lifeStage,
@@ -200,6 +195,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
     const key = `${record.lifeStage || ''}|${record.plantPart || ''}`;
     if (!acc[key]) {
       acc[key] = {
+        isFlowerVisit: isFlowerVisitRecord(record),
         lifeStage: record.lifeStage,
         plantPart: record.plantPart,
         observationTypes: new Set(),
@@ -222,7 +218,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
   const badges = usageInfoArray.map((usage) => {
     const ls = usage.lifeStage ? getLifeStageIcon(usage.lifeStage) : null;
     const pp = usage.plantPart ? getPlantPartIcon(usage.plantPart) : null;
-    const isFlowerVisit = isFlowerVisitRecord({ lifeStage: usage.lifeStage, plantPart: usage.plantPart });
+    const isFlowerVisit = usage.isFlowerVisit;
     const label = isFlowerVisit
       ? (isEnglish ? 'Flower visit' : '訪花')
       : ([getLifeStageLabel(usage.lifeStage, isEnglish), getPlantPartLabel(usage.plantPart, isEnglish)].filter(Boolean).join(isEnglish ? ' / ' : '・') || '');
@@ -400,9 +396,9 @@ const EnhancedHostPlantDisplay = ({
         name: typeof plant === 'string' ? plant.replace(/（.*）$/, '') : plant.name || plant,
         family: typeof plant === 'string' ? extractFamily(plant) : plant.family || '',
         displayName: typeof plant === 'string' ? plant : plant.displayName || plant.name || plant,
-        observationType: '野外（国内）',
-        plantPart: '葉',
-        lifeStage: '幼虫',
+        observationType: '',
+        plantPart: '',
+        lifeStage: '',
         reference: '',
         notes: '',
         isDetailed: false
@@ -481,7 +477,7 @@ const EnhancedHostPlantDisplay = ({
       {hostGroups.length > 0 && (
         <div className="space-y-2">
           <div className={`text-xs font-semibold uppercase tracking-wide ${HOST_STYLE.labelText}`}>
-            {isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
+            {isEnglish ? 'Host plants' : '食草・寄主植物'}
           </div>
           <div className="space-y-2">
             {hostGroups.slice(0, hostDisplayCount).map((plantGroup, index) => {

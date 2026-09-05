@@ -169,3 +169,19 @@ export const planInitialDataLoad = ({
         : null,
   };
 };
+
+// Readiness describes the route's requirements, never the number of nonempty arrays.
+// An empty, successfully fetched partition is ready; one fetched classification is not seven.
+export const isRouteDataReady = (state, pathname = '/', search = '') => {
+  const plan = planInitialDataLoad({ pathname, search });
+  const levels = state?.collectionLevels || {};
+  return (!plan.loadPlantsImmediately || state?.plantsReady === true) &&
+    (!plan.loadTypesImmediately || plan.immediateCollectionKeys.every((key) =>
+      levels[key] === 'full' || (plan.immediateDetailLevel === 'catalog' && levels[key] === 'catalog')));
+};
+
+export const getRouteDataError = (state, pathname = '/') => {
+  const detailKey = getInsectDetailCollectionKey(pathname);
+  return Object.entries(state?.errors || {}).find(([key]) =>
+    state?.errorLevels?.[key] !== 'full' || key === detailKey)?.[1] || null;
+};

@@ -2,12 +2,12 @@ import { isPlantHostRecord } from './hostResource.js';
 
 export const isFlowerVisitRecord = (record) => {
   if (!record) return false;
-  if (record.isFlowerVisit === true) return true;
+  if (typeof record.isFlowerVisit === 'boolean') return record.isFlowerVisit;
   const lifeStage = (record?.lifeStage || '').trim();
   const plantPart = (record?.plantPart || '').trim();
   const partCompact = plantPart.replace(/\s+/g, '');
-  const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-  return isAdultOrUnknown && partCompact && partCompact.includes('花');
+  // An unspecified stage (or flower-stalk feeding) does not establish an adult visit.
+  return lifeStage === '成虫' && partCompact.replace(/花[梗茎]/g, '').includes('花');
 };
 
 const normalizeFlowerVisitPlant = (value) => {

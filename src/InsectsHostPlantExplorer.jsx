@@ -1228,7 +1228,7 @@ const InsectsHostPlantExplorer = memo(
       return {
         title: isEnglish
           ? "Insects and Host Plants of Japan"
-          : "昆虫植物図鑑｜10,000種超の昆虫と食草を検索",
+          : "昆虫植物図鑑｜日本産昆虫と食草を検索",
         description: isEnglish
           ? `Explore insects and host plants recorded in Japan. Includes ${countLabel(
               counts.moths + counts.butterflies,

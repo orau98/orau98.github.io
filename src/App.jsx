@@ -15,7 +15,7 @@ import LoadingBar from './components/LoadingBar';
 import NotFoundPage from './components/NotFoundPage';
 import ManualAdSlot from './components/ManualAdSlot';
 import { loadDatasetFromCache, saveDatasetToCache } from './services/datasetCache';
-import { buildFlowerVisitMap } from './utils/flowerVisitPlants';
+import { createDataPartitionLoader, isCompleteDatasetPayload } from './services/dataPartitionLoader';
 import {
   INDEX_FOLLOW_ROBOTS,
   NOINDEX_FOLLOW_ROBOTS,
@@ -47,13 +47,9 @@ import {
   buildDataLiteAssetUrl,
   buildLiteSummaryCounts,
   buildPartitionVersionSuffix,
-  getCollectionPartitionFile,
-  isDatasetCacheComplete,
-  isLiteIndexPayload,
-  normalizeDatasetPayload,
-  normalizePlantPartitions,
   planInitialDataLoad,
-  selectCollectionKeysToLoad,
+  isRouteDataReady,
+  getRouteDataError,
 } from './utils/dataLitePlan';
 
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
@@ -82,10 +78,13 @@ function App() {
   const [loadProgress, setLoadProgress] = useState(0);
   const [loadError, setLoadError] = useState(null);
   const [summaryCounts, setSummaryCounts] = useState(null);
-  const typesFetchPromiseRef = useRef(null);
+  const partitionLoaderRef = useRef(null);
+  const [partitionState, setPartitionState] = useState({ collectionLevels: {}, plantsReady: false, errors: {} });
+  const [loaderGeneration, setLoaderGeneration] = useState(0);
+  const routeLocationRef = useRef(location);
+  routeLocationRef.current = location;
   const ensureTypesLoaderRef = useRef(null);
   const ensurePlantsLoaderRef = useRef(null);
-  const plantsFetchPromiseRef = useRef(null);
   const fetchDataRef = useRef(null);
   const fetchSeqRef = useRef(0);
   const fetchAbortRef = useRef(null);
@@ -106,8 +105,6 @@ function App() {
       return 'light';
     }
   });
-  const cacheLoadedRef = useRef(false);
-  const cachedVersionRef = useRef(null);
   
   // 静的ドキュメントパス(/meta/等)のセーフティネット(location.replace)が
   // 無限フルリロードに陥らないためのガード:
@@ -301,26 +298,6 @@ function App() {
     return () => mediaQuery.removeListener(handleChange);
   }, []);
 
-  const hasDatasetRef = useRef(false);
-  const applyDataset = (data = {}) => {
-    const normalized = normalizeDatasetPayload(data);
-    setMoths(normalized.collections.moths);
-    setButterflies(normalized.collections.butterflies);
-    setBeetles(normalized.collections.beetles);
-    setLonghornbeetles(normalized.collections.longhornbeetles);
-    setBarkbeetles(normalized.collections.barkbeetles);
-    setLeafbeetles(normalized.collections.leafbeetles);
-    setAphids(normalized.collections.aphids);
-    setHostPlants(normalized.hostPlants);
-    setFlowerVisitPlants(normalized.flowerVisitPlants);
-    setPlantDetails(normalized.plantDetails);
-    if (normalized.summaryCounts) {
-      setSummaryCounts(normalized.summaryCounts);
-    }
-    hasDatasetRef.current = normalized.hasAny;
-    cacheLoadedRef.current = cacheLoadedRef.current || normalized.hasAny;
-  };
-
   useEffect(() => {
     const loadIndexes = () => loadInsectImageIndexes().catch(() => {});
     let timerId = null;
@@ -345,452 +322,174 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async (cachedVersion = null) => {
-      const isDevelopment = import.meta.env.DEV;
-      const allowDebugLogs =
-        isDevelopment || (typeof window !== 'undefined' && !!window.DEBUG_LOGS);
+    let cancelled = false;
+    let installedLoaderId = 0;
+    const setters = { moths: setMoths, butterflies: setButterflies, beetles: setBeetles,
+      longhornbeetles: setLonghornbeetles, barkbeetles: setBarkbeetles,
+      leafbeetles: setLeafbeetles, aphids: setAphids };
+    const fetchData = async (cached = null) => {
       const fetchId = ++fetchSeqRef.current;
-      plantsFetchPromiseRef.current = null;
-      ensurePlantsLoaderRef.current = null;
-      if (fetchAbortRef.current) {
-        try {
-          fetchAbortRef.current.abort();
-        } catch {}
-      }
-      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      fetchAbortRef.current?.abort();
+      const controller = new AbortController();
       fetchAbortRef.current = controller;
-      const externalSignal = controller?.signal || null;
-      const isCurrent = () => fetchId === fetchSeqRef.current;
-      const shouldContinue = () => (!externalSignal || !externalSignal.aborted) && isCurrent();
-
-      if (!cacheLoadedRef.current) {
-        setLoading(true);
-      }
-      setLoadError(null);
+      const isCurrent = () => !cancelled && !controller.signal.aborted && fetchId === fetchSeqRef.current;
       const base = import.meta.env.BASE_URL || '/';
-      let plantDetailsLite = {};
-      const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-      // データ取得は「レスポンスを返し呼び出し側が res.ok を見る」契約で共有utilを使う
-      const fetchWithRetry = (url, opts = {}) =>
-        fetchWithRetryShared(
-          url,
-          { ...opts, signal: externalSignal || opts.signal },
+      const appSuffix = buildAppVersionSuffix({ isDevelopment: import.meta.env.DEV, buildId: APP_BUILD_ID });
+      const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
+      setLoadError(null);
+      setLoading(true);
+      setLoadProgress(10);
+      const readJson = async (file, suffix) => {
+        const response = await fetchWithRetryShared(
+          buildDataLiteAssetUrl(base, file, suffix),
+          { cache: cacheMode, signal: controller.signal },
           { retries: 4, delay: 300 },
         );
-      const cacheMode = import.meta.env.DEV ? 'no-store' : 'default';
-      const appVersionSuffix = buildAppVersionSuffix({
-        isDevelopment,
-        buildId: APP_BUILD_ID,
-      });
-      const fallbackVersionSuffix = appVersionSuffix;
-      const applyLiteIndex = (lite) => {
-        if (!isLiteIndexPayload(lite)) return false;
-        setLoadProgress(90);
-        setMoths(lite.moths);
-        setButterflies(lite.butterflies);
-        setBeetles(lite.beetles || []);
-        setLonghornbeetles(lite.longhornbeetles || []);
-        setBarkbeetles(lite.barkbeetles || []);
-        setLeafbeetles(lite.leafbeetles || []);
-        setAphids(lite.aphids || []);
-        setHostPlants(lite.hostPlants || {});
-        setPlantDetails(lite.plantDetails || {});
-        setSummaryCounts(lite.summaryCounts || buildLiteSummaryCounts(lite));
+        if (!response?.ok) throw new Error(`Dataset request failed: ${file} (${response?.status})`);
+        return response.json();
+      };
+      const installLoader = (suffix, version, counts, initialPayload = null) => {
+        const loaderId = ++installedLoaderId;
+        const isActive = () => isCurrent() && loaderId === installedLoaderId;
+        const loader = createDataPartitionLoader({
+          readJson: (file) => readJson(file, suffix),
+          initialPayload,
+          summaryCounts: counts,
+          isActive,
+          onCollection: (key, records) => setters[key](records),
+          onPlants: (plants) => {
+            if (plants.hostPlants) setHostPlants(plants.hostPlants);
+            if (plants.plantDetails) setPlantDetails(plants.plantDetails);
+            if (plants.flowerVisitPlants) setFlowerVisitPlants(plants.flowerVisitPlants);
+          },
+          onState: (state) => {
+            setPartitionState(state);
+          },
+          onComplete: (payload) => {
+            if (shouldDeferHeavyWork()) return;
+            const save = () => {
+              // A superseded bootstrap/manifest must never write a stale cache.
+              if (isActive()) saveDatasetToCache(version, payload).catch(() => {});
+            };
+            if ('requestIdleCallback' in window) window.requestIdleCallback(save, { timeout: 10000 });
+            else window.setTimeout(save, 3000);
+          },
+        });
+        partitionLoaderRef.current = loader;
+        ensureTypesLoaderRef.current = loader.ensureTypes;
+        ensurePlantsLoaderRef.current = loader.ensurePlants;
+        setSummaryCounts(counts);
+        setLoaderGeneration((value) => value + 1);
         setLoading(false);
-        ensureTypesLoaderRef.current = () => {
-          typesFetchPromiseRef.current = Promise.resolve(null);
-        };
-        return true;
+        return loader;
       };
-      const tryFullDataset = async (versionSuffix) => {
-        try {
-          const fullRes = await fetchWithRetry(
-            buildDataLiteAssetUrl(base, 'full-dataset.json', versionSuffix),
-            { cache: cacheMode },
-          );
-          if (!shouldContinue()) return false;
-          if (!fullRes.ok) return false;
-          const fullData = await fullRes.json();
-          if (!shouldContinue()) return false;
-          return applyLiteIndex(fullData);
-        } catch {
-          return false;
-        }
-      };
-      const tryLiteIndex = async (versionSuffix) => {
-        try {
-          const liteUrl = buildDataLiteAssetUrl(
-            base,
-            'index.json',
-            versionSuffix || fallbackVersionSuffix,
-          );
-          const res = await fetchWithRetry(liteUrl, { cache: cacheMode });
-          if (!shouldContinue()) return false;
-          if (!res.ok) return false;
-          const lite = await res.json();
-          if (!shouldContinue()) return false;
-          return applyLiteIndex(lite);
-        } catch {
-          return false;
-        }
-      };
-      // Prefer split JSON in production and fall back to the combined index only if needed.
+      let suffix = appSuffix;
+      let manifestVersion = null;
       try {
-        setLoadProgress(10);
-        const manifestUrl = buildDataLiteAssetUrl(
-          base,
-          'manifest.json',
-          appVersionSuffix,
-        );
-        // Allow HTTP cache in production (versioned URL keeps data fresh) to speed up repeats
-        const manifestRes = await fetchWithRetry(manifestUrl, { cache: cacheMode });
-        if (!shouldContinue()) return;
-        let versionSuffix = buildPartitionVersionSuffix({ isDevelopment });
-        let manifest = null;
-        let manifestVersion = null;
-        if (manifestRes?.ok) {
-          manifest = await manifestRes.json();
-          if (!shouldContinue()) return;
-          setLoadProgress(35);
-          manifestVersion = manifest?.version || null;
-          if (manifest?.counts && !cacheLoadedRef.current) {
-            setSummaryCounts((prev) => prev || manifest.counts);
-            setLoading(false);
-          }
-          versionSuffix = buildPartitionVersionSuffix({
-            isDevelopment,
-            manifestVersion,
-          });
-          const hostUrl = buildDataLiteAssetUrl(base, 'hostplants.json', versionSuffix);
-          const plantDetailsUrl = buildDataLiteAssetUrl(
-            base,
-            'plant-details.json',
-            versionSuffix,
-          );
-          const flowerVisitUrl = buildDataLiteAssetUrl(
-            base,
-            'flower-visit-plants.json',
-            versionSuffix,
-          );
-
-          if (manifest && manifest.counts) {
-            cachedVersionRef.current = manifestVersion;
-            const fetchJsonOrNull = async (url, label) => {
-              try {
-                const res = await fetchWithRetry(url, { cache: cacheMode });
-                if (!shouldContinue() || !res?.ok) return null;
-                return await res.json();
-              } catch (error) {
-                logger.debug(`${label} preload skipped:`, error);
-                return null;
-              }
-            };
-
-            const loadPlantPartitions = async () => {
-              const [hostMap, plantDetailsPayload, flowerVisitPayload] = await Promise.all([
-                fetchJsonOrNull(hostUrl, 'Host plants'),
-                fetchJsonOrNull(plantDetailsUrl, 'Plant details'),
-                fetchJsonOrNull(flowerVisitUrl, 'Flower-visit'),
-              ]);
-              if (!shouldContinue()) return null;
-              const plantPayload = normalizePlantPartitions({
-                hostMap,
-                plantDetails: plantDetailsPayload,
-                flowerVisitPlants: flowerVisitPayload,
-              });
-              if (!plantPayload) return null;
-
-              plantDetailsLite = plantPayload.plantDetails;
-              setHostPlants(plantPayload.hostMap);
-              setPlantDetails(plantDetailsLite);
-              if (Object.keys(plantPayload.flowerVisitPlants).length > 0) {
-                setFlowerVisitPlants(plantPayload.flowerVisitPlants);
-              }
-              setSummaryCounts((prev) => ({
-                ...(prev || {}),
-                ...manifest.counts,
-                hostPlants: Object.keys(plantPayload.hostMap).length,
-              }));
-              return plantPayload;
-            };
-
-            const startFetchPlants = () => {
-              if (plantsFetchPromiseRef.current) return plantsFetchPromiseRef.current;
-              const promise = loadPlantPartitions().catch((error) => {
-                logger.warn('Failed to load plant partitions:', error);
-                plantsFetchPromiseRef.current = null;
-                return null;
-              });
-              plantsFetchPromiseRef.current = promise;
-              return promise;
-            };
-
-            ensurePlantsLoaderRef.current = startFetchPlants;
-            let initialPathname = '/';
-            let initialParams = new URLSearchParams();
-            try {
-              initialPathname = typeof window !== 'undefined' ? window.location.pathname || '/' : '/';
-              initialParams = new URLSearchParams(
-                typeof window !== 'undefined' ? window.location.search || '' : '',
-              );
-            } catch {}
-            const initialLoadPlan = planInitialDataLoad({
-              pathname: initialPathname,
-              search: initialParams,
-              cacheLoaded: cacheLoadedRef.current,
-              cachedVersion,
-              manifestVersion,
-            });
-            const initialPlantsPromise = initialLoadPlan.loadPlantsImmediately
-              ? startFetchPlants()
-              : null;
-
-            // 再訪時に即時復元できるよう、取得済みデータをアイドル時にIndexedDBへ保存する
-            const scheduleDatasetCacheSave = (payload) => {
-              if (typeof window === 'undefined' || !payload) return;
-              if (shouldDeferHeavyWork()) return;
-              const fire = () => {
-                saveDatasetToCache(manifestVersion || null, payload).catch(() => {});
-              };
-              if ('requestIdleCallback' in window) {
-                window.requestIdleCallback(fire, { timeout: 10000 });
-              } else {
-                window.setTimeout(fire, 3000);
-              }
-            };
-
-            // Reset fetch guards for fresh lifecycle
-            typesFetchPromiseRef.current = null;
-
-            const collectionConfigs = {
-              moths: { setter: setMoths },
-              butterflies: { setter: setButterflies },
-              beetles: { setter: setBeetles },
-              longhornbeetles: { setter: setLonghornbeetles },
-              barkbeetles: { setter: setBarkbeetles },
-              leafbeetles: { setter: setLeafbeetles },
-              aphids: { setter: setAphids },
-            };
-            const loadedCollectionLevels = new Map();
-            const loadedCollectionData = {};
-
-            const loadTypePartitions = async (
-              requestedKeys = INSECT_COLLECTION_KEYS,
-              detailLevel = 'catalog',
-            ) => {
-              const keys = selectCollectionKeysToLoad(
-                requestedKeys,
-                loadedCollectionLevels,
-                detailLevel,
-              );
-              if (keys.length === 0) return {};
-
-              const results = await Promise.all(
-                keys.map(async (key) => {
-                  const file = getCollectionPartitionFile(key, detailLevel);
-                  const response = await fetchWithRetry(
-                    buildDataLiteAssetUrl(base, file, versionSuffix),
-                    { cache: cacheMode },
-                  );
-                  if (!response?.ok) return [key, null];
-                  const records = await response.json();
-                  return [key, Array.isArray(records) ? records : null];
-                }),
-              );
-              if (!shouldContinue()) return {};
-
-              const loadedCollections = {};
-              results.forEach(([key, records]) => {
-                if (!Array.isArray(records)) return;
-                collectionConfigs[key].setter(records);
-                loadedCollectionLevels.set(key, detailLevel);
-                loadedCollections[key] = records;
-                loadedCollectionData[key] = records;
-              });
-              setLoadProgress((prev) => Math.max(prev, 90));
-              setSummaryCounts((prev) => ({ ...(prev || {}), ...manifest.counts }));
-              const plantPayload = plantsFetchPromiseRef.current
-                ? await plantsFetchPromiseRef.current
-                : null;
-              let flowerVisitPayload = plantPayload?.flowerVisitPlants || {};
-              if (Object.keys(flowerVisitPayload).length === 0) {
-                flowerVisitPayload = buildFlowerVisitMap(
-                  Object.values(loadedCollections).flat(),
-                );
-                setFlowerVisitPlants(flowerVisitPayload);
-              }
-              // IndexedDBへは7分類がすべて揃った時だけ保存する。
-              // 個別種ページ用の部分データで完全なキャッシュを上書きしない。
-              if (isDatasetCacheComplete(loadedCollectionLevels, plantPayload)) {
-                scheduleDatasetCacheSave({
-                  ...loadedCollectionData,
-                  hostPlants: plantPayload.hostMap,
-                  flowerVisitPlants: flowerVisitPayload,
-                  plantDetails: plantPayload.plantDetails || {},
-                  summaryCounts: {
-                    ...manifest.counts,
-                    hostPlants: Object.keys(plantPayload.hostMap).length,
-                  },
-                });
-              }
-              return loadedCollections;
-            };
-
-            const startFetchTypes = (
-              requestedKeys = INSECT_COLLECTION_KEYS,
-              detailLevel = 'catalog',
-            ) => {
-              // 直接個別種ページ→一覧のように要求が増えた場合も、先行取得の完了後に
-              // 未取得分類だけを追加する。重複取得はloadedCollectionKeysで防ぐ。
-              const previous = typesFetchPromiseRef.current || Promise.resolve(null);
-              const promise = previous
-                .catch(() => null)
-                .then(() => loadTypePartitions(requestedKeys, detailLevel))
-                .catch((error) => {
-                  logger.warn('Failed to load insect partitions:', error);
-                  return null;
-                });
-              typesFetchPromiseRef.current = promise;
-              return promise;
-            };
-
-            ensureTypesLoaderRef.current = startFetchTypes;
-
-            // 版不一致時は全分類を直ちに揃える。通常の個別種ページは該当分類の
-            // fullだけ、一覧は全分類のcatalogだけを取得する。
-            const {
-              loadPlantsImmediately,
-              loadTypesImmediately,
-              immediateCollectionKeys,
-              immediateDetailLevel,
-              followUpFullKey,
-            } = initialLoadPlan;
-            let typesPromise = loadTypesImmediately
-              ? startFetchTypes(
-                  immediateCollectionKeys,
-                  immediateDetailLevel,
-                )
-              : null;
-            if (followUpFullKey) {
-              typesPromise = startFetchTypes([followUpFullKey], 'full');
-            }
-
-            const [plantPayload] = await Promise.all([
-              initialPlantsPromise || Promise.resolve(null),
-              typesPromise || Promise.resolve(null),
-            ]);
-            if (!shouldContinue()) return;
-
-            const requiredTypesReady =
-              !loadTypesImmediately ||
-              immediateCollectionKeys.every((key) => loadedCollectionLevels.has(key));
-            const requiredPlantsReady = !loadPlantsImmediately || Boolean(plantPayload?.hostMap);
-            if (requiredTypesReady && requiredPlantsReady) {
-              setLoadProgress(100);
-              setLoading(false);
-              return;
-            }
-            // 必須パーティションを取得できなかった場合は一括データセットへフォールバック
-          }
-          if (await tryFullDataset(versionSuffix)) return;
-          if (await tryLiteIndex(versionSuffix)) return;
-        } else {
-          // manifest.json が取得できなかった場合のフォールバック
-          if (await tryFullDataset(versionSuffix)) return;
-          if (await tryLiteIndex(versionSuffix)) return;
+        const manifest = await readJson('manifest.json', appSuffix);
+        if (!isCurrent()) return;
+        if (!manifest?.counts || !manifest.version) throw new Error('Invalid dataset manifest');
+        manifestVersion = manifest.version;
+        suffix = buildPartitionVersionSuffix({ isDevelopment: import.meta.env.DEV, manifestVersion: manifest.version });
+        // Only a complete cache from this exact dataset version may seed readiness.
+        const seed = cached?.version === manifest.version && isCompleteDatasetPayload(cached?.payload)
+          ? cached.payload : null;
+        const loader = installLoader(suffix, manifest.version, manifest.counts, seed);
+        setLoadProgress(35);
+        const { pathname, search } = routeLocationRef.current;
+        await loader.ensurePlan(planInitialDataLoad({ pathname, search }));
+        if (!isCurrent()) return;
+        if (isRouteDataReady(loader.getState(), pathname, search)) {
+          setLoadProgress(100);
+          return;
         }
-      } catch (_) {
-        if (await tryFullDataset(fallbackVersionSuffix)) return;
-        if (await tryLiteIndex(fallbackVersionSuffix)) return;
-        // ignore and fallback to full pipeline
+      } catch (error) {
+        if (!isCurrent()) return;
+        logger.debug('Split dataset unavailable:', error);
       }
-      if (import.meta.env.PROD) {
-        if (shouldContinue() && !(cacheLoadedRef.current || hasDatasetRef.current)) {
-          setLoading(false);
-          setLoadError(new Error('Lite dataset unavailable'));
+      // Identical normalization/readiness rules for split files, cache and fallback.
+      for (const file of ['full-dataset.json', 'index.json']) {
+        try {
+          const payload = await readJson(file, suffix);
+          if (!isCurrent()) return;
+          if (!isCompleteDatasetPayload(payload)) throw new Error(`Incomplete dataset: ${file}`);
+          if (payload.version && manifestVersion && payload.version !== manifestVersion) {
+            throw new Error('Combined dataset version mismatch');
+          }
+          // A user retry/navigation may have recovered while the fallback was
+          // in flight. Keep that loader and its successful full upgrades.
+          const recoveredRoute = routeLocationRef.current;
+          if (partitionLoaderRef.current && isRouteDataReady(partitionLoaderRef.current.getState(),
+            recoveredRoute.pathname, recoveredRoute.search)) {
+            setLoadError(null);
+            setLoadProgress(100);
+            return;
+          }
+          const loader = installLoader(suffix, payload.version || null,
+            payload.summaryCounts || buildLiteSummaryCounts(payload), payload);
+          const { pathname, search } = routeLocationRef.current;
+          await loader.ensurePlan(planInitialDataLoad({ pathname, search }));
+          if (!isCurrent()) return;
+          if (isRouteDataReady(loader.getState(), pathname, search)) {
+            setLoadProgress(100);
+            return;
+          }
+        } catch (error) {
+          if (!isCurrent()) return;
+          logger.debug('Combined dataset unavailable:', error);
         }
-        return;
       }
-      // ここから先はDEV専用のレガシーCSVパイプライン。
-      // 本番は上のdata-lite経路で完結する（PRODは直前で早期return済み）ため、
-      // 動的importで分離してメインバンドルに含めない。
-      const { runLegacyCsvPipeline } = await import('./services/legacyCsvPipeline');
-      await runLegacyCsvPipeline({
-        shouldContinue,
-        externalSignal,
-        allowDebugLogs,
-        isDevelopment,
-        plantDetailsLite,
-        sleep,
-        cachedVersionRef,
-        cacheLoadedRef,
-        hasDatasetRef,
-        setMoths,
-        setButterflies,
-        setBeetles,
-        setLonghornbeetles,
-        setBarkbeetles,
-        setLeafbeetles,
-        setAphids,
-        setHostPlants,
-        setPlantDetails,
-        setFlowerVisitPlants,
-        setSummaryCounts,
-        setLoading,
-        setLoadError,
-      });
-    };
-    let cancelled = false;
-    fetchDataRef.current = fetchData;
-    const bootstrap = async () => {
-      const cached = await loadDatasetFromCache();
-      if (!cancelled && cached?.payload) {
-        applyDataset(cached.payload);
+      if (isCurrent()) {
         setLoading(false);
-        cacheLoadedRef.current = true;
-        cachedVersionRef.current = cached.version || null;
-      }
-      if (!cancelled) {
-        await fetchData(cached?.version || null);
+        const currentRoute = routeLocationRef.current;
+        if (partitionLoaderRef.current && isRouteDataReady(partitionLoaderRef.current.getState(),
+          currentRoute.pathname, currentRoute.search)) setLoadError(null);
+        else setLoadError(new Error('Required dataset partitions unavailable'));
       }
     };
-    bootstrap();
+    fetchDataRef.current = fetchData;
+    // A broken IndexedDB connection must not block network loading indefinitely.
+    let cacheTimer;
+    const cacheTimeout = new Promise((resolve) => { cacheTimer = window.setTimeout(() => resolve(null), 1500); });
+    Promise.race([loadDatasetFromCache().catch(() => null), cacheTimeout])
+      .then((cached) => {
+        window.clearTimeout(cacheTimer);
+        if (!cancelled) return fetchData(cached);
+      });
     return () => {
       cancelled = true;
+      window.clearTimeout(cacheTimer);
+      fetchAbortRef.current?.abort();
       fetchDataRef.current = null;
+      partitionLoaderRef.current = null;
+      ensureTypesLoaderRef.current = null;
       ensurePlantsLoaderRef.current = null;
-      plantsFetchPromiseRef.current = null;
-      if (fetchAbortRef.current) {
-        try {
-          fetchAbortRef.current.abort();
-        } catch {}
-      }
-      if (insectDataLoadTimerRef.current) {
-        window.clearTimeout(insectDataLoadTimerRef.current);
-        insectDataLoadTimerRef.current = null;
-      }
-      insectDataInteractionCleanupRef.current && insectDataInteractionCleanupRef.current();
+      if (insectDataLoadTimerRef.current) window.clearTimeout(insectDataLoadTimerRef.current);
+      insectDataInteractionCleanupRef.current?.();
       insectDataInteractionCleanupRef.current = null;
     };
-  }, []); // Close useEffect and add dependency array
+  }, []);
 
-  // 一覧は軽量catalogで表示し、個別種へ移動した時だけ該当分類の
-  // 文献・詳細食草を含む完全データへ差し替える。
+  const routeDataReady = isRouteDataReady(partitionState, location.pathname, location.search);
+  // Reconcile every route, including recovery without a navigation event.
   useEffect(() => {
-    const collectionKey = getInsectDetailCollectionKey(location.pathname || '/');
-    if (!collectionKey || !ensureTypesLoaderRef.current) return;
-    ensureTypesLoaderRef.current([collectionKey], 'full');
-  }, [location.pathname]);
+    const loader = partitionLoaderRef.current;
+    let cancelled = false;
+    loader?.ensurePlan(planInitialDataLoad({
+      pathname: location.pathname, search: location.search,
+    })).then(() => {
+      // The main species account needs only its full partition, but related
+      // species and the network require catalogs from every classification.
+      if (!cancelled && getInsectDetailCollectionKey(location.pathname) &&
+          isRouteDataReady(loader.getState(), location.pathname, location.search)) loader.ensureTypes();
+    });
+    return () => { cancelled = true; };
+  }, [location.pathname, location.search, loaderGeneration, routeDataReady]);
 
-  const hasLoadedInsectPartitions =
-    moths.length +
-      butterflies.length +
-      beetles.length +
-      longhornbeetles.length +
-      barkbeetles.length +
-      leafbeetles.length +
-      aphids.length >
-    0;
+  const visibleLoadError = loadError || getRouteDataError(partitionState, location.pathname);
+  const hasLoadedInsectPartitions = INSECT_COLLECTION_KEYS.every(
+    (key) => Boolean(partitionState.collectionLevels[key]),
+  );
 
   const clearScheduledInsectDataLoad = () => {
     if (insectDataLoadTimerRef.current && typeof window !== 'undefined') {
@@ -890,6 +589,7 @@ function App() {
     // /plant系ランディングでは昆虫パーティションが遅延読み込みのため、
     // 「まだ届いていない」と「本当に関連昆虫が0」を詳細ページ側で区別できるようにする
     insectPartitionsReady: hasLoadedInsectPartitions,
+    relatedDataError: visibleLoadError,
   };
 
   const routeConfigs = [
@@ -960,7 +660,7 @@ function App() {
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
       {/* グローバルローディングバー */}
-      <LoadingBar isLoading={loading} progress={loadProgress} />
+      <LoadingBar isLoading={loading || (!routeDataReady && !visibleLoadError)} progress={routeDataReady ? 100 : Math.min(loadProgress, 90)} />
       <a
         href={skipToMainHref}
         onClick={handleSkipToMainContent}
@@ -983,7 +683,7 @@ function App() {
         plantDetails={plantDetails}
       />
 
-      {loadError && (
+      {visibleLoadError && (
         <div className="px-4 sm:px-6 lg:px-8 mt-4">
           <div
             role="alert"
@@ -996,9 +696,19 @@ function App() {
             </div>
             <button
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 if (fetchDataRef.current) {
-                  fetchDataRef.current(cachedVersionRef.current);
+                  if (partitionLoaderRef.current) {
+                    setLoadError(null);
+                    const loader = partitionLoaderRef.current;
+                    await loader.retryFailures(planInitialDataLoad({
+                      pathname: location.pathname, search: location.search,
+                    }));
+                    const currentRoute = routeLocationRef.current;
+                    loader.ensurePlan(planInitialDataLoad({
+                      pathname: currentRoute.pathname, search: currentRoute.search,
+                    }));
+                  } else fetchDataRef.current();
                 }
               }}
               className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors shadow-sm"
@@ -1010,11 +720,11 @@ function App() {
       )}
 
       <main id="main-content" role="main" tabIndex={-1}>
-        {loading ? (
+        {(loading || !routeDataReady) ? (visibleLoadError ? null : (
           routeConfigs.some(({ path, fallback }) => fallback && matchPath({ path, end: true }, location.pathname))
             ? <DetailSkeleton />
             : <SkeletonLoader />
-        ) : (
+        )) : (
         <Routes>
           {routeConfigs.map(({ path, element, fallback }) => (
             <Route

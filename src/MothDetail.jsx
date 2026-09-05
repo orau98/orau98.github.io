@@ -1,3 +1,4 @@
+import { isFlowerVisitRecord } from './utils/flowerVisitPlants.js';
 import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import logger from './utils/logger';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
@@ -108,7 +109,7 @@ const extractPlantPartsFromNotes = (notes) => {
   );
 };
 
-const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], barkbeetles = [], leafbeetles = [], aphids = [], hostPlants, flowerVisitPlants = {}, plantDetails = {}, theme, locale = 'ja' }) => {
+const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], barkbeetles = [], leafbeetles = [], aphids = [], hostPlants, flowerVisitPlants = {}, plantDetails = {}, theme, locale = 'ja', insectPartitionsReady = true, relatedDataError = null }) => {
   // 🔍 デバッグ：コンポーネント呼び出し確認
   logger.debug('🔍 MothDetail component called');
   const isEnglish = isEnglishLocale(locale);
@@ -640,15 +641,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return String(plant).replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
   };
 
-  const isFlowerVisitRecord = (record) => {
-    if (!record || typeof record !== 'object') return false;
-    if (record.isFlowerVisit === true) return true;
-    const lifeStage = (record.lifeStage || '').trim();
-    const plantPart = (record.plantPart || '').trim();
-    const partCompact = plantPart.replace(/\s+/g, '');
-    const isAdultOrUnknown = lifeStage === '成虫' || lifeStage === '';
-    return isAdultOrUnknown && partCompact && partCompact.includes('花');
-  };
+
 
   const extractLarvalHostPlants = (insect) => {
     if (!insect) return [];
@@ -1082,7 +1075,13 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
         {/* 凡例はグラフ内ツールバーの表示（絞り込みに追従する）に一本化し、二重表示を避ける */}
         <div className="h-[560px] lg:h-[820px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
-          {graphDimensions.width === 0 || !graphNearViewport ? (
+          {!insectPartitionsReady ? (
+            <p role="status" className="p-6 text-sm text-slate-500">
+              {relatedDataError
+                ? (isEnglish ? 'Related data could not be loaded. Please retry above.' : '関連データを取得できませんでした。上の再読み込みをお試しください。')
+                : (isEnglish ? 'Loading all insect groups...' : '全分類の関連データを読み込み中...')}
+            </p>
+          ) : graphDimensions.width === 0 || !graphNearViewport ? (
             <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm animate-pulse">
               <div className="w-24 h-24 mb-4 rounded-full bg-emerald-200/60 dark:bg-emerald-900/40"></div>
               <div className="h-3 w-40 rounded-full bg-slate-200 dark:bg-slate-700 mb-2"></div>
@@ -2162,12 +2161,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             {/* 関連種情報 - 横スクロール式カードデザイン
                 （アンカーで包み、関連ゼロで非表示のときは目次からも消えるようにする） */}
             <div id="related-insects">
-              <RelatedInsectsSection
+              {!insectPartitionsReady ? (
+                <p role="status" className="p-4 text-sm text-slate-500">
+                  {relatedDataError
+                    ? (isEnglish ? 'Related data could not be loaded. Please retry above.' : '関連データを取得できませんでした。上の再読み込みをお試しください。')
+                    : (isEnglish ? 'Loading related insects from all groups...' : '全分類の関連昆虫を読み込み中...')}
+                </p>
+              ) : <RelatedInsectsSection
                 relatedMothsByPlant={relatedMothsByPlant}
                 allInsects={allInsects}
                 locale={locale}
                 plantDetails={plantDetails}
-              />
+              />}
             </div>
 
             <ManualAdSlot
