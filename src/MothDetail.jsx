@@ -1074,7 +1074,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         </div>
 
         {/* 凡例はグラフ内ツールバーの表示（絞り込みに追従する）に一本化し、二重表示を避ける */}
-        <div className="h-[560px] lg:h-[820px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
+        <div className="h-[720px] lg:h-[820px] bg-gradient-to-br from-slate-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-950 dark:to-emerald-950/25">
           {!insectPartitionsReady ? (
             <p role="status" className="p-6 text-sm text-slate-500">
               {relatedDataError
