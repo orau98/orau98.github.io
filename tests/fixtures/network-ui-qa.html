@@ -1,0 +1,57 @@
+<!doctype html>
+<!-- Manual integration fixture: run Vite and visit /tests/fixtures/network-ui-qa.html. -->
+<html lang="ja"><meta charset="utf-8"><title>ネットワークUI 動作確認</title>
+<style>body{font:14px system-ui;margin:8px;background:#eee}button{padding:6px;margin-right:4px}iframe{display:block;border:1px solid #aaa;background:white}pre{white-space:pre-wrap;max-height:100px;overflow:auto}</style>
+<button id="mobile">390px</button><button id="tablet">768px</button><button id="desktop">1230px</button><button id="small">アイモンアツバ</button><button id="large">ハンノキ</button><button id="run">表示・検索・選択を検証</button>
+<pre id="result" role="status">準備中</pre>
+<iframe id="app" title="図鑑の検証画面" width="390" height="760"></iframe>
+<script>
+const frame = document.querySelector('#app');
+const result = document.querySelector('#result');
+let plant = false;
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+const route = () => '/'+(plant?'plant/ハンノキ/?qa=1#plant-network':'moth/アイモンアツバ/?qa=1#food-web');
+const load = () => { frame.src=route(); result.textContent='読み込み中'; };
+for(const [id,width] of [['mobile',390],['tablet',768],['desktop',1230]]) document.getElementById(id).onclick=()=>{frame.width=width; result.textContent=width+'px に変更';};
+document.querySelector('#small').onclick=()=>{plant=false;load();};
+document.querySelector('#large').onclick=()=>{plant=true;load();};
+frame.onload=()=>{result.textContent='表示幅 '+frame.width+'px';};
+document.querySelector('#run').onclick=async()=>{
+  const checks=[];
+  const assert=(name,value,detail='')=>{checks.push({name,pass:Boolean(value),detail});result.textContent=JSON.stringify(checks,null,2);};
+  const doc=frame.contentDocument;
+  let root;
+  for(let i=0;i<100;i++){root=doc.querySelector('[data-network-root]');if(root)break;await wait(200);}
+  if(!root){assert('network rendered',false);return;}
+  await wait(1500);
+  const buttons=()=>[...root.querySelectorAll('button')];
+  const named=name=>buttons().find(button=>button.textContent.trim()===name||button.getAttribute('aria-label')===name);
+  const canvas=()=>root.querySelector('[data-network-canvas]').getBoundingClientRect();
+  const panel=()=>root.querySelector('[data-network-inspector]');
+  const inside=(inner,outer)=>inner.top>=outer.top-1&&inner.left>=outer.left-1&&inner.bottom<=outer.bottom+1&&inner.right<=outer.right+1;
+  assert('counts preserve source',root.querySelector('[data-network-counts]').textContent.includes(plant?'関係 77/77':'関係 8/8'),root.querySelector('[data-network-counts]').textContent);
+  assert('canvas has usable height',canvas().height>=180,Math.round(canvas().height)+'px');
+  const before=canvas().height;named('表示設定').click();await wait(150);
+  assert('settings do not push down graph',Math.abs(canvas().height-before)<1);
+  named('設定を閉じる').click();named('種の一覧').click();await wait(300);
+  assert('all species remain in list',root.querySelectorAll('[data-network-list] button[aria-pressed]').length===(plant?78:9));
+  assert('list contained by frame',inside(panel().getBoundingClientRect(),root.getBoundingClientRect()));
+  const input=root.querySelector('input[type=search]');
+  const target=plant?'ハンノキハムシ':'サカハチチョウ';
+  const setter=Object.getOwnPropertyDescriptor(frame.contentWindow.HTMLInputElement.prototype,'value').set;
+  setter.call(input,target);input.dispatchEvent(new frame.contentWindow.Event('input',{bubbles:true}));await wait(300);
+  const choice=buttons().find(button=>button.getAttribute('aria-pressed')!==null&&button.textContent.includes(target));
+  assert('search finds target species',Boolean(choice));if(!choice)return;
+  choice.click();await wait(700);
+  assert('selection is rendered',panel()?.getAttribute('aria-label')==='選択した種の詳細'&&panel().textContent.includes(target));
+  assert('details are not clipped by outer frame',inside(panel().getBoundingClientRect(),root.getBoundingClientRect()));
+  const detail=named('詳細ページへ →');
+  assert('detail action visible inside inspector',Boolean(detail)&&inside(detail.getBoundingClientRect(),panel().getBoundingClientRect()));
+  assert('canvas remains usable with inspector',canvas().height>=180,Math.round(canvas().height)+'px');
+  named('全体表示').click();await wait(500);
+  assert('one zoom-in control',buttons().filter(button=>button.getAttribute('aria-label')==='拡大').length===1);
+  root.scrollIntoView({block:'start'});
+  result.textContent=JSON.stringify({width:frame.width,plant,passed:checks.filter(check=>check.pass).length,total:checks.length,checks},null,2);
+};
+load();
+</script></html>
