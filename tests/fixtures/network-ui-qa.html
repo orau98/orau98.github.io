@@ -37,7 +37,7 @@ document.querySelector('#run').onclick=async()=>{
   assert('all species remain in list',root.querySelectorAll('[data-network-list] button[aria-pressed]').length===(plant?78:9));
   assert('list contained by frame',inside(panel().getBoundingClientRect(),root.getBoundingClientRect()));
   const input=root.querySelector('input[type=search]');
-  const target=plant?'ハンノキハムシ':'サカハチチョウ';
+  const target=plant?'オオミズアオ':'サカハチチョウ';
   const setter=Object.getOwnPropertyDescriptor(frame.contentWindow.HTMLInputElement.prototype,'value').set;
   setter.call(input,target);input.dispatchEvent(new frame.contentWindow.Event('input',{bubbles:true}));await wait(300);
   const choice=buttons().find(button=>button.getAttribute('aria-pressed')!==null&&button.textContent.includes(target));
@@ -50,6 +50,34 @@ document.querySelector('#run').onclick=async()=>{
   assert('canvas remains usable with inspector',canvas().height>=180,Math.round(canvas().height)+'px');
   named('全体表示').click();await wait(500);
   assert('one zoom-in control',buttons().filter(button=>button.getAttribute('aria-label')==='拡大').length===1);
+  const photoSize=root.querySelector('select[aria-label="写真サイズ"]');
+  assert('larger photos are the default',photoSize?.value==='large');
+  photoSize.value='extra-large';photoSize.dispatchEvent(new frame.contentWindow.Event('change',{bubbles:true}));await wait(500);
+  assert('photo size can change independently',photoSize.value==='extra-large'&&root.querySelector('[data-network-counts]').textContent.includes(plant?'関係 77/77':'関係 8/8'));
+  const preview=root.querySelector('[data-network-photo-preview]');
+  assert('selected species has a photo preview',Boolean(preview));
+  if(preview){
+    preview.focus();preview.click();await wait(500);
+    const dialog=doc.querySelector('[role=dialog]');
+    assert('large photograph opens outside the graph frame',Boolean(dialog)&&!root.contains(dialog));
+    const modalImage=dialog?.querySelector('img');
+    for(let i=0;i<60&&modalImage&&!modalImage.naturalWidth;i++)await wait(100);
+    assert('large photograph loads successfully',modalImage?.naturalWidth>0);
+    const imageRect=modalImage?.getBoundingClientRect();
+    const fitsViewport=rect=>rect&&rect.top>=0&&rect.left>=0&&rect.bottom<=frame.contentWindow.innerHeight&&rect.right<=frame.contentWindow.innerWidth;
+    assert('large photograph fits the viewport',fitsViewport(imageRect),imageRect?JSON.stringify(imageRect.toJSON()):'missing image');
+    const zoom=dialog?.querySelector('button[aria-label="拡大する"]');
+    zoom?.click();await wait(150);
+    const fit=dialog?.querySelector('button[aria-label="全体表示に戻す"]');
+    assert('photograph zoom control works',fit?.getAttribute('aria-pressed')==='true');
+    fit?.click();await wait(150);
+    assert('photograph fits again after zoom',fitsViewport(modalImage?.getBoundingClientRect()));
+    const close=dialog?.querySelector('button[aria-label="閉じる"]');
+    assert('large photograph has a close control',Boolean(close));
+    frame.contentWindow.dispatchEvent(new frame.contentWindow.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));await wait(200);
+    assert('Escape closes preview and restores focus',!doc.querySelector('[role=dialog]')&&doc.activeElement===preview);
+  }
+  assert('detail footer stays inside the inspector after photo preview',inside(detail.getBoundingClientRect(),panel().getBoundingClientRect()));
   root.scrollIntoView({block:'start'});
   result.textContent=JSON.stringify({width:frame.width,plant,passed:checks.filter(check=>check.pass).length,total:checks.length,checks},null,2);
 };

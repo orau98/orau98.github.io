@@ -1,6 +1,34 @@
 // Presentation-only helpers: source species and relationships are never discarded.
 export const endpointId = (endpoint) => typeof endpoint === 'object' ? endpoint?.id : endpoint;
 
+export const NETWORK_PHOTO_SIZES = [
+  { value: 'medium', radius: 22, label: '中', labelEn: 'Medium' },
+  { value: 'large', radius: 32, label: '大', labelEn: 'Large' },
+  { value: 'extra-large', radius: 44, label: '特大', labelEn: 'Extra large' },
+];
+
+// One geometry contract for drawing, fitting, collision and pointer targets.
+// Species without a registered photo stay compact; their records remain visible.
+export const networkNodeRadius = (node, photoSize = 'large') => {
+  if (node.type === 'group') return 20;
+  const current = node.type.includes('current');
+  if (!node.imgCandidates?.length) return current ? 18 : 12;
+  const size = NETWORK_PHOTO_SIZES.find(option => option.value === photoSize) || NETWORK_PHOTO_SIZES[1];
+  return size.radius * (current ? 1.25 : 1);
+};
+
+// Preserve the complete photograph and its aspect ratio in the square frame.
+export const containNetworkImage = (width, height, radius) => {
+  if (!(width > 0 && height > 0 && radius > 0)) return null;
+  const scale = radius * 2 / Math.max(width, height);
+  return { x: -width * scale / 2, y: -height * scale / 2, width: width * scale, height: height * scale };
+};
+
+export const networkPreviewCandidates = (candidates = []) => {
+  const resolution = url => Number(url.match(/\.(\d+)\.(?:avif|webp|jpe?g|png)(?:[?#]|$)/i)?.[1] || 2048);
+  return [...new Set(candidates.filter(Boolean))].sort((a, b) => resolution(b) - resolution(a));
+};
+
 export const networkGroup = (node, isEnglish = false) => {
   const kind = node.type.startsWith('plant') ? 'plant' : 'insect';
   const classification = node.raw?.classification || {};
@@ -54,14 +82,14 @@ export const searchNetworkNodes = (nodes, query) => {
 };
 
 // Fit painted circles AND labels, not just the centers used by zoomToFit.
-export const fitNetworkBounds = (nodes, width, height, measureLabel = text => [...String(text)].length * 12) => {
+export const fitNetworkBounds = (nodes, width, height, measureLabel = text => [...String(text)].length * 12, photoSize = 'large') => {
   const positioned = nodes.filter(node => Number.isFinite(node.x) && Number.isFinite(node.y));
   if (!positioned.length || width < 64 || height < 64) return null;
   const boundsAt = (zoom) => {
     const fontScale = Math.max(0.78, Math.min(1, zoom));
     const bounds = { left: Infinity, right: -Infinity, top: Infinity, bottom: -Infinity };
     for (const node of positioned) {
-      const radius = node.type === 'group' ? 20 : node.type.includes('current') ? 18 : 12;
+      const radius = networkNodeRadius(node, photoSize);
       const halfWidth = Math.max(radius * 1.5 * zoom, measureLabel(node.name, node.type.includes('current')) * fontScale / 2 + 6);
       const halfHeight = radius * 1.5 * zoom + 28;
       bounds.left = Math.min(bounds.left, node.x * zoom - halfWidth);

@@ -211,7 +211,7 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
             alt={image.alt}
             className={zoomed
               ? 'max-w-none w-[200%] cursor-zoom-out rounded-lg shadow-2xl'
-              : 'w-full h-full object-contain cursor-zoom-in rounded-lg shadow-2xl'}
+              : 'block w-full max-h-[90vh] object-contain cursor-zoom-in rounded-lg shadow-2xl'}
             onError={handleModalImageError}
             onClick={() => setZoomed((z) => !z)}
           />
