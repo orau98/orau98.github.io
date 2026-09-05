@@ -9,6 +9,7 @@ import {
   loadLeafBeetleMergedTaxonRedirects,
 } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
+import { SITE_ICON_VERSION } from '../src/utils/siteBrand.js';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -119,7 +120,6 @@ function hasIndexFollowRobots(html) {
     !tokens.has('nofollow');
 }
 
-const SITE_ICON_VERSION = '5';
 const REQUIRED_SITE_ICON_HREFS = [
   `/favicon-48.png?v=${SITE_ICON_VERSION}`,
   `/favicon.svg?v=${SITE_ICON_VERSION}`,
