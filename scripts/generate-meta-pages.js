@@ -310,10 +310,7 @@ function formatCitationHtml(entry, rawReference = '') {
   const isAssociate = isAmazonAssociateUrl(link);
   const rel = isAssociate ? 'sponsored nofollow noopener noreferrer' : 'noopener noreferrer';
   const linkLabel = isAssociate ? '購入先' : '出典ページ';
-  const associateLabel = isAssociate
-    ? '<span class="amazon-associate-link-label">（Amazonアソシエイトリンク）</span>'
-    : '';
-  return `<cite><span class="citation-bibliography">${label}</span> <a class="citation-source-link" href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${linkLabel}</a>${associateLabel}</cite>`;
+  return `<cite><span class="citation-bibliography">${label}</span> <a class="citation-source-link" href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${linkLabel}</a></cite>`;
 }
 
 function formatCitationShortHtml(entry, rawReference = '') {
@@ -324,10 +321,7 @@ function formatCitationShortHtml(entry, rawReference = '') {
 
   const isAssociate = isAmazonAssociateUrl(link);
   const rel = isAssociate ? 'sponsored nofollow noopener noreferrer' : 'noopener noreferrer';
-  const associateLabel = isAssociate
-    ? '<span class="amazon-associate-link-label">（Amazonアソシエイトリンク）</span>'
-    : '';
-  return `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${label}</a>${associateLabel}</cite>`;
+  return `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${label}</a></cite>`;
 }
 
 function renderAmazonAssociatesDisclosureHtml(citationEntries = []) {
