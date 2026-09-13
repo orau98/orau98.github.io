@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { getPlantUsage } from './lib/plantUsage.mjs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { globalJapaneseToScientificMapping } from '../src/utils/insectImageMappings.js';
@@ -12,7 +13,6 @@ import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { comparePlantImageDisplayPriority } from '../src/utils/filename.js';
 import {
   cleanString,
-  isFlowerVisitRecord,
   normalizePlantNameLite,
 } from './lib/dataLiteBuilders.mjs';
 import {
@@ -429,35 +429,6 @@ function resolveInsectImageUrl(insect) {
   return '';
 }
 
-function extractLarvalHostPlants(insect) {
-  const detailed = Array.isArray(insect?.hostPlantsDetailed) ? insect.hostPlantsDetailed : [];
-  if (detailed.length > 0) {
-    const plants = detailed
-      .filter((record) => !isFlowerVisitRecord(record))
-      .map((record) => normalizePlantNameLite(cleanString(record?.name || record?.displayName || record?.plant)))
-      .filter(Boolean)
-      .filter((name) => name !== '不明');
-    if (plants.length > 0) {
-      return Array.from(new Set(plants));
-    }
-  }
-  const hostPlants = insect?.hostPlants;
-  if (Array.isArray(hostPlants)) {
-    return Array.from(new Set(hostPlants.map((name) => normalizePlantNameLite(cleanString(name))).filter(Boolean)));
-  }
-  if (typeof hostPlants === 'string') {
-    return Array.from(
-      new Set(
-        hostPlants
-          .split(/[;；、,，]/)
-          .map((name) => normalizePlantNameLite(cleanString(name)))
-          .filter(Boolean),
-      ),
-    );
-  }
-  return [];
-}
-
 function normalizeInsectFamilyLabels(insect) {
   const classification = insect?.classification || {};
   return {
@@ -616,7 +587,9 @@ function buildEnglishInsectPage({
   const socialImageAlt = imageUrl
     ? `${primaryName} photograph`
     : `${primaryName} reference image`;
-  const hostPlantsArray = extractLarvalHostPlants(insect);
+  const plantUsage = getPlantUsage(insect, (value) => normalizePlantNameLite(cleanString(value)));
+  const hostPlantsArray = plantUsage.hostPlants;
+  const flowerPlantItems = buildPlantListItems(plantUsage.flowerPlants, plantRecords, plantDetails, aliasToCanonical);
   const hostPlantItems = buildPlantListItems(
     hostPlantsArray,
     plantRecords,
@@ -633,16 +606,17 @@ function buildEnglishInsectPage({
   const description = [
     japaneseReference,
     `${primaryName} is listed here as a ${section.singularLabel.toLowerCase()} from Japan.`,
+    flowerPlantItems.length > 0 ? `Adult flower visits: ${flowerPlantItems.length} plant entries, counted separately from host records.` : '',
     hostPlantItems.length > 0
-      ? `Recorded larval host plants: ${hostPlantItems
+      ? `Recorded host plants: ${hostPlantItems
           .slice(0, 3)
           .map((item) => item.primaryName)
           .join(', ')}${hostPlantItems.length > 3 ? ` and ${hostPlantItems.length - 3} more` : ''}.`
-      : 'Larval host plant information is currently limited on this page.',
+      : 'Host plant information is currently limited on this page.',
   ]
     .filter(Boolean)
     .join(' ');
-  const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
+  const robotsContent = computeInsectRobotsContent({ hostPlantsArray: [...hostPlantsArray, ...plantUsage.flowerPlants], imageUrl, insect });
   const title = `${primaryName} | ${section.singularLabel} profile from Japan`;
   const summaryParagraphs = [
     `${primaryName} is documented here as a ${section.singularLabel.toLowerCase()} associated with plants recorded in Japan.`,
@@ -788,8 +762,8 @@ function buildEnglishInsectPage({
                   : ''
               }</dd>`
             : ''}
-          <dt>Recorded larval host plants</dt>
-          <dd>${hostPlantItems.length}</dd>
+          <dt>Recorded host plants</dt>
+          <dd>${hostPlantItems.length} plant entries (including collective names)</dd>
           ${seasonText && seasonText !== '不明' ? `<dt>Adult season</dt><dd>${escapeHtml(seasonText)}</dd>` : ''}
         </dl>
       </section>
@@ -806,7 +780,8 @@ function buildEnglishInsectPage({
       </section>
 
       <section class="host-plants">
-        <h3>Recorded larval host plants</h3>
+        <h3>Recorded host plants</h3>
+        <p>Life stage and plant part are not inferred when absent from the source. Adult flower visits are listed separately.</p>
         ${hostPlantItems.length > 0 ? `
         <ul>
           ${hostPlantItems.map((item) => `<li>
@@ -815,9 +790,15 @@ function buildEnglishInsectPage({
             ${item.japaneseReference ? `<div class="meta-note">${escapeHtml(item.japaneseReference)}</div>` : ''}
           </li>`).join('\n          ')}
         </ul>` : `
-        <p>Larval host plant information is currently limited in the source dataset for this entry.</p>`}
+        <p>Host plant information is currently limited in the source dataset for this entry.</p>`}
       </section>
 
+      ${flowerPlantItems.length > 0 ? `
+      <section class="flower-visits">
+        <h3>Adult flower visits (${flowerPlantItems.length} plant entries)</h3>
+        <p>These records do not establish larval host use.</p>
+        <ul>${flowerPlantItems.map((item) => `<li>${item.href ? `<a href="${escapeAttr(item.href)}">${escapeHtml(item.primaryName)}</a>` : escapeHtml(item.primaryName)}${item.japaneseReference ? ` <span class="meta-note">${escapeHtml(item.japaneseReference)}</span>` : ''}</li>`).join('')}</ul>
+      </section>` : ''}
       ${renderEnglishHostPlantGuideLinks(hostPlantsArray)}
 
       ${cleanString(insect.notes || insect.remarks) ? `

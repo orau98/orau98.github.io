@@ -1,3 +1,4 @@
+import { getPlantUsage, getPlantInsectUsage, uniqueInsects } from './lib/plantUsage.mjs';
 import { normalizeHostRecord } from '../src/utils/hostRecord.js';
 import { buildImageIndex } from './build-image-index.mjs';
 import fs from 'fs';
@@ -1392,6 +1393,7 @@ function renderCoOccurringInsects(insect, fallbackType, hostPlantsArray = [], ho
     if (!Array.isArray(list)) continue;
     for (const other of list) {
       if (!other || !other.id || other.id === selfId) continue;
+      if (!getPlantInsectUsage(other, plant, plantPageKey).host) continue;
       const name = other.japaneseName || other.name;
       if (!name) continue;
       if (!seen.has(other.id)) {
@@ -1423,7 +1425,9 @@ function generateInsectHTML(
 ) {
   const typeNames = INSECT_TYPE_NAMES;
   
-  const hostPlants = insect.hostPlants || '不明';
+  const plantUsage = getPlantUsage(insect);
+  const hostPlants = plantUsage.hostPlants.join('; ') || '不明';
+  const flowerPlantsArray = plantUsage.flowerPlants.map(normalizePlantName).filter(isValidPlantName);
   const scientificName = insect.scientificName || '';
   const citationEntries = buildInsectCitationEntries(insect);
   const citationSummaryHtml = renderCitationSummaryHtml(citationEntries);
@@ -1476,9 +1480,26 @@ function generateInsectHTML(
       }))]
       : [];
   
+  const renderPlantItems = (plants) => plants.map((plant) => {
+    const normalizedPlant = normalizePlantName(plant);
+    if (!isValidPlantName(normalizedPlant)) {
+      return `<li>${escapeRedirectHtml(plant)}</li>`;
+    }
+    // リンク先は科名を除いた正規ページ（統合先）。科名は隣接テキストで補足表示する。
+    const key = plantPageKey(plant);
+    const fam = extractPlantFamilySuffix(normalizedPlant);
+    const targetName = resolvePlantMetaTarget ? resolvePlantMetaTarget(key) : '';
+    const label = escapeRedirectHtml(key);
+    const familyLabel = fam ? `（${escapeRedirectHtml(fam)}）` : '';
+    if (!targetName) {
+      return `<li>${label}${familyLabel}</li>`;
+    }
+    const safeTargetName = targetName.replace(/[/\\?%*:|"<>]/g, '-');
+    return `<li><a href="${buildPlantPath(safeTargetName, 'ja')}">${label}</a>${familyLabel}</li>`;
+  }).join('');
   // 分類情報の生成
   const familyName = insect.family || INSECT_DEFAULT_FAMILIES[type];
-  const robotsContent = computeInsectRobotsContent({ hostPlantsArray, imageUrl, insect });
+  const robotsContent = computeInsectRobotsContent({ hostPlantsArray: [...hostPlantsArray, ...flowerPlantsArray], imageUrl, insect });
   const alternativeNameList = splitAlternativeNames(insect.alternativeNames);
   const scientificGenus = extractScientificGenus(scientificName);
   const hostPlantKeywordList = uniqueNonEmpty(
@@ -1547,7 +1568,7 @@ function generateInsectHTML(
   if (hostPlantsArray.length > 0) {
     // 食草あり
     const plantListStr = hostPlantsArray.slice(0, 3).join('、');
-    const plantSuffix = hostPlantsArray.length > 3 ? `など${hostPlantsArray.length}種` : `${hostPlantsArray.length}種`;
+    const plantSuffix = hostPlantsArray.length > 3 ? `など${hostPlantsArray.length}項目` : `${hostPlantsArray.length}項目`;
     let desc = `${insect.japaneseName}（${familyName}）の食草・寄主植物の記録は${plantListStr}${plantSuffix}。`;
     if (hasEmergence && emergenceTimeVal) {
       desc += `成虫は${emergenceTimeVal}に出現。`;
@@ -1581,6 +1602,10 @@ function generateInsectHTML(
     }
     desc += SUFFIX_NOFOOD;
     insectDescription = desc.replace(/"/g, '');
+  }
+
+  if (flowerPlantsArray.length > 0) {
+    insectDescription += `成虫の訪花記録を${flowerPlantsArray.length}項目掲載（食草とは別集計）。`;
   }
 
   // og:description / twitter:description（先頭5種 + など に制限）
@@ -1633,7 +1658,7 @@ function generateInsectHTML(
         taxonRank: 'family',
       },
     },
-    description: `${insect.japaneseName}（${scientificName}）は${familyName}に属する${typeNames[type]}の一種です。${hostPlantsArray.length > 0 ? `主な食草：${hostPlantsArray.slice(0, 3).join('、')}など${hostPlantsArray.length}種の植物を利用します。` : '食草情報は現在調査中です。'}`,
+    description: insectDescription,
     keywords: insectKeywordList.slice(0, 14),
     url: insectPageUrl,
     inLanguage: 'ja',
@@ -1652,7 +1677,7 @@ function generateInsectHTML(
   if (insectImageObject) {
     insectStructuredData.image = insectImageObject;
   }
-  const insectWebPageData = shouldRenderInsectWebPageData(hostPlantsArray)
+  const insectWebPageData = shouldRenderInsectWebPageData([...hostPlantsArray, ...flowerPlantsArray])
     ? buildMetaWebPageData({
       url: insectPageUrl,
       title: insectTitle,
@@ -1673,16 +1698,16 @@ function generateInsectHTML(
   };
   const faqPlantList = hostPlantsArray.slice(0, 5).join('、');
   const faqPlantSummary = hostPlantsArray.length > 5
-    ? `${faqPlantList}など${hostPlantsArray.length}種`
-    : `${faqPlantList}の${hostPlantsArray.length}種`;
+    ? `${faqPlantList}など${hostPlantsArray.length}項目`
+    : `${faqPlantList}の${hostPlantsArray.length}項目`;
   const insectFaqItems = hostPlantsArray.length > 0 ? [
     {
       question: `${insect.japaneseName}の食草・寄主植物は何ですか？`,
       answer: `${insect.japaneseName}の食草・寄主植物として、このページでは${faqPlantSummary}を掲載しています。`,
     },
     {
-      question: `${insect.japaneseName}は何種の植物を利用しますか？`,
-      answer: `整理済みデータでは、${insect.japaneseName}が利用する植物として${hostPlantsArray.length}種が記録されています。表記ゆれや近縁植物を含む場合があります。`,
+      question: `${insect.japaneseName}の食草・寄主植物は何項目掲載されていますか？`,
+      answer: `整理済みデータでは、${insect.japaneseName}の食草・寄主植物として${hostPlantsArray.length}項目が記録されています。科・属などの総称を含むため、植物の種数とは異なります。成虫の訪花記録は別に掲載しています。`,
     },
     {
       question: `${insect.japaneseName}の食草情報の出典はどこで確認できますか？`,
@@ -1796,8 +1821,8 @@ function generateInsectHTML(
           <dt>種類</dt>
           <dd>${typeNames[type]}</dd>
           ${hostPlantsArray.length > 0 ? `
-          <dt>食草数</dt>
-          <dd>${hostPlantsArray.length}種</dd>` : ''}
+          <dt>食草・寄主植物の掲載項目</dt>
+          <dd>${hostPlantsArray.length}項目</dd>` : ''}
           ${insect.emergenceTime && insect.emergenceTime !== '不明' ? `
           <dt>成虫出現時期</dt>
           <dd>${insect.emergenceTime}</dd>` : ''}
@@ -1816,29 +1841,19 @@ function generateInsectHTML(
       <section class="host-plants">
         <h3>食草・食樹</h3>
         ${hostPlantsArray.length > 0 ? `
-        <p>${insect.japaneseName}は以下の植物を食草として利用します：</p>
+        <p>${insect.japaneseName}の食草・寄主植物として記録された植物です。利用段階・部位が未記載の記録は推定していません：</p>
         <ul>
-          ${hostPlantsArray.map(plant => {
-            const normalizedPlant = normalizePlantName(plant);
-            if (!isValidPlantName(normalizedPlant)) {
-              return `<li>${escapeRedirectHtml(plant)}</li>`;
-            }
-            // リンク先は科名を除いた正規ページ（統合先）。科名は隣接テキストで補足表示する。
-            const key = plantPageKey(plant);
-            const fam = extractPlantFamilySuffix(normalizedPlant);
-            const targetName = resolvePlantMetaTarget ? resolvePlantMetaTarget(key) : '';
-            const label = escapeRedirectHtml(key);
-            const familyLabel = fam ? `（${escapeRedirectHtml(fam)}）` : '';
-            if (!targetName) {
-              return `<li>${label}${familyLabel}</li>`;
-            }
-            const safeTargetName = targetName.replace(/[/\\?%*:|"<>]/g, '-');
-            return `<li><a href="${buildPlantPath(safeTargetName, 'ja')}">${label}</a>${familyLabel}</li>`;
-          }).join('')}
+          ${renderPlantItems(hostPlantsArray)}
         </ul>
         ${renderHostPlantGuideLinks(hostPlantsArray)}` : `
         <p>食草情報は現在調査中です。</p>`}
       </section>
+      ${flowerPlantsArray.length > 0 ? `
+      <section class="flower-visits">
+        <h3>成虫の訪花記録（${flowerPlantsArray.length}項目）</h3>
+        <p>成虫による花の利用記録です。幼虫の食草を示すものではありません。</p>
+        <ul>${renderPlantItems(flowerPlantsArray)}</ul>
+      </section>` : ''}
       ${renderCoOccurringInsects(insect, type, hostPlantsArray, hostPlantsMap)}
 
       ${insectFaqItems.length > 0 ? `
@@ -2049,6 +2064,12 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   // plantNameは表示用の名前（エイリアスの場合は科名なし）
   // plantFamily は科名（例「バラ科」）。ページ識別子には含めず本文属性として表示する。
   const dataPlantName = originalPlantName || plantName;
+  relatedInsects = uniqueInsects(relatedInsects);
+  const usageById = new Map(relatedInsects.map((insect) => [insect.id, getPlantInsectUsage(insect, dataPlantName, plantPageKey)]));
+  const hostInsects = relatedInsects.filter((insect) => usageById.get(insect.id).host);
+  const flowerInsects = relatedInsects.filter((insect) => usageById.get(insect.id).flower);
+  const relationSummary = `食草・寄主記録${hostInsects.length}種、成虫の訪花記録${flowerInsects.length}種（両方に含まれる昆虫もいます）`;
+  const relationLabel = (insect) => [usageById.get(insect.id).host ? '食草・寄主記録' : '', usageById.get(insect.id).flower ? '成虫の訪花' : ''].filter(Boolean).join(' / ');
   const displayPlantName = plantName;
   
   const isAlias = Boolean(originalPlantName && originalPlantName !== displayPlantName);
@@ -2129,13 +2150,13 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     .join('、');
   // description: 昆虫数・内訳 + 代表的な昆虫名 + 末尾句
   const plantRepresentatives = relatedInsects.slice(0, 3).map(i => i.japaneseName).join('、');
-  const plantDescriptionBase = `${displayPlantName}を食草・寄主植物とする昆虫は${relatedInsects.length}種（${plantTypeBreakdown}）。`;
+  const plantDescriptionBase = `${displayPlantName}の利用記録がある昆虫は${relatedInsects.length}種。${relationSummary}。`;
   const plantDescriptionSuffix = `${plantRepresentatives}など${displayPlantName}につく幼虫・成虫の種類と生態情報。`;
   const insectBasedPlantDescription = (plantDescriptionBase + plantDescriptionSuffix).replace(/"/g, '');
   // og:description: 先頭5種の昆虫名 + など
   const ogInsects = relatedInsects.slice(0, 5).map(i => i.japaneseName).join('、');
   const ogInsectsSuffix = relatedInsects.length > 5 ? 'など' : '';
-  const insectBasedPlantOgDescription = `${displayPlantName}を食草とする昆虫: ${ogInsects}${ogInsectsSuffix}。利用昆虫${relatedInsects.length}種の生態・食草関係。`.replace(/"/g, '');
+  const insectBasedPlantOgDescription = `${displayPlantName}を利用する昆虫: ${ogInsects}${ogInsectsSuffix}。${relationSummary}。`.replace(/"/g, '');
   const profileBasedPlantDescription = buildPlantProfileMetaDescription(
     displayPlantName,
     profileForMetadata || {},
@@ -2166,7 +2187,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     .join('・') || '特徴';
   const plantPageUrl = `${BASE_ORIGIN}${buildPlantPath(safeCanonicalName, 'ja')}`;
   const plantTitle = hasRelatedInsects
-    ? `${displayPlantName}につく虫・幼虫${relatedInsects.length}種｜食草記録と出典｜昆虫植物図鑑`
+    ? `${displayPlantName}につく虫${relatedInsects.length}種｜食草記録と出典｜昆虫植物図鑑`
     : `${displayPlantName}の${plantProfileTopicSummary}｜植物プロフィール｜昆虫植物図鑑`;
   const plantKeywords = hasRelatedInsects
     ? `${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}`
@@ -2203,13 +2224,13 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       value: displayPlantName,
     },
     description: hasRelatedInsects
-      ? `${displayPlantName}の食草植物情報。${relatedInsects.length}種の昆虫がこの植物を食草として利用します.`
+      ? `${displayPlantName}の昆虫利用記録。${relationSummary}。`
       : plantDescription,
     url: plantPageUrl,
     inLanguage: 'ja',
     ...(hasRelatedInsects ? { hasEcologicalInteraction: relatedInsects.map(insect => ({
       '@type': 'EcologicalInteraction',
-      interactionType: 'herbivory',
+      interactionType: [usageById.get(insect.id).host ? 'host plant association' : '', usageById.get(insect.id).flower ? 'flower visitation' : ''].filter(Boolean),
       participantOrganism: {
         '@type': ['Animal', 'Species'],
         name: insect.japaneseName,
@@ -2271,11 +2292,11 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const plantFaqItems = shouldRenderPlantFaq ? [
     {
       question: `${displayPlantName}につく虫は何種ありますか？`,
-      answer: `昆虫植物図鑑の整理済みデータでは、${displayPlantName}を食草・寄主植物として利用する昆虫を${relatedInsects.length}種掲載しています。内訳は${plantTypeBreakdown || `計${relatedInsects.length}種`}です。`,
+      answer: `昆虫植物図鑑の整理済みデータでは、${displayPlantName}の利用記録がある昆虫を${relatedInsects.length}種掲載しています。${relationSummary}。分類群の内訳は${plantTypeBreakdown || `計${relatedInsects.length}種`}です。`,
     },
     {
-      question: `${displayPlantName}を食べる幼虫や昆虫を調べるには？`,
-      answer: `${displayPlantName}を利用する昆虫として、このページでは${plantFaqInsectSummary}を掲載しています。各昆虫名から食草・分類・出典を確認できます。`,
+      question: `${displayPlantName}の食草利用と訪花を見分けるには？`,
+      answer: `${displayPlantName}を利用する昆虫として、このページでは${plantFaqInsectSummary}を掲載しています。一覧の「食草・寄主記録」と「成虫の訪花」を区別し、各昆虫名から利用段階・部位・出典を確認できます。`,
     },
     {
       question: `${displayPlantName}の食草記録の出典はどこで確認できますか？`,
@@ -2431,9 +2452,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       ${plantProfileHtml}
       ${hasRelatedInsects ? `
       <section class="description">
-        <h3>生態系での役割</h3>
-        <p>${displayPlantName}は、昆虫の食草として重要な役割を果たしている植物です。</p>
-        <p>この植物を食草として利用する昆虫は${relatedInsects.length}種確認されており、生態系において多様な昆虫の生活を支える重要な植物資源となっています。</p>
+        <h3>昆虫による利用記録</h3>
+        <p>${displayPlantName}の利用記録として${relatedInsects.length}種を掲載しています。${relationSummary}。</p>
+        <p>利用段階・部位が未記載の記録は推定していません。掲載数は利用する昆虫の全種数を示すものではありません。</p>
         ${Object.entries(insectsByType)
           .filter(([_type, insects]) => insects.length > 0)
           .map(([type, insects]) => 
@@ -2471,6 +2492,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
               <a href="${buildJapaneseInsectPath(insect, getInsectMetaRouteType(insect))}">${insect.japaneseName}</a>
             </div>
             <div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>
+            <div class="plant-use">${relationLabel(insect)}</div>
           </li>`).join('')}
         </ul>`).join('')}
 	      </section>` : ''}
@@ -3268,6 +3290,14 @@ async function generateMetaPages() {
       outputPath: path.join(publicDir, 'guides', 'categories', 'vegetables.html'),
       lang: 'ja',
       title: '野菜につく虫・幼虫 | 昆虫植物図鑑',
+      targetPath: '/plant/',
+      verifyTarget: false,
+    });
+
+    writePermanentGuideRedirect({
+      outputPath: path.join(publicDir, 'guides', 'categories', 'fruit-trees.html'),
+      lang: 'ja',
+      title: '果樹から昆虫を探す | 昆虫植物図鑑',
       targetPath: '/plant/',
       verifyTarget: false,
     });

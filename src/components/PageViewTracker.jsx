@@ -59,7 +59,9 @@ export default function PageViewTracker() {
       if (url.origin !== window.location.origin || !isKnownDetailPath(url.pathname)) return;
 
       const segments = url.pathname.split('/').filter(Boolean);
-      const contentType = segments[0] === 'en' ? segments[1] : segments[0];
+      const contentOffset = segments[0] === 'en' ? 1 : 0;
+      if (segments.length <= contentOffset + 1) return;
+      const contentType = segments[contentOffset];
       const source = anchor.closest('.related-insects-section')
         ? 'related_insects'
         : anchor.closest('#explorer-results')
@@ -73,8 +75,10 @@ export default function PageViewTracker() {
       });
     };
 
-    document.addEventListener('click', handleInternalDetailClick);
-    return () => document.removeEventListener('click', handleInternalDetailClick);
+    // React Router prevents the default action while bubbling a normal Link click.
+    // Observe it in capture phase so SPA detail navigation is counted as well.
+    document.addEventListener('click', handleInternalDetailClick, true);
+    return () => document.removeEventListener('click', handleInternalDetailClick, true);
   }, []);
 
   return null;
