@@ -250,7 +250,6 @@ Lithomoia_solidaginis
 Lithophane_consocia
 Lithophane_lamda
 Lithophane_nagaii
-Lithophane_nagaii_3
 Lithophane_plumbealis
 Lithophane_plumbeolimbata
 Lithophane_pruinosa
@@ -360,7 +359,6 @@ Perigrapha_circumducta
 Perigrapha_hoenei_P_ngeler_1914
 Petrophora_chlorosata
 Phaecasiophora_roseana
-Phaecasiophora_roseana_3
 Phalerodonta_manleyi
 Phalga_clarirena
 Phazaca_alikangensis
@@ -525,7 +523,6 @@ Zizeeria_maha
 アトシロナミシャク
 アトジロエダシャク
 アトジロキリガ
-アトヘリアオシャク
 アトヘリアオシャク_2
 アトモンチビカミキリ
 アトモンマルケシカミキリ
@@ -579,7 +576,6 @@ Zizeeria_maha
 ウスシロフコヤガ
 ウスズミカレハ
 ウスバカミキリ基亜種
-ウスバシロチョウ
 ウスベニアヤトガリバ
 ウスベニコヤガ
 ウスベニスジナミシャク
@@ -606,7 +602,6 @@ Zizeeria_maha
 エルタテハ
 オイワケキエダシャク
 オオアオカミキリ
-オオアヤシャク
 オオアヤシャク_2
 オオアヤトガリバ
 オオウスヅマカラスヨトウ
