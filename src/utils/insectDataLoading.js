@@ -38,6 +38,14 @@ export const getInsectDetailCollectionKey = (pathname = '/') => {
   );
 };
 
+// クイズの出題（utils/quiz.js の buildQuizQuestions）は蛾・蝶の詳細な食草記録
+// (hostPlantsDetailed) を使う。一覧用の軽量データ(catalog)には含まれないため、
+// クイズではこの2分類だけ完全データ(full)を必須にする（catalogだと0問になり開始できない）
+export const QUIZ_COLLECTION_KEYS = Object.freeze(['moths', 'butterflies']);
+
+export const getRequiredFullCollectionKeys = (pathname = '/') =>
+  normalizePathname(pathname) === '/quiz' ? [...QUIZ_COLLECTION_KEYS] : [];
+
 export const getImmediateInsectCollectionKeys = (pathname = '/') => {
   const detailCollectionKey = getInsectDetailCollectionKey(pathname);
   return detailCollectionKey

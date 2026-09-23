@@ -2,6 +2,7 @@ import { buildFlowerVisitMap } from './flowerVisitPlants.js';
 import {
   getImmediateInsectCollectionKeys,
   getInsectDetailCollectionKey,
+  getRequiredFullCollectionKeys,
   shouldLoadInsectPartitionsImmediately,
   shouldLoadPlantPartitionsImmediately,
 } from './insectDataLoading.js';
@@ -149,9 +150,12 @@ export const planInitialDataLoad = ({
   const loadTypesImmediately =
     cacheVersionMismatch ||
     shouldLoadInsectPartitionsImmediately(pathname, params);
-  const immediateCollectionKeys = cacheVersionMismatch
+  // クイズ等、完全データが必須の分類はcatalogを経由せず直接fullを取る（二重取得しない）
+  const requiredFullCollectionKeys = getRequiredFullCollectionKeys(pathname);
+  const immediateCollectionKeys = (cacheVersionMismatch
     ? [...INSECT_COLLECTION_KEYS]
-    : getImmediateInsectCollectionKeys(pathname);
+    : getImmediateInsectCollectionKeys(pathname)
+  ).filter((key) => !requiredFullCollectionKeys.includes(key));
   const detailCollectionKey = getInsectDetailCollectionKey(pathname);
 
   return {
@@ -167,6 +171,7 @@ export const planInitialDataLoad = ({
       immediateCollectionKeys.length > 1
         ? detailCollectionKey
         : null,
+    requiredFullCollectionKeys,
   };
 };
 
@@ -177,11 +182,14 @@ export const isRouteDataReady = (state, pathname = '/', search = '') => {
   const levels = state?.collectionLevels || {};
   return (!plan.loadPlantsImmediately || state?.plantsReady === true) &&
     (!plan.loadTypesImmediately || plan.immediateCollectionKeys.every((key) =>
-      levels[key] === 'full' || (plan.immediateDetailLevel === 'catalog' && levels[key] === 'catalog')));
+      levels[key] === 'full' || (plan.immediateDetailLevel === 'catalog' && levels[key] === 'catalog'))) &&
+    plan.requiredFullCollectionKeys.every((key) => levels[key] === 'full');
 };
 
 export const getRouteDataError = (state, pathname = '/') => {
   const detailKey = getInsectDetailCollectionKey(pathname);
+  const requiredFullKeys = getRequiredFullCollectionKeys(pathname);
   return Object.entries(state?.errors || {}).find(([key]) =>
-    state?.errorLevels?.[key] !== 'full' || key === detailKey)?.[1] || null;
+    state?.errorLevels?.[key] !== 'full' || key === detailKey ||
+    requiredFullKeys.includes(key))?.[1] || null;
 };
