@@ -255,13 +255,16 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
 
   return (
     <div className={`rounded-lg border ${obsStyle.borderColor} ${obsStyle.bgColor} p-3 transition-all duration-200`}>
-      {/* 基本情報行（食草名 + 科名 + 利用バッジ + 観察タイプ） */}
-      <div className="grid grid-cols-[6rem_5.75rem_minmax(0,1fr)_auto] sm:grid-cols-[7.25rem_8rem_minmax(0,1fr)_auto] items-start gap-x-2 gap-y-1">
-        <div className="min-w-0">
+      {/* 基本情報行（食草名 + 科名 + 利用バッジ + 観察タイプ）。
+          食草名はこの一覧の主役なので、固定幅で「…」省略せず必ず全文を出す（長ければ折り返す）。
+          科名は名前の直後に続け、スマホでは利用バッジを2行目へ回して名前の幅を確保する */}
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 gap-y-1.5 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
+        <div className="col-start-1 row-start-1 min-w-0">
+          {/* flex-wrap: 科名が収まらない時は字下げなしで次の行へ送り、科名の途中では折らない */}
+          <div className="flex flex-wrap items-baseline gap-x-2 leading-6">
           {isResourceGroup || isUnknownPlant ? (
             <span
-              className={`block w-full truncate font-medium leading-6 ${isDomesticWild ? 'text-emerald-700 dark:text-emerald-300' : 'text-emerald-600 dark:text-emerald-400'}`}
-              title={displayPlantName}
+              className={`min-w-0 break-words font-medium ${isDomesticWild ? 'text-emerald-700 dark:text-emerald-300' : 'text-emerald-600 dark:text-emerald-400'}`}
             >
               {primaryPlantName}
             </span>
@@ -269,7 +272,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
             <Link
               to={buildPlantPath(plantGroup.name, locale)}
               state={makeDetailLinkState(location)}
-              className={`block w-full truncate font-medium leading-6 ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
+              className={`min-w-0 break-words font-medium ${isDomesticWild ? 'text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200' : 'text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300'} underline-offset-2 hover:underline`}
               title={isEnglish ? `${primaryPlantName}${japaneseReference ? ` (${displayPlantName})` : ''}` : `${displayPlantName} の詳細へ`}
             >
               {isEnglish && plantDetail.scientificName
@@ -277,49 +280,45 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
                 : primaryPlantName}
             </Link>
           )}
+          {!isResourceGroup && plantGroup.family && plantGroup.family !== plantGroup.name && plantGroup.family !== '不明' && (
+            <Link
+              to={buildPlantPath(plantGroup.family, locale)}
+              state={makeDetailLinkState(location)}
+              className={`min-w-0 break-words text-sm underline-offset-2 hover:underline ${isDomesticWild ? 'text-slate-500 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-300' : 'text-slate-400 hover:text-emerald-600 dark:text-slate-500 dark:hover:text-emerald-300'}`}
+              title={isEnglish ? `Go to ${plantGroup.family}` : `${plantGroup.family} の詳細へ`}
+            >
+              {plantGroup.family}
+            </Link>
+          )}
+          </div>
           {japaneseReference && (
-            <div className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+            <div className="mt-0.5 break-words text-[11px] leading-4 text-slate-500 dark:text-slate-400">
               {japaneseReference}
             </div>
           )}
         </div>
-        {!isResourceGroup && plantGroup.family && plantGroup.family !== plantGroup.name && plantGroup.family !== '不明' && (
-          <Link
-            to={buildPlantPath(plantGroup.family, locale)}
-            state={makeDetailLinkState(location)}
-            className={`block w-full truncate text-sm leading-6 underline-offset-2 hover:underline ${isDomesticWild ? 'text-slate-500 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-300' : 'text-slate-400 hover:text-emerald-600 dark:text-slate-500 dark:hover:text-emerald-300'}`}
-            title={isEnglish ? `Go to ${plantGroup.family}` : `${plantGroup.family} の詳細へ`}
-          >
-            {plantGroup.family}
-          </Link>
+        {/* 利用バッジ（極小・横並び）。スマホは2行目（2列ぶち抜き）、sm以上は名前と観察タイプの間 */}
+        {shownBadges.length > 0 && (
+          <div className="col-span-2 row-start-2 flex min-w-0 flex-wrap items-center gap-1 sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:justify-end">
+            {shownBadges.map((b, i) => (
+              <span
+                key={i}
+                className={`inline-flex items-center gap-1 h-6 text-[11px] px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/30 ${b.ls ? b.ls.color : ''}`}
+                title={b.label}
+              >
+                <span className="truncate max-w-[8rem]">{b.label}</span>
+              </span>
+            ))}
+            {extra > 0 && (
+              <span className="inline-flex items-center h-6 text-[11px] px-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                {isEnglish ? `+${extra} more` : `他+${extra}`}
+              </span>
+            )}
+          </div>
         )}
-        {(isResourceGroup || !plantGroup.family || plantGroup.family === plantGroup.name || plantGroup.family === '不明') && (
-          <div aria-hidden="true" />
-        )}
-        {/* 利用バッジ（極小・横並び・折り返さない） */}
-        <div className="flex min-w-0 items-center gap-1 overflow-hidden">
-          {shownBadges.length > 0 && (
-            <>
-              {shownBadges.map((b, i) => (
-                <span
-                  key={i}
-                  className={`inline-flex items-center gap-1 h-6 text-[11px] px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/30 ${b.ls ? b.ls.color : ''}`}
-                  title={b.label}
-                >
-                  <span className="truncate max-w-[8rem]">{b.label}</span>
-                </span>
-              ))}
-              {extra > 0 && (
-                <span className="inline-flex items-center h-6 text-[11px] px-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  {isEnglish ? `+${extra} more` : `他+${extra}`}
-                </span>
-              )}
-            </>
-          )}
-        </div>
         {/* カード背景と同じ bgColor だとバッジが地の文に埋没するため白系の面+枠線にし、
             縦ずれ防止のため h-6 固定・行頭揃え(#63/#69)も維持する */}
-        <span className={`justify-self-end inline-flex items-center h-6 text-xs px-2 rounded shrink-0 border ${obsStyle.borderColor} bg-white/80 dark:bg-slate-900/50 ${obsStyle.textColor} font-medium`}>
+        <span className={`col-start-2 row-start-1 justify-self-end inline-flex items-center h-6 text-xs px-2 rounded shrink-0 border ${obsStyle.borderColor} bg-white/80 dark:bg-slate-900/50 ${obsStyle.textColor} font-medium sm:col-start-3`}>
           {obsStyle.label}
         </span>
       </div>
