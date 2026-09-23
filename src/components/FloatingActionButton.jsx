@@ -127,7 +127,9 @@ const FloatingActionButton = () => {
         id="fab-menu"
         inert={!isOpen ? true : undefined}
         aria-hidden={!isOpen}
-        className={`relative z-[70] flex flex-col gap-3 transition-all duration-300 origin-bottom ${
+        // 閉じたメニューがレイアウト上の場所を取らないよう、ボタンの上に重ねて置く
+        // （目次の項目が読み込まれるたびに固定枠の大きさが変わり、画面のずれとして計測されていた）
+        className={`absolute bottom-full right-0 z-[70] mb-3 flex flex-col items-end gap-3 transition-all duration-300 origin-bottom ${
           isOpen
             ? 'opacity-100 scale-100 translate-y-0'
             : 'opacity-0 scale-90 translate-y-10 pointer-events-none'
@@ -143,7 +145,7 @@ const FloatingActionButton = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="w-full flex items-center px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors text-left"
+                className="w-full flex items-center px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-lg transition-colors text-left"
               >
                 <span className="mr-2 text-slate-400">
                   {item.id === 'host-plants' ? (
@@ -177,7 +179,7 @@ const FloatingActionButton = () => {
         className={`relative z-[70] flex h-12 items-center justify-center gap-1.5 rounded-full px-4 shadow-xl transition-all duration-300 md:h-14 md:px-5 ${
           isOpen
             ? 'bg-slate-700 text-white'
-            : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105'
+            : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-105'
         }`}
         aria-label={isOpen ? (isEnglish ? 'Close contents' : '目次を閉じる') : (isEnglish ? 'Open contents' : '目次を開く')}
         aria-expanded={isOpen}

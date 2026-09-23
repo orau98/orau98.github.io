@@ -161,6 +161,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   candidates={imageFallbackCandidates}
                   fallbackSrc={placeholderFallbackSrc}
                   subject={resolvePlaceholderSubject(moth.type)}
+                  errorLabel={isEnglish ? 'No image' : '画像なし'}
                   alt={isEnglish ? `${primaryName} photograph` : `${moth.name}（${moth.scientificName}）の写真`}
                   width="120"
                   height="120"
@@ -248,6 +249,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     candidates={imageFallbackCandidates}
                     fallbackSrc={placeholderFallbackSrc}
                     subject={resolvePlaceholderSubject(moth.type)}
+                    errorLabel={isEnglish ? 'No image' : '画像なし'}
                     alt={
                       isEnglish
                         ? `${primaryName} photograph`

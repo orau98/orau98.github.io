@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback, useId } from 'react';
+import { trackSearchNoResults } from '../utils/analytics';
 import { useNavigationType } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import useInsectImageMap from '../hooks/useInsectImageMap';
@@ -823,6 +824,16 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     getEmergenceMonthList,
     getVisibleName,
   ]);
+
+  // 絞り込みなしで検索して0件だった語を1回だけ記録する（データ読み込み完了後のみ）
+  const reportedNoResultRef = useRef('');
+  useEffect(() => {
+    const term = String(debouncedSearchTerm || '').trim();
+    if (!term || hasFilterCriteria || !(moths?.length > 0) || (sortedMoths?.length ?? 0) > 0) return;
+    if (reportedNoResultRef.current === term) return;
+    reportedNoResultRef.current = term;
+    trackSearchNoResults({ query: term, scope: 'insects' });
+  }, [debouncedSearchTerm, hasFilterCriteria, moths?.length, sortedMoths?.length]);
 
   const totalPages = Math.ceil((sortedMoths?.length || 0) / effectiveItemsPerPage);
   // URLのipageが総ページ数を超える場合は最終ページへ丸める

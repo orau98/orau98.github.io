@@ -1955,7 +1955,7 @@ const InsectsHostPlantExplorer = memo(
                   <div className="p-0">
                     <Suspense
                       fallback={
-                        <div className="p-6 text-center text-slate-500 dark:text-slate-300">
+                        <div className="min-h-[150vh] p-6 text-center text-slate-500 dark:text-slate-300">
                           {ui.loadingInsects}
                         </div>
                       }
@@ -1989,7 +1989,7 @@ const InsectsHostPlantExplorer = memo(
                   <div className="p-0">
                     <Suspense
                       fallback={
-                        <div className="p-6 text-center text-slate-500 dark:text-slate-300">
+                        <div className="min-h-[150vh] p-6 text-center text-slate-500 dark:text-slate-300">
                           {ui.loadingPlants}
                         </div>
                       }

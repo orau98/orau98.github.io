@@ -125,6 +125,16 @@ export function trackSearch({ query = '', scope = '', source = 'submit' } = {}) 
   });
 }
 
+// 検索しても1件も見つからなかった語。別名（例: ナミアゲハ）の追加などデータ改善の手がかりにする
+export function trackSearchNoResults({ query = '', scope = '' } = {}) {
+  const searchTerm = String(query || '').trim();
+  if (!searchTerm) return false;
+  return trackEvent('search_no_results', {
+    search_term: searchTerm.slice(0, 100),
+    search_scope: String(scope || '').slice(0, 40),
+  });
+}
+
 export function trackDetailSelection({ path = '', contentType = '', source = 'internal_link' } = {}) {
   const itemId = String(path || '').trim();
   if (!itemId) return false;

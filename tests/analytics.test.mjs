@@ -9,6 +9,7 @@ import {
   trackLegacyMetaLanding,
   trackPageView,
   trackSearch,
+  trackSearchNoResults,
 } from '../src/utils/analytics.js';
 
 const createStorage = () => {
@@ -162,6 +163,27 @@ test('legacy meta landing records only legacy and clean paths', () => {
     assert.equal(calls[0][2].clean_path, '/moth/ホソバオビキリガ/');
     assert.equal(Object.hasOwn(calls[0][2], 'query'), false);
     assert.equal(trackLegacyMetaLanding({ sourcePath: '', targetPath: '/' }), false);
+  } finally {
+    globalThis.window = previousWindow;
+  }
+});
+
+test('searches that found nothing are recorded for data improvements', () => {
+  const previousWindow = globalThis.window;
+  const calls = [];
+  globalThis.window = {
+    location: { origin: 'https://orau98.github.io', search: '' },
+    localStorage: createStorage(),
+    sessionStorage: createStorage(),
+    gtag: (...args) => calls.push(args),
+  };
+  try {
+    assert.equal(trackSearchNoResults({ query: ' ナミアゲハ ', scope: 'insects' }), true);
+    assert.equal(trackSearchNoResults({ query: '   ', scope: 'plants' }), false);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0][1], 'search_no_results');
+    assert.equal(calls[0][2].search_term, 'ナミアゲハ');
+    assert.equal(calls[0][2].search_scope, 'insects');
   } finally {
     globalThis.window = previousWindow;
   }
