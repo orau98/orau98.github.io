@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef, useId } from "react";
+import { trackSearchNoResults } from "../utils/analytics";
 import { Link, useLocation, useNavigationType, useSearchParams } from "react-router-dom";
 import logger from "../utils/logger";
 import useSeoMeta from "../hooks/useSeoMeta";
@@ -147,6 +148,7 @@ const HostPlantListItem = React.memo(
                   src={primaryImageSrc}
                   candidates={fallbackImageCandidates}
                   subject="sprout"
+                  errorLabel={isEnglish ? "No image" : "画像なし"}
                   alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
                   width="120"
                   height="120"
@@ -222,6 +224,7 @@ const HostPlantListItem = React.memo(
                     src={primaryImageSrc}
                     candidates={fallbackImageCandidates}
                     subject="sprout"
+                    errorLabel={isEnglish ? "No image" : "画像なし"}
                     alt={isEnglish ? `${primaryName} photograph` : `${plant}の写真`}
                     width="800"
                     height="600"
@@ -1223,6 +1226,16 @@ const HostPlantList = ({
       );
     }
   }, [currentPage, effectiveItemsPerPage, filteredHostPlants.length]);
+  // 絞り込みなしで検索して0件だった語を1回だけ記録する（データ読み込み完了後のみ）
+  const reportedNoResultRef = useRef('');
+  useEffect(() => {
+    const term = String(debouncedPlantSearch || '').trim();
+    if (!term || hasFilterCriteria || plantCount === 0 || filteredHostPlants.length > 0) return;
+    if (reportedNoResultRef.current === term) return;
+    reportedNoResultRef.current = term;
+    trackSearchNoResults({ query: term, scope: 'plants' });
+  }, [debouncedPlantSearch, hasFilterCriteria, plantCount, filteredHostPlants.length]);
+
   const totalPages = Math.ceil(filteredHostPlants.length / effectiveItemsPerPage);
   // URLのppageが総ページ数を超える場合は最終ページへ丸める
   // （共有URLや表示件数変更で範囲外になっても、空の一覧を表示しない）
