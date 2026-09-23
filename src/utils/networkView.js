@@ -9,12 +9,20 @@ export const NETWORK_PHOTO_SIZES = [
 
 // One geometry contract for drawing, fitting, collision and pointer targets.
 // Species without a registered photo stay compact; their records remain visible.
+// tier: 1 = ページの主役と直接つながる種（昆虫ページの食草など）、2 = その先の種。
+// 主役に直接つながる種を目立たせ、その先の種は少し控えめにする。
 export const networkNodeRadius = (node, photoSize = 'large') => {
-  if (node.type === 'group') return 20;
+  if (node.type === 'group') return groupNodeRadius(node.group?.members?.length);
   const current = node.type.includes('current');
-  if (!node.imgCandidates?.length) return current ? 18 : 12;
+  if (!node.imgCandidates?.length) return current ? 18 : node.tier === 1 ? 15 : 12;
   const size = NETWORK_PHOTO_SIZES.find(option => option.value === photoSize) || NETWORK_PHOTO_SIZES[1];
-  return size.radius * (current ? 1.25 : 1);
+  return size.radius * (current ? 1.25 : node.tier === 2 ? 0.8 : 1);
+};
+
+// 科のまとまりは種数が多いほど大きく（面積が種数に比例するよう平方根で）。3種で約18、60種で約31
+export const groupNodeRadius = (memberCount) => {
+  if (!(memberCount > 0)) return 20;
+  return Math.round(Math.min(34, 14 + Math.sqrt(memberCount) * 2.2) * 10) / 10;
 };
 
 // Fill the circular crop without letterboxing or stretching. Full photographs
@@ -56,7 +64,8 @@ export const groupNetwork = (data, { expanded = new Set(), enabled = true, isEng
     if (expanded.has(group.id)) continue;
     for (const node of group.members) replacement.set(node.id, group.id);
     const average = (axis) => group.members.reduce((sum, node) => sum + (Number.isFinite(node[axis]) ? node[axis] : 0), 0) / group.members.length;
-    nodes.push({ id: group.id, name: `${group.label} (${group.members.length}${isEnglish ? ' species' : '種'})`, type: 'group', group, x: average('x'), y: average('y') });
+    const tiers = group.members.map(node => node.tier).filter(Number.isFinite);
+    nodes.push({ id: group.id, name: `${group.label} (${group.members.length}${isEnglish ? ' species' : '種'})`, type: 'group', group, tier: tiers.length ? Math.min(...tiers) : undefined, x: average('x'), y: average('y') });
   }
   nodes.push(...data.nodes.filter(node => !replacement.has(node.id)));
   nodes.sort((a, b) => Number(b.type.includes('current')) - Number(a.type.includes('current')));
