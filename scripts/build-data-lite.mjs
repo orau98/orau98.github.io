@@ -4,6 +4,7 @@ import { createHash } from 'crypto';
 import Papa from 'papaparse';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
+import { countInsectLinkedPlants, mergePlantEntries } from '../src/utils/plantListMerge.js';
 import {
   buildFlowerVisitPlantDataset,
   buildHostPlantDataset,
@@ -430,7 +431,12 @@ const slim = (arr) => (arr || []).map(i => ({
     ...Object.fromEntries(
       INSECT_COLLECTION_KEYS.map((key) => [key, processedCollections[key].length]),
     ),
-    hostPlants: Object.keys(fullHostPlants).length,
+    // 植物一覧・トップのタブと同じ規則（正規名へ統合し、食草・訪花の記録がある植物だけ）で数える
+    hostPlants: countInsectLinkedPlants(mergePlantEntries({
+      hostPlants: fullHostPlants,
+      flowerVisitPlants,
+      plantDetails,
+    })),
   };
   // Date.now() を版数にすると、Instagramだけの更新を含む毎デプロイで
   // 1.45MB超のデータURLが変わり、HTTP/IndexedDBキャッシュが全失効する。

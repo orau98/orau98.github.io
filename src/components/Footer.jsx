@@ -39,7 +39,7 @@ const Footer = ({ locale = 'ja' }) => {
     : [
         { to: '/moth/', label: '昆虫から食草を検索' },
         { to: '/plant/', label: '植物から昆虫を逆引き検索' },
-        { to: localizePath('/quiz', locale), label: '4択図鑑' },
+        { to: localizePath('/quiz', locale), label: '4択クイズ' },
       ];
   const hubLink = (segment, label) => ({
     href: `${import.meta.env.BASE_URL}${metaBase}/${segment}/index.html`,

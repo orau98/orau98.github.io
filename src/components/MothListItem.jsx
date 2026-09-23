@@ -11,7 +11,7 @@ import { hasEmergencePeriods } from '../utils/emergenceTime.js';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime } from '../utils/emergenceTimeUtils';
 import ImageWithFallback from './ImageWithFallback';
-import NoPhotoPlaceholder, { SubjectSilhouette, CameraGlyph } from './ui/NoPhotoPlaceholder';
+import NoPhotoPlaceholder, { SubjectSilhouette } from './ui/NoPhotoPlaceholder';
 import { resolvePlaceholderSubject } from '../utils/placeholderSubject';
 import { Card, Badge } from './ui';
 import {
@@ -70,6 +70,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   const secondaryName = isEnglish
     ? buildJapaneseReferenceLabel(moth.name)
     : moth.scientificName;
+  // 和名が未登録の種は name に学名（著者名つき）が入っており、カードで同じ学名が2回並んでいた
+  const lacksJapaneseName = !isEnglish && /^[\x20-\x7E]+$/.test(String(moth.name || '').trim());
   
   // 画像ファイル名を動的に解決（学名表記ゆれ・著者名付きファイル名にも対応）
   const finalImageFilename = React.useMemo(() => imageFilename || null, [imageFilename]);
@@ -143,7 +145,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   try {
     if (viewMode === 'compact') {
       return (
-        <Card as="article" ref={imgRef} interactive className="group list-none overflow-hidden hover:border-blue-400/60 dark:hover:border-blue-500/60">
+        <Card as="article" ref={imgRef} interactive className="group list-none overflow-hidden hover:border-emerald-400/60 dark:hover:border-emerald-500/60">
           <Link
             to={route}
             state={makeDetailLinkState(location, { setFromList: true })}
@@ -178,8 +180,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <h3 className="line-clamp-1 text-base font-bold text-slate-800 dark:text-slate-100">
-                    {isEnglish ? formatScientificNameReact(primaryName) : moth.name}
+                  <h3 className={`line-clamp-1 font-bold ${lacksJapaneseName ? 'text-sm text-slate-500 dark:text-slate-400' : 'text-base text-slate-800 dark:text-slate-100'}`}>
+                    {isEnglish ? formatScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name}
                   </h3>
                   {secondaryName && (
                     <p className="line-clamp-1 text-sm text-slate-600 dark:text-slate-400">
@@ -224,9 +226,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     }
 
     return (
-      <article ref={imgRef} className="group relative h-full overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-blue-400/60 dark:hover:border-blue-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-blue-500/15 dark:hover:shadow-blue-500/10 hover:-translate-y-1 transform shadow-sm list-none">
+      <article ref={imgRef} className="group relative h-full overflow-hidden rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400/60 dark:hover:border-emerald-500/60 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-500/10 hover:-translate-y-1 transform shadow-sm list-none">
         {/* ホバー時のグラデーションオーバーレイ */}
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 rounded-xl" />
         <Link
         to={route}
         state={makeDetailLinkState(location, { setFromList: true })}
@@ -272,39 +274,32 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               </div>
             ) : null}
             
+            {/* 写真のない種（昆虫の約9割）は大きな灰色の枠を並べず、細い帯で示す */}
             {!hasImageFilename && (
-
-              <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex flex-col items-center justify-center p-5 sm:p-6">
-                {/* 被写体シルエット + カメラバッジ */}
-                <div className="flex-shrink-0 mb-4 text-slate-400 dark:text-slate-500">
-                  <NoPhotoPlaceholder subject={resolvePlaceholderSubject(moth.type)} size="lg" />
-                </div>
-
-                {/* No image indicator at bottom */}
-                <div className="flex-shrink-0 mt-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-300/70 dark:bg-slate-600/70 text-slate-700 dark:text-slate-300 border border-slate-400/30 dark:border-slate-500/30">
-                    <CameraGlyph className="w-3 h-3 mr-1" />
-                    {isEnglish ? 'No image listed' : '画像未掲載'}
-                  </span>
-                </div>
+              <div className="flex h-9 w-full items-center gap-2 bg-gradient-to-r from-slate-100 to-slate-200/70 px-2.5 text-slate-400 dark:from-slate-700 dark:to-slate-800 dark:text-slate-500 sm:h-11 sm:px-4">
+                <SubjectSilhouette subject={resolvePlaceholderSubject(moth.type)} className="h-5 w-5 flex-shrink-0" />
+                <span className="truncate text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  <span className="sm:hidden">{isEnglish ? 'No photo' : '写真なし'}</span>
+                  <span className="hidden sm:inline">{isEnglish ? 'No photo yet' : '写真はまだありません'}</span>
+                </span>
               </div>
             )}
             
           </div>
           
           {/* Enhanced Content section */}
-          <div className="flex flex-col flex-grow p-3.5 sm:p-4">
+          <div className="flex flex-col flex-grow p-2.5 sm:p-4">
             {/* 和名・学名は各1行に固定し、min-heightで高さを揃えて食草欄の開始位置をカード間で一致させる */}
-            <div className="mb-2.5 min-h-[2.75rem] sm:mb-3 sm:min-h-[3rem]">
+            <div className="mb-1.5 min-h-[2.4rem] sm:mb-3 sm:min-h-[3rem]">
               <h3
-                className="mb-1 line-clamp-1 text-base font-bold leading-tight text-slate-800 dark:text-slate-100 sm:text-lg"
+                className={`mb-1 line-clamp-1 font-bold leading-tight ${lacksJapaneseName ? 'text-xs text-slate-500 dark:text-slate-400 sm:text-base' : 'text-sm text-slate-800 dark:text-slate-100 sm:text-lg'}`}
                 title={isEnglish ? primaryName : moth.name}
               >
-                {isEnglish ? formatScientificNameReact(primaryName) : moth.name}
+                {isEnglish ? formatScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name}
               </h3>
               {secondaryName && (
                 <p
-                  className="line-clamp-1 text-[13px] text-slate-600 dark:text-slate-400 sm:text-sm"
+                  className="line-clamp-1 text-[11px] text-slate-600 dark:text-slate-400 sm:text-sm"
                   title={isEnglish ? secondaryName : dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName))}
                 >
                   {isEnglish
@@ -317,20 +312,17 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
             </div>
 
             {/* 食草・訪花はヘッダー直下に上詰めで配置（下詰めだと行数差で開始位置がカードごとにずれる） */}
-            <div className="mb-1.5 space-y-1.5 text-[13px] sm:mb-2 sm:text-sm">
+            <div className="mb-1 space-y-1 text-xs sm:mb-2 sm:space-y-1.5 sm:text-sm">
               {plantDisplay.hostNames.length > 0 && (
-                <div className="flex items-start space-x-2">
+                <div className="flex items-start space-x-1.5 sm:space-x-2">
+                  {/* マークだけでは意味が伝わらないため「食草」と文字で示す */}
                   <span
-                    className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5"
-                    role="img"
-                    aria-label={isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
+                    className="inline-flex flex-shrink-0 items-center rounded-full bg-emerald-100 px-1.5 py-px text-[11px] font-bold leading-4 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 mt-0.5"
                     title={isEnglish ? 'Larval host plants' : '幼虫の食草・食樹'}
                   >
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
-                    </svg>
+                    {isEnglish ? 'Host' : '食草'}
                   </span>
-                  <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
+                  <span className="line-clamp-1 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
                     {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                     {localizedPlantDisplay.hostNames.length > CARD_PLANT_PREVIEW_CAP && (
                       <span className="text-slate-500 dark:text-slate-400">
@@ -342,16 +334,14 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               )}
 
               {plantDisplay.flowerNames.length > 0 && (
-                <div className="flex items-start space-x-2">
+                <div className="flex items-start space-x-1.5 sm:space-x-2">
                   <span
-                    className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-[13px] dark:bg-rose-900/30 flex-shrink-0 mt-0.5"
-                    role="img"
-                    aria-label={isEnglish ? "Flower-visit plants (adults)" : "成虫の訪花植物"}
+                    className="inline-flex flex-shrink-0 items-center rounded-full bg-rose-100 px-1.5 py-px text-[11px] font-bold leading-4 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 mt-0.5"
                     title={isEnglish ? "Flower-visit plants (adults)" : "成虫の訪花植物"}
                   >
-                    🌸
+                    {isEnglish ? 'Flower' : '訪花'}
                   </span>
-                  <span className="line-clamp-2 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
+                  <span className="line-clamp-1 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
                     {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                     {localizedPlantDisplay.flowerNames.length > CARD_PLANT_PREVIEW_CAP && (
                       <span className="text-slate-500 dark:text-slate-400">
@@ -363,11 +353,9 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               )}
 
               {localizedPlantDisplay.hostNames.length === 0 && localizedPlantDisplay.flowerNames.length === 0 && (
-                <div className="flex items-start space-x-2">
-                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex-shrink-0 mt-0.5">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
-                    </svg>
+                <div className="flex items-start space-x-1.5 sm:space-x-2">
+                  <span className="inline-flex flex-shrink-0 items-center rounded-full bg-emerald-100 px-1.5 py-px text-[11px] font-bold leading-4 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 mt-0.5">
+                    {isEnglish ? 'Host' : '食草'}
                   </span>
                   <span className="text-slate-600 dark:text-slate-300 leading-snug">
                     {isEnglish ? 'No plant record' : '情報なし'}
@@ -393,11 +381,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               if ((normalizedTime || hasSupplementalEmergenceHint) &&
                   hasEmergencePeriods(normalizedTime || '', supplementalEmergenceTexts)) {
                 return (
-                  <div className="mt-auto border-t border-slate-100 pt-1.5 dark:border-slate-700/50 sm:pt-2">
+                  <div className="mt-auto hidden border-t border-slate-100 pt-1.5 dark:border-slate-700/50 sm:block sm:pt-2">
                     <EmergenceTimeDisplay
                       emergenceTime={normalizedTime || ''}
                       source={moth.source}
                       compact={true}
+                      locale={locale}
                       supplementalTexts={supplementalEmergenceTexts}
                     />
                   </div>

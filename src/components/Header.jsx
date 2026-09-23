@@ -119,8 +119,10 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
     };
   }, [speciesInfo]);
 
+  // ヘッダー中央の色は不透明にする（半透明だとライトモードで明るいページ背景が透け、
+  // 白いタイトル文字が読みにくくなっていた）
   return (
-    <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-emerald-900/30 to-slate-900 dark:from-slate-950 dark:via-emerald-950/30 dark:to-slate-950 backdrop-blur-xl border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl relative z-40">
+    <header ref={headerRef} className="bg-gradient-to-r from-slate-900 via-[#0c3b31] to-slate-900 dark:from-slate-950 dark:via-[#06241e] dark:to-slate-950 border-b border-emerald-600/20 dark:border-emerald-500/20 shadow-2xl relative z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-2.5 py-3 sm:min-h-20 sm:py-2">
           <Link to={homePath} className="group flex min-w-0 flex-1 items-center gap-2.5 transition-transform duration-200 sm:gap-3 sm:hover:scale-105">
@@ -213,15 +215,18 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
             <Link
               to={quizPath}
               className="group inline-flex min-h-[44px] items-center gap-2 rounded-2xl border border-amber-300/30 bg-amber-400/15 px-2.5 py-2 text-sm font-bold text-amber-100 shadow-lg transition hover:bg-amber-400/25 focus:outline-none focus:ring-2 focus:ring-amber-300/50 sm:px-4 sm:py-2.5"
-              aria-label={isEnglish ? 'Open four-choice quiz' : '4択図鑑を開く'}
+              aria-label={isEnglish ? 'Open four-choice quiz' : '4択クイズ（4択図鑑）を開く'}
             >
-              {/* 「クイズ」と直感的に伝わる吹き出し＋？アイコン（旧: 書類アイコンは用途が伝わらなかった） */}
+              {/* 4つの選択肢のうち1つに正解のチェックが付いたアイコン。
+                  旧アイコン（吹き出し＋？）はヘルプボタンに見えて用途が伝わらなかった */}
               <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087A9.72 9.72 0 0012 20.25z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.1 9.4a1.95 1.95 0 113.4 1.3c-.5.55-1.4.9-1.4 1.8v.25" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.6} d="M12.1 15.5h.01" />
+                <rect x="3.5" y="3.5" width="7" height="7" rx="1.6" strokeWidth={2} />
+                <rect x="13.5" y="3.5" width="7" height="7" rx="1.6" strokeWidth={2} />
+                <rect x="3.5" y="13.5" width="7" height="7" rx="1.6" strokeWidth={2} />
+                <rect x="13.5" y="13.5" width="7" height="7" rx="1.6" strokeWidth={2} />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.3 17l1.4 1.4 2.3-2.8" />
               </svg>
-              <span className="hidden sm:inline">{isEnglish ? 'Quiz' : '4択図鑑'}</span>
+              <span className="hidden sm:inline">{isEnglish ? 'Quiz' : '4択クイズ'}</span>
             </Link>
             
             <ThemeToggle theme={theme} setTheme={setTheme} locale={locale} variant="header" />
