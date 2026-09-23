@@ -48,6 +48,7 @@ import {
   stripLocalePrefix,
 } from "./utils/locale";
 import { buildExplorerDetailContext } from "./utils/navState";
+import { countInsectLinkedPlants, mergePlantEntries } from "./utils/plantListMerge";
 import {
   trackCrossSearch,
   trackDetailSelection,
@@ -540,8 +541,8 @@ const InsectsHostPlantExplorer = memo(
           ? "Try a scientific name, family, genus, or host plant first."
           : "Esc を 1 回押すと候補を閉じ、続けて押すと入力をクリアします。",
         searchShortcut3: isEnglish
-          ? "Use the tabs above to switch between insects and plants."
-          : "検索対象は上のタブで、昆虫と植物を切り替えできます。",
+          ? "Use the Insects / Plants switch next to the search box to change what you search."
+          : "検索対象は検索窓の横の「昆虫／植物」で切り替えできます。",
         themeAria: isEnglish ? "Toggle theme" : "テーマを切り替え",
         insectsTab: isEnglish ? "Insects" : "昆虫",
         plantsTab: isEnglish ? "Plants" : "植物",
@@ -1028,13 +1029,13 @@ const InsectsHostPlantExplorer = memo(
       hostPlants,
       flowerVisitPlants,
     ]);
+    // 植物の件数は植物一覧と同じ規則（別名・表記ゆれを正規名へ統合し、昆虫の記録がある植物だけ数える）で
+    // 数える。データ読み込み前はビルド時に同じ規則で数えた件数（manifest）を使う。
     const mergedHostPlantCount = useMemo(() => {
-      const names = new Set(Object.keys(hostPlants || {}));
-      Object.keys(flowerVisitPlants || {}).forEach((name) => {
-        if (name) names.add(name);
-      });
-      return Math.max(names.size, Number(summaryCounts?.hostPlants) || 0);
-    }, [hostPlants, flowerVisitPlants, summaryCounts?.hostPlants]);
+      const hasPlantData = Object.keys(hostPlants || {}).length > 0 || Object.keys(flowerVisitPlants || {}).length > 0;
+      if (!hasPlantData) return Number(summaryCounts?.hostPlants) || 0;
+      return countInsectLinkedPlants(mergePlantEntries({ hostPlants, flowerVisitPlants, plantDetails }));
+    }, [hostPlants, flowerVisitPlants, plantDetails, summaryCounts?.hostPlants]);
     // 逆引き動線のラベル: 検索語を保持して反対カテゴリへ誘導する。
     // 件数は親側では正確に算出できない（各リストが内部に独自フィルタ＋別名正規化マージを持ち、
     // 植物詳細は遅延ロード）ため、誤った数字を出さないよう数字なしの行動リンクにしている。
@@ -1901,6 +1902,18 @@ const InsectsHostPlantExplorer = memo(
             isEnglish={isEnglish}
             isStickyHeaderVisible={isStickyHeaderVisible}
             locale={locale}
+            onTabChange={setActiveTabWithUrl}
+            onTabListKeyDown={handleTabListKeyDown}
+            insectCount={
+              counts.moths +
+              counts.butterflies +
+              counts.beetles +
+              counts.longhornbeetles +
+              counts.barkbeetles +
+              counts.leafbeetles +
+              counts.aphids
+            }
+            plantCount={mergedHostPlantCount}
             setTheme={setTheme}
             showHeaderControls={false}
             suggestions={suggestions}
@@ -1908,116 +1921,8 @@ const InsectsHostPlantExplorer = memo(
             ui={ui}
           />
 
-          {/* タブナビゲーション */}
+          {/* 検索結果（昆虫/植物の切り替えタブはヒーロー内の検索窓の横にある） */}
           <div id="explorer-results" className="scroll-mt-24 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-emerald-200/30 dark:border-emerald-700/30 overflow-hidden sm:rounded-3xl">
-            {/* タブヘッダー */}
-            <div className="flex border-b border-slate-200/70 dark:border-slate-700/70" role="tablist" aria-label={isEnglish ? "Switch between insects and plants" : "昆虫/植物の切り替え"} onKeyDown={handleTabListKeyDown}>
-              <button
-                id="tab-insects"
-                role="tab"
-                aria-selected={activeTab === "insects"}
-                aria-controls="panel-insects"
-                tabIndex={activeTab === "insects" ? 0 : -1}
-                type="button"
-                onClick={() => {
-                  setActiveTabWithUrl("insects");
-                }}
-                className={`flex-1 px-4 py-2.5 text-sm font-medium tracking-tight transition-colors relative sm:px-6 sm:py-4 sm:text-base ${
-                  activeTab === "insects"
-                    ? "text-emerald-600 dark:text-emerald-300 bg-white/70 dark:bg-slate-900/40"
-                    : "text-slate-600 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
-                }`}
-              >
-                <div className="flex items-center justify-center space-x-3">
-                  {/* Beautiful butterfly icon */}
-                  <svg
-                    className="h-[18px] w-[18px] sm:h-6 sm:w-6"
-                    fill="currentColor"
-                    viewBox="0 0 512 512"
-                  >
-                    <path
-                      d="M243.695,179.339c0.703,4.906,5.813,7.438,7.719,1.406c1.891-6.031-4.828-17.219-22.219-36.531
-                      c-14.828-16.484-35.625-39.391-23.844-51.578c14.609-10.078,8.469-27.75-4.172-29.469c-11.313-1.516-21.609,13.578-15.031,38.703
-                      C192.711,126.964,241.695,165.292,243.695,179.339z"
-                    />
-                    <path
-                      d="M445.898,83.886c-74.469,0-160.703,89.859-174.516,111.078c-3.594-4.578-9.109-7.578-15.375-7.578
-                      c-6.281,0-11.797,3-15.391,7.578C226.805,173.73,140.57,83.886,66.102,83.886c-76.828,0-70.547,68.984-59.578,112.891
-                      c10.969,43.922,56.453,92.516,106.609,94.094c-56.438,25.078-61.141,89.375-43.891,119.156
-                      c16.359,28.25,103.266,92.016,167.156-50.296v29.141c0,10.813,8.781,19.593,19.609,19.593c10.813,0,19.594-8.781,19.594-19.593
-                      v-29.156c63.891,142.328,150.813,78.562,167.156,50.312c17.25-29.781,12.547-94.078-43.891-119.156
-                      c50.172-1.578,95.641-50.172,106.609-94.094C516.445,152.871,522.727,83.886,445.898,83.886z"
-                    />
-                    <path
-                      d="M268.305,179.339c2-14.047,50.984-52.375,57.563-77.469c6.563-25.125-3.734-40.219-15.047-38.703
-                      c-12.641,1.719-18.766,19.391-4.172,29.469c11.781,12.188-9.016,35.094-23.844,51.578c-17.391,19.313-24.109,30.5-22.219,36.531
-                      C262.492,186.777,267.602,184.246,268.305,179.339z"
-                    />
-                  </svg>
-                  <span className="flex items-center gap-1">
-                    <span>{ui.insectsTab}</span>
-                    <span className="text-xs sm:text-sm">
-                      {/* summaryCounts フォールバック込みの counts を使い、データ未着でも
-                          「(0)」にならずヒーローの種数と一致させる */}
-                      (
-                      {counts.moths +
-                        counts.butterflies +
-                        counts.beetles +
-                        counts.longhornbeetles +
-                        counts.barkbeetles +
-                        counts.leafbeetles +
-                        counts.aphids}
-                      )
-                    </span>
-                  </span>
-                </div>
-                {activeTab === "insects" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 rounded-full shadow-sm shadow-emerald-500/50"></div>
-                )}
-              </button>
-
-              <button
-                id="tab-plants"
-                role="tab"
-                aria-selected={activeTab === "plants"}
-                aria-controls="panel-plants"
-                tabIndex={activeTab === "plants" ? 0 : -1}
-                type="button"
-                onClick={() => setActiveTabWithUrl("plants")}
-                className={`flex-1 px-4 py-2.5 text-sm font-medium tracking-tight transition-colors relative sm:px-6 sm:py-4 sm:text-base ${
-                  activeTab === "plants"
-                    ? "text-blue-600 dark:text-blue-300 bg-white/70 dark:bg-slate-900/40"
-                    : "text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-white/40 dark:hover:bg-slate-800/30"
-                }`}
-              >
-                <div className="flex items-center justify-center space-x-3">
-                  {/* Beautiful leaf icon */}
-                  <svg
-                    className="h-[18px] w-[18px] sm:h-6 sm:w-6"
-                    fill="currentColor"
-                    viewBox="0 0 512 512"
-                  >
-                    <path
-                      d="M377.478,0.174c-34.179-3.423-37.602,44.438-119.644,78.618c-83.543,34.808-166.39,80.55-167.693,254.14
-                      c-0.155,18.807-1.314,51.296-1.513,65.056c-0.276,19.691,0.287,40.872-8.69,51.738c-7.311,8.857-20.176,18.818-32.866,27.531
-                      L81.87,512c31.032-24.306,39.834-26.493,46.35-26.35c15.549,0.342,31.33,0.496,47.155-0.762
-                      c100.318-7.995,202.137-56.718,253.379-149.714C521.042,167.679,411.657,3.598,377.478,0.174z M368.81,109.802
-                      c-6.184,20.817-26.957,51.826-91.925,128.445c-33.517,39.535-72.158,107.672-99.743,168.344
-                      c-8.361,18.388-36.432,4.925-26.405-13.473c13.042-19.403,43.08-104.117,86.558-160.968
-                      c43.489-56.862,101.411-105.685,110.378-133.801C351.857,79.112,377.048,82.116,368.81,109.802z"
-                    />
-                  </svg>
-                  <span className="flex items-center gap-1">
-                    <span>{ui.plantsTab}</span>
-                    <span className="text-xs sm:text-sm">({mergedHostPlantCount})</span>
-                  </span>
-                </div>
-                {activeTab === "plants" && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-500 rounded-full shadow-sm shadow-blue-500/50"></div>
-                )}
-              </button>
-            </div>
-
             {/* 逆引き動線: 検索語があるとき、反対カテゴリの概算一致件数つきリンクを1本だけ出す。
                 説明文（「○○を表示中」）は冗長なので撤去し、行動リンクに集約。 */}
             {activeSearchTerm.trim() && (

@@ -67,8 +67,11 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       sortFamily: isEnglish ? 'Family' : '科順',
       sortPlantCount: isEnglish ? 'Plant links' : '植物数順',
       sortSeason: isEnglish ? 'Adult season' : '出現期順',
-      resultCount: (value) =>
-        isEnglish ? `${value} results` : `${value} 件が見つかりました`,
+      // 件数はタブや絞り込みボタンと同じくカンマ区切りで表示する（9952 → 9,952）
+      resultCount: (value) => {
+        const formatted = Number(value || 0).toLocaleString(isEnglish ? 'en-US' : 'ja-JP');
+        return isEnglish ? `${formatted} results` : `${formatted} 件が見つかりました`;
+      },
       listTitle: isEnglish ? `${title} list` : `${title}のリスト`,
       renderError: (name) =>
         isEnglish ? `Render error: ${name}` : `表示エラー: ${name}`,
@@ -307,7 +310,8 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   const computeItemsPerPage = useCallback(() => {
     if (typeof window === 'undefined') return 48;
     const w = window.innerWidth;
-    const cols = w >= 1536 ? 4 : w >= 1024 ? 3 : w >= 640 ? 2 : 1;
+    // 一覧の列数（スマホ2列・タブレット3列・PC4列）に合わせ、最終行が埋まる件数にする
+    const cols = w >= 1024 ? 4 : w >= 768 ? 3 : 2;
     return cols * 12;
   }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
@@ -1034,7 +1038,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                   id={hostId}
                   value={hostFilter}
                   onChange={(e) => setIHostFilter(e.target.value)}
-                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
                 >
                   <option value="all">{ui.all}</option>
                   <option value="has">{ui.hasHostPlant}</option>
@@ -1075,7 +1079,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               id={emergenceId}
               value={emergenceFilter}
               onChange={(e) => setIEmergenceFilter(e.target.value)}
-              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
             >
               <option value="">{ui.any}</option>
               {emergenceOptions.map((em) => (
@@ -1189,7 +1193,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               画像インデックスは即時解決するため、これが無いと初回ロード中に一瞬
               「該当する昆虫が見つかりません」「昆虫(0)」が出てしまう（植物一覧と対称化）。 */}
           {(!isImageIndexReady && !imageIndexResolved) || ((moths?.length ?? 0) === 0 && !hasAnyCriteria) ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
                   key={`skeleton-${i}`}
@@ -1205,7 +1209,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
               ))}
             </div>
           ) : currentMoths.length > 0 ? (
-            <div className={viewMode === 'compact' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'}>
+            <div className={viewMode === 'compact' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-4'}>
               {currentMoths.map((moth, index) => {
                 try {
                   return (
@@ -1214,7 +1218,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                         <ManualAdSlot
                           placement="inFeed"
                           locale={locale}
-                          className="animate-fadeIn h-full"
+                          className="animate-fadeIn h-full col-span-2 md:col-span-1"
                           minHeight="min-h-[220px]"
                         />
                       )}
@@ -1274,7 +1278,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                     key={example}
                     type="button"
                     onClick={() => applyExampleSearch(example)}
-                    className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-200 dark:hover:bg-blue-900/50"
+                    className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200 dark:hover:bg-emerald-900/50"
                   >
                     {example}
                   </button>
@@ -1323,7 +1327,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
         </div>
         
         {totalPages > 1 && (
-          <div className="mt-6 pt-4 border-t border-blue-200/30 dark:border-blue-700/30 overflow-x-hidden">
+          <div className="mt-6 pt-4 border-t border-slate-200/70 dark:border-slate-700/60 overflow-x-hidden">
             <Pagination
               currentPage={effectivePage}
               totalPages={totalPages}

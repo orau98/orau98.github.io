@@ -24,6 +24,7 @@ import ListFilterPanel from "./ListFilterPanel";
 import { isEnglishLocale } from "../utils/locale";
 import { makeDetailLinkState } from "../utils/navState";
 import { normalizePlantKey } from "../utils/plantNameUtils";
+import { buildPlantCanonicalMaps, countInsectLinkedPlants, mergePlantEntries } from "../utils/plantListMerge";
 import { buildPlantPath } from "../utils/siteTaxonomy";
 import {
   formatScientificNameReact,
@@ -33,7 +34,7 @@ import {
   buildResponsivePicture,
 } from "../utils/imageSrcset";
 import ImageWithFallback from "./ImageWithFallback";
-import NoPhotoPlaceholder, { CameraGlyph } from "./ui/NoPhotoPlaceholder";
+import NoPhotoPlaceholder, { SubjectSilhouette } from "./ui/NoPhotoPlaceholder";
 import SearchableSelect from "./SearchableSelect";
 import { ListDisplayControls, PerPageSelect, PresetFilterChips } from "./ListToolbar";
 import ManualAdSlot from "./ManualAdSlot";
@@ -71,7 +72,6 @@ const HostPlantListItem = React.memo(
     const isEnglish = isEnglishLocale(locale);
     const [imageError, setImageError] = useState(false);
 
-    const safePlantName = createSafePlantFilename(plant);
     const normalizedBase = getAssetBase();
     const assetVer = getAssetVersionQuery();
     const encoded = imageFilename ? encodeURIComponent(imageFilename) : "";
@@ -235,56 +235,13 @@ const HostPlantListItem = React.memo(
                   />
                 </div>
               ) : (
-                // Fallback: 芽生えシルエット + カメラバッジで「植物の写真が未掲載」を伝える
-                <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-700 dark:to-emerald-800 flex flex-col items-center justify-center p-5 sm:p-6">
-                  <div className="flex-shrink-0 mb-4 text-emerald-500/80 dark:text-emerald-400/80">
-                    <NoPhotoPlaceholder subject="sprout" size="lg" />
-                  </div>
-
-                  {/* No image indicator at bottom */}
-                  <div className="flex-shrink-0 mt-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-300/70 dark:bg-emerald-600/70 text-emerald-700 dark:text-emerald-300 border border-emerald-400/30 dark:border-emerald-500/30">
-                      <CameraGlyph className="w-3 h-3 mr-1" />
-                      {isEnglish ? "No image listed" : "画像未掲載"}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {/* Decorative pattern overlay for non-image cards */}
-              {(!imageFilename || imageError) && (
-                <div className="absolute inset-0 opacity-10">
-                  <svg
-                    className="w-full h-full"
-                    viewBox="0 0 100 100"
-                    fill="none"
-                  >
-                    <pattern
-                      id={`plant-pattern-${safePlantName}`}
-                      x="0"
-                      y="0"
-                      width="20"
-                      height="20"
-                      patternUnits="userSpaceOnUse"
-                    >
-                      <path
-                        d="M10 2L8 8L10 14L12 8Z"
-                        fill="currentColor"
-                        className="text-emerald-500"
-                      />
-                      <circle
-                        cx="10"
-                        cy="8"
-                        r="1"
-                        fill="currentColor"
-                        className="text-emerald-600"
-                      />
-                    </pattern>
-                    <rect
-                      width="100"
-                      height="100"
-                      fill={`url(#plant-pattern-${safePlantName})`}
-                    />
-                  </svg>
+                // 写真のない植物は大きな枠を並べず、細い帯で示す（件数バッジは帯の右端に載る）
+                <div className="flex h-9 w-full items-center gap-2 bg-gradient-to-r from-emerald-50 to-emerald-100/80 px-2.5 pr-24 text-emerald-500/80 dark:from-emerald-900/40 dark:to-emerald-800/40 dark:text-emerald-400/80 sm:h-11 sm:px-4 sm:pr-24">
+                  <SubjectSilhouette subject="sprout" className="h-5 w-5 flex-shrink-0" />
+                  <span className="truncate text-xs font-semibold text-emerald-800/70 dark:text-emerald-200/70">
+                    <span className="sm:hidden">{isEnglish ? "No photo" : "写真なし"}</span>
+                    <span className="hidden sm:inline">{isEnglish ? "No photo yet" : "写真はまだありません"}</span>
+                  </span>
                 </div>
               )}
 
@@ -312,15 +269,15 @@ const HostPlantListItem = React.memo(
             </div>
 
             {/* Enhanced Content section */}
-            <div className="flex flex-col flex-grow p-3.5 sm:p-4">
-              <div className="mb-2.5 sm:mb-3">
-                <h3 className="mb-1 text-base font-bold leading-tight tracking-tight text-emerald-800 dark:text-emerald-200 sm:text-lg">
+            <div className="flex flex-col flex-grow p-2.5 sm:p-4">
+              <div className="mb-1.5 sm:mb-3">
+                <h3 className="mb-1 line-clamp-1 text-sm font-bold leading-tight tracking-tight text-emerald-800 dark:text-emerald-200 sm:line-clamp-none sm:text-lg">
                   {isEnglish && detail.scientificName
                     ? formatScientificNameReact(primaryName)
                     : primaryName}
                 </h3>
                 {secondaryName && (
-                  <p className="line-clamp-1 text-[13px] leading-relaxed text-emerald-700 dark:text-emerald-400 sm:line-clamp-none sm:text-sm">
+                  <p className="line-clamp-1 text-[11px] leading-relaxed text-emerald-700 dark:text-emerald-400 sm:line-clamp-none sm:text-sm">
                     {secondaryName}
                   </p>
                 )}
@@ -347,7 +304,7 @@ const HostPlantListItem = React.memo(
               </div>
 
               <div className="mt-auto space-y-1.5 sm:space-y-2">
-                <div className="flex items-start space-x-2 text-[13px] sm:text-sm">
+                <div className="flex items-start space-x-1.5 text-xs sm:space-x-2 sm:text-sm">
                   <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex-shrink-0 mt-0.5">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 512 512">
                       <path d="M243.695,179.339c0.703,4.906,5.813,7.438,7.719,1.406c1.891-6.031-4.828-17.219-22.219-36.531c-14.828-16.484-35.625-39.391-23.844-51.578c14.609-10.078,8.469-27.75-4.172-29.469c-11.313-1.516-21.609,13.578-15.031,38.703C192.711,126.964,241.695,165.292,243.695,179.339z"/>
@@ -355,7 +312,7 @@ const HostPlantListItem = React.memo(
                       <path d="M268.305,179.339c2-14.047,50.984-52.375,57.563-77.469c6.563-25.125-3.734-40.219-15.047-38.703c-12.641,1.719-18.766,19.391-4.172,29.469c11.781,12.188-9.016,35.094-23.844,51.578c-17.391,19.313-24.109,30.5-22.219,36.531C262.492,186.777,267.602,184.246,268.305,179.339z"/>
                     </svg>
                   </span>
-                  <span className="text-slate-600 dark:text-slate-300 line-clamp-2 leading-snug sm:line-clamp-3">
+                  <span className="text-slate-600 dark:text-slate-300 line-clamp-1 leading-snug sm:line-clamp-3">
                     {renderLocalizedScientificNameListReact(visibleDisplayNames, locale)}
                     {extraCount > 0 && `${isEnglish ? ' ' : '…'}${buildMoreLabel(extraCount, isEnglish)}`}
                   </span>
@@ -394,6 +351,9 @@ const HostPlantList = ({
       photo: isEnglish ? 'Photo' : '写真',
       withPhoto: isEnglish ? 'With photos' : '写真あり',
       hostPlantsOnly: isEnglish ? 'Host plants' : '食草あり',
+      // 昆虫の記録がなく『日本の野生植物』等の説明だけがある植物（既定では一覧に出さない）
+      includeProfileOnly: isEnglish ? 'Also plants without insect records' : '昆虫の記録がない植物も表示',
+      profileOnlyFilterType: isEnglish ? 'Showing' : '表示',
       presetLabel: isEnglish ? 'Quick filters:' : 'クイック絞り込み:',
       familyLabel: isEnglish ? 'Family:' : '科で絞り込み:',
       allFamilies: isEnglish ? 'All' : 'すべて',
@@ -409,7 +369,11 @@ const HostPlantList = ({
       sortName: isEnglish ? 'Name' : '名前順',
       sortFamily: isEnglish ? 'Family' : '科順',
       sortRelated: isEnglish ? 'Linked insects' : '関連昆虫数順',
-      resultCount: (value) => (isEnglish ? `${value} results` : `${value} 件が見つかりました`),
+      // 件数はタブや絞り込みボタンと同じくカンマ区切りで表示する
+      resultCount: (value) => {
+        const formatted = Number(value || 0).toLocaleString(isEnglish ? 'en-US' : 'ja-JP');
+        return isEnglish ? `${formatted} results` : `${formatted} 件が見つかりました`;
+      },
       listTitle: isEnglish ? 'Plant list' : '植物リスト',
       emptyTitle: isEnglish ? 'No matching plants found' : '結果が見つかりませんでした',
       tryAnother: isEnglish ? 'Try another keyword or family.' : '別のキーワードや科名でお試しください。',
@@ -427,48 +391,9 @@ const HostPlantList = ({
   // Canonical/OG/パンくず（フックで共通化）
   const safeHostPlants = useMemo(() => hostPlants || {}, [hostPlants]);
   const safePlantDetails = useMemo(() => plantDetails || {}, [plantDetails]);
-  const aliasToCanonical = useMemo(() => {
-    const map = new Map();
-    Object.entries(safePlantDetails || {}).forEach(([canonical, detail]) => {
-      if (!canonical || !detail) return;
-      const aliasesRaw = detail.aliases || detail.aliasNames;
-      const aliases = Array.isArray(aliasesRaw)
-        ? aliasesRaw
-        : aliasesRaw instanceof Set
-          ? Array.from(aliasesRaw)
-          : [];
-      aliases.forEach((alias) => {
-        const key = (alias || "").trim();
-        if (key) map.set(key, canonical);
-      });
-    });
-    return map;
-  }, [safePlantDetails]);
-
-  const normalizedToCanonical = useMemo(() => {
-    const map = new Map();
-    Object.keys(safePlantDetails || {}).forEach((name) => {
-      if (!name) return;
-      const normalized = normalizePlantKey(name);
-      if (!normalized) return;
-      if (!map.has(normalized)) {
-        map.set(normalized, name);
-        return;
-      }
-      const existing = map.get(normalized);
-      if (existing === normalized) return;
-      if (name === normalized) {
-        map.set(normalized, name);
-        return;
-      }
-      const existingHasParen = /[（(].*[)）]/.test(existing);
-      const nameHasParen = /[（(].*[)）]/.test(name);
-      if (existingHasParen && !nameHasParen) {
-        map.set(normalized, name);
-      }
-    });
-    return map;
-  }, [safePlantDetails]);
+  // 別名・表記ゆれの統合規則はトップのタブ件数・ビルド時の件数と共通（utils/plantListMerge）
+  const plantCanonicalMaps = useMemo(() => buildPlantCanonicalMaps(safePlantDetails), [safePlantDetails]);
+  const { aliasToCanonical, normalizedToCanonical } = plantCanonicalMaps;
   const compareLocalizedValues = useCallback(
     (a, b) =>
       String(a || "").localeCompare(String(b || ""), isEnglish ? "en" : "ja"),
@@ -507,50 +432,24 @@ const HostPlantList = ({
     [isEnglish],
   );
 
-  const mergedHostPlants = useMemo(() => {
-    const merged = new Map();
-    const addEntry = (plantName, insects = []) => {
-      if (!plantName || plantName === '不明') return;
-      const normalized = normalizePlantKey(plantName);
-      if (!normalized || normalized === '不明') return;
-      const canonicalFromAlias =
-        aliasToCanonical.get(plantName) ||
-        aliasToCanonical.get(normalized) ||
-        null;
-      const canonical = canonicalFromAlias || normalizedToCanonical.get(normalized) || normalized;
-      let set = merged.get(canonical);
-      if (!set) {
-        set = new Set();
-        merged.set(canonical, set);
-      }
-      if (Array.isArray(insects)) {
-        insects.forEach((name) => {
-          if (name) set.add(name);
-        });
-      }
-    };
-    Object.entries(safeHostPlants || {}).forEach(([plant, insects]) => {
-      addEntry(plant, insects);
-    });
-    Object.entries(flowerVisitPlants || {}).forEach(([plant, insects]) => {
-      addEntry(plant, insects);
-    });
-    Object.entries(safePlantDetails || {}).forEach(([plant, detail]) => {
-      if (detail?.profile) addEntry(plant, []);
-    });
-    const obj = {};
-    merged.forEach((set, key) => {
-      obj[key] = Array.from(set);
-    });
-    return obj;
-  }, [safeHostPlants, flowerVisitPlants, safePlantDetails, normalizedToCanonical, aliasToCanonical]);
+  const mergedHostPlants = useMemo(
+    () => mergePlantEntries({
+      hostPlants: safeHostPlants,
+      flowerVisitPlants,
+      plantDetails: safePlantDetails,
+      maps: plantCanonicalMaps,
+    }),
+    [safeHostPlants, flowerVisitPlants, safePlantDetails, plantCanonicalMaps],
+  );
 
   const plantCount = Object.keys(mergedHostPlants).length;
+  const linkedPlantCount = useMemo(() => countInsectLinkedPlants(mergedHostPlants), [mergedHostPlants]);
+  const profileOnlyPlantCount = plantCount - linkedPlantCount;
   const plantCanonicalUrl = absUrl(locale === "en" ? "/en/plant" : "/plant");
   const plantPageTitle = isEnglish ? `Plant index | ${EN_SITE_NAME}` : "植物（食草）一覧 | 昆虫植物図鑑";
   const plantPageDesc = isEnglish
-    ? `Browse ${plantCount} plant entries and review the insects associated with each plant. Search by scientific name, genus, family, alias, or Japanese name.`
-    : `植物（食草）一覧ページ。${plantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
+    ? `Browse ${linkedPlantCount} plant entries and review the insects associated with each plant. Search by scientific name, genus, family, alias, or Japanese name.`
+    : `植物（食草）一覧ページ。${linkedPlantCount}種の植物から、利用する昆虫を一覧で確認。和名・別名でも検索可能。`;
   const plantBreadcrumbItems = useMemo(
     () => [
       { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(locale === "en" ? "/en/" : "/") },
@@ -575,7 +474,8 @@ const HostPlantList = ({
   const computeItemsPerPage = useCallback(() => {
     if (typeof window === "undefined") return 12;
     const w = window.innerWidth;
-    const cols = w >= 1280 ? 4 : w >= 1024 ? 3 : w >= 768 ? 2 : 1;
+    // 一覧の列数（スマホ2列・タブレット3列・PC4列）に合わせ、最終行が埋まる件数にする
+    const cols = w >= 1024 ? 4 : w >= 768 ? 3 : 2;
     return cols * 12;
   }, []);
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
@@ -615,6 +515,9 @@ const HostPlantList = ({
   const orderFilter = useMemo(() => searchParams.get('porder') || '', [searchParams]);
   const visitFilter = useMemo(() => searchParams.get('pvisit') || 'all', [searchParams]);
   const hostOnlyFilter = useMemo(() => searchParams.get('phost') === 'has', [searchParams]);
+  // 既定では昆虫（食草・訪花）の記録がある植物だけを並べ、トップのタブの件数と一致させる。
+  // pall=1 のときは図鑑の説明だけの植物も含める（検索中は常に含め、名前で探せるようにする）
+  const showAllPlants = useMemo(() => searchParams.get('pall') === '1', [searchParams]);
   const photoFilter = useMemo(() => (searchParams.get('pphoto') === 'has' ? 'has' : 'all'), [searchParams]);
   const viewMode = useMemo(() => (searchParams.get('pview') === 'compact' ? 'compact' : 'cards'), [searchParams]);
   const sortMode = useMemo(() => {
@@ -673,6 +576,14 @@ const HostPlantList = ({
     }, { push: true });
   }, [updateSearchParams]);
 
+  const setPShowAllPlants = useCallback((value) => {
+    updateSearchParams((p) => {
+      if (value) p.set('pall', '1');
+      else p.delete('pall');
+      p.delete('ppage');
+    }, { push: true });
+  }, [updateSearchParams]);
+
   const setPPhotoFilter = useCallback((value) => {
     updateSearchParams((p) => {
       if (value === 'has') p.set('pphoto', 'has');
@@ -713,6 +624,7 @@ const HostPlantList = ({
       p.delete('pvisit');
       p.delete('phost');
       p.delete('pphoto');
+      p.delete('pall');
       p.delete('ppage');
     }, { push: true });
   }, [updateSearchParams]);
@@ -733,6 +645,7 @@ const HostPlantList = ({
       p.delete('pvisit');
       p.delete('phost');
       p.delete('pphoto');
+      p.delete('pall');
       p.delete('q');
       p.delete('ppage');
     }, { push: true });
@@ -760,7 +673,7 @@ const HostPlantList = ({
   const navigationType = useNavigationType();
   const searchQuery = useMemo(() => (debouncedPlantSearch || '').trim(), [debouncedPlantSearch]);
   const hasSearchQuery = searchQuery.length > 0;
-  const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all' || hostOnlyFilter || photoFilter === 'has';
+  const hasFilterCriteria = !!familyFilter || !!orderFilter || visitFilter !== 'all' || hostOnlyFilter || photoFilter === 'has' || showAllPlants;
   const hasAnyCriteria = hasFilterCriteria || hasSearchQuery;
   // URLパラメータの科/目は選択時のロケール表記のまま残るため、表示前に
   // 現在ロケールの表記へ解決する（照合は元々ゆれ耐性がある。表示だけの問題）
@@ -801,6 +714,7 @@ const HostPlantList = ({
     if (visitFilter !== 'all') filters.push({ type: ui.flowerVisit, value: isEnglish ? 'Only' : 'のみ', clear: () => setPVisitFilter('all') });
     if (hostOnlyFilter) filters.push({ type: isEnglish ? 'Host plant' : '食草', value: isEnglish ? 'Yes' : 'あり', clear: () => setPHostOnlyFilter('all') });
     if (photoFilter === 'has') filters.push({ type: ui.photo, value: ui.withPhoto, clear: () => setPPhotoFilter('all') });
+    if (showAllPlants) filters.push({ type: ui.profileOnlyFilterType, value: ui.includeProfileOnly, clear: () => setPShowAllPlants(false) });
     return filters;
   }, [
     hasSearchQuery,
@@ -812,18 +726,22 @@ const HostPlantList = ({
     visitFilter,
     hostOnlyFilter,
     photoFilter,
+    showAllPlants,
     clearSearch,
     setPFamilyFilter,
     setPOrderFilter,
     setPVisitFilter,
     setPHostOnlyFilter,
     setPPhotoFilter,
+    setPShowAllPlants,
     isEnglish,
     ui.family,
     ui.flowerVisit,
     ui.order,
     ui.photo,
     ui.withPhoto,
+    ui.includeProfileOnly,
+    ui.profileOnlyFilterType,
   ]);
   const emptyStateHint = useMemo(() => {
     if (!hasSearchQuery && !hasFilterCriteria) {
@@ -879,6 +797,7 @@ const HostPlantList = ({
     visitFilter,
     hostOnlyFilter,
     photoFilter,
+    showAllPlants,
     sortMode,
   });
 
@@ -1063,7 +982,8 @@ const HostPlantList = ({
     const katakanaSearchTerm =
       hiraganaToKatakana(nfkcPlantSearch).toLowerCase();
 
-    const filtered = Object.entries(mergedHostPlants).filter(([plantName]) => {
+    const includeProfileOnlyPlants = showAllPlants || nfkcPlantSearch.trim().length > 0;
+    const filtered = Object.entries(mergedHostPlants).filter(([plantName, insects]) => {
       // Explicitly exclude empty, undefined, or invalid plant names
       if (
         !plantName ||
@@ -1071,6 +991,10 @@ const HostPlantList = ({
         plantName === "undefined" ||
         plantName === "null"
       ) {
+        return false;
+      }
+
+      if (!includeProfileOnlyPlants && (!Array.isArray(insects) || insects.length === 0)) {
         return false;
       }
 
@@ -1243,6 +1167,7 @@ const HostPlantList = ({
     visitFilter,
     hostOnlyFilter,
     photoFilter,
+    showAllPlants,
     sortMode,
     isRelevanceSort,
     relevancePlantSearch,
@@ -1331,6 +1256,7 @@ const HostPlantList = ({
       prev.visitFilter !== visitFilter ||
       prev.hostOnlyFilter !== hostOnlyFilter ||
       prev.photoFilter !== photoFilter ||
+      prev.showAllPlants !== showAllPlants ||
       prev.sortMode !== sortMode;
 
     if (!changed) return;
@@ -1342,6 +1268,7 @@ const HostPlantList = ({
       visitFilter,
       hostOnlyFilter,
       photoFilter,
+      showAllPlants,
       sortMode,
     };
 
@@ -1365,13 +1292,14 @@ const HostPlantList = ({
 
     if (currentPage === 1) return;
     setPPage(1);
-  }, [navigationType, debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, sortMode, currentPage, setPPage]);
+  }, [navigationType, debouncedPlantSearch, familyFilter, orderFilter, visitFilter, hostOnlyFilter, photoFilter, showAllPlants, sortMode, currentPage, setPPage]);
 
   const renderFilters = () => {
     const presetChips = [
       { key: "host", label: ui.hostPlantsOnly, active: hostOnlyFilter, onClick: () => setPHostOnlyFilter(hostOnlyFilter ? "all" : "has") },
       { key: "flower", label: ui.flowerOnly, active: visitFilter === "flower", onClick: () => setPVisitFilter(visitFilter === "flower" ? "all" : "flower") },
       { key: "photo", label: ui.withPhoto, active: photoFilter === "has", onClick: () => setPPhotoFilter(photoFilter === "has" ? "all" : "has") },
+      { key: "all", label: ui.includeProfileOnly, count: profileOnlyPlantCount, active: showAllPlants, onClick: () => setPShowAllPlants(!showAllPlants) },
     ];
     const familyChips = topFamilies.length > 0
       ? [
@@ -1583,7 +1511,7 @@ const HostPlantList = ({
             /* データ未着（検索・フィルタなしで0件はロード中）: 昆虫リストと同じスケルトンを出し、
                「結果が見つかりませんでした」との誤認を防ぐ */
             <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"
+              className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-4"
               role="status"
               aria-live="polite"
               aria-busy="true"
@@ -1605,7 +1533,7 @@ const HostPlantList = ({
               ))}
             </div>
           ) : currentHostPlants.length > 0 ? (
-            <div className={viewMode === "compact" ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"}>
+            <div className={viewMode === "compact" ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-4"}>
               {currentHostPlants.map(([plant, mothList], index) => {
                 const normalizedPlant = normalizePlantKey(plant);
                 const statsNames =
@@ -1643,7 +1571,7 @@ const HostPlantList = ({
                     <ManualAdSlot
                       placement="inFeed"
                       locale={locale}
-                      className="animate-fadeIn h-full"
+                      className="animate-fadeIn h-full col-span-2 md:col-span-1"
                       minHeight="min-h-[220px]"
                     />
                   )}
