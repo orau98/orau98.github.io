@@ -103,6 +103,21 @@ const createCollideForce = (getRadius, { strength = 0.5, iterations = 2 } = {}) 
   return force;
 };
 
+// ページの主役（中心ノード）を原点へ引き寄せる力。固定（fx/fy）ではないので
+// ドラッグやピン留めの仕組みには影響せず、配置が片寄って主役が端に寄るのを防ぐ
+const createAnchorForce = (nodeId, strength = 0.5) => {
+  let target = null;
+  const force = () => {
+    if (!target || typeof target.fx === 'number') return;
+    target.vx = (target.vx || 0) - (target.x || 0) * strength;
+    target.vy = (target.vy || 0) - (target.y || 0) * strength;
+  };
+  force.initialize = (nodes) => {
+    target = Array.isArray(nodes) ? nodes.find((node) => node.id === nodeId) || null : null;
+  };
+  return force;
+};
+
 const seedGraphNodePositions = ({
   nodes,
   centerNodeId,
@@ -262,6 +277,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const pendingKeyboardFocusRef = useRef(false);
   const pendingNodeFocusRef = useRef(false);
   const labelBoxesRef = useRef([]);
+  // ラベルを写真や丸の上に重ねないよう、各フレームのノードの占有範囲（画面座標の倍率適用後）を持つ
+  const nodeBoxesRef = useRef([]);
   const labelMeasureContextRef = useRef(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -676,14 +693,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const pinDragPointerIdRef = useRef(null);
   const pinDragNodeIdRef = useRef(null);
   const hasUserInteractedRef = useRef(false);
-  const guideDismissFrameRef = useRef(null);
   const [hoverNodeId, setHoverNodeId] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [labelMode, setLabelMode] = useState('auto'); // auto | all | none
   const [relationFilter, setRelationFilter] = useState('all');
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [nodeListOpen, setNodeListOpen] = useState(false);
-  const [guideDismissed, setGuideDismissed] = useState(false);
   const [pinVersion, setPinVersion] = useState(0);
   const [isPinDragging, setIsPinDragging] = useState(false);
   // PCでのホイールズームはクリックで有効化する（ページスクロールを奪わないため）。
@@ -707,21 +722,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   useEffect(() => {
     hasUserInteractedRef.current = false;
   }, [currentInsect?.name, currentPlantName]);
-
-  useEffect(() => {
-    if (guideDismissFrameRef.current !== null && typeof window !== 'undefined' && window.cancelAnimationFrame) {
-      window.cancelAnimationFrame(guideDismissFrameRef.current);
-      guideDismissFrameRef.current = null;
-    }
-    setGuideDismissed(false);
-  }, [currentInsect?.name, currentPlantName]);
-
-  useEffect(() => () => {
-    if (guideDismissFrameRef.current !== null && typeof window !== 'undefined' && window.cancelAnimationFrame) {
-      window.cancelAnimationFrame(guideDismissFrameRef.current);
-      guideDismissFrameRef.current = null;
-    }
-  }, []);
 
   useEffect(() => {
     setRelationFilter('all');
@@ -899,7 +899,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
               ? 'insect-host'
               : 'insect';
         const distance = ringLayout.distanceFor(index);
-        addNode(insectId, name, insectType, insectDetail, { radialDistance: distance });
+        addNode(insectId, name, insectType, insectDetail, { radialDistance: distance, tier: 1 });
         links.push({ source: centerId, target: insectId, relation: getRelationType(hasHost, hasFlower), distance });
       });
     } else if (currentInsect) {
@@ -928,7 +928,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             : 'plant-host';
         const plantId = `plant:${plantName}`;
         const plantDistance = plantRingLayout.distanceFor(plantIndex);
-        addNode(plantId, plantName, plantType, plantDetails[plantName], { radialDistance: plantDistance });
+        addNode(plantId, plantName, plantType, plantDetails[plantName], { radialDistance: plantDistance, tier: 1 });
         links.push({ source: centerId, target: plantId, relation: getRelationType(isHost, isFlower), distance: plantDistance });
 
         if (showRelatedInsects) {
@@ -943,7 +943,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           related.slice(0, relatedPerPlant).forEach(name => {
             const insectDetail = insectLookup.get(name) || null;
             const insectId = `insect:${name}`;
-            addNode(insectId, name, 'insect', insectDetail);
+            addNode(insectId, name, 'insect', insectDetail, { tier: 2 });
             const relatedHasHost = insectDetail ? hasLarvalHostForPlant(insectDetail, plantName) : false;
             const relatedHasFlowerVisit = insectDetail ? hasFlowerVisitForPlant(insectDetail, plantName) : false;
             links.push({
@@ -1312,6 +1312,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   const showInsectHostLegend = legendTypeSet.has('insect-host');
   const showInsectFlowerLegend = legendTypeSet.has('insect-flower');
   const showInsectBothLegend = legendTypeSet.has('insect-both');
+  const hasFlowerRelations = useMemo(
+    () => baseGraphData.links.some((link) => link.relation === 'flower' || link.relation === 'both'),
+    [baseGraphData.links]
+  );
   const legendRelationSet = useMemo(() => new Set(graphData.links.map((l) => l.relation || 'unknown')), [graphData.links]);
   const showHostRelationLegend = legendRelationSet.has('host');
   const showFlowerRelationLegend = legendRelationSet.has('flower');
@@ -1323,7 +1327,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     const node = relationshipGraphData.nodes.find(n => n.id === nodeId);
     if (!node) return;
     hasUserInteractedRef.current = true;
-    setGuideDismissed(true);
     const groupId = networkGroup(node).id;
     setExpandedGroups(new Set(graphData.groups.some(group => group.id === groupId) ? [groupId] : []));
     pendingNodeFocusRef.current = true;
@@ -1365,7 +1368,21 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     if (!fgRef.current) return;
     if (!labelMeasureContextRef.current) labelMeasureContextRef.current = document.createElement('canvas').getContext('2d');
     const context = labelMeasureContextRef.current;
-    const fit = fitNetworkBounds(graphData.nodes, graphSize.width, graphSize.height, (label, current) => {
+    // 実際に描くラベル（密な図では短縮・非表示）で幅を見積もり、必要以上に縮小しない
+    const dense = graphData.nodes.length > graphLayoutMetrics.denseLabelThreshold;
+    const primaryDense = primaryNeighborIds.size - 1 > 14;
+    const fitNodes = graphData.nodes.map((node) => {
+      const emphasized = node.type === 'group' || node.type.includes('current');
+      const base = node.type === 'group' ? (node.group?.label || node.name) : node.name;
+      const isPrimary = primaryNeighborIds.has(node.id);
+      let name = base;
+      if (labelMode === 'none' || (labelMode === 'auto' && graphData.nodes.length > 36 && !emphasized)) name = '';
+      else if (labelMode !== 'all' && dense && !emphasized && (isPrimary ? primaryDense : true)) {
+        name = truncateNodeLabel(base, isPrimary ? (isEnglish ? 18 : 12) : (isEnglish ? 14 : 8));
+      }
+      return name === node.name ? node : { ...node, name };
+    });
+    const fit = fitNetworkBounds(fitNodes, graphSize.width, graphSize.height, (label, current) => {
       if (!context) return [...String(label)].length * 12;
       context.font = `${current ? '700 13' : '12'}px "Helvetica Neue", "Segoe UI", sans-serif`;
       return context.measureText(label).width;
@@ -1374,7 +1391,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     beginProgrammaticZoom(duration + 300);
     fgRef.current.centerAt(fit.x, fit.y, duration);
     fgRef.current.zoom(fit.zoom, duration);
-  }, [beginProgrammaticZoom, graphData.nodes, graphSize.width, graphSize.height, photoSize]);
+  }, [beginProgrammaticZoom, graphData.nodes, graphLayoutMetrics.denseLabelThreshold, graphSize.width, graphSize.height, isEnglish, labelMode, photoSize, primaryNeighborIds]);
 
   const fitInitialView = fitGraphToViewport;
 
@@ -1409,11 +1426,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         linkForce.strength(0.9);
       }
       fgRef.current.d3Force?.('collide', collideForce);
+      fgRef.current.d3Force?.('anchorCenter', currentCenterNodeId ? createAnchorForce(currentCenterNodeId) : null);
       fgRef.current.d3ReheatSimulation?.();
     } catch {
       // ignore
     }
-  }, [collideForce, graphData.links.length, graphData.nodes.length, graphLayoutMetrics.chargeStrength, linkDistance]);
+  }, [collideForce, currentCenterNodeId, graphData.links.length, graphData.nodes.length, graphLayoutMetrics.chargeStrength, linkDistance]);
 
   // initial fit
   useEffect(() => {
@@ -1431,23 +1449,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     setHoverNodeId(node ? node.id : null);
   }, [selectedNodeId]);
 
-  const dismissGuideAfterRender = useCallback(() => {
-    if (guideDismissFrameRef.current !== null) return;
-    const runDismiss = () => {
-      guideDismissFrameRef.current = null;
-      setGuideDismissed(true);
-    };
-    if (typeof window !== 'undefined' && window.requestAnimationFrame) {
-      guideDismissFrameRef.current = window.requestAnimationFrame(runDismiss);
-    } else {
-      setTimeout(runDismiss, 0);
-    }
-  }, []);
-
   const markUserInteracted = useCallback(() => {
     hasUserInteractedRef.current = true;
-    dismissGuideAfterRender();
-  }, [dismissGuideAfterRender]);
+  }, []);
 
   // click toggles selection (navigation moved to the detail panel)
   const handleNodeClick = useCallback((node) => {
@@ -1532,11 +1536,38 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       const padding = 4 / globalScale;
       const labelWidth = textWidth + padding * 2;
       const labelHeight = fontSize + padding * 2;
-      // ラベルはノードの外側（中心から遠い側）に置き、ノードやリンクとの重なりを避ける
-      const top = below ? y + gap : y - gap - labelHeight;
-      const box = { left: (x - labelWidth / 2) * globalScale, right: (x + labelWidth / 2) * globalScale, top: top * globalScale, bottom: (top + labelHeight) * globalScale };
+      // ラベルはまずノードの外側（中心から遠い側）に置き、他のラベルと重なる場合は
+      // 反対側→右→左の順に空いている場所を探す。どこも空いていなければ省略する
+      const candidates = [
+        { left: x - labelWidth / 2, top: below ? y + gap : y - gap - labelHeight },
+        { left: x - labelWidth / 2, top: below ? y - gap - labelHeight : y + gap },
+        { left: x + gap, top: y - labelHeight / 2 },
+        { left: x - gap - labelWidth, top: y - labelHeight / 2 },
+      ].map(({ left, top }) => ({
+        left, top,
+        box: { left: left * globalScale, right: (left + labelWidth) * globalScale, top: top * globalScale, bottom: (top + labelHeight) * globalScale },
+      }));
+      const collides = (box) => labelBoxesRef.current.some(b => box.left < b.right + 4 && box.right > b.left - 4 && box.top < b.bottom + 3 && box.bottom > b.top - 3);
       const priority = node.type.includes('current') || selectedNodeId === node.id || hoverNodeId === node.id;
-      if (labelMode === 'auto' && !priority && labelBoxesRef.current.some(b => box.left < b.right + 4 && box.right > b.left - 4 && box.top < b.bottom + 3 && box.bottom > b.top - 3)) return;
+      // 図の外にはみ出す置き場所は選ばない（スマホで左右のラベルが切れるのを防ぐ）
+      const fg = fgRef.current;
+      const insideCanvas = ({ left, top }) => {
+        if (!fg?.graph2ScreenCoords) return true;
+        const start = fg.graph2ScreenCoords(left, top);
+        const end = fg.graph2ScreenCoords(left + labelWidth, top + labelHeight);
+        return start.x >= 2 && start.y >= 2 && end.x <= graphSize.width - 2 && end.y <= graphSize.height - 2;
+      };
+      let placement = candidates[0];
+      if (labelMode === 'auto') {
+        // 他のノードの写真・丸に重ならない場所を優先し、なければラベル同士が重ならない場所にする
+        const overNode = (box, onlyCurrent = false) => nodeBoxesRef.current.some(b => b.id !== node.id && (!onlyCurrent || b.current) && box.left < b.right && box.right > b.left && box.top < b.bottom && box.bottom > b.top);
+        // 主役の写真の上にだけは他のラベルを載せない
+        const free = candidates.find(candidate => insideCanvas(candidate) && !collides(candidate.box) && !overNode(candidate.box))
+          || candidates.find(candidate => insideCanvas(candidate) && !collides(candidate.box) && !overNode(candidate.box, true));
+        if (free) placement = free;
+        else if (!priority) return;
+      }
+      const { left, top, box } = placement;
       labelBoxesRef.current.push(box);
       ctx.globalAlpha = dim ? 0.45 : 1;
       ctx.fillStyle = isDark
@@ -1546,13 +1577,13 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         ? `rgba(148,163,184,${dim ? 0.18 : 0.35})`
         : `rgba(148,163,184,${dim ? 0.3 : 0.7})`;
       ctx.lineWidth = 1 / globalScale;
-      drawRoundedRect(ctx, x - labelWidth / 2, top, labelWidth, labelHeight, 4 / globalScale);
+      drawRoundedRect(ctx, left, top, labelWidth, labelHeight, 4 / globalScale);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = isDark ? '#e2e8f0' : '#0f172a';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(label, x, top + labelHeight / 2);
+      ctx.fillText(label, left + labelWidth / 2, top + labelHeight / 2);
     };
 
     const colors = {
@@ -1561,7 +1592,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       'insect-flower': '#f59e0b',
       'insect-both': '#a78bfa',
       insect: '#38bdf8',
-      group: '#818cf8',
+      group: '#6366f1',
       'plant-current': '#22c55e',
       'plant-host': '#10b981',
       'plant-flower': '#f59e0b',
@@ -1570,7 +1601,10 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     };
     const isCurrent = node.type.includes('current');
     // Photo size is independent of graph zoom; empty nodes remain compact.
-    const radius = networkNodeRadius(node, photoSize);
+    // 科のまとまりは中に種数を書くので、縮小表示でも数字が読める大きさ（画面上で半径11px以上）を保つ
+    const radius = node.type === 'group'
+      ? Math.max(networkNodeRadius(node, photoSize), 11 / globalScale)
+      : networkNodeRadius(node, photoSize);
     const inHighlight = highlightNodeIds.size > 0 && highlightNodeIds.has(node.id);
     const dimByHighlight = highlightNodeIds.size > 0 && !inHighlight;
     const dim = dimByHighlight;
@@ -1598,9 +1632,11 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       && !emphasize
       && globalScale < revealZoom
       && (isPrimary ? primaryDense : true);
+    // 科のまとまりは種数を丸の中に描くので、ラベルは科名だけにする
+    const baseLabel = node.type === 'group' ? (node.group?.label || node.name) : node.name;
     const labelText = shorten
-      ? truncateNodeLabel(node.name, isPrimary ? (isEnglish ? 16 : 9) : (isEnglish ? 12 : 6))
-      : node.name;
+      ? truncateNodeLabel(baseLabel, isPrimary ? (isEnglish ? 18 : 12) : (isEnglish ? 14 : 8))
+      : baseLabel;
 
     // try to ensure image is loaded
     const foundUrl = ensureImage(node.imgCandidates);
@@ -1608,7 +1644,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
     // glow
     ctx.save();
-    ctx.globalAlpha = alpha * 0.35;
+    // 主役に直接つながらない種（tier 2）の光の輪は控えめにして、食草などを埋もれさせない
+    ctx.globalAlpha = alpha * (node.tier === 2 ? 0.16 : 0.35);
     ctx.fillStyle = colors[node.type] || '#94a3b8';
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius * 1.5, 0, Math.PI * 2);
@@ -1642,6 +1679,22 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       ctx.stroke();
     }
 
+    if (node.type === 'group') {
+      const count = node.group?.members?.length || 0;
+      if (count > 0) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#ffffff';
+        // 画面上の文字サイズを9〜15pxに保つ（グラフ座標で指定するため globalScale で割る）
+        const screenSize = Math.max(9, Math.min(15, radius * globalScale * 0.62));
+        ctx.font = `700 ${screenSize / globalScale}px "Helvetica Neue", "Segoe UI", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(count), node.x, node.y + 0.5);
+        ctx.restore();
+      }
+    }
+
     if (isCurrent) {
       ctx.save();
       ctx.lineWidth = 2.2 / Math.sqrt(globalScale);
@@ -1662,7 +1715,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       });
     }
     ctx.restore();
-  }, [photoSize, hoverNodeId, activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, highlightNodeIds, isDark, isEnglish, labelMode, primaryNeighborIds, selectedNodeId]);
+  }, [photoSize, hoverNodeId, activeNodeId, graphData.nodes.length, graphLayoutMetrics.denseLabelThreshold, graphSize.width, graphSize.height, highlightNodeIds, isDark, isEnglish, labelMode, primaryNeighborIds, selectedNodeId]);
 
   const nodePointerAreaPaint = useCallback((node, color, ctx, globalScale) => {
     // Include the circular photo and its halo, with a minimum 44px touch target.
@@ -2002,9 +2055,9 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   // 実際の描画色（中心=ローズ/緑・訪花=アンバー・食草＋訪花=バイオレット/ライム）と
   // 凡例が食い違わないよう、グラフに存在するノード種別ごとに色を出し分ける
   const legendStrip = (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
+    <div className="flex flex-nowrap items-center gap-x-3 gap-y-1 whitespace-nowrap text-xs text-slate-600 dark:text-slate-300 sm:flex-wrap">
       <span className="font-semibold text-slate-500 dark:text-slate-400">{isEnglish ? 'Legend' : '凡例'}</span>
-      {collapsedGroups.length > 0 && <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-indigo-400" aria-hidden="true" />{isEnglish ? 'Family group (select to expand)' : '科のまとまり（選ぶと展開）'}</span>}
+      {collapsedGroups.length > 0 && <span className="inline-flex shrink-0 items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-indigo-500" aria-hidden="true" />{isEnglish ? 'Family group (number = species; select to expand)' : '科のまとまり（数字＝種数・選ぶと展開）'}</span>}
       {legendTypeSet.has('insect-current') && (
         <span className="inline-flex items-center gap-1.5">
           <span className="relative inline-flex h-3 w-3 items-center justify-center" aria-hidden="true">
@@ -2279,7 +2332,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+          <div className={`mt-4 flex flex-wrap items-center gap-2 ${isCompactPanel ? 'justify-start' : 'justify-end'}`}>
             <button
               type="button"
               className={`px-3 py-2 rounded-lg text-[12px] font-semibold border shadow-sm ${
@@ -2309,7 +2362,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             )}
             <button
               type="button"
-              className={`px-3 py-2 rounded-lg text-[12px] font-semibold text-white shadow ${selectedNode.type.startsWith('plant') ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-sky-600 hover:bg-sky-700'}`}
+              className={`px-3 py-2 rounded-lg text-[12px] font-semibold text-white shadow ${isCompactPanel ? 'order-first' : ''} ${selectedNode.type.startsWith('plant') ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-sky-600 hover:bg-sky-700'}`}
               onClick={() => {
                 if (!selectedNode) return;
                 if (selectedNode.type.startsWith('insect')) {
@@ -2342,46 +2395,43 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const showInspector = nodeListOpen || Boolean(selectedNode);
   const controlClass = `${desktopControlButtonClass} min-h-9 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600`;
+  const zoomButtonClass = 'flex h-9 w-9 items-center justify-center text-sm font-semibold text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-emerald-600 dark:text-slate-200 dark:hover:bg-slate-800';
 
   return (
     <div data-network-root className="flex h-full min-h-0 w-full flex-col rounded-xl border border-slate-200 bg-slate-50 text-slate-800 shadow-md dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
       <div data-network-toolbar className="relative z-20 shrink-0 space-y-2 border-b border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
-        <div className="flex flex-wrap items-center gap-2">
-          <label className="min-w-[140px] flex-1">
+        <div className="flex items-center gap-2">
+          <label className="min-w-0 flex-1">
             <span className="sr-only">{isEnglish ? 'Search network species' : 'ネットワーク内の種を検索'}</span>
             <input ref={searchInputRef} type="search" value={searchQuery} onChange={event => { setSearchQuery(event.target.value); setNodeListOpen(true); }} onFocus={() => setNodeListOpen(true)} onKeyDown={event => { if (event.key === 'Escape') { setNodeListOpen(false); listButtonRef.current?.focus(); } }} placeholder={isEnglish ? 'Search species or family' : '種名・科名で探す'} className="h-9 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 text-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/25 dark:border-slate-600 dark:bg-slate-950" />
           </label>
           <button ref={listButtonRef} type="button" className={controlClass} aria-expanded={nodeListOpen} onClick={() => setNodeListOpen(previous => !previous)}>{isEnglish ? 'Species list' : '種の一覧'}</button>
-          <label className="flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 px-2 text-xs dark:border-slate-600">
-            <span>{isEnglish ? 'Photos' : '写真'}</span>
-            <select aria-label={isEnglish ? 'Photo size' : '写真サイズ'} value={photoSize} onChange={event => { markUserInteracted(); setPhotoSize(event.target.value); }} className="h-8 bg-transparent font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600">
-              {NETWORK_PHOTO_SIZES.map(size => <option key={size.value} value={size.value}>{isEnglish ? size.labelEn : size.label}</option>)}
-            </select>
-          </label>
-          <button type="button" className={controlClass} onClick={resetView}>{isEnglish ? 'Fit view' : '全体表示'}</button>
-          <button type="button" className={controlClass} onClick={zoomOut} aria-label={isEnglish ? 'Zoom out' : '縮小'}>−</button>
-          <button type="button" className={controlClass} onClick={zoomIn} aria-label={isEnglish ? 'Zoom in' : '拡大'}>＋</button>
           <button type="button" className={controlClass} aria-expanded={desktopControlsOpen} onClick={() => setDesktopControlsOpen(previous => !previous)}>{isEnglish ? 'Settings' : '表示設定'}</button>
           <InfoPopover title={isEnglish ? 'How to read the network' : 'ネットワーク図の見方'} buttonAriaLabel={isEnglish ? 'Show how to use the network diagram' : 'ネットワーク図の使い方を表示'} buttonClassName={controlClass} panelClassName="w-[min(24rem,calc(100vw-2rem))]" buttonContent={<span>?</span>}>{graphHelpPopoverContent}</InfoPopover>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {relationFilterButtons}
-          <span className="text-xs text-slate-500 dark:text-slate-300" data-network-counts>{statsChips.join(' · ')}</span>
-        </div>
-        {relationshipGraphData.nodes.length > 36 && <div className="flex items-center gap-2 text-xs">
-          <button type="button" className={controlClass} aria-pressed={groupMode === 'auto'} onClick={() => { hasUserInteractedRef.current = false; setGroupMode(previous => previous === 'auto' ? 'all' : 'auto'); setExpandedGroups(new Set()); }}>{groupMode === 'auto' ? (isEnglish ? 'Grouped by family' : '科ごとにまとめる') : (isEnglish ? 'Show individual species' : '個々の種を表示')}</button>
-          {expandedGroups.size > 0 && groupMode === 'auto' && <button type="button" className={controlClass} onClick={() => { hasUserInteractedRef.current = false; setExpandedGroups(new Set()); setSelectedNodeId(null); listButtonRef.current?.focus(); }}>{isEnglish ? 'Collapse groups' : '科をまとめ直す'}</button>}
-          <span>{collapsedGroups.length > 0 ? (isEnglish ? 'Select a group to expand. All species remain in the list.' : '科を選ぶと展開。全種は一覧で確認できます。') : (isEnglish ? 'All species displayed individually.' : '個々の種を表示中')}</span>
-        </div>}
-        <div className="hidden sm:block">{legendStrip}</div>
-        {desktopControlsOpen && <div className="absolute inset-x-3 top-full z-30 mt-1 max-h-60 overflow-y-auto rounded-xl border border-slate-300 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-900">
+        {/* 食草／訪花の切り替えは、訪花の記録がある図でだけ意味があるので、そのときだけ出す */}
+        {(hasFlowerRelations || relationFilter !== 'all') && <div className="flex flex-wrap items-center gap-2">{relationFilterButtons}</div>}
+        {/* 凡例はスマホでも1行（横スクロール）で常に表示する */}
+        <div className="-mx-3 overflow-x-auto px-3 scrollbar-none sm:mx-0 sm:overflow-visible sm:px-0">{legendStrip}</div>
+        {desktopControlsOpen && <div className="absolute inset-x-3 top-full z-30 mt-1 max-h-72 overflow-y-auto rounded-xl border border-slate-300 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-900">
           <div className="flex flex-wrap items-center gap-2">
+            <label className="flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 px-2 text-xs dark:border-slate-600">
+              <span>{isEnglish ? 'Photos' : '写真'}</span>
+              <select aria-label={isEnglish ? 'Photo size' : '写真サイズ'} value={photoSize} onChange={event => { markUserInteracted(); setPhotoSize(event.target.value); }} className="h-8 bg-transparent font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600">
+                {NETWORK_PHOTO_SIZES.map(size => <option key={size.value} value={size.value}>{isEnglish ? size.labelEn : size.label}</option>)}
+              </select>
+            </label>
             {['auto', 'all', 'none'].map(mode => <button key={mode} type="button" className={controlClass} aria-pressed={labelMode === mode} onClick={() => setLabelMode(mode)}>{mode === 'auto' ? (isEnglish ? 'Labels: auto' : 'ラベル: 自動') : mode === 'all' ? (isEnglish ? 'Labels: all' : 'ラベル: 全て') : (isEnglish ? 'Labels: none' : 'ラベル: なし')}</button>)}
-            {pinnedNodeCount > 0 && <button type="button" className={controlClass} onClick={clearPinnedNodes}>{isEnglish ? 'Unpin all' : '全固定解除'}</button>}
-            <button type="button" className={controlClass} onClick={() => setDesktopControlsOpen(false)}>{isEnglish ? 'Close settings' : '設定を閉じる'}</button>
           </div>
-          <p className="mt-2 text-xs">{interactionHint}</p>
-          <div className="mt-2 sm:hidden">{legendStrip}</div>
+          {relationshipGraphData.nodes.length > 36 && <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+            <button type="button" className={controlClass} aria-pressed={groupMode === 'auto'} onClick={() => { hasUserInteractedRef.current = false; setGroupMode(previous => previous === 'auto' ? 'all' : 'auto'); setExpandedGroups(new Set()); }}>{groupMode === 'auto' ? (isEnglish ? 'Grouped by family' : '科ごとにまとめる') : (isEnglish ? 'Show individual species' : '個々の種を表示')}</button>
+            {expandedGroups.size > 0 && groupMode === 'auto' && <button type="button" className={controlClass} onClick={() => { hasUserInteractedRef.current = false; setExpandedGroups(new Set()); setSelectedNodeId(null); listButtonRef.current?.focus(); }}>{isEnglish ? 'Collapse groups' : '科をまとめ直す'}</button>}
+            <span>{collapsedGroups.length > 0 ? (isEnglish ? 'Select a group to expand. All species remain in the list.' : '科を選ぶと展開。全種は一覧で確認できます。') : (isEnglish ? 'All species displayed individually.' : '個々の種を表示中')}</span>
+          </div>}
+          {pinnedNodeCount > 0 && <div className="mt-2"><button type="button" className={controlClass} onClick={clearPinnedNodes}>{isEnglish ? 'Unpin all' : '全固定解除'}</button></div>}
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-300" data-network-counts>{statsChips.join(' · ')}</p>
+          <p className="mt-1 text-xs">{interactionHint}</p>
+          <div className="mt-2 flex justify-end"><button type="button" className={controlClass} onClick={() => setDesktopControlsOpen(false)}>{isEnglish ? 'Close settings' : '設定を閉じる'}</button></div>
         </div>}
       </div>
       <div className={`flex min-h-0 flex-1 ${isCompactPanel ? 'flex-col' : 'flex-row'}`}>
@@ -2394,7 +2444,17 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             graphData={graphData}
             nodeLabel="name"
             linkLabel={link => `${relationStyleLabel(link.relation)}${link.count > 1 ? ` (${link.count}${isEnglish ? ' relationships' : '関係'})` : ''}`}
-            onRenderFramePre={() => { labelBoxesRef.current = []; }}
+            onRenderFramePre={(_ctx, globalScale) => {
+              labelBoxesRef.current = [];
+              nodeBoxesRef.current = graphData.nodes
+                .filter(node => Number.isFinite(node.x) && Number.isFinite(node.y))
+                .map(node => {
+                  const current = node.type.includes('current');
+                  // 主役は外側の黒い輪まで含める
+                  const r = networkNodeRadius(node, photoSize) * (current ? 1.4 : 1) * globalScale;
+                  return { id: node.id, current, left: node.x * globalScale - r, right: node.x * globalScale + r, top: node.y * globalScale - r, bottom: node.y * globalScale + r };
+                });
+            }}
             nodeCanvasObject={nodeCanvasObject}
             nodePointerAreaPaint={nodePointerAreaPaint}
             onNodeHover={handleNodeHover}
@@ -2446,6 +2506,12 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             }}
           />
 
+          {/* 拡大・縮小・全体表示は地図アプリのように図の右上に小さく置く */}
+          <div className="absolute right-2 top-2 z-10 flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white/90 shadow-sm backdrop-blur dark:border-slate-600 dark:bg-slate-900/85">
+            <button type="button" className={zoomButtonClass} onClick={zoomIn} aria-label={isEnglish ? 'Zoom in' : '拡大'} title={isEnglish ? 'Zoom in' : '拡大'}>＋</button>
+            <button type="button" className={`${zoomButtonClass} border-t border-slate-200 dark:border-slate-600`} onClick={zoomOut} aria-label={isEnglish ? 'Zoom out' : '縮小'} title={isEnglish ? 'Zoom out' : '縮小'}>−</button>
+            <button type="button" className={`${zoomButtonClass} border-t border-slate-200 text-[11px] dark:border-slate-600`} onClick={resetView} aria-label={isEnglish ? 'Fit view' : '全体表示'} title={isEnglish ? 'Fit view' : '全体表示'}>{isEnglish ? 'Fit' : '全体'}</button>
+          </div>
           {relationFilter !== 'all' && relationshipGraphData.links.length === 0 && <p className="absolute inset-x-3 top-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900" role="status">{isEnglish ? 'No relationships match this filter.' : 'この条件に一致する関係はありません。'}</p>}
         </div>
         {showInspector && <aside
@@ -2460,7 +2526,6 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
           {nodeListOpen ? nodeListPanel : <div className="h-full min-h-0 p-4">{selectionPanelContent}</div>}
         </aside>}
       </div>
-      {!guideDismissed && <div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 px-3 py-1.5 text-xs text-slate-600 dark:border-slate-700 dark:text-slate-300"><span>{isEnglish ? 'Select a species for details and a larger photograph. Photo size can be changed independently of zoom.' : '種を選ぶと説明と大きな写真を表示。写真サイズは図のズームとは別に変えられます。'}</span><button type="button" className="p-1" aria-label={isEnglish ? 'Close guide' : 'ガイドを閉じる'} onClick={() => setGuideDismissed(true)}>✕</button></div>}
       {photoPreview && typeof document !== 'undefined' && createPortal(<ImageModal image={photoPreview} isOpen onClose={() => setPhotoPreview(null)} locale={isEnglish ? 'en' : 'ja'} />, document.body)}
     </div>
   );

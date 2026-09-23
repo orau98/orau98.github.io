@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fitNetworkBounds, groupNetwork, networkGroup, searchNetworkNodes, endpointId, NETWORK_PHOTO_SIZES, networkNodeRadius, coverNetworkImage, networkPreviewCandidates } from '../src/utils/networkView.js';
+import { fitNetworkBounds, groupNetwork, groupNodeRadius, networkGroup, searchNetworkNodes, endpointId, NETWORK_PHOTO_SIZES, networkNodeRadius, coverNetworkImage, networkPreviewCandidates } from '../src/utils/networkView.js';
 
 const plant = { id: 'plant:p', name: 'ハンノキ', type: 'plant-current', x: 0, y: 0 };
 const insect = (i, family = 'ヤガ科') => ({ id: `insect:${i}`, name: `昆虫${i}`, type: 'insect-host', x: Math.cos(i) * 160, y: Math.sin(i) * 160, raw: { classification: { familyJapanese: family, family: family === 'ヤガ科' ? 'Noctuidae' : 'Geometridae' } } });
@@ -168,3 +168,23 @@ for (const size of NETWORK_PHOTO_SIZES) {
     });
   }
 }
+
+test('family groups grow with their species count so larger families read as larger', () => {
+  assert.equal(groupNodeRadius(0), 20);
+  assert.ok(groupNodeRadius(3) < groupNodeRadius(8));
+  assert.ok(groupNodeRadius(8) < groupNodeRadius(60));
+  assert.ok(groupNodeRadius(1000) <= 34);
+  const view = groupNetwork(makeData());
+  const [large, small] = [...view.groups].sort((a, b) => b.members.length - a.members.length);
+  const node = (group) => view.nodes.find(item => item.id === group.id);
+  assert.ok(networkNodeRadius(node(large)) > networkNodeRadius(node(small)));
+});
+
+test('species linked directly to the page subject stand out over second-hop species', () => {
+  const photo = { ...insect(1), imgCandidates: ['/insect.320.webp'] };
+  assert.ok(networkNodeRadius({ ...photo, tier: 1 }) > networkNodeRadius({ ...photo, tier: 2 }));
+  assert.ok(networkNodeRadius({ ...insect(1), tier: 1 }) > networkNodeRadius({ ...insect(1), tier: 2 }));
+  const data = makeData();
+  data.nodes.forEach((item, index) => { if (index) item.tier = 2; });
+  assert.ok(groupNetwork(data).nodes.filter(item => item.type === 'group').every(item => item.tier === 2));
+});
