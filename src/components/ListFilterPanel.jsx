@@ -18,6 +18,10 @@ export default function ListFilterPanel({
   getClearFilterLabel,
   controlsClassName = '',
   resultsLabel = '',
+  // 見出し行の右端に並べる要素（sm以上: 表示切替・並び替え）。操作帯を1段にまとめて結果を上へ寄せる
+  headerEnd = null,
+  // 開閉パネル内、各種セレクトの上に置く要素（クイック絞り込みチップ）
+  beforeControls = null,
   children,
 }) {
   const panelIsOpen = hideHeader || isOpen;
@@ -81,13 +85,18 @@ export default function ListFilterPanel({
                 )}
               </div>
 
-              {resultsLabel && (
-                <div
-                  className="ml-auto text-right text-xs font-semibold text-slate-600 dark:text-slate-300"
-                  role="status"
-                  aria-live="polite"
-                >
-                  {resultsLabel}
+              {(resultsLabel || headerEnd) && (
+                <div className="ml-auto flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+                  {resultsLabel && (
+                    <div
+                      className="text-right text-xs font-semibold text-slate-600 dark:text-slate-300"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      {resultsLabel}
+                    </div>
+                  )}
+                  {headerEnd}
                 </div>
               )}
             </div>
@@ -137,6 +146,11 @@ export default function ListFilterPanel({
           panelIsOpen ? 'max-h-[36rem] overflow-visible opacity-100' : 'max-h-0 overflow-hidden opacity-0'
         }`}
       >
+        {beforeControls && (
+          <div className={hideHeader ? 'mb-3' : 'mt-3'}>
+            {beforeControls}
+          </div>
+        )}
         <fieldset disabled={!panelIsOpen} className={controlsClassName}>
           {children}
         </fieldset>

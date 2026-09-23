@@ -3,31 +3,11 @@ import ThemeToggle from "./ThemeToggle";
 import SearchInput from "./SearchInput";
 
 /**
- * 種数チップの行。モバイルでも横スクロールにせず折り返しで全チップを表示する
- * （横スクロールは操作しづらく、最後の「食草」種数が初期状態で隠れてしまうため）。
- * チップは短く数も少ないので、狭い画面では2〜3行に自然に折り返る。
- */
-const HeroStatChips = ({ heroStats }) => {
-  return (
-    <div className="flex max-w-full flex-wrap items-center gap-2 sm:max-w-5xl sm:gap-2.5">
-      {heroStats.map((item) => (
-        <div
-          key={item.label}
-          className="inline-flex rounded-full border border-white/30 bg-white/20 px-3 py-1 backdrop-blur-sm sm:px-3.5 sm:py-1.5"
-        >
-          <span className="whitespace-nowrap text-xs font-medium text-white/90 sm:text-sm">
-            {item.label} {item.value}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-/**
  * トップのヒーロー。大きな写真バナーは UI を妨げる装飾だったため廃止し、
  * 検索ファーストのコンパクトなヘッダーにした（ブランド名はグローバルヘッダーが担う）。
  * 高さは内容ベース（固定 min-height なし）。
+ * 分類ごとの種数チップは押せそうで押せず、スマホで結果を画面外へ押し出していたため廃止し、
+ * 件数は一覧の「昆虫グループ」ボタン（押すとそのまま絞り込める）に表示している。
  */
 const ExplorerHero = ({
   activeSearchTerm,
@@ -36,7 +16,6 @@ const ExplorerHero = ({
   handleGlobalSearch,
   handleSelectSuggestion,
   heroSearchInputRef,
-  heroStats,
   isEnglish,
   isStickyHeaderVisible,
   locale,
@@ -69,9 +48,6 @@ const ExplorerHero = ({
           <ThemeToggle theme={theme} setTheme={setTheme} locale={locale} variant="hero" />
         </div>
       )}
-
-      {/* 種数チップ（モバイル横スクロール＋スクロール可能の視覚ヒント） */}
-      <HeroStatChips heroStats={heroStats} />
 
       <div className="w-full max-w-2xl">
         <SearchInput

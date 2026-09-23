@@ -16,6 +16,7 @@ import {
   splitFilenameBase,
 } from "../utils/filename";
 import { hiraganaToKatakana, normalizeNFKC } from "../utils/text";
+import { getSearchMatchTier } from "../utils/searchRelevance";
 import usePlantImageFilenames from "../hooks/usePlantImageFilenames";
 import { getAssetBase, getAssetVersionQuery } from "../utils/assetPaths";
 import Pagination from "./Pagination";
@@ -34,7 +35,7 @@ import {
 import ImageWithFallback from "./ImageWithFallback";
 import NoPhotoPlaceholder, { CameraGlyph } from "./ui/NoPhotoPlaceholder";
 import SearchableSelect from "./SearchableSelect";
-import { ListDisplayControls, PresetFilterChips } from "./ListToolbar";
+import { ListDisplayControls, PerPageSelect, PresetFilterChips } from "./ListToolbar";
 import ManualAdSlot from "./ManualAdSlot";
 import { Card } from "./ui";
 import { buildMoreLabel } from "../utils/hostVisitStyle";
@@ -395,6 +396,8 @@ const HostPlantList = ({
       hostPlantsOnly: isEnglish ? 'Host plants' : '食草あり',
       presetLabel: isEnglish ? 'Quick filters:' : 'クイック絞り込み:',
       familyLabel: isEnglish ? 'Family:' : '科で絞り込み:',
+      allFamilies: isEnglish ? 'All' : 'すべて',
+      filtersButton: isEnglish ? 'Filters' : '絞り込み',
       view: isEnglish ? 'View' : '表示',
       cards: isEnglish ? 'Cards' : 'カード',
       compact: isEnglish ? 'Compact' : 'コンパクト',
@@ -402,6 +405,7 @@ const HostPlantList = ({
       autoPerPage: (value) => (isEnglish ? `Auto (${value})` : `自動 (${value})`),
       sort: isEnglish ? 'Sort' : '並び替え',
       sortImage: isEnglish ? 'Photos first' : '写真あり優先',
+      sortRelevance: isEnglish ? 'Best match' : '一致度順',
       sortName: isEnglish ? 'Name' : '名前順',
       sortFamily: isEnglish ? 'Family' : '科順',
       sortRelated: isEnglish ? 'Linked insects' : '関連昆虫数順',
@@ -749,6 +753,9 @@ const HostPlantList = ({
   // 実際の絞り込みに使う値（debouncedPlantSearch）から表示用の検索状態を導出し、
   // フィルタと検索チップ/空状態表示が常に一致するようにする（URL q との二系統ずれを解消）
   const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
+  // 既定の並び（写真あり優先）で検索中は、名前の一致度を最優先にする
+  const relevancePlantSearch = String(debouncedPlantSearch || "").trim();
+  const isRelevanceSort = sortMode === "image" && relevancePlantSearch.length > 0;
   // 戻る/進む(POP)による復元をユーザーの絞り込み操作と区別するために参照する
   const navigationType = useNavigationType();
   const searchQuery = useMemo(() => (debouncedPlantSearch || '').trim(), [debouncedPlantSearch]);
@@ -1175,12 +1182,34 @@ const HostPlantList = ({
       return Number.isFinite(statsCount) && statsCount >= 0 ? statsCount : insects.length;
     };
 
+    const matchTierCache = new Map();
+    const getMatchTier = (plantName) => {
+      if (matchTierCache.has(plantName)) return matchTierCache.get(plantName);
+      const detail = safePlantDetails[plantName] || {};
+      const aliasesRaw = detail.aliases || detail.aliasNames;
+      const aliases = Array.isArray(aliasesRaw)
+        ? aliasesRaw
+        : aliasesRaw instanceof Set
+          ? Array.from(aliasesRaw)
+          : [];
+      const tier = getSearchMatchTier({
+        names: [plantName, ...aliases],
+        scientificNames: [normalizeLatinBinomialPlain(detail.scientificName || "")],
+      }, relevancePlantSearch);
+      matchTierCache.set(plantName, tier);
+      return tier;
+    };
+
     const sorted = filtered.sort(([a], [b]) => {
       const aHasImage = plantImageMap.has(a);
       const bHasImage = plantImageMap.has(b);
 
       if (a === "不明") return 1;
       if (b === "不明") return -1;
+      if (isRelevanceSort) {
+        const tierDiff = getMatchTier(a) - getMatchTier(b);
+        if (tierDiff !== 0) return tierDiff;
+      }
       if (sortMode === "image") {
         if (aHasImage && !bHasImage) return -1;
         if (!aHasImage && bHasImage) return 1;
@@ -1215,6 +1244,8 @@ const HostPlantList = ({
     hostOnlyFilter,
     photoFilter,
     sortMode,
+    isRelevanceSort,
+    relevancePlantSearch,
     plantInsectStats,
     compareLocalizedValues,
     getFamilyDisplayValue,
@@ -1342,21 +1373,37 @@ const HostPlantList = ({
       { key: "flower", label: ui.flowerOnly, active: visitFilter === "flower", onClick: () => setPVisitFilter(visitFilter === "flower" ? "all" : "flower") },
       { key: "photo", label: ui.withPhoto, active: photoFilter === "has", onClick: () => setPPhotoFilter(photoFilter === "has" ? "all" : "has") },
     ];
-    const familyChips = topFamilies.map((fam) => ({
-      key: `fam-${fam}`,
-      label: fam,
-      active: familyFilter === fam,
-      onClick: () => setPFamilyFilter(familyFilter === fam ? '' : fam),
-    }));
+    const familyChips = topFamilies.length > 0
+      ? [
+          {
+            key: "fam-all",
+            label: ui.allFamilies,
+            active: !familyFilter,
+            onClick: () => setPFamilyFilter(""),
+          },
+          ...topFamilies.map((fam) => ({
+            key: `fam-${fam}`,
+            label: fam,
+            active: familyFilter === fam,
+            onClick: () => setPFamilyFilter(familyFilter === fam ? '' : fam),
+          })),
+        ]
+      : [];
     const sortOptions = [
-      { value: "image", label: ui.sortImage },
+      { value: "image", label: isRelevanceSort ? ui.sortRelevance : ui.sortImage },
       { value: "name", label: ui.sortName },
       { value: "family", label: ui.sortFamily },
       { value: "related", label: ui.sortRelated },
     ];
     const resultsLabel = ui.resultCount(filteredHostPlants?.length ?? 0);
-    const mobileControlsLabel = isEnglish ? "Controls" : "条件";
-    const activeControlsLabel = isEnglish ? "Active" : "条件あり";
+    const displayLabels = {
+      view: ui.view,
+      cards: ui.cards,
+      compact: ui.compact,
+      perPage: ui.perPage,
+      autoPerPage: ui.autoPerPage,
+      sort: ui.sort,
+    };
     const renderFullControls = ({ showResultsLabel = true, mobileInline = false } = {}) => {
       const idSuffix = mobileInline ? "-mobile" : "";
       const panelId = `${filtersPanelId}${idSuffix}`;
@@ -1380,8 +1427,22 @@ const HostPlantList = ({
           getClearFilterLabel={(type) =>
             isEnglish ? `Clear ${type} filter` : `${type}フィルターを解除`
           }
-          controlsClassName={`${mobileInline ? "mt-2" : "mt-4"} grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3`}
+          controlsClassName={`${mobileInline ? "mt-2" : "mt-4"} grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4`}
           resultsLabel={showResultsLabel ? resultsLabel : ""}
+          // sm以上は表示切替・並び替えを見出し行に並べ、操作帯を1段にまとめる
+          headerEnd={mobileInline ? null : (
+            <ListDisplayControls
+              variant="inline"
+              viewMode={viewMode}
+              onViewModeChange={setPViewMode}
+              sortMode={sortMode}
+              onSortModeChange={setPSortMode}
+              sortOptions={sortOptions}
+              labels={displayLabels}
+            />
+          )}
+          // クイック絞り込み（食草あり/訪花のみ/写真あり）は結果を押し下げないよう絞り込みの中へ
+          beforeControls={<PresetFilterChips label={ui.presetLabel} chips={presetChips} />}
         >
           <SearchableSelect
             id={orderId}
@@ -1422,40 +1483,39 @@ const HostPlantList = ({
             </div>
           </div>
         </div>
+        {!mobileInline && (
+          <PerPageSelect
+            block
+            value={requestedItemsPerPage || 'auto'}
+            autoItemsPerPage={itemsPerPage}
+            onChange={setPItemsPerPage}
+            labels={displayLabels}
+          />
+        )}
         </ListFilterPanel>
-        <ListDisplayControls
-          viewMode={viewMode}
-          onViewModeChange={setPViewMode}
-          sortMode={sortMode}
-          onSortModeChange={setPSortMode}
-          sortOptions={sortOptions}
-          itemsPerPageValue={requestedItemsPerPage || 'auto'}
-          autoItemsPerPage={itemsPerPage}
-          onItemsPerPageChange={setPItemsPerPage}
-          labels={{
-            view: ui.view,
-            cards: ui.cards,
-            compact: ui.compact,
-            perPage: ui.perPage,
-            autoPerPage: ui.autoPerPage,
-            sort: ui.sort,
-          }}
-        />
+        {mobileInline && (
+          <ListDisplayControls
+            viewMode={viewMode}
+            onViewModeChange={setPViewMode}
+            sortMode={sortMode}
+            onSortModeChange={setPSortMode}
+            sortOptions={sortOptions}
+            itemsPerPageValue={requestedItemsPerPage || 'auto'}
+            autoItemsPerPage={itemsPerPage}
+            onItemsPerPageChange={setPItemsPerPage}
+            labels={displayLabels}
+          />
+        )}
       </>
       );
     };
     return (
       <>
-        {/* 主要な科はドロワーを開かず1タップで絞れるよう常時表示（昆虫グループチップと同じ思想） */}
+        {/* 主要な科はドロワーを開かず1タップで絞れるよう常時表示（昆虫グループチップと同じ思想）。
+            スマホでは横スクロールの1行にして結果を押し下げない */}
         {familyChips.length > 0 && (
           <div className="mb-2 sm:mb-3">
-            <PresetFilterChips label={ui.familyLabel} chips={familyChips} />
-          </div>
-        )}
-        {/* クイック絞り込みも、初訪問者が絞り込みに気づけるよう「条件」ドロワーの外に常時表示 */}
-        {presetChips.length > 0 && (
-          <div className="mb-2 sm:mb-3">
-            <PresetFilterChips label={ui.presetLabel} chips={presetChips} />
+            <PresetFilterChips label={ui.familyLabel} chips={familyChips} scrollable locale={locale} />
           </div>
         )}
         <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
@@ -1464,18 +1524,21 @@ const HostPlantList = ({
               {resultsLabel}
             </span>
             <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300/70 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-600/70 dark:bg-slate-800 dark:text-slate-200">
-              {hasAnyCriteria && (
-                <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[11px] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
-                  {activeControlsLabel}
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              {ui.filtersButton}
+              {activeFilters.length > 0 && (
+                <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[11px] tabular-nums text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
+                  {activeFilters.length}
                 </span>
               )}
-              {mobileControlsLabel}
-              <svg className="h-3.5 w-3.5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-3.5 w-3.5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </span>
           </summary>
-          <div className="border-t border-slate-200/70 px-3 pb-3 pt-1 dark:border-slate-700/70">
+          <div className="border-t border-slate-200/70 px-3 pb-3 pt-3 dark:border-slate-700/70">
             {renderFullControls({ showResultsLabel: false, mobileInline: true })}
           </div>
         </details>
@@ -1505,8 +1568,9 @@ const HostPlantList = ({
         </div>
       )}
 
+      {/* 操作帯と結果の間は詰める（sm以上の下余白は結果側の上余白だけにする） */}
       {embedded && (
-        <div className="p-3 sm:p-6">
+        <div className="p-3 sm:p-6 sm:pb-0">
           {renderFilters()}
         </div>
       )}

@@ -131,11 +131,13 @@ export const createDataPartitionLoader = ({
   const ensurePlants = () => Promise.all(Object.keys(PLANT_FILES).map(ensurePlant));
   const retryFailures = (plan = null) => Promise.all([...errors.keys()]
     .filter((key) => !plan || errorLevels.get(key) !== 'full' ||
-      (plan.immediateDetailLevel === 'full' && plan.immediateCollectionKeys.includes(key)))
+      (plan.immediateDetailLevel === 'full' && plan.immediateCollectionKeys.includes(key)) ||
+      (plan.requiredFullCollectionKeys || []).includes(key))
     .map((key) => key in PLANT_FILES ? ensurePlant(key) :
       ensureCollection(key, errorLevels.get(key) || requestedLevels.get(key))));
   const ensurePlan = (plan) => Promise.all([
     plan.loadTypesImmediately ? ensureTypes(plan.immediateCollectionKeys, plan.immediateDetailLevel) : null,
+    plan.requiredFullCollectionKeys?.length ? ensureTypes(plan.requiredFullCollectionKeys, 'full') : null,
     plan.loadPlantsImmediately ? ensurePlants() : null,
   ]);
 

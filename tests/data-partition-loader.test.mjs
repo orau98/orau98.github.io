@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createDataPartitionLoader, isCompleteDatasetPayload } from '../src/services/dataPartitionLoader.js';
-import { planInitialDataLoad, isRouteDataReady } from '../src/utils/dataLitePlan.js';
+import { planInitialDataLoad, isRouteDataReady, getRouteDataError } from '../src/utils/dataLitePlan.js';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
 
 const dataset = () => ({
@@ -172,4 +172,42 @@ test('superseded requests cannot publish state or persist stale data', async () 
   await pending;
   assert.deepEqual(h.delivered, {});
   assert.equal(h.saved.length, 0);
+});
+
+test('home → quiz upgrades moths and butterflies to full data before the quiz is ready', async () => {
+  // 一覧(catalog)のままだとクイズの出題に必要な詳細食草記録が無く、開始ボタンが無反応になっていた
+  const h = harness();
+  await ensureRoute(h.loader, '/');
+  assert.equal(h.loader.getState().collectionLevels.moths, 'catalog');
+  assert.equal(isRouteDataReady(h.loader.getState(), '/quiz'), false);
+  await ensureRoute(h.loader, '/quiz');
+  assert.equal(isRouteDataReady(h.loader.getState(), '/quiz'), true);
+  assert.equal(h.loader.getState().collectionLevels.moths, 'full');
+  assert.equal(h.loader.getState().collectionLevels.butterflies, 'full');
+  assert.equal(h.delivered.moths[0]._detail, undefined);
+  assert.equal(h.requests.filter((file) => file === 'catalog/aphids.json').length, 1);
+});
+
+test('direct quiz visit fetches quiz collections only at full level', async () => {
+  const h = harness();
+  await ensureRoute(h.loader, '/en/quiz');
+  assert.equal(isRouteDataReady(h.loader.getState(), '/en/quiz'), true);
+  assert.ok(!h.requests.includes('catalog/moths.json'));
+  assert.ok(!h.requests.includes('catalog/butterflies.json'));
+  assert.ok(h.requests.includes('moths.json'));
+  assert.ok(h.requests.includes('butterflies.json'));
+  assert.equal(Object.keys(h.loader.getState().collectionLevels).length, 7);
+});
+
+test('a failed full quiz collection is reported for the quiz route and can be retried', async () => {
+  const h = harness();
+  h.failures.add('butterflies.json');
+  await ensureRoute(h.loader, '/quiz');
+  assert.equal(isRouteDataReady(h.loader.getState(), '/quiz'), false);
+  assert.ok(getRouteDataError(h.loader.getState(), '/quiz'), 'quiz must not wait silently forever');
+  assert.equal(getRouteDataError(h.loader.getState(), '/'), null, 'the list page does not need full data');
+  h.failures.clear();
+  await h.loader.retryFailures(planInitialDataLoad({ pathname: '/quiz' }));
+  assert.equal(isRouteDataReady(h.loader.getState(), '/quiz'), true);
+  assert.equal(getRouteDataError(h.loader.getState(), '/quiz'), null);
 });

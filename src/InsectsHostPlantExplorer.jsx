@@ -1102,39 +1102,6 @@ const InsectsHostPlantExplorer = memo(
       });
       return map;
     }, [moths, butterflies, beetles, longhornbeetles, barkbeetles, leafbeetles, aphids]);
-    const heroStats = useMemo(
-      () => [
-        {
-          label: isEnglish ? "Butterflies & moths" : "蝶・蛾",
-          value: countLabel(counts.moths + counts.butterflies),
-        },
-        {
-          label: isEnglish ? "Jewel beetles" : "タマムシ",
-          value: countLabel(counts.beetles),
-        },
-        {
-          label: isEnglish ? "Longhorn beetles" : "カミキリムシ",
-          value: countLabel(counts.longhornbeetles),
-        },
-        {
-          label: isEnglish ? "Bark beetles" : "キクイムシ",
-          value: countLabel(counts.barkbeetles),
-        },
-        {
-          label: isEnglish ? "Leaf beetles" : "ハムシ",
-          value: countLabel(counts.leafbeetles),
-        },
-        {
-          label: isEnglish ? "Aphids" : "アブラムシ",
-          value: countLabel(counts.aphids),
-        },
-        {
-          label: isEnglish ? "Host plants" : "食草",
-          value: countLabel(counts.hostPlants),
-        },
-      ],
-      [countLabel, counts, isEnglish],
-    );
     const featuredInsects = useMemo(
       () =>
         [
@@ -1931,7 +1898,6 @@ const InsectsHostPlantExplorer = memo(
             handleGlobalSearch={handleGlobalSearch}
             handleSelectSuggestion={handleSelectSuggestion}
             heroSearchInputRef={heroSearchInputRef}
-            heroStats={heroStats}
             isEnglish={isEnglish}
             isStickyHeaderVisible={isStickyHeaderVisible}
             locale={locale}

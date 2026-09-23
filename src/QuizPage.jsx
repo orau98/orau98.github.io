@@ -213,6 +213,9 @@ const labelsFor = (isEnglish) => ({
   notReady: isEnglish
     ? 'Quiz data is still loading. Please try again in a moment.'
     : 'クイズに使うデータを読み込み中です。少し待ってから始めてください。',
+  startFailed: isEnglish
+    ? 'Questions could not be prepared. Please reload the page and try again.'
+    : '問題を準備できませんでした。ページを再読み込みしてから、もう一度お試しください。',
   halfway: isEnglish ? 'Halfway. Keep the rhythm.' : '半分到達。いいテンポです。',
   finish: isEnglish ? 'Last question complete.' : '10問完了です。',
   keyboard: isEnglish ? 'Keys 1-4 answer, Enter advances.' : '1〜4で回答、Enterで次へ進めます。',
@@ -582,6 +585,8 @@ const QuizPage = ({
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [startStage, setStartStage] = useState('');
+  // 出題を作れなかった時に「押しても何も起きない」状態にせず理由を表示する
+  const [startFailed, setStartFailed] = useState(false);
   // null = セッション未生成、true/false = 直近セッションに優先問題が含まれたか
   const [priorityIncluded, setPriorityIncluded] = useState(null);
   const [reviewRevision, setReviewRevision] = useState(0);
@@ -706,6 +711,7 @@ const QuizPage = ({
     setAnswers([]);
     setSelectedOptionId('');
     setPriorityIncluded(null);
+    setStartFailed(false);
   }, [searchParams, setSearchParams]);
 
   const setQuizStyle = useCallback((nextStyle) => {
@@ -722,11 +728,13 @@ const QuizPage = ({
     setAnswers([]);
     setSelectedOptionId('');
     setPriorityIncluded(null);
+    setStartFailed(false);
   }, [searchParams, setSearchParams]);
 
   const startSession = useCallback(() => {
     if (!hasData || isStarting) return;
     setIsStarting(true);
+    setStartFailed(false);
     setQuestions([]);
     setCurrentIndex(0);
     setAnswers([]);
@@ -764,6 +772,7 @@ const QuizPage = ({
           prioritySubjectKeys,
         });
         setQuestions(nextQuestions);
+        setStartFailed(nextQuestions.length === 0);
         setPriorityIncluded(
           prioritySubjectKeys.length > 0
             ? nextQuestions.some((question) => question.isPriority)
@@ -772,6 +781,7 @@ const QuizPage = ({
       } catch (error) {
         console.error('Failed to prepare quiz session', error);
         setQuestions([]);
+        setStartFailed(true);
         setPriorityIncluded(null);
       } finally {
         setIsStarting(false);
@@ -963,6 +973,11 @@ const QuizPage = ({
           )}
           {!hasData && (
             <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{labels.notReady}</p>
+          )}
+          {startFailed && !isStarting && (
+            <p role="alert" className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-800 dark:border-rose-800/60 dark:bg-rose-950/40 dark:text-rose-200">
+              {labels.startFailed}
+            </p>
           )}
           <p className="mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">{labels.keyboard}</p>
         </div>

@@ -130,3 +130,14 @@ test('actual App: late fallback failures do not overwrite a successful user retr
   assert.ok(app.route('/moth/:mothSlug'));
   app.dispose();
 });
+
+test('actual App: home → quiz renders only after full moth and butterfly records arrive', async () => {
+  const app = await createAppHarness('/');
+  assert.equal(app.route('/').moths[0]._detail, false, 'the list starts from catalog data');
+  await app.navigate('/quiz');
+  const props = app.route('/quiz');
+  assert.ok(props, 'quiz route renders');
+  assert.equal(props.moths[0]._detail, undefined, 'quiz receives full moth records');
+  assert.equal(props.butterflies[0]._detail, undefined, 'quiz receives full butterfly records');
+  app.dispose();
+});

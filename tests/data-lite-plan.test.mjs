@@ -126,6 +126,7 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateCollectionKeys: [...INSECT_COLLECTION_KEYS],
     immediateDetailLevel: 'catalog',
     followUpFullKey: null,
+    requiredFullCollectionKeys: [],
   });
 
   assert.deepEqual(planInitialDataLoad({ pathname: '/plant' }), {
@@ -135,6 +136,7 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateCollectionKeys: [...INSECT_COLLECTION_KEYS],
     immediateDetailLevel: 'catalog',
     followUpFullKey: null,
+    requiredFullCollectionKeys: [],
   });
 
   assert.deepEqual(planInitialDataLoad({ pathname: '/moth/オオミズアオ/' }), {
@@ -144,6 +146,7 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateCollectionKeys: ['moths'],
     immediateDetailLevel: 'full',
     followUpFullKey: null,
+    requiredFullCollectionKeys: [],
   });
 
   const mismatch = planInitialDataLoad({
@@ -170,5 +173,19 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateCollectionKeys: [...INSECT_COLLECTION_KEYS],
     immediateDetailLevel: 'catalog',
     followUpFullKey: null,
+    requiredFullCollectionKeys: [],
   });
+});
+
+test('クイズは蛾・蝶の完全データを必須にし、catalogとの二重取得をしない', () => {
+  for (const pathname of ['/quiz', '/en/quiz', '/quiz/']) {
+    const plan = planInitialDataLoad({ pathname });
+    assert.deepEqual(plan.requiredFullCollectionKeys, ['moths', 'butterflies']);
+    assert.deepEqual(
+      plan.immediateCollectionKeys,
+      INSECT_COLLECTION_KEYS.filter((key) => key !== 'moths' && key !== 'butterflies'),
+    );
+    assert.equal(plan.immediateDetailLevel, 'catalog');
+    assert.equal(plan.loadPlantsImmediately, true);
+  }
 });

@@ -2,8 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+  QUIZ_COLLECTION_KEYS,
   getImmediateInsectCollectionKeys,
   getInsectDetailCollectionKey,
+  getRequiredFullCollectionKeys,
   shouldLoadInsectPartitionsImmediately,
   shouldLoadPlantPartitionsImmediately,
 } from '../src/utils/insectDataLoading.js';
@@ -47,4 +49,13 @@ test('昆虫パーティションの即時取得条件を一覧タブと検索�
     true,
   );
   assert.equal(shouldLoadInsectPartitionsImmediately('/moth/オオミズアオ/'), true);
+});
+
+test('クイズだけが蛾・蝶の完全データを必須にする', () => {
+  assert.deepEqual([...QUIZ_COLLECTION_KEYS], ['moths', 'butterflies']);
+  assert.deepEqual(getRequiredFullCollectionKeys('/quiz'), ['moths', 'butterflies']);
+  assert.deepEqual(getRequiredFullCollectionKeys('/en/quiz/'), ['moths', 'butterflies']);
+  for (const pathname of ['/', '/moth', '/plant', '/moth/オオミズアオ/', '/plant/キハダ/', '/quizzes']) {
+    assert.deepEqual(getRequiredFullCollectionKeys(pathname), []);
+  }
 });
