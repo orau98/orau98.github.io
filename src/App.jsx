@@ -17,6 +17,7 @@ import ManualAdSlot from './components/ManualAdSlot';
 import { loadDatasetFromCache, saveDatasetToCache } from './services/datasetCache';
 import { createDataPartitionLoader, isCompleteDatasetPayload } from './services/dataPartitionLoader';
 import { prefetchPlantProfile, setDataLiteVersionSuffix } from './services/dataLiteAssets';
+import { trackError } from './utils/analytics';
 import { decodeRouteParam } from './utils/urlEncoding';
 import {
   INDEX_FOLLOW_ROBOTS,
@@ -526,6 +527,10 @@ function App() {
   }, [location.pathname, plantDetails]);
 
   const visibleLoadError = loadError || getRouteDataError(partitionState, location.pathname);
+  // 「データの読み込みに失敗しました」を利用者に表示したら、件数をアクセス解析へ送る
+  useEffect(() => {
+    if (visibleLoadError) trackError({ kind: 'data_load', error: visibleLoadError, fatal: true });
+  }, [visibleLoadError]);
   const hasLoadedInsectPartitions = INSECT_COLLECTION_KEYS.every(
     (key) => Boolean(partitionState.collectionLevels[key]),
   );

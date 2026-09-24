@@ -41,36 +41,22 @@ jobs:
       - name: Validate source, lint and regression tests
         run: npm run check:source
 
-      - name: Sync runtime CSVs into public/
-        run: npm run sync:public-insects
+      # 写真の縮小版は元画像が変わらない限り前回の結果を使い回す（以前は毎回約7分かけて作り直していた）。
+      # .cache/resized は縮小版の保管場所、.cache/responsive-images.json は元画像の指紋。
+      # 元画像が同じ名前で差し替えられたときは指紋の食い違いで検出して作り直す。
+      - name: Restore responsive image cache
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: responsive-images-v1-${{ hashFiles('public/images/insects/**', 'public/images/plants/**', 'scripts/build-responsive-images.mjs', 'scripts/lib/imageAssetConstants.mjs') }}
+          restore-keys: |
+            responsive-images-v1-
 
-      - name: Refresh plant image filename index
-        run: node scripts/update_plant_image_filenames.mjs
-
-      - name: Refresh insect image indexes
-        run: npm run build:image-index
-
-      - name: Build responsive images
-        run: npm run build:images:responsive
-
-      - name: Build data-lite
-        run: npm run build:data-lite
-
-      - name: Generate meta pages
-        run: npm run generate-meta:all
-
-      - name: Build (vite only)
-        run: npm run build:app
-
-      - name: Generate sitemaps
-        run: npm run generate-sitemap
-
-      - name: Post-build cleanup and asset sync
-        run: node scripts/postbuild-cleanup.mjs
-
-      - name: Add .nojekyll
-        run: |
-          echo > dist/.nojekyll
+      # ビルド工程の定義は scripts/build-site.mjs の1か所だけ（ci.yml・手元の npm run build と共通）
+      - name: Build site
+        env:
+          RESPONSIVE_CACHE_DIR: .cache/resized
+        run: npm run build
 
       - name: Validate built artifact before upload
         run: npm run check:dist

@@ -28,7 +28,7 @@
 **原因**: 不正な植物名（例：「キョウチクトウ科が」「アブラナ科(オオアラセイトウ」）が無効なHTMLファイルを生成
 
 **解決策**:
-1. `isValidPlantName`関数の強化（正規表現の正はコード側: `scripts/generate-meta-pages.js`）
+1. `isValidPlantName`関数の強化（正規表現の正はコード側: `scripts/lib/dataLiteBuilders.mjs`。data-lite とメタページ生成が共用）
 2. 無効なファイルの削除
 3. メタページとサイトマップの再生成
 4. サイトの再デプロイ

@@ -11,3 +11,8 @@ export const SOURCE_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif'
 
 // レスポンシブ画像の生成幅（サイトの srcset と対応）
 export const RESIZED_WIDTHS = [320, 640, 1024];
+
+// 昆虫の縮小版は WebP だけを配信する（JPEG は WebP があれば postbuild-cleanup が
+// 削除するため、作っても捨てるだけだった）。SNS共有の既定画像だけは JPEG を残す
+// （og:image に WebP を表示しないSNSがあるため）。
+export const RETAINED_INSECT_JPEGS = ['Cucullia_argentea.1024.jpg'];

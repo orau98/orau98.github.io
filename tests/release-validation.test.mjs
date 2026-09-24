@@ -74,7 +74,7 @@ test('both release paths use the same mandatory source and artifact checks befor
     assert.ok(text.includes('run: npm run check:source'));
     assert.ok(text.includes('run: npm run check:dist'));
     if (workflow === 'deploy') {
-      assert.ok(text.indexOf('run: npm run check:source') < text.indexOf('run: npm run build:app'));
+      assert.ok(text.indexOf('run: npm run check:source') < text.indexOf('run: npm run build\n'));
       assert.ok(text.indexOf('run: npm run check:dist') < text.indexOf('uses: actions/upload-pages-artifact'));
       assert.match(text, /deploy:\s+needs: build/);
     }

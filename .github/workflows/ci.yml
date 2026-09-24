@@ -30,32 +30,10 @@ jobs:
       - name: Validate source, lint and regression tests
         run: npm run check:source
 
-      - name: Sync runtime CSVs into public/
-        run: npm run sync:public-insects
-
-      - name: Build lite datasets
-        run: npm run build:data-lite
-
-      - name: Refresh plant image filename index
-        run: npm run build:plant-image-index
-
-      - name: Build image index
-        run: npm run build:image-index
-
-      - name: Build responsive images
-        run: npm run build:images:responsive
-
-      - name: Generate meta pages
-        run: npm run generate-meta:all
-
-      - name: Build app
-        run: npm run build:app
-
-      - name: Generate sitemaps
-        run: npm run generate-sitemap
-
-      - name: Post-build cleanup
-        run: node scripts/postbuild-cleanup.mjs
+      # ビルド工程の定義は scripts/build-site.mjs の1か所だけ（deploy.yml・手元の npm run build と共通）。
+      # PRでは写真の縮小版づくりを省く（SKIP_RESPONSIVE_IMAGES）
+      - name: Build site
+        run: npm run build
 
       - name: Validate built artifact
         run: npm run check:dist

@@ -45,13 +45,15 @@ export function buildImageIndex(root = ROOT) {
   // 過去の正常時に生成されたリサイズ版も無い場合、索引に載せると
   // サイト側が存在しないURLへ404を繰り返す（カードが読み込み失敗表示になる）
   const hasResizedOutput = (base) => {
-    // サイトのカード/詳細はリサイズ版のjpgを最終フォールバックに使うため、
-    // 代表して .320.jpg の存在で表示可否を判定する
-    try {
-      return fs.statSync(path.join(RESIZED_INSECT_DIR, `${base}.320.jpg`)).isFile();
-    } catch {
-      return false;
-    }
+    // サイトのカード/詳細はリサイズ版（昆虫は WebP のみ生成）を使うため、
+    // 代表して .320.webp / .320.jpg の存在で表示可否を判定する
+    return ['webp', 'jpg'].some((ext) => {
+      try {
+        return fs.statSync(path.join(RESIZED_INSECT_DIR, `${base}.320.${ext}`)).isFile();
+      } catch {
+        return false;
+      }
+    });
   };
   const files = fs.readdirSync(INSECT_DIR);
   const candidatesByBase = new Map();

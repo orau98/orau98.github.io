@@ -1,6 +1,7 @@
 import logger from './utils/logger';
 import { isStaticDocumentPath } from './utils/staticDocumentPaths';
 import { recoverFromChunkLoadError } from './utils/chunkRecovery';
+import { trackError } from './utils/analytics';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
@@ -12,6 +13,7 @@ import './index.css';
 // recover immediately instead of showing retries that reuse the stale URL.
 if (typeof window !== 'undefined') {
   window.addEventListener('vite:preloadError', (event) => {
+    trackError({ kind: 'chunk_load', error: event?.payload, message: event?.payload?.message });
     recoverFromChunkLoadError({ event });
   });
 }
@@ -138,6 +140,11 @@ window.addEventListener('error', (event) => {
     return false;
   }
 
+  // 拡張機能以外のエラーは件数をアクセス解析へ送る（利用者の画面で起きた不具合に気づくため）
+  if (!isExtension) {
+    trackError({ kind: 'js_error', error: event.error, message: errorMessage || event.message });
+  }
+
   // Minimal inline reporter in debug mode to avoid white screen without clues
   try {
     if (typeof window !== 'undefined' && window.DEBUG_LOGS) {
@@ -171,6 +178,10 @@ window.addEventListener('unhandledrejection', (event) => {
     logger.debug('Suppressed extension promise rejection (harmless):', reasonMessage);
     event.preventDefault();
     return false;
+  }
+
+  if (!isExtension) {
+    trackError({ kind: 'unhandled_rejection', error: event.reason, message: reasonMessage });
   }
 
   // Minimal inline reporter in debug mode for async errors

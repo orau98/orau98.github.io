@@ -884,7 +884,10 @@ test('the production profile is byte-idempotent and a same-count substituted led
 test('local builds and GitHub Pages fail closed when the wild-plant audit drifts', () => {
   const pkg = JSON.parse(fs.readFileSync(PACKAGE_PATH, 'utf8'));
   const deployWorkflow = fs.readFileSync(DEPLOY_PATH, 'utf8');
-  assert.match(pkg.scripts.prebuild, /npm run check:wildplants-audit/u);
+  // ビルド手順は scripts/build-site.mjs に一本化されている（手元の npm run build も本番公開も同じ）
+  const buildSite = fs.readFileSync(new URL('../scripts/build-site.mjs', import.meta.url), 'utf8');
+  assert.equal(pkg.scripts.build, 'node scripts/build-site.mjs');
+  assert.match(buildSite, /script: 'build:data-lite'/u);
   assert.match(pkg.scripts['build:data-lite'], /npm run check:wildplants-audit/u);
-  assert.match(deployWorkflow, /run: npm run build:data-lite/u);
+  assert.match(deployWorkflow, /run: npm run build\n/u);
 });
