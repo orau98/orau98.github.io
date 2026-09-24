@@ -527,9 +527,15 @@ function App() {
   }, [location.pathname, plantDetails]);
 
   const visibleLoadError = loadError || getRouteDataError(partitionState, location.pathname);
-  // 「データの読み込みに失敗しました」を利用者に表示したら、件数をアクセス解析へ送る
+  // 「データの読み込みに失敗しました」が表示され続けたら、件数をアクセス解析へ送る。
+  // 分割ファイルの失敗は一括ファイルへの切り替えで数秒以内に復旧することがあるため、
+  // 4秒たっても消えないものだけを数える（復旧した一時的な失敗は数えない）
   useEffect(() => {
-    if (visibleLoadError) trackError({ kind: 'data_load', error: visibleLoadError, fatal: true });
+    if (!visibleLoadError || typeof window === 'undefined') return undefined;
+    const timerId = window.setTimeout(() => {
+      trackError({ kind: 'data_load', error: visibleLoadError, fatal: true });
+    }, 4000);
+    return () => window.clearTimeout(timerId);
   }, [visibleLoadError]);
   const hasLoadedInsectPartitions = INSECT_COLLECTION_KEYS.every(
     (key) => Boolean(partitionState.collectionLevels[key]),
