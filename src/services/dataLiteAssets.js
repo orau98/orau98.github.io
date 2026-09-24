@@ -8,9 +8,14 @@ import { getPlantProfileBucketFile } from '../utils/speciesRecordKey';
  */
 let versionSuffix = '';
 const cache = new Map();
+// 読み終えたプロフィールのバケット（番号 → { 植物名: 本文 }）。描画時に同期で引けるようにする
+const resolvedProfileBuckets = new Map();
 
 export const setDataLiteVersionSuffix = (suffix = '') => {
-  if (suffix !== versionSuffix) cache.clear();
+  if (suffix !== versionSuffix) {
+    cache.clear();
+    resolvedProfileBuckets.clear();
+  }
   versionSuffix = suffix || '';
 };
 
@@ -40,6 +45,22 @@ export const loadPlantProfile = async (plantName, profileRef) => {
   const bucketNumber = Number(profileRef);
   if (!plantName || !Number.isInteger(bucketNumber) || bucketNumber < 1) return null;
   const bucket = await fetchDataLiteJson(getPlantProfileBucketFile(bucketNumber - 1));
+  if (bucket && typeof bucket === 'object') resolvedProfileBuckets.set(bucketNumber, bucket);
   const profile = bucket?.[plantName];
   return profile && typeof profile === 'object' ? profile : null;
+};
+
+/** 既に読み終えていれば同期で本文を返す（未取得なら undefined）。初回描画から解説を出して表示のずれを防ぐ */
+export const getCachedPlantProfile = (plantName, profileRef) => {
+  if (profileRef && typeof profileRef === 'object') return profileRef;
+  const bucket = resolvedProfileBuckets.get(Number(profileRef));
+  if (!bucket) return undefined;
+  const profile = bucket[plantName];
+  return profile && typeof profile === 'object' ? profile : null;
+};
+
+/** 植物ページを開いたら、ページの描画を待たずに解説本文の取得を始める */
+export const prefetchPlantProfile = (plantName, profileRef) => {
+  if (!plantName || !profileRef || typeof profileRef === 'object') return;
+  loadPlantProfile(plantName, profileRef).catch(() => {});
 };

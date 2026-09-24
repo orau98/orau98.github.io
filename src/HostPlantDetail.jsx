@@ -46,7 +46,7 @@ import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
 import { buildSourceLabel, normalizePlantProfileText } from './utils/plantProfileText';
-import { loadPlantProfile } from './services/dataLiteAssets';
+import { getCachedPlantProfile, loadPlantProfile } from './services/dataLiteAssets';
 import SourceCitation from './components/ui/SourceCitation';
 import InfoPopover from './components/InfoPopover';
 import {
@@ -692,7 +692,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   }, [profileRequestKey]);
   const plantProfile = profileRef && typeof profileRef === 'object'
     ? profileRef
-    : (loadedProfile.key === profileRequestKey && profileRequestKey ? loadedProfile.profile : null);
+    : (loadedProfile.key === profileRequestKey && profileRequestKey
+      ? loadedProfile.profile
+      : (profileRequestKey ? getCachedPlantProfile(profileOwnerName, profileRef) || null : null));
   const plantProfileFacts = useMemo(() => {
     if (!plantProfile) return [];
     const labels = isEnglish

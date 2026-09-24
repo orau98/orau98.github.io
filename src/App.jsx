@@ -16,7 +16,8 @@ import NotFoundPage from './components/NotFoundPage';
 import ManualAdSlot from './components/ManualAdSlot';
 import { loadDatasetFromCache, saveDatasetToCache } from './services/datasetCache';
 import { createDataPartitionLoader, isCompleteDatasetPayload } from './services/dataPartitionLoader';
-import { setDataLiteVersionSuffix } from './services/dataLiteAssets';
+import { prefetchPlantProfile, setDataLiteVersionSuffix } from './services/dataLiteAssets';
+import { decodeRouteParam } from './utils/urlEncoding';
 import {
   INDEX_FOLLOW_ROBOTS,
   NOINDEX_FOLLOW_ROBOTS,
@@ -508,6 +509,21 @@ function App() {
     });
     return () => { cancelled = true; };
   }, [location.pathname, location.search, loaderGeneration, routeDataReady]);
+
+  // 植物ページ: 画面用の植物データが届いたら、全データを待たずに解説本文の取得を始める
+  // （ページを描く時点で揃っていれば、解説が後から差し込まれて表示がずれない）
+  useEffect(() => {
+    const match = matchPath({ path: '/plant/:plantName', end: false }, location.pathname) ||
+      matchPath({ path: '/en/plant/:plantName', end: false }, location.pathname);
+    if (!match?.params?.plantName) return;
+    let name = '';
+    try {
+      name = decodeRouteParam(match.params.plantName).trim();
+    } catch {
+      return;
+    }
+    prefetchPlantProfile(name, plantDetails?.[name]?.profile);
+  }, [location.pathname, plantDetails]);
 
   const visibleLoadError = loadError || getRouteDataError(partitionState, location.pathname);
   const hasLoadedInsectPartitions = INSECT_COLLECTION_KEYS.every(

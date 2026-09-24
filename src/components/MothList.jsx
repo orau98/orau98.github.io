@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef, useCallback, useId } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback, useId, useDeferredValue } from 'react';
 import { trackSearchNoResults } from '../utils/analytics';
 import { useNavigationType } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
@@ -29,7 +29,15 @@ import { isEnglishLocale, localizePath } from '../utils/locale';
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
 const PER_PAGE_OPTIONS = [20, 50, 100];
 
-const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", plantDetails = {}, locale = 'ja', preview = null }) => {
+const EMPTY_INSECT_LIST = [];
+
+const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", plantDetails = {}, locale = 'ja', preview = null }) => {
+  // 先読み（トップの最初の48件）があるときは、最初の描画を空の一覧で行って先読みのカードを先に出し、
+  // 約1万種の絞り込み・並べ替え（スマホでは数秒かかる）はその後の描画に回す
+  const moths = useDeferredValue(
+    mothsProp,
+    Array.isArray(preview?.records) && !isEnglishLocale(locale) ? EMPTY_INSECT_LIST : mothsProp,
+  );
   const isEnglish = isEnglishLocale(locale);
   const ui = useMemo(
     () => ({
