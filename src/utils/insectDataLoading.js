@@ -5,6 +5,8 @@ import {
   isExplorerRoutePath,
 } from './siteTaxonomy.js';
 import { isEnglishLocale, getLocaleFromPath, stripLocalePrefix } from './locale.js';
+import { decodeRouteParam } from './urlEncoding.js';
+import { normalizeRecordKey } from './speciesRecordKey.js';
 
 const INSECT_DATA_IMMEDIATE_QUERY_PARAMS = Object.freeze([
   'q',
@@ -36,6 +38,24 @@ export const getInsectDetailCollectionKey = (pathname = '/') => {
     INSECT_SECTION_CONFIGS.find((section) => section.routeSegment === segment)
       ?.collectionKey || null
   );
+};
+
+/**
+ * 昆虫の詳細ページで「どの種か」を表すキー（URLの種名またはID）。
+ * 1種ずつのデータ（species/<分類>/<バケット>.json）を引くのに使う。
+ */
+export const getInsectDetailRecordRequest = (pathname = '/') => {
+  const collectionKey = getInsectDetailCollectionKey(pathname);
+  if (!collectionKey) return null;
+  const segments = normalizePathname(pathname).split('/').filter(Boolean);
+  if (segments.length !== 2) return null;
+  let routeKey = '';
+  try {
+    routeKey = normalizeRecordKey(decodeRouteParam(segments[1]));
+  } catch {
+    routeKey = '';
+  }
+  return routeKey ? { collectionKey, routeKey } : null;
 };
 
 // クイズの出題（utils/quiz.js の buildQuizQuestions）は蛾・蝶の詳細な食草記録
@@ -86,4 +106,19 @@ export const shouldLoadInsectPartitionsImmediately = (
   if (!isExplorerRoutePath(pathname)) return true;
   if (hasImmediateInsectDataParams(params)) return true;
   return getExplorerInitialTabForPath(pathname) === 'insects';
+};
+
+/**
+ * トップ（日本語・昆虫タブ・検索や絞り込みなし）かどうか。
+ * このときだけ、全分類のデータを待たずに先読みの最初の48件（catalog/home-preview.json）を先に表示する。
+ */
+export const isHomePreviewRoute = (pathname = '/', params = new URLSearchParams()) => {
+  const search = params instanceof URLSearchParams
+    ? params
+    : new URLSearchParams(String(params || '').replace(/^\?/, ''));
+  if (isEnglishLocale(getLocaleFromPath(pathname))) return false;
+  if (normalizePathname(pathname) !== '/') return false;
+  if (search.get('tab') === 'plants') return false;
+  return !hasImmediateInsectDataParams(search) &&
+    !['iphoto', 'igroup', 'isort', 'iview', 'iper', 'iseason'].some((name) => search.has(name));
 };

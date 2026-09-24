@@ -2,6 +2,7 @@ import { buildFlowerVisitMap } from './flowerVisitPlants.js';
 import {
   getImmediateInsectCollectionKeys,
   getInsectDetailCollectionKey,
+  getInsectDetailRecordRequest,
   getRequiredFullCollectionKeys,
   shouldLoadInsectPartitionsImmediately,
   shouldLoadPlantPartitionsImmediately,
@@ -172,17 +173,29 @@ export const planInitialDataLoad = ({
         ? detailCollectionKey
         : null,
     requiredFullCollectionKeys,
+    // 詳細ページはまず該当種1件だけを読む（分類まるごとの完全データは読まない）
+    detailRecord: getInsectDetailRecordRequest(pathname),
   };
 };
+
+export const getDetailRecordStateKey = ({ collectionKey, routeKey } = {}) =>
+  `${collectionKey}:${routeKey}`;
 
 // Readiness describes the route's requirements, never the number of nonempty arrays.
 // An empty, successfully fetched partition is ready; one fetched classification is not seven.
 export const isRouteDataReady = (state, pathname = '/', search = '') => {
   const plan = planInitialDataLoad({ pathname, search });
   const levels = state?.collectionLevels || {};
+  const detail = plan.detailRecord;
+  // 該当種の完全な1件が届いていれば、その分類の完全データ（full）を待たない
+  const detailReady = !detail || levels[detail.collectionKey] === 'full' ||
+    state?.detailRecords?.[getDetailRecordStateKey(detail)] === true;
   return (!plan.loadPlantsImmediately || state?.plantsReady === true) &&
     (!plan.loadTypesImmediately || plan.immediateCollectionKeys.every((key) =>
-      levels[key] === 'full' || (plan.immediateDetailLevel === 'catalog' && levels[key] === 'catalog'))) &&
+      levels[key] === 'full' ||
+      (detail && key === detail.collectionKey && plan.immediateDetailLevel === 'full' && detailReady) ||
+      (plan.immediateDetailLevel === 'catalog' && levels[key] === 'catalog'))) &&
+    detailReady &&
     plan.requiredFullCollectionKeys.every((key) => levels[key] === 'full');
 };
 

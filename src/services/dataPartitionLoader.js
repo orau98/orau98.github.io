@@ -1,9 +1,15 @@
 import { INSECT_COLLECTION_KEYS } from '../utils/siteTaxonomy.js';
-import { getCollectionPartitionFile, normalizeDatasetPayload } from '../utils/dataLitePlan.js';
+import {
+  getCollectionPartitionFile,
+  getDetailRecordStateKey,
+  normalizeDatasetPayload,
+} from '../utils/dataLitePlan.js';
+import { getSpeciesBucketFile } from '../utils/speciesRecordKey.js';
 
+// plantDetails は画面用の軽量版（プロフィール本文は plant-profiles/ に分離）
 const PLANT_FILES = {
   hostPlants: 'hostplants.json',
-  plantDetails: 'plant-details.json',
+  plantDetails: 'plant-details-lite.json',
   flowerVisitPlants: 'flower-visit-plants.json',
 };
 const isMap = (value) => Boolean(value && typeof value === 'object' && !Array.isArray(value));
@@ -27,6 +33,7 @@ export const createDataPartitionLoader = ({
   isActive = () => true,
   initialPayload = null,
   summaryCounts = null,
+  speciesBuckets = null,
 }) => {
   const levels = new Map();
   const collections = {};
@@ -35,6 +42,9 @@ export const createDataPartitionLoader = ({
   const errors = new Map();
   const errorLevels = new Map();
   const requestedLevels = new Map();
+  // 詳細ページ用に先に届いた完全な1件（分類ごと id → レコード）と、その到着状況
+  const detailRecordsById = new Map();
+  const detailRecords = new Map();
   let revision = 0;
   let savedRevision = -1;
 
@@ -43,6 +53,7 @@ export const createDataPartitionLoader = ({
     plantsReady: Object.keys(PLANT_FILES).every((key) => key in plants),
     errors: Object.fromEntries(errors),
     errorLevels: Object.fromEntries(errorLevels),
+    detailRecords: Object.fromEntries(detailRecords),
   });
   const emit = () => {
     if (!isActive()) return;
@@ -78,14 +89,14 @@ export const createDataPartitionLoader = ({
         if (!Array.isArray(records) || (detailLevel === 'full' && records.some((row) => row?._detail === false))) {
           throw new Error(`Invalid collection: ${file}`);
         }
-        collections[key] = records;
+        collections[key] = detailLevel === 'catalog' ? mergeDetailRecords(key, records) : records;
         levels.set(key, detailLevel);
         if (detailLevel === 'full' || errorLevels.get(key) !== 'full') {
           errors.delete(key);
           errorLevels.delete(key);
         }
         revision += 1;
-        onCollection(key, records);
+        onCollection(key, collections[key]);
       } catch (error) {
         if (isActive()) {
           errors.set(key, error);
@@ -98,6 +109,68 @@ export const createDataPartitionLoader = ({
     });
     pending.set(key, { promise: task, level: detailLevel });
     emit();
+    return task;
+  };
+
+  // 一覧用の軽量データ（catalog）に、先に読んだ完全な1件を差し戻す
+  // （後から届いたcatalogで詳細表示中の種が軽量版に戻らないように）
+  function mergeDetailRecords(key, records) {
+    const byId = detailRecordsById.get(key);
+    if (!byId || byId.size === 0) return records;
+    return records.map((row) => (row?.id && byId.has(row.id) ? byId.get(row.id) : row));
+  }
+
+  const ensureDetailRecord = async ({ collectionKey, routeKey } = {}) => {
+    if (!INSECT_COLLECTION_KEYS.includes(collectionKey) || !routeKey || !isActive()) return;
+    const stateKey = getDetailRecordStateKey({ collectionKey, routeKey });
+    if (levels.get(collectionKey) === 'full' || detailRecords.get(stateKey) === true) return;
+    const bucketCount = Number(speciesBuckets?.[collectionKey]) || 0;
+    // 1件用のファイルが無い（旧データ・同名で曖昧・読み込み失敗）ときは従来どおり分類の完全データ
+    const fallbackToFull = () => ensureCollection(collectionKey, 'full');
+    if (!bucketCount || detailRecords.get(stateKey) === false) return fallbackToFull();
+    const pendingKey = `detail:${stateKey}`;
+    if (pending.has(pendingKey)) return pending.get(pendingKey).promise;
+    const task = Promise.resolve().then(async () => {
+      let record = null;
+      try {
+        const bucket = await readJson(getSpeciesBucketFile(collectionKey, routeKey, bucketCount));
+        if (!isActive()) return;
+        const id = bucket?.keys?.[routeKey];
+        const candidate = id ? bucket?.records?.[id] : null;
+        if (candidate && candidate.id === id && candidate._detail !== false) record = candidate;
+      } catch {
+        record = null;
+      } finally {
+        pending.delete(pendingKey);
+      }
+      if (!isActive()) return;
+      if (!record) {
+        detailRecords.set(stateKey, false);
+        await fallbackToFull();
+        return;
+      }
+      if (levels.get(collectionKey) === 'full') {
+        emit();
+        return;
+      }
+      if (!detailRecordsById.has(collectionKey)) detailRecordsById.set(collectionKey, new Map());
+      detailRecordsById.get(collectionKey).set(record.id, record);
+      detailRecords.set(stateKey, true);
+      if (collections[collectionKey]) {
+        const current = collections[collectionKey];
+        const merged = mergeDetailRecords(collectionKey, current);
+        collections[collectionKey] = merged.some((row) => row?.id === record.id)
+          ? merged
+          : [...merged, record];
+        revision += 1;
+        onCollection(collectionKey, collections[collectionKey]);
+      } else {
+        // 分類のデータがまだ無い間は、その1件だけを画面へ渡す（collections には入れない）
+        onCollection(collectionKey, [record]);
+      }
+      emit();
+    });
+    pending.set(pendingKey, { promise: task });
     return task;
   };
 
@@ -135,11 +208,21 @@ export const createDataPartitionLoader = ({
       (plan.requiredFullCollectionKeys || []).includes(key))
     .map((key) => key in PLANT_FILES ? ensurePlant(key) :
       ensureCollection(key, errorLevels.get(key) || requestedLevels.get(key))));
-  const ensurePlan = (plan) => Promise.all([
-    plan.loadTypesImmediately ? ensureTypes(plan.immediateCollectionKeys, plan.immediateDetailLevel) : null,
-    plan.requiredFullCollectionKeys?.length ? ensureTypes(plan.requiredFullCollectionKeys, 'full') : null,
-    plan.loadPlantsImmediately ? ensurePlants() : null,
-  ]);
+  const ensurePlan = (plan) => {
+    const detail = plan.detailRecord;
+    const useDetailRecord = Boolean(detail && plan.loadTypesImmediately);
+    // 詳細の分類は、完全データ(full)の代わりに該当種の1件だけを読む
+    const immediateKeys = useDetailRecord && plan.immediateDetailLevel === 'full'
+      ? plan.immediateCollectionKeys.filter((key) => key !== detail.collectionKey)
+      : plan.immediateCollectionKeys;
+    return Promise.all([
+      plan.loadTypesImmediately && immediateKeys.length
+        ? ensureTypes(immediateKeys, plan.immediateDetailLevel) : null,
+      useDetailRecord ? ensureDetailRecord(detail) : null,
+      plan.requiredFullCollectionKeys?.length ? ensureTypes(plan.requiredFullCollectionKeys, 'full') : null,
+      plan.loadPlantsImmediately ? ensurePlants() : null,
+    ]);
+  };
 
   if (isCompleteDatasetPayload(initialPayload)) {
     const normalized = normalizeDatasetPayload(initialPayload);
@@ -157,5 +240,5 @@ export const createDataPartitionLoader = ({
     onPlants({ ...plants });
   }
   emit();
-  return { ensureTypes, ensurePlants, ensurePlan, retryFailures, getState };
+  return { ensureTypes, ensurePlants, ensurePlan, ensureDetailRecord, retryFailures, getState };
 };

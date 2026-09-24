@@ -1,5 +1,6 @@
 // Preload and cache image filename indexes shared across components
 import fetchWithRetryBase from '../utils/fetchWithRetry';
+import { SUPPLEMENTAL_INSECT_IMAGE_EXTS } from '../utils/insectImageMappings';
 
 // 索引取得は「HTTPエラーも例外」「過負荷時は最低3秒待つ」契約で共有utilを使う
 const fetchWithRetry = (url, opts = {}, retries = 2, delay = 250) =>
@@ -75,45 +76,7 @@ let _insectImageNames = null; // set of bases for insects
 let _insectExtMap = null; // map base -> extension (e.g., .jpg)
 let _insectLoading = null;
 
-const SUPPLEMENTAL_INSECT_IMAGE_EXTS = {
-  Acronicta_alni: '.jpg',
-  Acropteris_iphiata: '.jpg',
-  Actebia_praecurrens: '.jpg',
-  Actias_aliena: '.jpg',
-  Albocosta_triangularis: '.jpg',
-  Ambulyx_ochracea: '.jpg',
-  Aromia_bungii: '.jpg',
-  Bhadorcosma_lonicerae: '.jpg',
-  Botyodes_principalis: '.jpg',
-  Cnephasia_stephensiana: '.jpg',
-  Cyrtoclytus_caproides: '.jpg',
-  Enarmonia_flammeata: '.jpg',
-  Epiblema_strenuana: '.jpg',
-  Epodonta_lineata: '.jpg',
-  Eugnathia_pulcherrima: '.jpg',
-  Eugoa_grisea: '.jpg',
-  Euplexia_angusta: '.jpg',
-  Gesonia_fallax: '.jpg',
-  Hedya_inouei: '.jpg',
-  Hypostrotia_cinerea: '.jpg',
-  Lamprodila_vivata: '.jpg',
-  Lethe_diana: '.jpg',
-  Lithophane_plumbeolimbata: '.jpg',
-  Lomaspilis_marginata: '.jpg',
-  Menophra_senilis: '.jpg',
-  Mythimna_flavostigma: '.jpg',
-  Neoanathamna_nipponica: '.jpg',
-  Pandemis_monticolana: '.jpg',
-  Polygonia_c: '.jpg',
-  Psacothea_hilaris: '.jpg',
-  Pygopteryx_suava: '.jpg',
-  Rusicada_leucolopha: '.jpg',
-  Xerodes_rufescentarius: '.jpg',
-  Xestia_fuscostigma: '.jpg',
-  Xestia_semiherbida: '.jpg',
-  Zizeeria_maha: '.jpg',
-};
-
+// 索引に未収録の画像（SUPPLEMENTAL_INSECT_IMAGE_EXTS）はビルド時の並び計算とも共有する
 const mergeSupplementalInsectImages = (namesSet, extsMap) => {
   Object.entries(SUPPLEMENTAL_INSECT_IMAGE_EXTS).forEach(([name, ext]) => {
     namesSet.add(name);

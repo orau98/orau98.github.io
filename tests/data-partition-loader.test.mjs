@@ -13,7 +13,7 @@ const dataset = () => ({
 const harness = (overrides = {}) => {
   const data = dataset();
   const files = new Map([
-    ['hostplants.json', data.hostPlants], ['plant-details.json', data.plantDetails],
+    ['hostplants.json', data.hostPlants], ['plant-details-lite.json', data.plantDetails],
     ['flower-visit-plants.json', data.flowerVisitPlants],
     ...INSECT_COLLECTION_KEYS.flatMap((key) => [
       [`${key}.json`, data[key]], [`catalog/${key}.json`, data[key].map((row) => ({ ...row, _detail: false }))],
@@ -75,11 +75,11 @@ test('a failed plant request is retried; successful companion partitions are ret
   assert.equal(h.loader.getState().plantsReady, true);
   assert.deepEqual(h.loader.getState().errors, {});
   assert.equal(h.requests.filter((file) => file === 'hostplants.json').length, 2);
-  assert.equal(h.requests.filter((file) => file === 'plant-details.json').length, 1);
+  assert.equal(h.requests.filter((file) => file === 'plant-details-lite.json').length, 1);
 });
 
 test('malformed or missing flower/profile JSON is not treated as an empty successful response', async () => {
-  for (const [file, key] of [['plant-details.json', 'plantDetails'], ['flower-visit-plants.json', 'flowerVisitPlants']]) {
+  for (const [file, key] of [['plant-details-lite.json', 'plantDetails'], ['flower-visit-plants.json', 'flowerVisitPlants']]) {
     const h = harness();
     h.files.set(file, null);
     await h.loader.ensurePlants();
@@ -210,4 +210,78 @@ test('a failed full quiz collection is reported for the quiz route and can be re
   await h.loader.retryFailures(planInitialDataLoad({ pathname: '/quiz' }));
   assert.equal(isRouteDataReady(h.loader.getState(), '/quiz'), true);
   assert.equal(getRouteDataError(h.loader.getState(), '/quiz'), null);
+});
+
+// ---- 詳細ページ: 該当種1件だけを読む ----
+import { getSpeciesBucketFile, hashRecordKey, chooseBucketCount } from '../src/utils/speciesRecordKey.js';
+
+const speciesHarness = ({ bucketPayload } = {}) => {
+  const h = harness({ speciesBuckets: Object.fromEntries(INSECT_COLLECTION_KEYS.map((key) => [key, 4])) });
+  const fullRecord = { id: 'moths', name: 'moths', hostPlantsDetailed: [{ name: 'テスト植物' }], _detail: true };
+  const file = getSpeciesBucketFile('moths', 'moths', 4);
+  h.files.set(file, bucketPayload === undefined
+    ? { keys: { moths: 'moths' }, records: { moths: fullRecord } }
+    : bucketPayload);
+  return { ...h, fullRecord, file };
+};
+
+test('detail route reads one species bucket instead of the full classification', async () => {
+  const h = speciesHarness();
+  await ensureRoute(h.loader, '/moth/moths/');
+  assert.ok(h.requests.includes(h.file));
+  assert.equal(h.requests.includes('moths.json'), false, 'the full moth file must not be fetched');
+  assert.equal(isRouteDataReady(h.loader.getState(), '/moth/moths/'), true);
+  assert.deepEqual(h.delivered.moths, [h.fullRecord]);
+  assert.equal(h.loader.getState().collectionLevels.moths, undefined, 'one record is not a loaded classification');
+});
+
+test('a later catalog keeps the full record of the species being viewed', async () => {
+  const h = speciesHarness();
+  h.files.set('catalog/moths.json', [
+    { id: 'other', name: 'other', _detail: false },
+    { id: 'moths', name: 'moths', _detail: false },
+  ]);
+  await ensureRoute(h.loader, '/moth/moths/');
+  await h.loader.ensureTypes();
+  assert.equal(h.loader.getState().collectionLevels.moths, 'catalog');
+  assert.deepEqual(h.delivered.moths.map((row) => row._detail), [false, true]);
+  assert.equal(h.delivered.moths[1], h.fullRecord);
+});
+
+test('a species record arriving after the catalog is merged into it', async () => {
+  const h = speciesHarness();
+  await h.loader.ensureTypes();
+  await ensureRoute(h.loader, '/moth/moths/');
+  assert.equal(h.delivered.moths.length, 1);
+  assert.equal(h.delivered.moths[0], h.fullRecord);
+});
+
+test('missing, ambiguous or failed species buckets fall back to the full classification', async () => {
+  for (const bucketPayload of [{ keys: { moths: null }, records: {} }, { keys: {}, records: {} }, null]) {
+    const h = speciesHarness({ bucketPayload });
+    await ensureRoute(h.loader, '/moth/moths/');
+    assert.ok(h.requests.includes('moths.json'), 'falls back to the full file');
+    assert.equal(h.loader.getState().collectionLevels.moths, 'full');
+    assert.equal(isRouteDataReady(h.loader.getState(), '/moth/moths/'), true);
+  }
+  const failed = speciesHarness();
+  failed.failures.add(failed.file);
+  await ensureRoute(failed.loader, '/moth/moths/');
+  assert.equal(failed.loader.getState().collectionLevels.moths, 'full');
+});
+
+test('without species buckets (old manifest / combined fallback) the full file is used as before', async () => {
+  const h = harness();
+  await ensureRoute(h.loader, '/moth/moths/');
+  assert.ok(h.requests.includes('moths.json'));
+  assert.equal(h.requests.some((file) => file.startsWith('species/')), false);
+});
+
+test('species bucket keys are deterministic and spread across buckets', () => {
+  assert.equal(hashRecordKey('オオミズアオ'), hashRecordKey('オオミズアオ'));
+  assert.equal(getSpeciesBucketFile('moths', ' オオミズアオ ', 8), getSpeciesBucketFile('moths', 'オオミズアオ', 8));
+  assert.equal(chooseBucketCount(0), 1);
+  assert.equal(chooseBucketCount(6368), 1024);
+  const used = new Set(Array.from({ length: 200 }, (_, index) => getSpeciesBucketFile('moths', `種${index}`, 16)));
+  assert.equal(used.size, 16);
 });

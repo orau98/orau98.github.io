@@ -16,7 +16,7 @@ const files = new Map([
   ['full-dataset.json', { ...fixtureData, summaryCounts: counts, version: 'fixture-v1' }],
   ['index.json', fixtureData],
   ['hostplants.json', fixtureData.hostPlants],
-  ['plant-details.json', fixtureData.plantDetails],
+  ['plant-details-lite.json', fixtureData.plantDetails],
   ['flower-visit-plants.json', fixtureData.flowerVisitPlants],
   ...INSECT_COLLECTION_KEYS.flatMap((key) => [
     [key + '.json', fixtureData[key]],

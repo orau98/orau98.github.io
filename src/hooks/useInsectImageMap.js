@@ -1,13 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import useInsectImageIndex from './useInsectImageIndex';
-import {
-  globalJapaneseToScientificMapping,
-  INSECT_IMAGE_BASE_OVERRIDES,
-} from '../utils/insectImageMappings';
-import {
-  buildInsectImageBaseCandidates,
-  resolveImageBaseCandidates,
-} from '../utils/insectImageResolver';
+import { INSECT_IMAGE_BASE_OVERRIDES } from '../utils/insectImageMappings';
+import { selectInsectImageBase } from '../utils/insectImageSelection';
 
 // 昆虫配列（App側stateで参照が安定）ごとの解決結果キャッシュ。
 // 詳細ページから一覧へ戻った際に全種の再解決を待たず、初回レンダーから
@@ -44,34 +38,10 @@ export default function useInsectImageMap(insects) {
     resolved,
   } = useInsectImageIndex();
 
-  const getBestImageForInsect = useCallback((insect) => {
-    try {
-      if (!insect) return null;
-
-      // Index未準備でも重要種は即座にファイル名を返して表示を試みる
-      const override = INSECT_IMAGE_BASE_OVERRIDES.get(insect.id);
-      if (!isReady) return override || null;
-
-      if (override && (imageNames.has(override) || imageExtensions[override])) {
-        return override;
-      }
-
-      const mappedFilename = globalJapaneseToScientificMapping.get(insect.name);
-      const candidates = [
-        override,
-        ...buildInsectImageBaseCandidates(insect, mappedFilename),
-      ].filter(Boolean);
-      const resolvedBases = resolveImageBaseCandidates(candidates, {
-        imageExtensions,
-        imageNames,
-        normalizedEntries,
-        includeUnresolved: false,
-      });
-      return resolvedBases[0] || null;
-    } catch {
-      return null;
-    }
-  }, [imageExtensions, imageNames, isReady, normalizedEntries]);
+  const getBestImageForInsect = useCallback(
+    (insect) => selectInsectImageBase(insect, { imageNames, imageExtensions, normalizedEntries, isReady }),
+    [imageExtensions, imageNames, isReady, normalizedEntries],
+  );
 
   // 再マウント時は前回計算済みのマップ（insects配列参照＋インデックス参照が
   // 一致する場合のみ）を初期値に使い、戻った直後から確定表示する

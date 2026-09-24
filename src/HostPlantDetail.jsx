@@ -46,6 +46,7 @@ import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
 import { buildSourceLabel, normalizePlantProfileText } from './utils/plantProfileText';
+import { getCachedPlantProfile, loadPlantProfile } from './services/dataLiteAssets';
 import SourceCitation from './components/ui/SourceCitation';
 import InfoPopover from './components/InfoPopover';
 import {
@@ -666,9 +667,34 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const isFamily = /科$/.test(decodedPlantName);
   const isOrder = /目$/.test(decodedPlantName);
   const isGenus = !isFamily && !isOrder && /属$/.test(decodedPlantName);
-  const plantProfile = (!isFamily && !isOrder && !isGenus && details?.profile)
-    ? details.profile
-    : null;
+  // 軽量版の植物詳細ではプロフィール本文は別ファイル（profile はバケット番号）なので、
+  // 表示中の植物の分だけ読む。完全データ・旧キャッシュ（本文オブジェクト）ならそのまま使う
+  const profileRef = (!isFamily && !isOrder && !isGenus && details?.profile) ? details.profile : null;
+  const profileOwnerName = details?.name || resolvedCanonicalName || '';
+  const [loadedProfile, setLoadedProfile] = useState({ key: '', profile: null });
+  const profileRequestKey = profileRef && typeof profileRef !== 'object'
+    ? `${profileOwnerName}#${profileRef}`
+    : '';
+  useEffect(() => {
+    if (!profileRequestKey) return undefined;
+    let cancelled = false;
+    loadPlantProfile(profileOwnerName, profileRef)
+      .then((profile) => {
+        if (!cancelled) setLoadedProfile({ key: profileRequestKey, profile });
+      })
+      .catch((error) => {
+        logger.debug('Plant profile unavailable:', error);
+        if (!cancelled) setLoadedProfile({ key: profileRequestKey, profile: null });
+      });
+    return () => { cancelled = true; };
+    // profileRequestKey が名前とバケット番号の両方を表す
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileRequestKey]);
+  const plantProfile = profileRef && typeof profileRef === 'object'
+    ? profileRef
+    : (loadedProfile.key === profileRequestKey && profileRequestKey
+      ? loadedProfile.profile
+      : (profileRequestKey ? getCachedPlantProfile(profileOwnerName, profileRef) || null : null));
   const plantProfileFacts = useMemo(() => {
     if (!plantProfile) return [];
     const labels = isEnglish
@@ -830,7 +856,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   // SEO（タイトル/ディスクリプション/OG/カノニカル/パンくず）
   const count = classificationMembers && classificationMembers.length ? `（${classificationMembers.length}種）` : '';
   const hasPlantProfileContent = Boolean(
-    plantProfile || additionalPlantProfileEntries.length > 0,
+    plantProfile || profileRef || additionalPlantProfileEntries.length > 0,
   );
   // displayLatinは和名URLでは和名のままなので、そのケースでは分類データの学名を採用する。
   // これがないと英語ページのh1が和名になり、直下の「Japanese name: 〜」と同文重複していた

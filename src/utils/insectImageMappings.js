@@ -101,3 +101,43 @@ export const INSECT_IMAGE_BASE_OVERRIDES = new Map([
   ['species-20176', 'Graphium_sarpedon'], // アオスジアゲハ
   ['species-4601', 'Zaranga_permagna'],   // アオバシャチホコ
 ]);
+
+// image-index.json に未収録だが実在する画像（ベース名 → 拡張子）
+export const SUPPLEMENTAL_INSECT_IMAGE_EXTS = {
+  Acronicta_alni: '.jpg',
+  Acropteris_iphiata: '.jpg',
+  Actebia_praecurrens: '.jpg',
+  Actias_aliena: '.jpg',
+  Albocosta_triangularis: '.jpg',
+  Ambulyx_ochracea: '.jpg',
+  Aromia_bungii: '.jpg',
+  Bhadorcosma_lonicerae: '.jpg',
+  Botyodes_principalis: '.jpg',
+  Cnephasia_stephensiana: '.jpg',
+  Cyrtoclytus_caproides: '.jpg',
+  Enarmonia_flammeata: '.jpg',
+  Epiblema_strenuana: '.jpg',
+  Epodonta_lineata: '.jpg',
+  Eugnathia_pulcherrima: '.jpg',
+  Eugoa_grisea: '.jpg',
+  Euplexia_angusta: '.jpg',
+  Gesonia_fallax: '.jpg',
+  Hedya_inouei: '.jpg',
+  Hypostrotia_cinerea: '.jpg',
+  Lamprodila_vivata: '.jpg',
+  Lethe_diana: '.jpg',
+  Lithophane_plumbeolimbata: '.jpg',
+  Lomaspilis_marginata: '.jpg',
+  Menophra_senilis: '.jpg',
+  Mythimna_flavostigma: '.jpg',
+  Neoanathamna_nipponica: '.jpg',
+  Pandemis_monticolana: '.jpg',
+  Polygonia_c: '.jpg',
+  Psacothea_hilaris: '.jpg',
+  Pygopteryx_suava: '.jpg',
+  Rusicada_leucolopha: '.jpg',
+  Xerodes_rufescentarius: '.jpg',
+  Xestia_fuscostigma: '.jpg',
+  Xestia_semiherbida: '.jpg',
+  Zizeeria_maha: '.jpg',
+};

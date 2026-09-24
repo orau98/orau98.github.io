@@ -12,6 +12,7 @@ import {
   normalizeDatasetPayload,
   normalizePlantPartitions,
   planInitialDataLoad,
+  isRouteDataReady,
   selectCollectionKeysToLoad,
 } from '../src/utils/dataLitePlan.js';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
@@ -127,6 +128,7 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateDetailLevel: 'catalog',
     followUpFullKey: null,
     requiredFullCollectionKeys: [],
+    detailRecord: null,
   });
 
   assert.deepEqual(planInitialDataLoad({ pathname: '/plant' }), {
@@ -137,6 +139,7 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateDetailLevel: 'catalog',
     followUpFullKey: null,
     requiredFullCollectionKeys: [],
+    detailRecord: null,
   });
 
   assert.deepEqual(planInitialDataLoad({ pathname: '/moth/オオミズアオ/' }), {
@@ -147,6 +150,7 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateDetailLevel: 'full',
     followUpFullKey: null,
     requiredFullCollectionKeys: [],
+    detailRecord: { collectionKey: 'moths', routeKey: 'オオミズアオ' },
   });
 
   const mismatch = planInitialDataLoad({
@@ -174,7 +178,26 @@ test('初回取得計画はルート、検索、キャッシュ版不一致を�
     immediateDetailLevel: 'catalog',
     followUpFullKey: null,
     requiredFullCollectionKeys: [],
+    detailRecord: null,
   });
+});
+
+test('詳細ページは該当種1件が届けば、分類の完全データを待たずに表示できる', () => {
+  const pathname = '/moth/%E3%82%AA%E3%82%AA%E3%83%9F%E3%82%BA%E3%82%A2%E3%82%AA/';
+  assert.deepEqual(planInitialDataLoad({ pathname }).detailRecord, {
+    collectionKey: 'moths',
+    routeKey: 'オオミズアオ',
+  });
+  const base = { plantsReady: true, collectionLevels: {}, errors: {} };
+  assert.equal(isRouteDataReady(base, pathname), false);
+  assert.equal(isRouteDataReady({ ...base, detailRecords: { 'moths:オオミズアオ': true } }, pathname), true);
+  // 1件が見つからなかった（false）だけでは足りず、分類のfullが必要
+  assert.equal(isRouteDataReady({ ...base, detailRecords: { 'moths:オオミズアオ': false } }, pathname), false);
+  assert.equal(isRouteDataReady({ ...base, collectionLevels: { moths: 'full' } }, pathname), true);
+  // 別の種の1件では準備完了にならない
+  assert.equal(isRouteDataReady({ ...base, detailRecords: { 'moths:アオバ': true } }, pathname), false);
+  // 一覧・分類トップには1件のキーを作らない
+  assert.equal(planInitialDataLoad({ pathname: '/moth/' }).detailRecord, null);
 });
 
 test('クイズは蛾・蝶の完全データを必須にし、catalogとの二重取得をしない', () => {

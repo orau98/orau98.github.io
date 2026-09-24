@@ -95,6 +95,12 @@ const RUNTIME_DATA_FILES = [
   ),
   'assets/data-lite/hostplants.json',
   'assets/data-lite/plant-details.json',
+  'assets/data-lite/plant-details-lite.json',
+  'assets/data-lite/plant-profiles/0.json',
+  'assets/data-lite/catalog/home-preview.json',
+  ...INSECT_SECTION_CONFIGS.map(
+    (section) => `assets/data-lite/species/${section.collectionKey}/0.json`,
+  ),
   'assets/data-lite/flower-visit-plants.json',
   'assets/data-lite/image-index.json',
   'assets/data-lite/ylist-lite.json',
@@ -621,6 +627,35 @@ assert(
     kihadaProfileHtml.includes('オオバキハダに似るが') &&
     kihadaProfileHtml.includes('日本の野生植物 第2巻 p.112'),
   'the canonical static page must render the preserved source-name profile with its own citation',
+);
+
+// 画面用の軽量版: プロフィール本文はバケットへ分離され、同じ本文が引けること
+const kihadaLite = readDistJson('assets/data-lite/plant-details-lite.json').キハダ;
+assert(
+  Number.isInteger(kihadaLite?.profile) &&
+    readDistJson(`assets/data-lite/plant-profiles/${kihadaLite.profile - 1}.json`).キハダ?.habit === '落葉高木' &&
+    kihadaLite.additionalProfiles?.[0]?.sourcePlantName === 'ミヤマキハダ',
+  'plant-details-lite must reference the separated profile bucket and keep additional profiles inline',
+);
+// 詳細ページ用の1種ずつのデータ: manifestのバケット数どおりにファイルがあること
+const dataLiteManifest = readDistJson('assets/data-lite/manifest.json');
+for (const { collectionKey } of INSECT_SECTION_CONFIGS) {
+  const bucketCount = Number(dataLiteManifest?.speciesBuckets?.[collectionKey]) || 0;
+  assert(bucketCount > 0, `manifest must declare species buckets for ${collectionKey}`);
+  assert(
+    fs.existsSync(path.join(DIST_DIR, 'assets', 'data-lite', 'species', collectionKey, `${bucketCount - 1}.json`)),
+    `missing last species bucket for ${collectionKey}`,
+  );
+}
+
+// トップの先読み（最初の48件）は本体データと同じ版でなければブラウザが使わない
+const homePreview = readDistJson('assets/data-lite/catalog/home-preview.json');
+assert(
+  homePreview?.version === dataLiteManifest?.version &&
+    Array.isArray(homePreview.records) && homePreview.records.length === 48 &&
+    homePreview.total === INSECT_SECTION_CONFIGS
+      .reduce((sum, { collectionKey }) => sum + (Number(dataLiteManifest.counts?.[collectionKey]) || 0), 0),
+  'home-preview.json must match the manifest version and hold the first 48 insects',
 );
 
 const okinagusaEnglishRoutePath = path.join('en', 'plant', 'オキナグサ', 'index.html');
