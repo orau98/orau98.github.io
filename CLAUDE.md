@@ -45,6 +45,7 @@
 │   └── sitemap*.xml          # 分割サイトマップ（generate-sitemap で再生成）
 ├── src/                       # Reactソースコード
 ├── scripts/                   # ビルド・監査スクリプト
+│   ├── build-site.mjs              # ★ビルド手順の唯一の定義（npm run build・CI・デプロイ共通）
 │   ├── generate-meta-pages.js      # メタページ生成（日本語）
 │   ├── generate-meta-en-pages.mjs  # メタページ生成（英語）
 │   ├── generate-sitemap-split.js   # 分割サイトマップ生成
@@ -68,7 +69,7 @@
 ## メタページ生成システム
 
 ### 植物名バリデーション
-`scripts/generate-meta-pages.js` の `isValidPlantName` 関数が無効な植物名（説明文の断片、括弧の片割れ、「〜科が」等）をフィルタリングする。**正規表現の正はコード側**なので、パターンを変更・追加する場合は同関数を直接参照・編集すること（このファイルに正規表現をコピーして二重管理しない）。
+`scripts/lib/dataLiteBuilders.mjs` の `isValidPlantName` 関数（data-lite とメタページ生成が共用）が無効な植物名（説明文の断片、括弧の片割れ、「〜科が」等）をフィルタリングする。**正規表現の正はコード側**なので、パターンを変更・追加する場合は同関数を直接参照・編集すること（このファイルに正規表現をコピーして二重管理しない）。
 
 過去の障害事例（広告プレビューでの404等）と対処は `docs/troubleshooting.md` を参照。
 
@@ -77,27 +78,31 @@
 ### 開発コマンド
 ```bash
 npm run dev          # 開発サーバー起動（predevが不足データを自動生成）
-npm run build        # プロダクションビルド（prebuildで前処理一式が走る）
+npm run build        # サイト全体のビルド（scripts/build-site.mjs。前処理〜dist の後処理まで一式）
 npm run preview      # ビルド結果のプレビュー
 npm test             # ユニットテスト（node --test tests/*.test.mjs）
 npm run lint         # ESLint
 ```
 
-### ビルド前処理（`npm run build` の prebuild で自動実行）
-```bash
-npm run sync:public-insects       # normalized_data → public へCSV同期
-npm run validate-normalized       # 参照整合性検証（→ reports/missing_ids.csv）
-npm run build:data-lite           # 軽量JSON生成
-npm run build:image-index         # 画像索引生成
-npm run build:plant-image-index   # 植物画像ファイル名索引
-npm run build:images:responsive   # レスポンシブ画像生成
-npm run generate-meta:all         # メタページ生成（日本語 + 英語）
-npm run generate-sitemap          # 分割サイトマップ生成
-```
+### ビルド手順（`scripts/build-site.mjs` が唯一の定義）
+`npm run build`・PRチェック（`ci.yml`）・本番公開（`deploy.yml`）はすべて `scripts/build-site.mjs` を呼ぶ。
+工程の追加・並べ替えはこのファイルだけを直すこと（ワークフローや package.json に個別の工程を並べない。`tests/build-site.test.mjs` が検査する）。
+順番: 参照整合性検証 → CSV同期 → 植物画像索引 → 昆虫画像索引 → 写真の縮小版 → data-lite → メタページ（日本語 + 英語）→ vite → サイトマップ → dist の後処理（`.nojekyll` もここで作る）。
+終了時に工程ごとの所要時間を表示する。
+
+- ビルドの前後のチェックは別コマンド: `npm run check:source`（lint・テスト・参照整合性）、`npm run check:dist`（dist の監査）。
+- 写真の縮小版: 昆虫は WebP だけを作る（SNS共有用の既定画像の JPEG だけ例外。`scripts/lib/imageAssetConstants.mjs` の `RETAINED_INSECT_JPEGS`）。
+  本番公開では `actions/cache` で `.cache/`（縮小版の保管場所と元画像の指紋。Git管理外）を持ち越し、元画像が変わらない限り作り直さない。
+  同じファイル名で差し替えた元画像は、指紋の食い違いで検出して作り直す。
+- PRチェックと手元のビルドで縮小版づくりを省くときは `SKIP_RESPONSIVE_IMAGES=1`。
 
 ### デプロイ
 - `main` ブランチへの push で GitHub Actions（`.github/workflows/deploy.yml`）が自動デプロイする。
 - `npm run deploy` はローカルからはデプロイしない（案内メッセージを表示するだけ）。
+- 公開ワークフローは概ね「check:source → 縮小版キャッシュの復元 → npm run build → check:dist → アップロード」。
+
+## 保管用スクリプト
+`scripts/_archive/` は過去に一度だけ実行したデータ移行スクリプトの置き場（再実行は想定しない）。目的の一覧は同フォルダの README を参照。
 
 ## データメンテナンス
 

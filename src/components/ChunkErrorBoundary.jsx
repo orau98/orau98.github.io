@@ -1,5 +1,6 @@
 import React from 'react';
 import logger from '../utils/logger';
+import { trackError } from '../utils/analytics';
 import {
   isChunkLoadError,
   recoverFromChunkLoadError,
@@ -36,7 +37,10 @@ export default class ChunkErrorBoundary extends React.Component {
       // ignore logging errors
     }
 
-    if (!isChunkLoadError(error)) return;
+    const chunkError = isChunkLoadError(error);
+    // 画面が表示できなかったことを件数として把握する（古い版の読み込み失敗は自動で再読み込みされる）
+    trackError({ kind: chunkError ? 'chunk_load' : 'render_error', error, fatal: !chunkError });
+    if (!chunkError) return;
 
     // Normally main.jsx handles vite:preloadError before React receives it.
     // Keep this boundary path for browsers/errors that reach React directly.

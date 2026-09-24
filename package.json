@@ -7,8 +7,9 @@
   "scripts": {
     "predev": "node scripts/ensure-dev-data.mjs",
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-site.mjs",
     "build:app": "vite build",
+    "postbuild:cleanup": "node scripts/postbuild-cleanup.mjs",
     "build:site-icons": "node scripts/generate-site-icons.mjs",
     "postbuild": "node scripts/postbuild-cleanup.mjs",
     "lint": "eslint .",
@@ -54,7 +55,6 @@
     "apply:standard-guide3-note-integrity": "node scripts/apply-standard-guide3-note-integrity-audit.mjs",
     "apply:standard-moth-hostplant-integrity": "node scripts/apply-standard-moth-guide-hostplant-integrity-audit.mjs",
     "repair:literature-record-integrity": "node scripts/repair-literature-record-integrity.mjs",
-    "prebuild": "npm run check:wildplants-audit && npm run validate-normalized && npm run sync:public-insects && npm run build:data-lite && npm run build:image-index && npm run build:plant-image-index && npm run build:images:responsive && npm run generate-meta:all && npm run generate-sitemap",
     "deploy": "echo 'Use GitHub Actions: push to main to deploy.'",
     "build:data-lite": "npm run check:wildplants-audit && node scripts/build-data-lite.mjs",
     "build:image-index": "node scripts/build-image-index.mjs",

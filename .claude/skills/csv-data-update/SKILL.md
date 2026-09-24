@@ -38,10 +38,10 @@ description: 昆虫・食草CSVデータの更新ワークフロー。normalized
    ```bash
    npm run sync:public-insects && npm run build:data-lite
    ```
-6. コミットする。`main` にマージされると GitHub Actions が自動デプロイする（`npm run build` の prebuild が同期・生成・検証を全て実行する）。
+6. コミットする。`main` にマージされると GitHub Actions が自動デプロイする（`npm run build`＝`scripts/build-site.mjs` が同期・生成・検証を全て実行する）。
 
 ## 検証で問題が出たとき
 
 - `unknown insect_id`: `hostplants.csv` / `general_notes.csv` が存在しない昆虫を参照している。旧ID→現行IDの対応が分かる場合は置換、不明なら行を削除する前にユーザーに確認する。
 - 科名不整合: YList の科名が正。`npm run audit:csv-quality` の指摘に従う。
-- 無効な植物名（説明文の断片・括弧の片割れ等）: `scripts/generate-meta-pages.js` の `isValidPlantName` が除外基準。データ側を修正する。
+- 無効な植物名（説明文の断片・括弧の片割れ等）: `scripts/lib/dataLiteBuilders.mjs` の `isValidPlantName` が除外基準。データ側を修正する。

@@ -2,6 +2,7 @@
 // Remove non-public/development artifacts from the built output to keep Pages lean
 import fs from 'fs';
 import path from 'path';
+import { RETAINED_INSECT_JPEGS as RETAINED_INSECT_JPEG_LIST } from './lib/imageAssetConstants.mjs';
 
 // Keep a small margin below GitHub Pages' 1 GiB published-site limit.
 const MAX_PAGES_DIST_BYTES = 980 * 1024 * 1024;
@@ -10,7 +11,7 @@ const EN_SITE_NAME = 'Insects and Host Plants of Japan';
 const EN_HOME_DESCRIPTION = 'Explore insects and host plants recorded in Japan. Search moths, butterflies, beetles, bark beetles, aphids, and host plants by scientific name, Japanese name, plant name, or taxonomy.';
 const EN_HOME_KEYWORDS = 'Japanese insects, host plants, larval host plants, moths, butterflies, beetles, bark beetles, aphids, plant-insect relationships, Japan biodiversity, scientific names';
 const DEFAULT_SOCIAL_IMAGE_URL = `${BASE_ORIGIN}/images/resized/insects/Cucullia_argentea.1024.jpg`;
-const RETAINED_INSECT_JPEGS = new Set(['Cucullia_argentea.1024.jpg']);
+const RETAINED_INSECT_JPEGS = new Set(RETAINED_INSECT_JPEG_LIST);
 const DEFAULT_SOCIAL_IMAGE_ALT_EN = 'Cucullia argentea on Insects and Host Plants of Japan';
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
 const ADSENSE_SCRIPT_URL = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;

@@ -130,3 +130,6 @@ public/sitemap-*.txt
 public/sitemap_index.xml
 public/search-console-submit.xml
 public/search-console-submit.txt
+
+# ビルドの作業用記録（縮小版の元画像の指紋など。公開ワークフローではキャッシュに保存）
+.cache/

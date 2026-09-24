@@ -10,6 +10,10 @@ import {
   trackPageView,
   trackSearch,
   trackSearchNoResults,
+  trackError,
+  sanitizeErrorText,
+  shouldIgnoreError,
+  resetTrackedErrorsForTest,
 } from '../src/utils/analytics.js';
 
 const createStorage = () => {
@@ -187,4 +191,54 @@ test('searches that found nothing are recorded for data improvements', () => {
   } finally {
     globalThis.window = previousWindow;
   }
+});
+
+test('画面のエラーは exception イベントで1種類につき1回だけ送り、URLはパスだけにする', () => {
+  const previousWindow = globalThis.window;
+  const calls = [];
+  globalThis.window = {
+    location: { origin: 'https://orau98.github.io', pathname: '/moth/オオミズアオ/', search: '' },
+    localStorage: createStorage(),
+    sessionStorage: createStorage(),
+    gtag: (...args) => calls.push(args),
+  };
+  resetTrackedErrorsForTest();
+  try {
+    const error = new Error('Dataset request failed: https://orau98.github.io/assets/data-lite/moths.json?v=abc (503)');
+    assert.equal(trackError({ kind: 'data_load', error, fatal: true }), true);
+    assert.equal(trackError({ kind: 'data_load', error, fatal: true }), false, 'duplicate is not sent twice');
+    assert.equal(calls.length, 1);
+    assert.deepEqual(calls[0].slice(0, 2), ['event', 'exception']);
+    assert.equal(calls[0][2].fatal, true);
+    assert.equal(calls[0][2].error_kind, 'data_load');
+    assert.equal(calls[0][2].page_path, '/moth/オオミズアオ/');
+    assert.equal(calls[0][2].description, 'data_load: Dataset request failed: /assets/data-lite/moths.json (503)');
+
+    // 無害なもの・中断した通信は送らない
+    assert.equal(trackError({ kind: 'js_error', message: 'ResizeObserver loop completed with undelivered notifications.' }), false);
+    assert.equal(trackError({ kind: 'unhandled_rejection', error: new DOMException('The user aborted a request.', 'AbortError') }), false);
+    assert.equal(trackError({ kind: 'js_error', message: 'Script error.' }), false);
+
+    // 1ページあたりの上限
+    for (let index = 0; index < 20; index += 1) trackError({ kind: 'js_error', message: `boom ${index}` });
+    assert.equal(calls.length, 10);
+
+    // 計測を止めたブラウザでは送らない
+    resetTrackedErrorsForTest();
+    globalThis.window.localStorage.setItem('orau98.analytics.optOut', '1');
+    assert.equal(trackError({ kind: 'js_error', message: 'after opt out' }), false);
+  } finally {
+    resetTrackedErrorsForTest();
+    globalThis.window = previousWindow;
+  }
+});
+
+test('エラー文の整形: 外部URLはドメインだけ、長さは150文字まで', () => {
+  assert.equal(
+    sanitizeErrorText('Failed https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=x', 'https://orau98.github.io'),
+    'Failed https://pagead2.googlesyndication.com',
+  );
+  assert.equal(sanitizeErrorText('x'.repeat(400)).length, 150);
+  assert.equal(shouldIgnoreError(''), true);
+  assert.equal(shouldIgnoreError('TypeError: Load failed'), false);
 });

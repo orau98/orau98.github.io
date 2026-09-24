@@ -591,6 +591,32 @@ function readJpegSize(absPath) {
   return size;
 }
 
+// WebP の実寸を RIFF ヘッダから読む（昆虫の縮小版は WebP のみ生成するため）。
+// VP8（非可逆）/ VP8L（可逆）/ VP8X（拡張）の3形式に対応。
+function readWebpSize(absPath) {
+  if (_imgSizeCache.has(absPath)) return _imgSizeCache.get(absPath);
+  let size = null;
+  try {
+    const fd = fs.openSync(absPath, 'r');
+    const buf = Buffer.alloc(30);
+    const read = fs.readSync(fd, buf, 0, 30, 0);
+    fs.closeSync(fd);
+    if (read >= 30 && buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WEBP') {
+      const chunk = buf.toString('ascii', 12, 16);
+      if (chunk === 'VP8 ') {
+        size = { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff };
+      } else if (chunk === 'VP8L') {
+        const bits = buf.readUInt32LE(21);
+        size = { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+      } else if (chunk === 'VP8X') {
+        size = { width: buf.readUIntLE(24, 3) + 1, height: buf.readUIntLE(27, 3) + 1 };
+      }
+    }
+  } catch { /* 読めなければ寸法なしで続行 */ }
+  _imgSizeCache.set(absPath, size);
+  return size;
+}
+
 // resized 画像からレスポンシブ <picture> を生成する。
 // Pages では容量節約のため昆虫 AVIF を配信しないため、昆虫は WebP/JPG、
 // 植物は AVIF/WebP/JPG を使う（src/utils/imageSrcset.js と同じ方針）。
@@ -615,7 +641,8 @@ function buildResponsivePicture({ dir, base, alt, aboveFold = false }) {
     formatWidths.map((w) => `/images/resized/${dir}/${enc}.${w}.${fmt} ${w}w`).join(', ');
   const sizesAttr = '(max-width: 640px) 100vw, 640px';
   const fallback = `/images/resized/${dir}/${enc}.${maxW}.${fallbackFormat}`;
-  const dims = readJpegSize(path.join(dirAbs, `${decodedBase}.${maxW}.jpg`));
+  const dims = readJpegSize(path.join(dirAbs, `${decodedBase}.${maxW}.jpg`)) ||
+    readWebpSize(path.join(dirAbs, `${decodedBase}.${maxW}.webp`));
   const dimAttrs = dims ? ` width="${dims.width}" height="${dims.height}"` : '';
   const loadAttrs = aboveFold ? 'decoding="async" fetchpriority="high"' : 'loading="lazy" decoding="async"';
   const safeAlt = escapeRedirectHtml(alt);
