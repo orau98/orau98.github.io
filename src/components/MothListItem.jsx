@@ -141,6 +141,13 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
   if (!moth) {
     return null;
   }
+
+  const titleText = isEnglish ? formatScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name;
+  const titleAttr = isEnglish ? primaryName : moth.name;
+  const scientificTitle = isEnglish ? secondaryName : dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName));
+  const scientificText = isEnglish
+    ? secondaryName
+    : formatScientificNameReact(dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName)));
   
   try {
     if (viewMode === 'compact') {
@@ -249,7 +256,8 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     candidates={imageFallbackCandidates}
                     fallbackSrc={placeholderFallbackSrc}
                     subject={resolvePlaceholderSubject(moth.type)}
-                    errorLabel={isEnglish ? 'No image' : '画像なし'}
+                    // 名前を写真に重ねるので、読み込み失敗時の「画像なし」の文字は出さない（名前と重なるため）
+                    errorLabel={null}
                     alt={
                       isEnglish
                         ? `${primaryName} photograph`
@@ -273,6 +281,23 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                     <SubjectSilhouette subject={resolvePlaceholderSubject(moth.type)} className="w-8 h-8 text-slate-400" />
                   </div>
                 )}
+                {/* 写真のあるカードは名前を写真の下端に重ね、カード本体を短くする（1画面に見える種を増やす） */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-2.5 pb-2 pt-7 sm:px-4 sm:pb-3 sm:pt-10">
+                  <h3
+                    className={`line-clamp-1 font-bold leading-tight text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.6)] ${lacksJapaneseName ? 'text-xs sm:text-sm' : 'text-sm sm:text-lg'}`}
+                    title={titleAttr}
+                  >
+                    {titleText}
+                  </h3>
+                  {secondaryName && (
+                    <p
+                      className="mt-0.5 line-clamp-1 text-[11px] text-white/85 [text-shadow:0_1px_2px_rgba(0,0,0,0.6)] sm:text-sm"
+                      title={scientificTitle}
+                    >
+                      {scientificText}
+                    </p>
+                  )}
+                </div>
               </div>
             ) : null}
             
@@ -290,28 +315,26 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
           </div>
           
           {/* Enhanced Content section */}
-          <div className="flex flex-col flex-grow p-2.5 sm:p-4">
-            {/* 和名・学名は各1行に固定し、min-heightで高さを揃えて食草欄の開始位置をカード間で一致させる */}
-            <div className="mb-1.5 min-h-[2.4rem] sm:mb-3 sm:min-h-[3rem]">
-              <h3
-                className={`mb-1 line-clamp-1 font-bold leading-tight ${lacksJapaneseName ? 'text-xs text-slate-500 dark:text-slate-400 sm:text-base' : 'text-sm text-slate-800 dark:text-slate-100 sm:text-lg'}`}
-                title={isEnglish ? primaryName : moth.name}
-              >
-                {isEnglish ? formatScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name}
-              </h3>
-              {secondaryName && (
-                <p
-                  className="line-clamp-1 text-[11px] text-slate-600 dark:text-slate-400 sm:text-sm"
-                  title={isEnglish ? secondaryName : dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName))}
+          <div className="flex flex-col flex-grow p-2.5 sm:p-3">
+            {/* 写真のない種は名前を本文に出す。和名・学名は各1行に固定し、高さを揃えて食草欄の開始位置を一致させる */}
+            {!hasImageFilename && (
+              <div className="mb-1.5 min-h-[2.4rem] sm:mb-2 sm:min-h-[3rem]">
+                <h3
+                  className={`mb-1 line-clamp-1 font-bold leading-tight ${lacksJapaneseName ? 'text-xs text-slate-500 dark:text-slate-400 sm:text-base' : 'text-sm text-slate-800 dark:text-slate-100 sm:text-lg'}`}
+                  title={titleAttr}
                 >
-                  {isEnglish
-                    ? secondaryName
-                    : formatScientificNameReact(
-                        dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName))
-                      )}
-                </p>
-              )}
-            </div>
+                  {titleText}
+                </h3>
+                {secondaryName && (
+                  <p
+                    className="line-clamp-1 text-[11px] text-slate-600 dark:text-slate-400 sm:text-sm"
+                    title={scientificTitle}
+                  >
+                    {scientificText}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* 食草・訪花はヘッダー直下に上詰めで配置（下詰めだと行数差で開始位置がカードごとにずれる） */}
             <div className="mb-1 space-y-1 text-xs sm:mb-2 sm:space-y-1.5 sm:text-sm">
@@ -324,7 +347,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   >
                     {isEnglish ? 'Host' : '食草'}
                   </span>
-                  <span className="line-clamp-1 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
+                  <span className="line-clamp-1 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-2">
                     {renderLocalizedScientificNameListReact(localizedPlantDisplay.hostNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                     {localizedPlantDisplay.hostNames.length > CARD_PLANT_PREVIEW_CAP && (
                       <span className="text-slate-500 dark:text-slate-400">
@@ -343,7 +366,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                   >
                     {isEnglish ? 'Flower' : '訪花'}
                   </span>
-                  <span className="line-clamp-1 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-3">
+                  <span className="line-clamp-1 leading-snug text-slate-600 dark:text-slate-300 sm:line-clamp-2">
                     {renderLocalizedScientificNameListReact(localizedPlantDisplay.flowerNames.slice(0, CARD_PLANT_PREVIEW_CAP), locale)}
                     {localizedPlantDisplay.flowerNames.length > CARD_PLANT_PREVIEW_CAP && (
                       <span className="text-slate-500 dark:text-slate-400">
@@ -388,6 +411,7 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
                       emergenceTime={normalizedTime || ''}
                       source={moth.source}
                       compact={true}
+                      dense={true}
                       locale={locale}
                       supplementalTexts={supplementalEmergenceTexts}
                     />
