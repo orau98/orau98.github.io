@@ -21,7 +21,7 @@ const MONTHS = [
 
 // Date parsing is shared with list cards and independently tested.
 
-const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, supplementalTexts = [], originalText = '', locale = 'ja' }) => {
+const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = false, supplementalTexts = [], originalText = '', locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const getPeriodLabel = (periodNum) => {
     if (!isEnglish) return periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
@@ -75,9 +75,16 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
       return null;
     }
     // コンパクト表示：スマートで洗練されたタイムライン
+    // dense（一覧カード）は見出しをバーの左に置いて1段にまとめ、カードの高さを抑える
     return (
-      <div className="space-y-2">
+      <div className={dense ? 'flex items-start gap-2' : 'space-y-2'}>
+        {dense && (
+          <span className="mt-px flex-shrink-0 text-[11px] font-bold leading-4 text-orange-800 dark:text-orange-300">
+            {isEnglish ? 'Adults' : '成虫'}
+          </span>
+        )}
         {/* マークだけの行だと何のバーか分からないため「成虫の時期」と見出しを付ける */}
+        {!dense && (
         <div className="mb-1 flex items-center gap-1.5">
           <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 flex-shrink-0" aria-hidden="true">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,9 +93,10 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
           </span>
           <span className="text-xs font-bold text-orange-800 dark:text-orange-300">{isEnglish ? 'Adult season' : '成虫の時期'}</span>
         </div>
-        <div className="relative">
+        )}
+        <div className={dense ? 'relative min-w-0 flex-1' : 'relative'}>
           {/* 背景のタイムライン（旬単位） */}
-          <div className="flex h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden border border-slate-200 dark:border-slate-600">
+          <div className={`flex ${dense ? 'h-3' : 'h-4'} bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden border border-slate-200 dark:border-slate-600`}>
             {MONTHS.map((month) => (
               <div key={month.number} className="flex-1 flex">
                 {[1, 2, 3].map((periodNum) => {
@@ -118,9 +126,9 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, suppleme
           </div>
           
           {/* 月のラベル */}
-          <div className="flex justify-between mt-1.5 px-0.5">
+          <div className={`flex justify-between px-0.5 ${dense ? 'mt-0.5' : 'mt-1.5'}`}>
             {[1, 3, 6, 9, 12].map(monthNum => (
-              <span key={monthNum} className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <span key={monthNum} className={`${dense ? 'text-[10px] leading-3' : 'text-xs'} text-slate-500 dark:text-slate-400 font-medium`}>
                 {getMonthLabel(MONTHS[monthNum - 1], 'header')}
               </span>
             ))}
