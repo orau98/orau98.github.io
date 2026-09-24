@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { MIN_IMAGE_BYTES, SOURCE_IMAGE_EXTENSIONS } from './lib/imageAssetConstants.mjs';
+import { writeHomePreviewIfPossible } from './lib/homePreview.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,4 +92,8 @@ export function buildImageIndex(root = ROOT) {
   );
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === __filename) buildImageIndex();
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
+  buildImageIndex();
+  // トップの先読み（最初の48件）は画像の有無で並びが決まるため、索引の更新後に作り直す
+  writeHomePreviewIfPossible(path.join(ROOT, 'public', 'assets', 'data-lite'));
+}

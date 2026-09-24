@@ -16,6 +16,7 @@ import NotFoundPage from './components/NotFoundPage';
 import ManualAdSlot from './components/ManualAdSlot';
 import { loadDatasetFromCache, saveDatasetToCache } from './services/datasetCache';
 import { createDataPartitionLoader, isCompleteDatasetPayload } from './services/dataPartitionLoader';
+import { setDataLiteVersionSuffix } from './services/dataLiteAssets';
 import {
   INDEX_FOLLOW_ROBOTS,
   NOINDEX_FOLLOW_ROBOTS,
@@ -35,11 +36,13 @@ import {
   EXPLORER_ROUTE_CONFIGS,
   INSECT_COLLECTION_KEYS,
   INSECT_DETAIL_ROUTE_PATTERNS,
+  isExplorerRoutePath,
 } from './utils/siteTaxonomy';
 import { isStaticDocumentPath } from './utils/staticDocumentPaths';
 import { hasExplorerResultQuery } from './utils/explorerQueryParams';
 import {
   getInsectDetailCollectionKey,
+  isHomePreviewRoute,
   shouldLoadInsectPartitionsImmediately,
 } from './utils/insectDataLoading';
 import {
@@ -78,6 +81,8 @@ function App() {
   const [loadProgress, setLoadProgress] = useState(0);
   const [loadError, setLoadError] = useState(null);
   const [summaryCounts, setSummaryCounts] = useState(null);
+  // トップの最初の48件（全分類のデータより先に届く小さな先読み）
+  const [homePreview, setHomePreview] = useState(null);
   const partitionLoaderRef = useRef(null);
   const [partitionState, setPartitionState] = useState({ collectionLevels: {}, plantsReady: false, errors: {} });
   const [loaderGeneration, setLoaderGeneration] = useState(0);
@@ -348,13 +353,15 @@ function App() {
         if (!response?.ok) throw new Error(`Dataset request failed: ${file} (${response?.status})`);
         return response.json();
       };
-      const installLoader = (suffix, version, counts, initialPayload = null) => {
+      const installLoader = (suffix, version, counts, initialPayload = null, speciesBuckets = null) => {
         const loaderId = ++installedLoaderId;
         const isActive = () => isCurrent() && loaderId === installedLoaderId;
+        setDataLiteVersionSuffix(suffix);
         const loader = createDataPartitionLoader({
           readJson: (file) => readJson(file, suffix),
           initialPayload,
           summaryCounts: counts,
+          speciesBuckets,
           isActive,
           onCollection: (key, records) => setters[key](records),
           onPlants: (plants) => {
@@ -394,9 +401,21 @@ function App() {
         // Only a complete cache from this exact dataset version may seed readiness.
         const seed = cached?.version === manifest.version && isCompleteDatasetPayload(cached?.payload)
           ? cached.payload : null;
-        const loader = installLoader(suffix, manifest.version, manifest.counts, seed);
-        setLoadProgress(35);
         const { pathname, search } = routeLocationRef.current;
+        // トップでは、全分類のデータ（約500KB）と並行して最初の48件（数KB）を取り、先に表示する。
+        // 版が一致するものだけ使い、失敗しても通常の読み込みには影響させない
+        if (!seed && isHomePreviewRoute(pathname, search)) {
+          readJson('catalog/home-preview.json', suffix)
+            .then((preview) => {
+              if (isCurrent() && preview?.version === manifest.version && Array.isArray(preview.records)) {
+                setHomePreview(preview);
+              }
+            })
+            .catch(() => {});
+        }
+        const loader = installLoader(suffix, manifest.version, manifest.counts, seed,
+          manifest.speciesBuckets || null);
+        setLoadProgress(35);
         await loader.ensurePlan(planInitialDataLoad({ pathname, search }));
         if (!isCurrent()) return;
         if (isRouteDataReady(loader.getState(), pathname, search)) {
@@ -471,6 +490,10 @@ function App() {
   }, []);
 
   const routeDataReady = isRouteDataReady(partitionState, location.pathname, location.search);
+  // 先読みを出したトップは、全データ到着前に検索語の入力等でURLが変わっても一覧を外さない
+  // （外すと入力中の検索窓ごと消える）。一覧側が条件つきの間はスケルトンを出す
+  const showHomePreview = Boolean(homePreview) && !routeDataReady && !isEnglish &&
+    isExplorerRoutePath(location.pathname);
   // Reconcile every route, including recovery without a navigation event.
   useEffect(() => {
     const loader = partitionLoaderRef.current;
@@ -571,6 +594,7 @@ function App() {
     locale,
     onNeedInsectsData: triggerInsectsDataLoad,
     onNeedPlantsData: triggerPlantsDataLoad,
+    insectPreview: homePreview,
   };
 
   const detailBaseProps = {
@@ -720,7 +744,7 @@ function App() {
       )}
 
       <main id="main-content" role="main" tabIndex={-1}>
-        {(loading || !routeDataReady) ? (visibleLoadError ? null : (
+        {(loading || (!routeDataReady && !(showHomePreview && !visibleLoadError))) ? (visibleLoadError ? null : (
           routeConfigs.some(({ path, fallback }) => fallback && matchPath({ path, end: true }, location.pathname))
             ? <DetailSkeleton />
             : <SkeletonLoader />

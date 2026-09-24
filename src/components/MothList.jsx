@@ -29,7 +29,7 @@ import { isEnglishLocale, localizePath } from '../utils/locale';
 const HOST_PLACEHOLDERS = ['不明', '未知', '不詳', '未確認', '未記載', 'なし', '未登録', '不詳種', '不明種'];
 const PER_PAGE_OPTIONS = [20, 50, 100];
 
-const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", plantDetails = {}, locale = 'ja' }) => {
+const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", plantDetails = {}, locale = 'ja', preview = null }) => {
   const isEnglish = isEnglishLocale(locale);
   const ui = useMemo(
     () => ({
@@ -342,9 +342,12 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
   }, [isEnglish]);
   // 一覧に複数グループが混在している場合のみグループ切替チップを出す
   const availableGroups = useMemo(() => {
-    const present = new Set((moths || []).map((m) => m?.type || 'moth'));
+    // 先読み表示中（全データ未着）はビルド時に数えたグループ別件数で切替チップを出す
+    const present = (moths?.length ?? 0) === 0 && preview?.groupCounts
+      ? new Set(Object.keys(preview.groupCounts).filter((type) => preview.groupCounts[type] > 0))
+      : new Set((moths || []).map((m) => m?.type || 'moth'));
     return INSECT_SECTION_CONFIGS.filter((section) => present.has(section.type));
-  }, [moths]);
+  }, [moths, preview]);
   const activeFilters = useMemo(() => {
     const filters = [];
     if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
@@ -678,8 +681,17 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     imageIndexResolved,
   } = useInsectImageMap(moths);
 
+  // 先読み（トップの最初の48件）: 全分類のデータと画像索引が揃うまでの間だけ、
+  // ビルド時に同じ並び（写真あり優先→五十音順）で作った1ページ目をそのまま出す。
+  // 検索・絞り込み・2ページ目以降は全データが要るので、その間はスケルトンにする
+  const previewRecords = !isEnglish && Array.isArray(preview?.records) ? preview.records : null;
+  const isImageIndexPending = !isImageIndexReady && !imageIndexResolved;
+  const isPreviewMode = Boolean(previewRecords) && ((moths?.length ?? 0) === 0 || isImageIndexPending);
+  const hasPreviewData = isPreviewMode && (moths?.length ?? 0) === 0;
+
   // グループ切替チップの件数（写真ありフィルタは一覧と同じ条件で反映する）
   const groupCounts = useMemo(() => {
+    if (hasPreviewData && preview?.groupCounts) return preview.groupCounts;
     const counts = {};
     const applyPhotoFilter = photoFilter === 'has' && isImageIndexReady;
     criteriaFilteredMoths.forEach((moth) => {
@@ -689,7 +701,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       counts[type] = (counts[type] || 0) + 1;
     });
     return counts;
-  }, [criteriaFilteredMoths, photoFilter, isImageIndexReady, mothImageMap]);
+  }, [criteriaFilteredMoths, photoFilter, isImageIndexReady, mothImageMap, hasPreviewData, preview]);
 
   // インデックス到着で「写真あり優先」の並びが確定するため、
   // 未準備→準備完了の遷移時のみ1ページ目へ戻す（同期初期化時は遷移しない）
@@ -835,11 +847,15 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
     trackSearchNoResults({ query: term, scope: 'insects' });
   }, [debouncedSearchTerm, hasFilterCriteria, moths?.length, sortedMoths?.length]);
 
-  const totalPages = Math.ceil((sortedMoths?.length || 0) / effectiveItemsPerPage);
+  const listTotal = hasPreviewData ? Number(preview?.total) || 0 : (sortedMoths?.length || 0);
+  const totalPages = Math.ceil(listTotal / effectiveItemsPerPage);
   // URLのipageが総ページ数を超える場合は最終ページへ丸める
   // （共有URLや表示件数変更で範囲外になっても、空の一覧を表示しない）
   const effectivePage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
+  const showPreviewCards = isPreviewMode && !hasAnyCriteria && effectivePage === 1 &&
+    effectiveItemsPerPage <= previewRecords.length;
   const currentMoths = useMemo(() => {
+    if (showPreviewCards) return previewRecords.slice(0, effectiveItemsPerPage);
     try {
       if (!sortedMoths || sortedMoths.length === 0) {
         return [];
@@ -852,7 +868,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       logger.error('Error calculating currentMoths:', error);
       return [];
     }
-  }, [sortedMoths, effectivePage, effectiveItemsPerPage]);
+  }, [sortedMoths, effectivePage, effectiveItemsPerPage, showPreviewCards, previewRecords]);
 
   const handlePageChange = (page) => {
     const nextPage = parseInt(page, 10);
@@ -992,7 +1008,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
       { value: 'plantCount', label: ui.sortPlantCount },
       { value: 'season', label: ui.sortSeason },
     ];
-    const resultsLabel = ui.resultCount(sortedMoths?.length ?? filteredMoths?.length ?? 0);
+    const resultsLabel = ui.resultCount(hasPreviewData ? listTotal : (sortedMoths?.length ?? filteredMoths?.length ?? 0));
     const displayLabels = {
       view: ui.view,
       cards: ui.cards,
@@ -1203,7 +1219,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
           {/* データ未着(moths=[])かつ条件なしのときも、空状態ではなくスケルトンを出す。
               画像インデックスは即時解決するため、これが無いと初回ロード中に一瞬
               「該当する昆虫が見つかりません」「昆虫(0)」が出てしまう（植物一覧と対称化）。 */}
-          {(!isImageIndexReady && !imageIndexResolved) || ((moths?.length ?? 0) === 0 && !hasAnyCriteria) ? (
+          {!showPreviewCards && (isImageIndexPending || ((moths?.length ?? 0) === 0 && (!hasAnyCriteria || previewRecords))) ? (
             <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
@@ -1239,7 +1255,7 @@ const MothList = ({ moths, title = "蛾", baseRoute = "/moth", embedded = false,
                           moth={moth} 
                           baseRoute={baseRoute} 
                           isPriority={index < 12} 
-                          imageFilename={mothImageMap.get(moth.id)}
+                          imageFilename={showPreviewCards ? (moth.imageFilename || undefined) : mothImageMap.get(moth.id)}
                           plantDetails={plantDetails}
                           locale={locale}
                           viewMode={viewMode}

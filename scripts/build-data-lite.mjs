@@ -6,6 +6,13 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { INSECT_COLLECTION_KEYS } from '../src/utils/siteTaxonomy.js';
 import { countInsectLinkedPlants, mergePlantEntries } from '../src/utils/plantListMerge.js';
 import {
+  chooseBucketCount,
+  getPlantProfileBucketFile,
+  getRecordBucketIndex,
+  normalizeRecordKey,
+} from '../src/utils/speciesRecordKey.js';
+import { writeHomePreviewIfPossible } from './lib/homePreview.mjs';
+import {
   buildFlowerVisitPlantDataset,
   buildHostPlantDataset,
   cleanString,
@@ -358,6 +365,40 @@ const slim = (arr) => (arr || []).map(i => ({
     write(path.join('catalog', `${key}.json`), catalogCollections[key]);
   });
 
+  // 詳細ページ用: 1種ずつの完全データを小さなバケットに分けて置く。
+  // 詳細ページは分類まるごと（蛾は9MB）ではなく、その種が入ったバケット1つだけを読む。
+  // キーはURLに現れる id / routeName / name。同じ分類内で同名が複数ある名前は
+  // null（=曖昧）にして、ブラウザ側は従来どおり分類の完全データへフォールバックする。
+  const writeQuiet = (name, data) => {
+    const p = path.join(OUT_DIR, name);
+    fs.mkdirSync(path.dirname(p), { recursive: true });
+    fs.writeFileSync(p, JSON.stringify(data), 'utf-8');
+  };
+  fs.rmSync(path.join(OUT_DIR, 'species'), { recursive: true, force: true });
+  const speciesBuckets = {};
+  INSECT_COLLECTION_KEYS.forEach((key) => {
+    const records = slimmedCollections[key] || [];
+    const bucketCount = chooseBucketCount(records.length);
+    speciesBuckets[key] = bucketCount;
+    const byId = new Map(records.map((record) => [record.id, record]));
+    const owners = new Map();
+    records.forEach((record) => {
+      new Set([record.id, record.routeName, record.name].map(normalizeRecordKey).filter(Boolean))
+        .forEach((routeKey) => {
+          if (!owners.has(routeKey)) owners.set(routeKey, record.id);
+          else if (owners.get(routeKey) !== record.id) owners.set(routeKey, null);
+        });
+    });
+    const buckets = Array.from({ length: bucketCount }, () => ({ keys: {}, records: {} }));
+    owners.forEach((id, routeKey) => {
+      const bucket = buckets[getRecordBucketIndex(routeKey, bucketCount)];
+      bucket.keys[routeKey] = id;
+      if (id) bucket.records[id] = byId.get(id);
+    });
+    buckets.forEach((bucket, index) => writeQuiet(path.join('species', key, `${index}.json`), bucket));
+    console.log('[data-lite] wrote species buckets', key, `buckets=${bucketCount} records=${records.length}`);
+  });
+
   // Build and write full dataset for runtime consumption
   // ylist-lite source resolution, in priority order:
   //   1. public/20210514YList_download.csv  (original YList CSV, currently not in the repo)
@@ -426,6 +467,27 @@ const slim = (arr) => (arr || []).map(i => ({
   const flowerVisitPlants = buildFlowerVisitPlantDataset(allProcessedInsects, ylistLite);
   write('hostplants.json', fullHostPlants);
   write('plant-details.json', plantDetails);
+  // 画面用の植物詳細は、容量の半分以上を占める『日本の野生植物』プロフィール本文を
+  // 別ファイル（バケット）へ出し、本文の代わりに「バケット番号+1」（真値の数値）を置く。
+  // plant-details.json 本体はメタページ・サイトマップ生成が使うのでそのまま残す。
+  fs.rmSync(path.join(OUT_DIR, 'plant-profiles'), { recursive: true, force: true });
+  const profileEntries = Object.entries(plantDetails)
+    .filter(([, detail]) => detail?.profile && typeof detail.profile === 'object');
+  const profileBucketCount = chooseBucketCount(profileEntries.length, 20);
+  const profileBuckets = Array.from({ length: profileBucketCount }, () => ({}));
+  const plantDetailsLite = {};
+  Object.entries(plantDetails).forEach(([name, detail]) => {
+    if (detail?.profile && typeof detail.profile === 'object') {
+      const bucketIndex = getRecordBucketIndex(name, profileBucketCount);
+      profileBuckets[bucketIndex][name] = detail.profile;
+      plantDetailsLite[name] = { ...detail, profile: bucketIndex + 1 };
+    } else {
+      plantDetailsLite[name] = detail;
+    }
+  });
+  profileBuckets.forEach((bucket, index) => writeQuiet(getPlantProfileBucketFile(index), bucket));
+  console.log('[data-lite] wrote plant profile buckets', `buckets=${profileBucketCount} profiles=${profileEntries.length}`);
+  write('plant-details-lite.json', plantDetailsLite);
   write('flower-visit-plants.json', flowerVisitPlants);
   const summaryCounts = {
     ...Object.fromEntries(
@@ -456,6 +518,7 @@ const slim = (arr) => (arr || []).map(i => ({
   const manifest = {
     counts: summaryCounts,
     version: dataVersion,
+    speciesBuckets,
   };
   write('manifest.json', manifest);
 
@@ -478,6 +541,8 @@ const slim = (arr) => (arr || []).map(i => ({
     aliasToCanonical,
   };
   write('full-dataset.json', fullDataset);
+  // トップの最初の48件（image-index.json が既にあれば。無ければ画像索引のビルド時に作られる）
+  writeHomePreviewIfPossible(OUT_DIR);
 }
 
 build().catch(err => {
