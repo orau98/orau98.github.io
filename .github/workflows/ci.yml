@@ -37,3 +37,11 @@ jobs:
 
       - name: Validate built artifact
         run: npm run check:dist
+
+      # 主要な画面（トップ・一覧・詳細・検索・英語・クイズ）を実際のブラウザで開き、
+      # 中身が出る・エラーが出ない・スマホで横にはみ出さないことを確かめる
+      - name: Install browser for screen checks
+        run: npx playwright install --with-deps chromium
+
+      - name: Check main screens in a real browser
+        run: npm run check:browser
