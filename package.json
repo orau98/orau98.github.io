@@ -20,7 +20,7 @@
     "generate-sitemap": "node scripts/generate-sitemap-split.js",
     "generate-meta": "node scripts/generate-meta-pages.js",
     "generate-meta:en": "node scripts/generate-meta-en-pages.mjs",
-    "generate-meta:all": "npm run generate-meta && npm run generate-meta:en && npm run generate-meta",
+    "generate-meta:all": "node scripts/generate-meta-pages.js --defer-en-alternates && npm run generate-meta:en && node scripts/apply-meta-en-alternates.mjs",
     "resolve-hostplant-family": "node scripts/resolve_hostplant_family_with_ylist.mjs",
     "validate-normalized": "node scripts/validate-normalized.mjs",
     "apply:kiriga-ecology-audit": "node scripts/apply-kiriga-ecology-audit.mjs",
