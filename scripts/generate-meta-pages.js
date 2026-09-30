@@ -41,10 +41,13 @@ import {
   SUSPICIOUS_PLANT_NAME_SET,
 } from './lib/dataLiteBuilders.mjs';
 import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
+import { createPlantMetaTargetResolver } from './lib/metaPageLinks.mjs';
 import {
-  createPlantMetaTargetResolver,
-  hasNoindexRobotsMeta,
-} from './lib/metaPageLinks.mjs';
+  DEFERRED_EN_ALTERNATES_PATH,
+  buildEnAlternateLink,
+  buildEnAlternateMarker,
+  buildEnglishSlugMaps,
+} from './lib/metaEnglishAlternates.mjs';
 import { buildAnalyticsHeadTags } from './lib/analyticsHeadTags.mjs';
 import { SITE_LOGO_SRC } from '../src/utils/siteBrand.js';
 
@@ -76,8 +79,16 @@ loadProductionEnv();
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
-const SEO_ROUTE_MAP_INSECTS_PATH = path.join(__dirname, '../public/seo-route-map.insects.json');
-const SEO_ROUTE_MAP_PLANTS_PATH = path.join(__dirname, '../public/seo-route-map.plants.json');
+// generate-meta:all では英語ページより先に日本語ページを作るため、英語版へのリンク（hreflang="en"）は
+// 目印だけ置いて記録し、英語の生成後に apply-meta-en-alternates.mjs が置き換える（全ページの2回生成を避ける）。
+// 単独実行（引数なし）では、既にある英語ページを見てその場でリンクを入れる。
+const DEFER_EN_ALTERNATES = process.argv.includes('--defer-en-alternates');
+const deferredEnAlternatePages = [];
+const deferredEnGuideRedirects = [];
+const renderEnAlternate = (href, hasEnglishPage) => {
+  if (DEFER_EN_ALTERNATES) return buildEnAlternateMarker(href);
+  return hasEnglishPage ? buildEnAlternateLink(href) : '';
+};
 const PLANT_DETAILS_PATH = path.join(__dirname, '../public/assets/data-lite/plant-details.json');
 const KAMIKIRI_AUDIT_PATH = path.join(
   __dirname,
@@ -1300,108 +1311,6 @@ function extractScientificGenus(scientificName = '') {
   return match ? match[1] : '';
 }
 
-// 英語メタページ（public/en/meta/）から id→slug および 植物名→slug のマップを構築する
-// 注意: public/en/ と seo-route-map.*.json は gitignore された生成物なので、
-// クリーンチェックアウト直後の1回目の実行ではこのマップは空になり、
-// 日本語ページに hreflang="en" が付かない。このため generate-meta:all は
-// 「ja → en → ja再実行」の2パス構成になっている（package.json）。
-function isIndexableEnglishMetaHref(href) {
-  if (!href) return false;
-  const relativePath = decodeURIComponent(String(href).replace(/^\//, ''));
-  const filePath = path.join(__dirname, '../public', relativePath);
-  if (!fs.existsSync(filePath)) return false;
-  return !hasNoindexRobotsMeta(fs.readFileSync(filePath, 'utf-8'));
-}
-
-function buildEnglishSlugMaps() {
-  const insectIdToEnSlug = new Map();
-  const plantNameToEnSlug = new Map();
-
-  if (fs.existsSync(SEO_ROUTE_MAP_INSECTS_PATH)) {
-    try {
-      const routeMap = JSON.parse(fs.readFileSync(SEO_ROUTE_MAP_INSECTS_PATH, 'utf-8'));
-      Object.entries(routeMap).forEach(([insectId, href]) => {
-        const match = String(href).match(/^\/en\/meta\/([^/]+)\/([^/]+)\.html$/);
-        if (!match || !isIndexableEnglishMetaHref(href)) return;
-        insectIdToEnSlug.set(insectId, {
-          type: match[1],
-          slug: decodeURIComponent(match[2]),
-          href,
-        });
-      });
-    } catch (_e) {
-      // Existing English pages are still scanned below as a fallback.
-    }
-  }
-
-  if (fs.existsSync(SEO_ROUTE_MAP_PLANTS_PATH)) {
-    try {
-      const routeMap = JSON.parse(fs.readFileSync(SEO_ROUTE_MAP_PLANTS_PATH, 'utf-8'));
-      Object.entries(routeMap).forEach(([plantName, href]) => {
-        const match = String(href).match(/^\/en\/meta\/plant\/([^/]+)\.html$/);
-        if (!match || !isIndexableEnglishMetaHref(href)) return;
-        plantNameToEnSlug.set(plantName, decodeURIComponent(match[1]));
-      });
-    } catch (_e) {
-      // Existing English pages are still scanned below as a fallback.
-    }
-  }
-
-  const enMetaDir = path.join(__dirname, '../public/en/meta');
-  if (!fs.existsSync(enMetaDir)) {
-    return { insectIdToEnSlug, plantNameToEnSlug };
-  }
-
-  // 昆虫: /en/meta/{type}/*.html の Japanese page リンクからIDとスラグを対応付ける
-  const insectTypes = INSECT_SECTION_CONFIGS.map(({ type }) => type);
-  for (const type of insectTypes) {
-    const typeDir = path.join(enMetaDir, type);
-    if (!fs.existsSync(typeDir)) continue;
-    for (const file of fs.readdirSync(typeDir)) {
-      if (!file.endsWith('.html') || file === 'index.html') continue;
-      const slug = file.replace(/\.html$/, '');
-      try {
-        const content = fs.readFileSync(path.join(typeDir, file), 'utf-8');
-        if (hasNoindexRobotsMeta(content)) continue;
-        // Japanese page link: href="/meta/{type}/{id}.html"
-        const jaPageMatch = content.match(/href="\/meta\/[^/]+\/([^"]+)\.html"/);
-        if (jaPageMatch) {
-          const insectId = decodeURIComponent(jaPageMatch[1]);
-          insectIdToEnSlug.set(insectId, {
-            slug,
-            type,
-            href: `/en/meta/${type}/${encodeURIComponent(slug)}.html`,
-          });
-        }
-      } catch (_e) {
-        // 読み込み失敗はスキップ
-      }
-    }
-  }
-
-  // 植物: /en/meta/plant/*.html の Japanese page リンクから植物名を取得
-  const plantDir = path.join(enMetaDir, 'plant');
-  if (fs.existsSync(plantDir)) {
-    for (const file of fs.readdirSync(plantDir)) {
-      if (!file.endsWith('.html') || file === 'index.html') continue;
-      const slug = file.replace(/\.html$/, '');
-      try {
-        const content = fs.readFileSync(path.join(plantDir, file), 'utf-8');
-        if (hasNoindexRobotsMeta(content)) continue;
-        // Japanese page link: href="/plant/{plantName}/"
-        const jaPageMatch = content.match(/href="\/plant\/([^"]+)\/"/);
-        if (jaPageMatch) {
-          const plantName = decodeURIComponent(jaPageMatch[1]);
-          plantNameToEnSlug.set(plantName, slug);
-        }
-      } catch (_e) {
-        // 読み込み失敗はスキップ
-      }
-    }
-  }
-
-  return { insectIdToEnSlug, plantNameToEnSlug };
-}
 
 // --- 食草ガイドへの内部リンク ---
 // 食草ガイドは廃止したため、種ページからガイドへの逆リンクは生成しない（no-op）。
@@ -1550,10 +1459,10 @@ function generateInsectHTML(
     '昆虫図鑑',
     ...hostPlantKeywordList,
   ]);
-  const enAlternatePath = (() => {
-    if (!enSlugEntry) return '';
-    return buildEnglishInsectPath(insect, type);
-  })();
+  const enAlternateHtml = renderEnAlternate(
+    `${BASE_ORIGIN}${buildEnglishInsectPath(insect, type)}`,
+    Boolean(enSlugEntry),
+  );
 
   // --- description テンプレート生成 ---
   // 出現時期は insect.emergenceTime から取得
@@ -1777,8 +1686,7 @@ function generateInsectHTML(
   <meta name="keywords" content="${safeInsectKeywords}">
   <link rel="canonical" href="${insectPageUrl}">
   <link rel="alternate" hreflang="ja" href="${insectPageUrl}">
-  ${enAlternatePath ? `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${enAlternatePath}">
-  ` : ''}<link rel="alternate" hreflang="x-default" href="${insectPageUrl}">
+  ${enAlternateHtml}<link rel="alternate" hreflang="x-default" href="${insectPageUrl}">
   <link rel="stylesheet" href="${META_STYLE_PATH}">
   ${heroPreloadHtml}
 
@@ -2370,8 +2278,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   <meta name="keywords" content="${safePlantKeywords}">
   <link rel="canonical" href="${safePlantPageUrl}">
   <link rel="alternate" hreflang="ja" href="${safePlantPageUrl}">
-  ${enSlug ? `<link rel="alternate" hreflang="en" href="${BASE_ORIGIN}${buildPlantPath(safeCanonicalName, 'en')}">
-  ` : ''}<link rel="alternate" hreflang="x-default" href="${safePlantPageUrl}">
+  ${renderEnAlternate(`${BASE_ORIGIN}${buildPlantPath(safeCanonicalName, 'en')}`, Boolean(enSlug))}<link rel="alternate" hreflang="x-default" href="${safePlantPageUrl}">
   <link rel="stylesheet" href="${META_STYLE_PATH}">
 
   <!-- Open Graph -->
@@ -2695,9 +2602,13 @@ async function generateMetaPages() {
     fs.mkdirSync(typeDir, { recursive: true });
   });
   
-  // 英語メタページが既に生成済みの場合、id→enSlug マップを構築
-  const { insectIdToEnSlug, plantNameToEnSlug } = buildEnglishSlugMaps();
-  console.log(`[meta] 英語スラグマップ: 昆虫${insectIdToEnSlug.size}件、植物${plantNameToEnSlug.size}件`);
+  // 英語メタページが既に生成済みの場合、id→enSlug マップを構築（後置き換えモードでは使わない）
+  const { insectIdToEnSlug, plantNameToEnSlug } = DEFER_EN_ALTERNATES
+    ? { insectIdToEnSlug: new Map(), plantNameToEnSlug: new Map() }
+    : buildEnglishSlugMaps();
+  console.log(DEFER_EN_ALTERNATES
+    ? '[meta] 英語版へのリンクは英語ページの生成後に入れます（--defer-en-alternates）'
+    : `[meta] 英語スラグマップ: 昆虫${insectIdToEnSlug.size}件、植物${plantNameToEnSlug.size}件`);
 
   try {
     // 植物の画像一覧を取得
@@ -2931,7 +2842,7 @@ async function generateMetaPages() {
       
       const enSlugEntry = insectIdToEnSlug.get(insectId);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
-      insectPageQueue.push({ insect, type, enSlugEntry, filename });
+      insectPageQueue.push({ insect, type, enSlugEntry, filename, enKey: insectId });
       queueInsectLegacyRedirects({
         type,
         insectId,
@@ -3001,7 +2912,7 @@ async function generateMetaPages() {
       
       const enSlugEntryB = insectIdToEnSlug.get(insectId);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
-      insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryB, filename });
+      insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryB, filename, enKey: insectId });
       queueInsectLegacyRedirects({
         type,
         insectId,
@@ -3083,7 +2994,7 @@ async function generateMetaPages() {
       
       const enSlugEntryH = insectIdToEnSlug.get(insectId);
       const filename = path.join(__dirname, `../public/meta/${type}/${insectId}.html`);
-      insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryH, filename });
+      insectPageQueue.push({ insect, type, enSlugEntry: enSlugEntryH, filename, enKey: insectId });
       queueInsectLegacyRedirects({
         type,
         insectId,
@@ -3135,7 +3046,7 @@ async function generateMetaPages() {
       plantDetails: plantDetailIndex,
       pageNames: plantPageNames,
     });
-    insectPageQueue.forEach(({ insect, type, enSlugEntry, filename }) => {
+    insectPageQueue.forEach(({ insect, type, enSlugEntry, filename, enKey }) => {
       const html = generateInsectHTML(
         insect,
         type,
@@ -3144,6 +3055,7 @@ async function generateMetaPages() {
         resolvePlantMetaTarget,
       );
       fs.writeFileSync(filename, html);
+      if (DEFER_EN_ALTERNATES) deferredEnAlternatePages.push({ file: filename, kind: 'insect', key: enKey });
     });
 
     // 分類統合で削除した旧IDの静的URLを、正本ページへ恒久転送する。
@@ -3222,6 +3134,7 @@ async function generateMetaPages() {
       const html = generatePlantHTML(plantName, insects, allPlantImages, null, plantEnSlug, plantFamily);
       const filename = path.join(__dirname, `../public/meta/plant/${safePlantName}.html`);
       fs.writeFileSync(filename, html);
+      if (DEFER_EN_ALTERNATES) deferredEnAlternatePages.push({ file: filename, kind: 'plant', key: safePlantName });
       queueLegacyRedirect(
         `/plant/${encodeURIComponent(plantName)}/index.html`,
         `/meta/plant/${encodeURIComponent(safePlantName)}.html`,
@@ -3285,15 +3198,28 @@ async function generateMetaPages() {
         verifyTarget: false,
       });
 
-      const englishSlug = plantNameToEnSlug.get(safePlantName);
-      if (englishSlug) {
-        writePermanentGuideRedirect({
-          outputPath: path.join(legacyEnglishGuidePlantDir, `${legacySlug}.html`),
-          lang: 'en',
-          title: `${plantName} host-plant insects | Insects and Host Plants of Japan`,
-          targetPath: `/en/plant/${encodeURIComponent(plantName)}/`,
-          verifyTarget: false,
+      const englishGuideRedirect = {
+        outputPath: path.join(legacyEnglishGuidePlantDir, `${legacySlug}.html`),
+        lang: 'en',
+        title: `${plantName} host-plant insects | Insects and Host Plants of Japan`,
+        targetPath: `/en/plant/${encodeURIComponent(plantName)}/`,
+        verifyTarget: false,
+      };
+      if (DEFER_EN_ALTERNATES) {
+        // 英語ページの有無は英語の生成後に決まるので、書き出しは apply-meta-en-alternates.mjs に任せる
+        deferredEnGuideRedirects.push({
+          kind: 'plant',
+          key: safePlantName,
+          outputPath: englishGuideRedirect.outputPath,
+          html: buildLegacyRedirectHtml({
+            lang: englishGuideRedirect.lang,
+            title: englishGuideRedirect.title,
+            targetUrl: `${BASE_ORIGIN}${englishGuideRedirect.targetPath}`,
+            noindex: false,
+          }),
         });
+      } else if (plantNameToEnSlug.get(safePlantName)) {
+        writePermanentGuideRedirect(englishGuideRedirect);
       }
     }
 
@@ -4132,4 +4058,15 @@ ${butterflyFilterScript}
 }
 
 // 実行
-generateMetaPages();
+const generated = generateMetaPages();
+const writeDeferredEnAlternates = () => {
+  if (!DEFER_EN_ALTERNATES) return;
+  fs.mkdirSync(path.dirname(DEFERRED_EN_ALTERNATES_PATH), { recursive: true });
+  fs.writeFileSync(DEFERRED_EN_ALTERNATES_PATH, JSON.stringify({
+    pages: deferredEnAlternatePages,
+    redirects: deferredEnGuideRedirects,
+  }));
+  console.log(`[meta] 英語版リンクの後置き換え対象: ページ${deferredEnAlternatePages.length}件、旧英語ガイド転送${deferredEnGuideRedirects.length}件`);
+};
+if (generated && typeof generated.then === 'function') generated.then(writeDeferredEnAlternates);
+else writeDeferredEnAlternates();

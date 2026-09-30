@@ -64,3 +64,12 @@ test('途中の工程が失敗したら以降を実行せずに失敗を返す',
   assert.equal(calls.at(-1), 'build:data-lite');
   assert.ok(!calls.includes('generate-meta:all'));
 });
+
+test('PRチェックはビルド後に実際のブラウザで主要な画面を確かめる', () => {
+  const ci = fs.readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+  assert.equal(pkg.scripts['check:browser'], 'node scripts/smoke-browser.mjs');
+  assert.ok(ci.indexOf('run: npm run build\n') < ci.indexOf('run: npm run check:browser'));
+  assert.match(ci, /npx playwright install --with-deps chromium/);
+  // ブラウザのバージョンを固定（CIでダウンロードするブラウザと合わせる）
+  assert.match(pkg.devDependencies.playwright, /^\d+\.\d+\.\d+$/);
+});
