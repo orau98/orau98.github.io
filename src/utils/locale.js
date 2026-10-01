@@ -69,6 +69,13 @@ export const localizePath = (input = '/', locale = DEFAULT_LOCALE) => {
   return `${localizedPath}${suffix}`;
 };
 
+// 静的ページ（/・/en/・/moth/ など）は末尾スラッシュ付きが正規URL。localizePath は
+// 末尾スラッシュを除去するため、canonical・hreflang 用のパス（クエリなし）はこちらを使う。
+export const localizeDirectoryPath = (pathname = '/', locale = DEFAULT_LOCALE) => {
+  const localized = localizePath(pathname, locale);
+  return localized.endsWith('/') ? localized : `${localized}/`;
+};
+
 export const getAlternateLocale = (locale = DEFAULT_LOCALE) =>
   isEnglishLocale(locale) ? DEFAULT_LOCALE : ENGLISH_LOCALE;
 

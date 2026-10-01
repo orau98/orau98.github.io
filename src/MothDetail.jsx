@@ -21,6 +21,7 @@ import {
 } from './utils/englishNaming';
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
+import { isPrerenderedHeadFor } from './utils/prerenderedHead';
 import { buildInsectPath, decodeSlug, isLikelyInsectId, slugifyInsectName } from './utils/insectSlug';
 import useInsectImageIndex from './hooks/useInsectImageIndex';
 import { getAssetVersionQuery, getPlaceholderImageUrl } from './utils/assetPaths';
@@ -907,7 +908,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     alternates: [
       { hreflang: 'ja', href: alternateJaHref },
       { hreflang: 'en', href: alternateEnHref },
-      { hreflang: 'x-default', href: alternateEnHref },
+      // 静的ページと同じく x-default は日本語版
+      { hreflang: 'x-default', href: alternateJaHref },
     ],
     breadcrumbItems: moth ? [
       { name: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑', url: absUrl(localizePath('/', locale)) },
@@ -931,12 +933,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
   // ソフト404対策: 存在しない種のURLは検索エンジンにインデックスさせない
   // （データ読み込み完了後に判定。植物詳細のthin-contentガードと同じ方式）
+  // 静的HTMLにあるページはビルド時の判定（全データで決めた robots）をそのまま使う。
+  // 画面用データの読み込みに失敗したときに、実在する種を noindex にしないため。
   useEffect(() => {
     try {
       if (isDataLoading) return;
+      if (isPrerenderedHeadFor(canonicalHref)) return;
       setRobotsMetaContent(moth ? INDEX_FOLLOW_ROBOTS : NOINDEX_FOLLOW_ROBOTS);
     } catch {}
-  }, [isDataLoading, moth]);
+  }, [canonicalHref, isDataLoading, moth]);
 
   // Show loading state if data is still loading
   // （スピナー1個の全画面ではなく、実レイアウトに合わせたスケルトンでシフトを抑える）
@@ -1154,14 +1159,18 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 sm:pt-6">
-      {/* 構造化データ */}
-      {mothId && moth && <MothStructuredData moth={moth} />}
-      {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
-      {beetleId && moth && <BeetleStructuredData beetle={moth} />}
-      {longhornbeetleId && moth && <LonghornBeetleStructuredData longhornbeetle={moth} />}
-      {barkbeetleId && moth && <BarkBeetleStructuredData barkbeetle={moth} />}
-      {leafbeetleId && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
-      {aphidId && moth && <AphidStructuredData aphid={moth} />}
+      {/* 構造化データ（静的HTMLにあるページでは静的なものを使い、二重にしない） */}
+      {!isPrerenderedHeadFor(canonicalHref) && (
+        <>
+          {mothId && moth && <MothStructuredData moth={moth} />}
+          {butterflyId && moth && <ButterflyStructuredData butterfly={moth} />}
+          {beetleId && moth && <BeetleStructuredData beetle={moth} />}
+          {longhornbeetleId && moth && <LonghornBeetleStructuredData longhornbeetle={moth} />}
+          {barkbeetleId && moth && <BarkBeetleStructuredData barkbeetle={moth} />}
+          {leafbeetleId && moth && <LeafBeetleStructuredData leafbeetle={moth} />}
+          {aphidId && moth && <AphidStructuredData aphid={moth} />}
+        </>
+      )}
       {/* モバイルはヘッダー直下の余白を詰める（pt-3）。sm以上は従来の余白 */}
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-8 sm:pt-8">
         {/* パンくずリスト */}

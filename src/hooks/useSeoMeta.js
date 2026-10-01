@@ -17,6 +17,7 @@ const setMetaContent = (selector, content) => {
 };
 
 import { absUrl } from '../utils/origin';
+import { isPrerenderedHeadFor, releasePrerenderedHead } from '../utils/prerenderedHead';
 
 export default function useSeoMeta(rawOptions) {
   const options = rawOptions ?? {};
@@ -66,6 +67,12 @@ export default function useSeoMeta(rawOptions) {
     if (!isActive) {
       return undefined;
     }
+    // ビルド時に作った静的な head がこのページ向けなら書き換えない（Google は JavaScript
+    // 実行後の head を使うため、上書きすると検索向けの内容が別物・二重になる）
+    if (isPrerenderedHeadFor(url)) {
+      return undefined;
+    }
+    releasePrerenderedHead();
     const managedMetaSelectors = managedMetaSelectorsRef.current;
     if (title) document.title = title;
     if (typeof document !== 'undefined' && document.documentElement) {
@@ -251,6 +258,7 @@ export default function useSeoMeta(rawOptions) {
   const setOgTwitterImage = (imgUrl, alt) => {
     if (!isActive) return;
     if (!imgUrl) return;
+    if (isPrerenderedHeadFor(url)) return;
     ensureMeta('meta[property="og:image"]', { property: 'og:image' });
     setMetaContent('meta[property="og:image"]', imgUrl);
     ensureMeta('meta[property="og:image:alt"]', { property: 'og:image:alt' });
