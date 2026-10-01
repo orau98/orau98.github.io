@@ -448,6 +448,7 @@ const InsectsHostPlantExplorer = memo(
     onNeedPlantsData,
     initialTab = "insects",
     insectPreview = null,
+    insectDataComplete = true,
   }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
@@ -1977,6 +1978,7 @@ const InsectsHostPlantExplorer = memo(
                         plantDetails={plantDetails}
                         locale={locale}
                         preview={insectPreview}
+                        dataComplete={insectDataComplete}
                       />
                     </Suspense>
                   </div>

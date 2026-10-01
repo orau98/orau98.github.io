@@ -52,17 +52,24 @@ export default function useInsectImageMap(insects) {
     }
     return buildOverrideMap(insects);
   });
+  // いまのマップがどの昆虫配列について解決済みか（配列が変わった直後は前の配列のマップが残る）
+  const [mapInsects, setMapInsects] = useState(() => {
+    const cached = insects ? insectImageMapCache.get(insects) : null;
+    return cached && cached.names === imageNames && cached.exts === imageExtensions ? insects : null;
+  });
 
   useEffect(() => {
     if (!isReady || !insects || insects.length === 0) {
       const overrides = buildOverrideMap(insects);
       setInsectImageMap((prev) => (mapsEqual(prev, overrides) ? prev : overrides));
+      setMapInsects(null);
       return undefined;
     }
 
     const cached = insectImageMapCache.get(insects);
     if (cached && cached.names === imageNames && cached.exts === imageExtensions) {
       setInsectImageMap((prev) => (prev === cached.map ? prev : cached.map));
+      setMapInsects(insects);
       return undefined;
     }
 
@@ -80,6 +87,7 @@ export default function useInsectImageMap(insects) {
         map: nextMap,
       });
       setInsectImageMap(nextMap);
+      setMapInsects(insects);
     }, 0);
 
     return () => clearTimeout(timeoutId);
@@ -89,5 +97,7 @@ export default function useInsectImageMap(insects) {
     insectImageMap,
     isImageIndexReady: isReady,
     imageIndexResolved: resolved,
+    // 渡した insects 全部について写真の解決が済んでいるか（写真あり優先の並びが確定しているか）
+    isImageMapCurrent: Boolean(insects) && insects.length > 0 && mapInsects === insects,
   };
 }

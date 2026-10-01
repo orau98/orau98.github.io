@@ -77,6 +77,8 @@ const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
   '../data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json',
 );
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+// 写真のないページの共有画像はサイト共通の蛾の写真。その種・植物の写真と誤解させない説明にする
+const DEFAULT_SOCIAL_IMAGE_ALT = 'Default image of Insects and Host Plants of Japan (Cucullia argentea)';
 const EN_INDEX_PAGE_SIZE = 1000;
 const ADSENSE_CLIENT = process.env.VITE_ADSENSE_CLIENT || 'ca-pub-6982051533473293';
 const ADSENSE_HEAD_TAGS = `<meta name="google-adsense-account" content="${ADSENSE_CLIENT}">
@@ -586,7 +588,7 @@ function buildEnglishInsectPage({
   const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = imageUrl
     ? `${primaryName} photograph`
-    : `${primaryName} reference image`;
+    : DEFAULT_SOCIAL_IMAGE_ALT;
   const plantUsage = getPlantUsage(insect, (value) => normalizePlantNameLite(cleanString(value)));
   const hostPlantsArray = plantUsage.hostPlants;
   const flowerPlantItems = buildPlantListItems(plantUsage.flowerPlants, plantRecords, plantDetails, aliasToCanonical);
@@ -838,7 +840,7 @@ function buildEnglishPlantPage({
   const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = mainImageUrl
     ? `${display.primaryName} photograph`
-    : `${display.primaryName} reference image`;
+    : DEFAULT_SOCIAL_IMAGE_ALT;
   const title = `${display.primaryName} | Host plant profile from Japan`;
   const description = [
     display.japaneseReference,

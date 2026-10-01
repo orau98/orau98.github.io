@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { SITEMAP_LASTMOD_FILENAME, toSitemapLastmodKey } from './lib/sitemapLastmod.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -421,6 +422,48 @@ const validateSitemapUrlSet = (filePath, options = {}) => {
   }
 };
 
+// サイトマップの lastmod は sitemap-lastmod.json（次回ビルドが読む前回の記録）と一致していること。
+// 記録が欠けると次回の公開で日付を引き継げず、全ページが初回の日付に戻ってしまう。
+const validateSitemapLastmodManifest = () => {
+  const manifestPath = path.join(DIST_DIR, SITEMAP_LASTMOD_FILENAME);
+  const relativePath = path.relative(ROOT, manifestPath);
+  ensure(fs.existsSync(manifestPath), `${relativePath}: not found`);
+  if (!fs.existsSync(manifestPath)) return;
+  let manifest = null;
+  try {
+    manifest = JSON.parse(readFile(manifestPath));
+  } catch (error) {
+    ensure(false, `${relativePath}: invalid JSON (${error.message})`);
+    return;
+  }
+  ensure(
+    manifest?.version === 1 && manifest.entries && typeof manifest.entries === 'object',
+    `${relativePath}: unexpected format`,
+  );
+  if (!manifest?.entries) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const unescapeXml = (value) => value
+    .replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  let checked = 0;
+  for (const entry of fs.readdirSync(DIST_DIR, { withFileTypes: true })) {
+    if (!entry.isFile() || !/^sitemap-.*\.xml$/i.test(entry.name)) continue;
+    const body = readFile(path.join(DIST_DIR, entry.name));
+    if (!/<urlset\b/i.test(body)) continue;
+    for (const match of body.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)) {
+      const loc = unescapeXml(match[1]);
+      const lastmod = match[2];
+      const recorded = manifest.entries[toSitemapLastmodKey(loc)];
+      checked++;
+      ensure(/^\d{4}-\d{2}-\d{2}$/.test(lastmod) && lastmod <= today, `dist/${entry.name}: invalid lastmod ${lastmod} -> ${loc}`);
+      ensure(
+        Array.isArray(recorded) && recorded[1] === lastmod,
+        `dist/${entry.name}: lastmod is not recorded in ${SITEMAP_LASTMOD_FILENAME} -> ${loc}`,
+      );
+    }
+  }
+  ensure(checked > 0, `${relativePath}: no sitemap URLs were checked`);
+};
+
 const validateSpa404 = (filePath) => {
   const relativePath = path.relative(ROOT, filePath);
   ensure(fs.existsSync(filePath), `${relativePath}: 404.html not found`);
@@ -729,6 +772,7 @@ for (const entry of fs.readdirSync(DIST_DIR, { withFileTypes: true })) {
   );
 }
 validateSpa404(path.join(DIST_DIR, '404.html'));
+validateSitemapLastmodManifest();
 
 if (failures.length > 0) {
   console.error(`[audit-seo] failed with ${failures.length} issue(s)`);

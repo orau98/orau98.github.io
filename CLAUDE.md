@@ -98,7 +98,11 @@ npm run lint         # ESLint
   `seo: true` の画面は、JavaScript 実行後の title・説明文・canonical・hreflang・robots・構造化データが静的HTMLと同じかも確かめる。
 - 静的HTML（ルートシェル・メタページ・index.html）の head が SEO の正。Google は JavaScript 実行後のページを登録に使うため、
   アプリは同じページを表示している間は head を書き換えない（`src/utils/prerenderedHead.js`。`useSeoMeta`・構造化データ・robots がこれに従う）。
-  アプリ内のリンクで別のページへ移った後だけ、アプリが head を更新する。
+  アプリ内のリンクで別のページへ移った後だけ、アプリが head を更新する。植物ページも、静的ページがある名前は
+  アプリ側で YList の別名扱いにして別の植物へ移動したり canonical を変えたりしない（`HostPlantDetail.jsx` の `seoPlantName`）。
+- 起動直後に読むデータ（manifest・トップの最初の48件）は、vite のプラグイン（`scripts/lib/earlyRouteResources.mjs`）が index.html で先読みさせる
+  （最初の48件はトップ専用なので、他のページからは postbuild が外す）。トップ・一覧ページの画面の JS は、HTML で先読みすると
+  最初の描画と取り合うため、アプリの起動時に読み始める（`src/App.jsx` の `prefetchExplorerRoute`）。
 - 写真の縮小版: 昆虫は WebP だけを作る（SNS共有用の既定画像の JPEG だけ例外。`scripts/lib/imageAssetConstants.mjs` の `RETAINED_INSECT_JPEGS`）。
   本番公開では `actions/cache` で `.cache/`（縮小版の保管場所と元画像の指紋。Git管理外）を持ち越し、元画像が変わらない限り作り直さない。
   同じファイル名で差し替えた元画像は、指紋の食い違いで検出して作り直す。
@@ -129,12 +133,15 @@ npm run lint         # ESLint
 - 各植物・昆虫に個別の静的HTMLページ（`public/meta/{type}/{insect_id}.html`、英語版は `public/en/`）
 - 構造化データ（JSON-LD）によるリッチスニペット対応
 - Open Graph/Twitter Card対応
-- 適切なcanonical URL設定
+- 適切なcanonical URL設定（別名やID違いのURLのルートシェルは、種の静的ページが宣言する正規URLを canonical にする）
+- ルートシェル（`/{type}/{名前}/`）の `#root` には、メタページの見出し（meta-header の h1）と本文（main）を JavaScript 前の表示用に載せる
 
 ### サイトマップ
 - 植物、蛾、蝶、タマムシ、カミキリムシ、ハムシ、アブラムシ別 + 英語版（`sitemap-en-*.xml`）の分割サイトマップ
 - インデックスは `public/sitemap.xml`
-- 毎日の更新日付自動設定
+- lastmod は「そのページの内容が実際に変わった日」。本文の指紋を前回公開時の記録（公開サイトの `sitemap-lastmod.json`）と比べ、
+  同じなら前回の日付、違えば今日にする（`scripts/lib/sitemapLastmod.mjs`。読み込み元は `SITEMAP_LASTMOD_SOURCE` で変更可）。
+  記録を読めないときは全ページを初回の日付（`INITIAL_SITEMAP_LASTMOD`）にし、「今日更新」を一斉に出さない。`audit:seo` が記録と sitemap の一致を確かめる。
 
 ## データ品質監査（CSV）
 
