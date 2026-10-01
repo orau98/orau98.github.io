@@ -2,6 +2,8 @@
 // ビルド結果（dist）を実際のブラウザで開き、主要な画面が壊れていないかを確かめる。
 // PRチェック（ci.yml）で `npm run build` の後に実行する。見た目の細部ではなく
 // 「開ける・中身が出る・エラーが出ない・スマホで横にはみ出さない」だけを見る。
+// seo: true の画面は、JavaScript 実行後の title・説明文・canonical・hreflang・robots・
+// 構造化データが静的HTMLと同じかも確かめる（Google は実行後のページを登録に使うため）。
 //
 // 使い方: npm run check:browser（事前に npm run build）
 import http from 'http';
@@ -16,13 +18,14 @@ const E = encodeURIComponent;
 
 // 画面ごとに「表示されるまで待つ文字」を決める
 export const PAGES = [
-  { name: 'トップ（昆虫一覧）', path: '/', waitFor: '件が見つかりました', expectCards: true },
+  { name: 'トップ（昆虫一覧）', path: '/', waitFor: '件が見つかりました', expectCards: true, seo: true },
   { name: '植物一覧', path: '/?tab=plants', waitFor: '件が見つかりました' },
-  { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草' },
-  { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ' },
+  { name: '昆虫一覧ページ（/moth/）', path: '/moth/', waitFor: '件が見つかりました', seo: true },
+  { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
+  { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true },
   { name: '検索（アゲハ）', path: `/?q=${E('アゲハ')}`, waitFor: '件が見つかりました' },
-  { name: '英語トップ', path: '/en/', waitFor: 'results' },
-  { name: 'クイズ', path: '/quiz', waitFor: '問を始める' },
+  { name: '英語トップ', path: '/en/', waitFor: 'results', seo: true },
+  { name: 'クイズ', path: '/quiz', waitFor: '問を始める', seo: true },
 ];
 
 const TYPES = {
@@ -43,6 +46,40 @@ function startServer() {
     fs.createReadStream(filePath).pipe(res);
   });
   return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
+}
+
+const decodeEntities = (value = '') => String(value)
+  .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+// 構造化データは「種類の一覧」で比べる（@graph はまとめて1つ）
+const jsonLdTypeOf = (text) => {
+  try {
+    const data = JSON.parse(text);
+    return data['@graph'] ? 'graph' : [data['@type']].flat().join('+');
+  } catch {
+    return 'INVALID';
+  }
+};
+
+// 静的HTML（dist のファイル）から、比べる SEO 情報を取り出す
+function readStaticSeo(urlPath) {
+  let filePath = path.join(DIST, decodeURIComponent(new URL(urlPath, 'http://x').pathname));
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) filePath = path.join(filePath, 'index.html');
+  const html = fs.readFileSync(filePath, 'utf8');
+  const head = html.match(/<head[^>]*>([\s\S]*?)<\/head>/i)?.[1] || '';
+  const attr = (tag, name) => decodeEntities(tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1] || '');
+  const tags = (pattern) => head.match(pattern) || [];
+  const metaContent = (name) => attr(tags(new RegExp(`<meta\\b[^>]*name="${name}"[^>]*>`, 'gi'))[0] || '', 'content');
+  return {
+    title: decodeEntities(head.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() || ''),
+    description: metaContent('description'),
+    robots: tags(/<meta\b[^>]*name="robots"[^>]*>/gi).map((tag) => attr(tag, 'content')).join(' | '),
+    canonical: tags(/<link\b[^>]*rel="canonical"[^>]*>/gi).map((tag) => attr(tag, 'href')).join(' | '),
+    hreflang: tags(/<link\b[^>]*rel="alternate"[^>]*hreflang="[^"]*"[^>]*>/gi)
+      .map((tag) => `${attr(tag, 'hreflang')}=${attr(tag, 'href')}`).sort().join(' '),
+    jsonLd: Array.from(html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi))
+      .map((match) => jsonLdTypeOf(match[1])).sort().join(' '),
+  };
 }
 
 // 外部サービス（広告・解析・Instagram・フォント）由来のエラーは対象外
@@ -80,6 +117,35 @@ async function checkPage(browser, origin, page, viewport) {
   if (state.alert) problems.push(`エラー表示: ${state.alert.split('\n')[0]}`);
   if (state.overflow > 2) problems.push(`横にはみ出し ${state.overflow}px`);
   if (page.expectCards && state.cards === 0) problems.push('昆虫カードが1枚も表示されない');
+  if (page.seo) {
+    const expected = readStaticSeo(page.path);
+    const rendered = await tab.evaluate(() => {
+      // jsonLdTypeOf と同じ判定（ブラウザ側では外の関数を使えないため書き直している）
+      const typeOf = (text) => {
+        try {
+          const data = JSON.parse(text);
+          return data['@graph'] ? 'graph' : [data['@type']].flat().join('+');
+        } catch {
+          return 'INVALID';
+        }
+      };
+      const all = (selector) => Array.from(document.querySelectorAll(selector));
+      return {
+        title: document.title,
+        description: document.querySelector('meta[name="description"]')?.getAttribute('content') || '',
+        robots: all('meta[name="robots"]').map((node) => node.getAttribute('content')).join(' | '),
+        canonical: all('link[rel="canonical"]').map((node) => node.getAttribute('href')).join(' | '),
+        hreflang: all('link[rel="alternate"][hreflang]')
+          .map((node) => `${node.getAttribute('hreflang')}=${node.getAttribute('href')}`).sort().join(' '),
+        jsonLd: all('script[type="application/ld+json"]').map((node) => typeOf(node.textContent)).sort().join(' '),
+      };
+    });
+    for (const key of Object.keys(expected)) {
+      if (expected[key] !== rendered[key]) {
+        problems.push(`SEO情報（${key}）が静的HTMLと違う: 「${expected[key]}」→「${rendered[key]}」`);
+      }
+    }
+  }
   await context.close();
   return { problems, ms: Date.now() - startedAt };
 }

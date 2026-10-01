@@ -16,6 +16,7 @@ import {
 } from './utils/englishNaming';
 import { isEnglishLocale, localizePath } from './utils/locale';
 import { absUrl } from './utils/origin';
+import { isPrerenderedHeadFor } from './utils/prerenderedHead';
 import { loadPlantImageFilenames as loadPlantImageFilenamesService } from './services/imageIndex';
 import {
   createSafePlantFilename,
@@ -973,7 +974,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     alternates: [
       { hreflang: 'ja', href: alternateJaHref },
       { hreflang: 'en', href: alternateEnHref },
-      { hreflang: 'x-default', href: alternateEnHref },
+      // 静的ページと同じく x-default は日本語版
+      { hreflang: 'x-default', href: alternateJaHref },
     ],
     breadcrumbItems: [
       { name: isEnglish ? EN_SITE_NAME : '昆虫植物図鑑', url: absUrl(localizePath('/', locale)) },
@@ -1003,7 +1005,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       const id = 'itemlist-classification';
       let s = document.querySelector('#' + id);
       if (s) s.remove();
-      if (isFamily || isOrder || isGenus) {
+      // 静的HTMLにあるページでは静的な構造化データを使い、二重にしない
+      if ((isFamily || isOrder || isGenus) && !isPrerenderedHeadFor(canonicalHref)) {
         const items = (classificationMembers || []).slice(0, 10).map((name, idx) => ({
           "@type": "ListItem",
           position: idx + 1,
@@ -1025,7 +1028,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       const s = document.querySelector('#itemlist-classification');
       if (s) s.remove();
     };
-  }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName, locale]);
+  }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName, locale, canonicalHref]);
   
   // All insects for RelatedPlants component
   const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...barkbeetles, ...leafbeetles, ...aphids];
@@ -1455,6 +1458,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       // 昆虫パーティション未着のうちは「関連0種」が確定ではないため、
       // noindexへの切替判定を保留する（着弾後に正しく再評価される）
       if (!insectPartitionsReady) return;
+      // 静的HTMLにあるページはビルド時の判定をそのまま使う（写真や植物プロフィールだけで
+      // index にしている植物もあり、ここで「関連0種」として noindex にすると食い違う）
+      if (isPrerenderedHeadFor(canonicalHref)) return;
       const isTaxonList = isFamily || isOrder || isGenus;
       const shouldIndex =
         isTaxonList ||
@@ -1462,7 +1468,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         (Array.isArray(flowerVisitInsects) && flowerVisitInsects.length > 0);
       setRobotsMetaContent(shouldIndex ? INDEX_FOLLOW_ROBOTS : NOINDEX_FOLLOW_ROBOTS);
     } catch {}
-  }, [insectPartitionsReady, isFamily, isOrder, isGenus, hostPlantInsects, flowerVisitInsects]);
+  }, [insectPartitionsReady, isFamily, isOrder, isGenus, hostPlantInsects, flowerVisitInsects, canonicalHref]);
 
   // Load classification: prefer lite JSON, fallback to CSV
   useEffect(() => {
@@ -1912,16 +1918,18 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           </Link>
         )}
       </div>
-      {/* 構造化データ */}
-      <PlantStructuredData 
-        plant={{
-          name: decodedPlantName,
-          canonicalName: canonicalPlantName,
-          scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined,
-          family: familyLabel,
-        }} 
-        relatedInsects={hostPlantInsects}
-      />
+      {/* 構造化データ（静的HTMLにあるページでは静的なものを使い、二重にしない） */}
+      {!isPrerenderedHeadFor(canonicalHref) && (
+        <PlantStructuredData
+          plant={{
+            name: decodedPlantName,
+            canonicalName: canonicalPlantName,
+            scientificName: isLikelyLatin(displayLatin) ? displayLatin : undefined,
+            family: familyLabel,
+          }}
+          relatedInsects={hostPlantInsects}
+        />
+      )}
       
       {/* モバイルは写真ファーストの1カラム。lg以上は写真を左に固定した2カラムにして、
           初期表示で種名・解説が写真と同時に見えるようにする（昆虫詳細と統一） */}

@@ -44,9 +44,10 @@ import {
 } from "./utils/englishNaming";
 import {
   isEnglishLocale,
-  localizePath,
+  localizeDirectoryPath,
   stripLocalePrefix,
 } from "./utils/locale";
+import { isPrerenderedHeadFor } from "./utils/prerenderedHead";
 import { buildExplorerDetailContext } from "./utils/navState";
 import { countInsectLinkedPlants, mergePlantEntries } from "./utils/plantListMerge";
 import {
@@ -453,6 +454,9 @@ const InsectsHostPlantExplorer = memo(
     const navigate = useNavigate();
     const isEnglish = isEnglishLocale(locale);
     const strippedPathname = stripLocalePrefix(location.pathname || "/");
+    // 一覧ハブ（"/moth"・"/plant"・トップ "/"）の判定。実際のURLは /moth/ のように
+    // 末尾スラッシュ付きなので、比較の前に外す
+    const explorerHubPath = strippedPathname.replace(/\/+$/, "") || "/";
     const countLabel = useCallback(
       (value) =>
         isEnglish
@@ -1144,7 +1148,7 @@ const InsectsHostPlantExplorer = memo(
     }, [hostPlants, flowerVisitPlants, plantInsectStats]);
 
     const listSeo = useMemo(() => {
-      if (strippedPathname === "/moth") {
+      if (explorerHubPath === "/moth") {
         return {
           title: isEnglish
             ? "Insect index | Insects and Host Plants of Japan"
@@ -1164,17 +1168,17 @@ const InsectsHostPlantExplorer = memo(
                 counts.aphids,
               )} of aphids by Japanese name, scientific name, or taxonomy.`
             : `昆虫一覧ページ。蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、キクイムシ ${counts.barkbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種を和名/学名/分類で検索できます。`,
-          canonical: absUrl(localizePath("/moth/", locale)),
+          canonical: absUrl(localizeDirectoryPath("/moth", locale)),
           breadcrumbItems: [
-            { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
+            { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizeDirectoryPath("/", locale)) },
             {
               name: isEnglish ? "Insects" : "昆虫",
-              url: absUrl(localizePath("/moth/", locale)),
+              url: absUrl(localizeDirectoryPath("/moth", locale)),
             },
           ],
         };
       }
-      if (strippedPathname === "/plant") {
+      if (explorerHubPath === "/plant") {
         return {
           title: isEnglish
             ? "Plant index | Insects and Host Plants of Japan"
@@ -1184,12 +1188,12 @@ const InsectsHostPlantExplorer = memo(
                 counts.hostPlants,
               )} of host plants and flower-visit plants recorded in Japan, then review the related insects for each plant.`
             : `植物一覧ページ。食草・訪花植物 ${counts.hostPlants}種を和名/学名/分類で検索し、関連昆虫を確認できます。`,
-          canonical: absUrl(localizePath("/plant/", locale)),
+          canonical: absUrl(localizeDirectoryPath("/plant", locale)),
           breadcrumbItems: [
-            { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
+            { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizeDirectoryPath("/", locale)) },
             {
               name: isEnglish ? "Plants" : "植物",
-              url: absUrl(localizePath("/plant/", locale)),
+              url: absUrl(localizeDirectoryPath("/plant", locale)),
             },
           ],
         };
@@ -1215,12 +1219,12 @@ const InsectsHostPlantExplorer = memo(
               counts.hostPlants,
             )} of plants.`
           : `蛾・蝶 ${counts.moths + counts.butterflies}種、タマムシ ${counts.beetles}種、カミキリムシ ${counts.longhornbeetles}種、キクイムシ ${counts.barkbeetles}種、ハムシ ${counts.leafbeetles}種、アブラムシ ${counts.aphids}種、食草 ${counts.hostPlants}種を掲載。和名・学名・植物名から検索できる昆虫食草データベース。`,
-        canonical: absUrl(localizePath("/", locale)),
+        canonical: absUrl(localizeDirectoryPath("/", locale)),
         breadcrumbItems: [
-          { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizePath("/", locale)) },
+          { name: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑", url: absUrl(localizeDirectoryPath("/", locale)) },
         ],
       };
-    }, [countLabel, counts, isEnglish, locale, strippedPathname]);
+    }, [countLabel, counts, explorerHubPath, isEnglish, locale]);
 
     const { setOgTwitterImage } = useSeoMeta({
       title: listSeo.title,
@@ -1230,10 +1234,11 @@ const InsectsHostPlantExplorer = memo(
       locale: isEnglish ? "en_US" : "ja_JP",
       htmlLang: locale,
       siteName: isEnglish ? EN_SITE_NAME : "昆虫植物図鑑",
+      // 静的ページと同じく末尾スラッシュ付きURLを使い、x-default は日本語版にする
       alternates: [
-        { hreflang: "ja", href: absUrl(localizePath(strippedPathname, "ja")) },
-        { hreflang: "en", href: absUrl(localizePath(strippedPathname, "en")) },
-        { hreflang: "x-default", href: absUrl(localizePath(strippedPathname, "en")) },
+        { hreflang: "ja", href: absUrl(localizeDirectoryPath(explorerHubPath, "ja")) },
+        { hreflang: "en", href: absUrl(localizeDirectoryPath(explorerHubPath, "en")) },
+        { hreflang: "x-default", href: absUrl(localizeDirectoryPath(explorerHubPath, "ja")) },
       ],
       breadcrumbItems: listSeo.breadcrumbItems,
       resetCanonicalTo: absUrl("/"),
@@ -1883,15 +1888,17 @@ const InsectsHostPlantExplorer = memo(
           locale={locale}
           onVisibilityChange={setIsStickyHeaderVisible}
         />
-        {/* 構造化データ */}
-        <ExplorerStructuredData
-          pathname={location.pathname}
-          pageTitle={listSeo.title}
-          pageDescription={listSeo.description}
-          counts={counts}
-          featuredInsects={featuredInsects}
-          featuredPlants={featuredPlants}
-        />
+        {/* 構造化データ（静的HTMLにあるページでは静的なものを使い、二重にしない） */}
+        {!isPrerenderedHeadFor(listSeo.canonical) && (
+          <ExplorerStructuredData
+            pathname={explorerHubPath}
+            pageTitle={listSeo.title}
+            pageDescription={listSeo.description}
+            counts={counts}
+            featuredInsects={featuredInsects}
+            featuredPlants={featuredPlants}
+          />
+        )}
         <div className="max-w-6xl mx-auto space-y-2 p-2 sm:space-y-6 sm:p-4 md:p-8">
           <ExplorerHero
             activeSearchTerm={activeSearchTerm}

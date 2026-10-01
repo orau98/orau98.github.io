@@ -93,8 +93,12 @@ npm run lint         # ESLint
 - メタページ（`npm run generate-meta:all`）は日本語・英語とも1回ずつ生成する。日本語ページの英語版リンク（hreflang="en"）は英語ページの有無で決まるため、
   日本語の生成（`--defer-en-alternates`）では目印だけ置き、英語の生成後に `scripts/apply-meta-en-alternates.mjs` が置き換える（仕組みは `scripts/lib/metaEnglishAlternates.mjs`）。
 - ビルドの前後のチェックは別コマンド: `npm run check:source`（lint・テスト・参照整合性）、`npm run check:dist`（dist の監査）、
-  `npm run check:browser`（`scripts/smoke-browser.mjs`。dist を実際のブラウザで開き、主要7画面をスマホ・PCで確認。PRチェックで実行）。
+  `npm run check:browser`（`scripts/smoke-browser.mjs`。dist を実際のブラウザで開き、主要8画面をスマホ・PCで確認。PRチェックで実行）。
   主要な画面や表示確認の文字を変えたら `scripts/smoke-browser.mjs` の `PAGES` も合わせて直す。
+  `seo: true` の画面は、JavaScript 実行後の title・説明文・canonical・hreflang・robots・構造化データが静的HTMLと同じかも確かめる。
+- 静的HTML（ルートシェル・メタページ・index.html）の head が SEO の正。Google は JavaScript 実行後のページを登録に使うため、
+  アプリは同じページを表示している間は head を書き換えない（`src/utils/prerenderedHead.js`。`useSeoMeta`・構造化データ・robots がこれに従う）。
+  アプリ内のリンクで別のページへ移った後だけ、アプリが head を更新する。
 - 写真の縮小版: 昆虫は WebP だけを作る（SNS共有用の既定画像の JPEG だけ例外。`scripts/lib/imageAssetConstants.mjs` の `RETAINED_INSECT_JPEGS`）。
   本番公開では `actions/cache` で `.cache/`（縮小版の保管場所と元画像の指紋。Git管理外）を持ち越し、元画像が変わらない限り作り直さない。
   同じファイル名で差し替えた元画像は、指紋の食い違いで検出して作り直す。

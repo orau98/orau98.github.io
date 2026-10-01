@@ -42,6 +42,7 @@ import {
 } from './utils/siteTaxonomy';
 import { isStaticDocumentPath } from './utils/staticDocumentPaths';
 import { hasExplorerResultQuery } from './utils/explorerQueryParams';
+import { getPrerenderedRobots, isPrerenderedHeadFor } from './utils/prerenderedHead';
 import {
   getInsectDetailCollectionKey,
   isHomePreviewRoute,
@@ -177,6 +178,12 @@ function App() {
         (window.__SEO_FORCE_NOINDEX__ === true || location.pathname === '/404.html');
       const params = new URLSearchParams(location.search);
       const hasSearch = hasExplorerResultQuery(params);
+      // 検索結果・404 以外で静的HTMLにあるページは、ビルド時の robots（noindex の別名ページなど）を使う
+      if (!isSpa404Fallback && !hasSearch && isPrerenderedHeadFor(location.pathname)) {
+        const prerenderedRobots = getPrerenderedRobots();
+        if (prerenderedRobots) setRobotsMetaContent(prerenderedRobots);
+        return;
+      }
       setRobotsMetaContent(
         isSpa404Fallback || hasSearch ? NOINDEX_FOLLOW_ROBOTS : INDEX_FOLLOW_ROBOTS,
       );

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   getAlternateLocalePath,
   getLocaleFromPath,
+  localizeDirectoryPath,
   localizePath,
   stripLocalePrefix,
 } from '../src/utils/locale.js';
@@ -31,4 +32,12 @@ test('localizePath preserves query strings and toggles locale prefixes', () => {
 test('getAlternateLocalePath swaps between japanese and english routes', () => {
   assert.equal(getAlternateLocalePath('/en/moth/species-1?q=test', 'en'), '/moth/species-1?q=test');
   assert.equal(getAlternateLocalePath('/plant/Fagus%20crenata', 'ja'), '/en/plant/Fagus%20crenata');
+});
+
+test('localizeDirectoryPath keeps the trailing slash used by static canonical URLs', () => {
+  assert.equal(localizeDirectoryPath('/', 'ja'), '/');
+  assert.equal(localizeDirectoryPath('/', 'en'), '/en/');
+  assert.equal(localizeDirectoryPath('/moth', 'ja'), '/moth/');
+  assert.equal(localizeDirectoryPath('/moth/', 'en'), '/en/moth/');
+  assert.equal(localizeDirectoryPath('/en/plant', 'ja'), '/plant/');
 });

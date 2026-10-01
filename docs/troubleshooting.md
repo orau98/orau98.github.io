@@ -32,3 +32,18 @@
 2. 無効なファイルの削除
 3. メタページとサイトマップの再生成
 4. サイトの再デプロイ
+
+### 問題: JavaScript 実行後に canonical・タイトルが静的HTMLと食い違う（2026年10月）
+
+**症状**: 静的HTMLの head は正しいのに、ブラウザで JavaScript が動いた後に別の内容へ書き換わっていた。
+- 一覧ページ（`/moth/`・`/plant/`・`/en/moth/`・`/en/plant/`）の canonical がトップ（`/`・`/en`）を指し、タイトルもトップと同じになる
+  （`/moth/` の末尾スラッシュのせいで一覧ページと判定されていなかった）
+- 種・植物ページのタイトル・説明文がアプリ側の文言に置き換わり、hreflang が2組（x-default が日本語版と英語版で食い違い）、構造化データが二重になる
+- robots がアプリの判定で変わる（写真や植物プロフィールだけで index にしている植物ページが noindex に、noindex の別名ページが index に）
+
+Google は JavaScript 実行後のページを登録に使うため、静的HTMLだけを調べる `audit:seo` では見つからなかった。
+
+**解決策**:
+1. 静的な head と同じページを表示している間はアプリが head を書き換えない（`src/utils/prerenderedHead.js`）
+2. 一覧ページの判定を末尾スラッシュに関係なく行い、canonical・hreflang を静的HTMLと同じ末尾スラッシュ付きURL・x-default=日本語版にそろえる
+3. `npm run check:browser` で、JavaScript 実行後の SEO 情報が静的HTMLと一致するかを確かめる
