@@ -157,7 +157,8 @@ test('all verified flower relationships apply atomically and remain idempotent',
       const key = relationshipKey(row);
       relationCounts.set(key, (relationCounts.get(key) || 0) + 1);
     }
-    assert.equal(sourceRows.length, 2972);
+    // 2,972行から、2026-10-02 の重複ID統合で完全重複として削除した2行を引いた数
+    assert.equal(sourceRows.length, 2970);
     assert.equal(sourceRows.some((row) => row.plant_name === '（リスト無し）'), false);
     assert.equal(sourceRows.some((row) => !row.plant_family), false);
     assert.equal(sourceRows.some((row) => row.plant_name === 'ヤマタケタケアザミ'), false);

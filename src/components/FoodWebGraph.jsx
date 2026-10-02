@@ -1091,7 +1091,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
     ].filter(Boolean);
 
     for (const key of candidates) {
-      const canonical = aliasToCanonical[key] || key;
+      // YList の標準名でもある名前は、別の植物の別名として引かない（植物ページの統合と同じ規則）
+      const canonical = plants[key] ? key : (aliasToCanonical[key] || key);
       const info = plants[canonical];
       if (info) return { canonical, info };
     }

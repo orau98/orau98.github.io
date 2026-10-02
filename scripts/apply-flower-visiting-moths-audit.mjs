@@ -28,6 +28,10 @@ if (unknownArguments.length) throw new Error(`Unknown arguments: ${unknownArgume
 const HOST_PATH = path.join(DATA_ROOT, 'normalized_data/hostplants.csv');
 const INSECT_PATH = path.join(DATA_ROOT, 'normalized_data/insects.csv');
 const SOURCE_REFERENCE = '花を訪れる蛾たち　知られざる姿を求めて';
+// この監査の適用直後は2,972行。その後、2026-10-02 の重複ID統合
+// （data/source_audits/insect-name-integrity-2026-10-02.json）で、統合先の行と完全に重複した
+// 2行（キイロトゲエダシャクの重複ID species-21578 のアセビ・ヒサカキ）を削除した。
+const EXPECTED_SOURCE_ROWS = 2972 - 2;
 const LEDGER_SHA256 = 'bad54f975389bef5db313beca0f1114156781c36faec99ebcd9e082ec90b9f87';
 const EXPECTED_ACTIONS = 363;
 const EXPECTED_ADDITIONS = 357;
@@ -311,7 +315,7 @@ function validateResult(source, ledger, baselineRelationshipCounts) {
     throw new Error(`post-transform actions are not fully applied: ${failures[0].action.action_id}`);
   }
   const sourceRows = rows.filter((row) => row.reference === SOURCE_REFERENCE);
-  if (sourceRows.length !== 2972) throw new Error(`unexpected source row count: ${sourceRows.length}`);
+  if (sourceRows.length !== EXPECTED_SOURCE_ROWS) throw new Error(`unexpected source row count: ${sourceRows.length}`);
   if (sourceRows.some((row) => !row.plant_family || row.plant_name === '（リスト無し）')) {
     throw new Error('source rows still contain blank families or invalid placeholders');
   }

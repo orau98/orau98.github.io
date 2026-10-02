@@ -28,6 +28,7 @@
     "apply:kiriga-emergence-audit": "node scripts/apply-kiriga-emergence-audit.mjs",
     "apply:aphid-p0-integrity": "node scripts/apply-aphid-p0-integrity.mjs",
     "apply:aphid-guide-full-audit": "node scripts/apply-japanese-aphid-guide-general-note-audit.mjs",
+    "apply:insect-name-integrity": "node scripts/apply-insect-name-integrity-audit.mjs",
     "apply:ga-tsushin-hostplant-audit": "node scripts/apply-ga-tsushin-hostplant-audit.mjs",
     "apply:scolytinae-kabe-1959-audit": "node scripts/apply-scolytinae-kabe-1959-audit.mjs",
     "apply:resolved-host-candidates": "node scripts/apply-resolved-host-update-candidates.mjs",

@@ -10,7 +10,7 @@ export function getPlantUsage(insect = {}, normalize = (value) => String(value |
     const records = detailed;
     const names = (flower) => unique(records
       .filter((record) => isFlowerVisitRecord(record) === flower)
-      .map((record) => normalize(record.displayName || record.name || record.plant)));
+      .map((record) => normalize(record.displayName || record.name || record.plant, record)));
     return { hostPlants: names(false), flowerPlants: names(true) };
   }
   const legacy = Array.isArray(insect.hostPlants) ? insect.hostPlants

@@ -126,6 +126,16 @@ npm run lint         # ESLint
 - 重複データの統合（例：「オニグルミ」→「オニグルミ(クルミ科)」）
 - エイリアス作成で検索性向上
 - 無効な植物名の除外
+- 植物ページの正規名は `scripts/lib/dataLiteBuilders.mjs` の `resolvePlantCanonical` が唯一の判定（アプリの data-lite・日本語メタページ・英語メタページが共用）。
+  食草記録の名前が YList の別名なら正規名のページにまとめる（例: アシ → ヨシ）。ただし、名前そのものが YList の標準名のもの、
+  同名の別種・総称（`YLIST_ALIAS_HOMONYMS`。例: ツルソバ、ツバキ、ナラ）、科が食い違うものは寄せない。
+  まとめた別名の旧URL（`/plant/アシ/` 等）は、メタページ生成が正規ページへの恒久転送（taxonomy-merge）を作る。
+
+### 重複IDの統合と名前の変更
+- 同じ種の別ID（重複）を統合したり、和名を直してURLが変わったりするときは、`data/source_audits/` の台帳に記録して適用スクリプトで反映する
+  （例: `insect-name-integrity-2026-10-02.json` と `scripts/apply-insect-name-integrity-audit.mjs`）。
+  台帳の `legacy_route_names` などから、旧URLを正規ページへの恒久転送にする（`scripts/lib/mergedTaxonRedirects.mjs`）。
+- 和名は原本で確認できたものだけを入れる。確認できない場合は空欄にする（表示名は学名になる）。
 
 ## SEO対策
 

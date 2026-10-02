@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "audit_name": "植物の別名ページの統合",
+  "reviewed_on": "2026-10-02",
+  "scope": {
+    "summary": "日本語の静的ページを、アプリの植物詳細（data-lite）と同じ正規名でまとめた（例: アシ → ヨシ）。別名のURLはビルド時に正規ページへの恒久転送を作る（scripts/generate-meta-pages.js の mergedPlantAliases）。",
+    "canonical_rule": "scripts/lib/dataLiteBuilders.mjs の resolvePlantCanonical。名前そのものが YList の標準名のもの、同名の別種・総称（YLIST_ALIAS_HOMONYMS）、科が食い違うものは別の種へ寄せない。",
+    "english_pages": "英語版は以前から別名を正規名へ寄せていたが、YList の標準名でもある名前まで別の種へ寄せていた。アプリと同じ判定にそろえたことで消える旧英語ページを english_retired_pages で転送する。"
+  },
+  "counts": {
+    "english_retired_pages": 26
+  },
+  "english_retired_pages": [
+    {
+      "old_route_name": "アズマシャクナゲ",
+      "old_meta_slug": "rhododendron-degronianum",
+      "target_plant": "シャクナゲ",
+      "reason": "旧英語版は食草記録「シャクナゲ」を YList-lite の別名索引で「アズマシャクナゲ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「シャクナゲ」のページにする。"
+    },
+    {
+      "old_route_name": "イブキノエンドウ",
+      "old_meta_slug": "vicia-sepium",
+      "target_plant": "カラスノエンドウ",
+      "reason": "旧英語版は食草記録「カラスノエンドウ」を YList-lite の別名索引で「イブキノエンドウ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「カラスノエンドウ」のページにする。"
+    },
+    {
+      "old_route_name": "エゴノキ",
+      "old_meta_slug": "styrax-japonicus-2",
+      "target_plant": "エゴノキ",
+      "reason": "同じ植物の英語ページで、学名が同じ別ページと番号（-2 等）を取り合っていたため、ファイル名だけが変わった。"
+    },
+    {
+      "old_route_name": "オオカメノキ",
+      "old_meta_slug": "viburnum-furcatum-2",
+      "target_plant": "オオカメノキ",
+      "reason": "同じ植物の英語ページで、学名が同じ別ページと番号（-2 等）を取り合っていたため、ファイル名だけが変わった。"
+    },
+    {
+      "old_route_name": "オニマタタビ",
+      "old_meta_slug": "actinidia-chinensis",
+      "target_plant": "キウイフルーツ",
+      "reason": "旧英語版は食草記録「キウイフルーツ」を YList-lite の別名索引で「オニマタタビ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「キウイフルーツ」のページにする。"
+    },
+    {
+      "old_route_name": "オノマンネングサ",
+      "old_meta_slug": "sedum-lineare-2",
+      "target_plant": "オノマンネングサ",
+      "reason": "同じ植物の英語ページで、学名が同じ別ページと番号（-2 等）を取り合っていたため、ファイル名だけが変わった。"
+    },
+    {
+      "old_route_name": "カラサイカチモドキ",
+      "old_meta_slug": "カラサイカチモドキ",
+      "target_plant": "グミモドキ",
+      "reason": "旧英語版は食草記録「グミモドキ」を YList-lite の別名索引で「カラサイカチモドキ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「グミモドキ」のページにする。"
+    },
+    {
+      "old_route_name": "ケアオダモ",
+      "old_meta_slug": "fraxinus-sieboldiana-2",
+      "target_plant": "アオダモ",
+      "reason": "旧英語版は食草記録「アオダモ」を YList-lite の別名索引で「ケアオダモ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「アオダモ」のページにする。"
+    },
+    {
+      "old_route_name": "コダチスズムシソウ",
+      "old_meta_slug": "strobilanthes-glandulifera",
+      "target_plant": "セイタカスズムシソウ",
+      "reason": "旧英語版は食草記録「セイタカスズムシソウ」を YList-lite の別名索引で「コダチスズムシソウ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「セイタカスズムシソウ」のページにする。"
+    },
+    {
+      "old_route_name": "コハコベ",
+      "old_meta_slug": "stellaria-media",
+      "target_plant": "ハコベ",
+      "reason": "旧英語版は食草記録「ハコベ」を YList-lite の別名索引で「コハコベ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「ハコベ」のページにする。"
+    },
+    {
+      "old_route_name": "シマダケ",
+      "old_meta_slug": "pleioblastus-variegatus",
+      "target_plant": "チゴザサ",
+      "reason": "旧英語版は食草記録「チゴザサ」を YList-lite の別名索引で「シマダケ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「チゴザサ」のページにする。"
+    },
+    {
+      "old_route_name": "シラタエヤグルマギク",
+      "old_meta_slug": "centaurea-cineraria",
+      "target_plant": "シロタエギク",
+      "reason": "旧英語版は食草記録「シロタエギク」を YList-lite の別名索引で「シラタエヤグルマギク」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「シロタエギク」のページにする。"
+    },
+    {
+      "old_route_name": "タイワンハマオモト",
+      "old_meta_slug": "crinum-asiaticum-var-sinicum",
+      "target_plant": "オオハマオモト",
+      "reason": "旧英語版は食草記録「オオハマオモト」を YList-lite の別名索引で「タイワンハマオモト」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「オオハマオモト」のページにする。"
+    },
+    {
+      "old_route_name": "ツルアジサイ",
+      "old_meta_slug": "hydrangea-petiolaris-2",
+      "target_plant": "ツルアジサイ",
+      "reason": "同じ植物の英語ページで、学名が同じ別ページと番号（-2 等）を取り合っていたため、ファイル名だけが変わった。"
+    },
+    {
+      "old_route_name": "トカチヤナギ",
+      "target_plant": "オオバヤナギ",
+      "reason": "旧英語版は食草記録「オオバヤナギ」を YList-lite の別名索引で「トカチヤナギ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「オオバヤナギ」のページにする。"
+    },
+    {
+      "old_route_name": "トクサバモクマオウ",
+      "old_meta_slug": "casuarina-equisetifolia",
+      "target_plant": "モクマオウ",
+      "reason": "旧英語版は食草記録「モクマオウ」を YList-lite の別名索引で「トクサバモクマオウ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「モクマオウ」のページにする。"
+    },
+    {
+      "old_route_name": "ニホンカボチャ",
+      "old_meta_slug": "cucurbita-moschata",
+      "target_plant": "カボチャ",
+      "reason": "旧英語版は食草記録「カボチャ」を YList-lite の別名索引で「ニホンカボチャ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「カボチャ」のページにする。"
+    },
+    {
+      "old_route_name": "ハナトリカブト",
+      "old_meta_slug": "aconitum-chinense",
+      "target_plant": "トリカブト",
+      "reason": "旧英語版は食草記録「トリカブト」を YList-lite の別名索引で「ハナトリカブト」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「トリカブト」のページにする。"
+    },
+    {
+      "old_route_name": "ヒメコウゾ",
+      "target_plant": "コウゾ",
+      "reason": "旧英語版は食草記録「コウゾ」を YList-lite の別名索引で「ヒメコウゾ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「コウゾ」のページにする。"
+    },
+    {
+      "old_route_name": "フクド",
+      "old_meta_slug": "artemisia-fukudo",
+      "target_plant": "ハマヨモギ",
+      "reason": "旧英語版は食草記録「ハマヨモギ」を YList-lite の別名索引で「フクド」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「ハマヨモギ」のページにする。"
+    },
+    {
+      "old_route_name": "フジモドキ",
+      "old_meta_slug": "フジモドキ",
+      "target_plant": "チョウジザクラ",
+      "reason": "旧英語版は食草記録「チョウジザクラ」を YList-lite の別名索引で「フジモドキ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「チョウジザクラ」のページにする。"
+    },
+    {
+      "old_route_name": "ホンミツバツツジ",
+      "old_meta_slug": "rhododendron-dilatatum-subsp-dilatatum-var-dilatatum",
+      "target_plant": "ミツバツツジ",
+      "reason": "旧英語版は食草記録「ミツバツツジ」を YList-lite の別名索引で「ホンミツバツツジ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「ミツバツツジ」のページにする。"
+    },
+    {
+      "old_route_name": "マルバアオダモ",
+      "old_meta_slug": "fraxinus-sieboldiana-3",
+      "target_plant": "マルバアオダモ",
+      "reason": "同じ植物の英語ページで、学名が同じ別ページと番号（-2 等）を取り合っていたため、ファイル名だけが変わった。"
+    },
+    {
+      "old_route_name": "モンタチバナ",
+      "old_meta_slug": "モンタチバナ",
+      "target_plant": "モクタチバナ",
+      "reason": "旧英語版は食草記録「モクタチバナ」を YList-lite の別名索引で「モンタチバナ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「モクタチバナ」のページにする。"
+    },
+    {
+      "old_route_name": "ヤマトラノオ",
+      "old_meta_slug": "veronica-rotunda",
+      "target_plant": "ヒメトラノオ",
+      "reason": "旧英語版は食草記録「ヒメトラノオ」を YList-lite の別名索引で「ヤマトラノオ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「ヒメトラノオ」のページにする。"
+    },
+    {
+      "old_route_name": "ヨルガオ",
+      "old_meta_slug": "ヨルガオ",
+      "target_plant": "ユウガオ",
+      "reason": "旧英語版は食草記録「ユウガオ」を YList-lite の別名索引で「ヨルガオ」へ寄せていた。日本語版・アプリと同じく、記録の名前どおり「ユウガオ」のページにする。"
+    }
+  ]
+}

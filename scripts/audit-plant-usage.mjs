@@ -32,7 +32,12 @@ const en = read(`${decodeURIComponent(enCanonical).replace(/^\//, '')}index.html
 assert.equal(listCount(section(en, 'host-plants')), 15);
 assert.equal(listCount(section(en, 'flower-visits')), 8);
 assert.doesNotMatch(en, /Recorded larval host plants/);
-const vine = read('plant/ヤブガラシ/index.html');
+// ヤブガラシ は YList の標準名 ヤブカラシ のページにまとめ、旧URLは恒久転送にしている
+const vineAlias = read('plant/ヤブガラシ/index.html');
+assert.match(vineAlias, /name="x-redirect-kind" content="taxonomy-merge"/);
+assert.match(vineAlias, /<link rel="canonical" href="https:\/\/orau98.github.io\/plant\/%E3%83%A4%E3%83%96%E3%82%AB%E3%83%A9%E3%82%B7\/">/);
+const vine = read('plant/ヤブカラシ/index.html');
+assert.match(section(vine, 'basic-info'), /<dt>別名<\/dt>\s*<dd>[^<]*ヤブガラシ/);
 const insectRows = [...section(vine, 'related-insects').matchAll(/<li>([\s\S]*?)<\/li>/g)];
 const graphiumRows = insectRows.filter((match) => match[1].includes('アオスジアゲハ'));
 assert.equal(graphiumRows.length, 1, 'one insect row per species, regardless of source count');

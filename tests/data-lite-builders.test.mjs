@@ -8,6 +8,8 @@ import {
   isIndexablePlantProfile,
   isNonPlantResourceName,
   isSuspiciousPlantName,
+  resolvePlantCanonical,
+  YLIST_ALIAS_HOMONYMS,
 } from '../scripts/lib/dataLiteBuilders.mjs';
 
 test('collectPlantPageNames includes audited profile-only plants for static pages', () => {
@@ -553,4 +555,52 @@ test('isSuspiciousPlantName filters fragmentary substrate notes but keeps coarse
   assert.equal(isSuspiciousPlantName(',コウマゴヤシ'), true);
   assert.equal(isSuspiciousPlantName('アザミの一種'), false);
   assert.equal(isSuspiciousPlantName('コナラ属の一種'), false);
+});
+
+test('buildHostPlantDataset keeps YList standard names even when another entry lists them as aliases', () => {
+  // ゴヨウマツ と ヒメコマツ は互いを別名に持つ。寄せると食草が入れ替わる
+  const ylistLite = {
+    aliasToCanonical: { ゴヨウマツ: 'ヒメコマツ', ヒメコマツ: 'ゴヨウマツ', キタゴヨウ: 'ゴヨウマツ' },
+    plants: {
+      ゴヨウマツ: { familyJp: 'マツ科', scientificName: 'Pinus parviflora var. pentaphylla', aliases: ['キタゴヨウ', 'ヒメコマツ'] },
+      ヒメコマツ: { familyJp: 'マツ科', scientificName: 'Pinus parviflora var. parviflora', aliases: ['ゴヨウマツ'] },
+    },
+  };
+  const insects = [
+    { name: 'ガA', hostPlantsDetailed: [{ name: 'ゴヨウマツ', family: 'マツ科', lifeStage: '幼虫', plantPart: '葉' }] },
+    { name: 'ガB', hostPlantsDetailed: [{ name: 'ヒメコマツ', family: 'マツ科', lifeStage: '幼虫', plantPart: '葉' }] },
+    { name: 'ガC', hostPlantsDetailed: [{ name: 'キタゴヨウ', family: 'マツ科', lifeStage: '幼虫', plantPart: '葉' }] },
+  ];
+
+  const { hostPlantsMap, plantDetails } = buildHostPlantDataset(insects, ylistLite);
+
+  assert.deepEqual(hostPlantsMap, { ゴヨウマツ: ['ガA', 'ガC'], ヒメコマツ: ['ガB'] });
+  // 別ページになっている名前は、もう一方の別名に載せない（植物一覧の統合で吸収されないように）
+  assert.equal(plantDetails.ヒメコマツ.aliases.includes('ゴヨウマツ'), false);
+  assert.equal(plantDetails.ゴヨウマツ.aliases.includes('ヒメコマツ'), false);
+  assert.ok(plantDetails.ゴヨウマツ.aliases.includes('キタゴヨウ'));
+});
+
+test('YList-lite の同名異種・総称は別の種へ寄せず、ふつうの別名は正規名へ寄せる', () => {
+  const ylistLite = {
+    aliasToCanonical: { ツルソバ: 'ソバカズラ', アシ: 'ヨシ' },
+    plants: {
+      ソバカズラ: { familyJp: 'タデ科', scientificName: 'Fallopia convolvulus', aliases: ['ツルソバ'] },
+      ヨシ: { familyJp: 'イネ科', scientificName: 'Phragmites australis', aliases: ['アシ'] },
+    },
+  };
+  assert.ok(YLIST_ALIAS_HOMONYMS.has('ツルソバ'));
+  assert.equal(resolvePlantCanonical('ツルソバ', 'タデ科', ylistLite.aliasToCanonical, ylistLite.plants).canonical, 'ツルソバ');
+  assert.equal(resolvePlantCanonical('アシ', 'イネ科', ylistLite.aliasToCanonical, ylistLite.plants).canonical, 'ヨシ');
+  assert.equal(resolvePlantCanonical('アシ(イネ科)', '', ylistLite.aliasToCanonical, ylistLite.plants).canonical, 'ヨシ');
+
+  const insects = [
+    { name: 'ガA', hostPlantsDetailed: [{ name: 'ツルソバ', family: 'タデ科', lifeStage: '幼虫', plantPart: '葉' }] },
+    { name: 'ガB', hostPlantsDetailed: [{ name: 'ソバカズラ', family: 'タデ科', lifeStage: '幼虫', plantPart: '葉' }] },
+    { name: 'ガC', hostPlantsDetailed: [{ name: 'アシ', family: 'イネ科', lifeStage: '幼虫', plantPart: '葉' }] },
+  ];
+  const { hostPlantsMap, plantDetails } = buildHostPlantDataset(insects, ylistLite);
+  assert.deepEqual(hostPlantsMap, { ツルソバ: ['ガA'], ソバカズラ: ['ガB'], ヨシ: ['ガC'] });
+  assert.equal(plantDetails.ソバカズラ.aliases.includes('ツルソバ'), false);
+  assert.ok(plantDetails.ヨシ.aliases.includes('アシ'));
 });

@@ -1,11 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
-import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { buildPlantPath, INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
 import { slugifyScientificLabel } from './lib/englishNaming.mjs';
 import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
 import {
   loadButterflyMergedTaxonRedirects,
+  loadInsectNameIntegrityRedirects,
   loadLeafBeetleMergedTaxonRedirects,
 } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
@@ -26,6 +27,14 @@ const LEAF_BEETLE_CANONICAL_AUDIT_PATH = path.join(
 const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
   ROOT,
   'data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json',
+);
+const NAME_INTEGRITY_AUDIT_PATH = path.join(
+  ROOT,
+  'data/source_audits/insect-name-integrity-2026-10-02.json',
+);
+const PLANT_CONSOLIDATION_AUDIT_PATH = path.join(
+  ROOT,
+  'data/source_audits/plant-page-consolidation-2026-10-02.json',
 );
 const REQUIRED_FILES = [
   'index.html',
@@ -1007,6 +1016,8 @@ for (const localePrefix of ['', 'en']) {
     if (!entry.isDirectory()) continue;
     const routeRelativePath = path.join(localePrefix, 'plant', entry.name, 'index.html');
     const routeHtml = readDistText(routeRelativePath);
+    // 別名の植物ページは正規名のページへの恒久転送（下の転送ページ検査で確かめる）
+    if (routeHtml.includes('name="x-redirect-kind" content="taxonomy-merge"')) continue;
     const canonicalHref = routeHtml.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
     assert(canonicalHref, `${routeRelativePath} must declare a canonical target`);
     const canonicalRelativePath = siteUrlToDistRelativeFile(canonicalHref);
@@ -1335,6 +1346,144 @@ for (const redirect of mergedButterflyRedirects) {
   assert(!englishInsectRoutes[redirect.duplicateId], `duplicate butterfly must not have an English canonical route: ${redirect.duplicateId}`);
   // The English route map intentionally contains indexable pages only. The exhaustive
   // app-route loop above separately verifies unmapped noindex canonical profiles.
+}
+
+// 2026-10-02 の重複ID統合と和名欄の修復: 旧URLがすべて正規ページへの恒久転送になっているか
+const nameIntegrityRedirects = loadInsectNameIntegrityRedirects(NAME_INTEGRITY_AUDIT_PATH);
+assert(
+  nameIntegrityRedirects.merges.length === 13 && nameIntegrityRedirects.renames.length === 115,
+  `unexpected name-integrity redirect counts: merges=${nameIntegrityRedirects.merges.length}, renames=${nameIntegrityRedirects.renames.length}`,
+);
+const runtimeInsectsByType = new Map(INSECT_SECTION_CONFIGS.map(({ type, collectionKey }) => [
+  type,
+  new Map(readDistJson(`assets/data-lite/${collectionKey}.json`).map((insect) => [insect.id, insect])),
+]));
+const sitemapTextByLocaleType = new Map();
+const readSitemapFor = (type, locale) => {
+  const key = `${locale}:${type}`;
+  if (!sitemapTextByLocaleType.has(key)) {
+    sitemapTextByLocaleType.set(key, readDistText(locale === 'en' ? `sitemap-en-${type}.xml` : `sitemap-${type}.xml`));
+  }
+  return sitemapTextByLocaleType.get(key);
+};
+const unescapeHtmlAttribute = (value = '') => value.replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+const assertMigrationRoute = ({ type, locale, legacyName, fallbackId, targetInsect }) => {
+  const routeKey = /[/\\?#%]/.test(legacyName) ? fallbackId : legacyName;
+  const relativePath = path.join(...(locale === 'en' ? ['en'] : []), type, routeKey, 'index.html');
+  assert(fs.existsSync(path.join(DIST_DIR, relativePath)), `missing name-integrity redirect: ${relativePath}`);
+  const html = readDistText(relativePath);
+  const target = `https://orau98.github.io${buildInsectPath(targetInsect, locale)}`;
+  const canonicalHref = unescapeHtmlAttribute(
+    html.match(/<link\s+rel=["']canonical["'][^>]*href=["']([^"']+)/i)?.[1] || '',
+  );
+  assert(/http-equiv=["']refresh["']/i.test(html), `${relativePath} must refresh immediately`);
+  assert(canonicalHref === target, `${relativePath} canonical ${canonicalHref} != ${target}`);
+  assert(html.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${relativePath} migration marker missing`);
+  assert(!hasNoindexRobotsMeta(html), `${relativePath} migration must remain crawlable`);
+  assert(
+    !readSitemapFor(type, locale).includes(`/${type}/${encodeURIComponent(routeKey)}/<`),
+    `${relativePath} migration URL must not be submitted in the sitemap`,
+  );
+};
+for (const redirect of nameIntegrityRedirects.merges) {
+  const runtime = runtimeInsectsByType.get(redirect.taxonGroup);
+  const canonical = runtime.get(redirect.canonicalId);
+  assert(
+    canonical && !runtime.has(redirect.duplicateId),
+    `name-integrity runtime IDs are inconsistent: ${redirect.duplicateId} -> ${redirect.canonicalId}`,
+  );
+  const jaRelativePath = path.join('meta', redirect.taxonGroup, `${redirect.duplicateId}.html`);
+  assert(fs.existsSync(path.join(DIST_DIR, jaRelativePath)), `missing merged ID redirect: ${jaRelativePath}`);
+  assertLegacyMetaCompatibility(readDistText(jaRelativePath), jaRelativePath);
+  const jaSourceHtml = readPublicText(jaRelativePath);
+  assert(
+    jaSourceHtml.includes(`rel="canonical" href="https://orau98.github.io/meta/${redirect.taxonGroup}/${redirect.canonicalId}.html"`),
+    `${jaRelativePath} source canonical mismatch`,
+  );
+  assert(jaSourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${jaRelativePath} source migration marker missing`);
+  const enRelativePath = path.join('en', 'meta', redirect.taxonGroup, `${redirect.legacyEnglishMetaSlug}.html`);
+  assert(fs.existsSync(path.join(DIST_DIR, enRelativePath)), `missing merged English redirect: ${enRelativePath}`);
+  assertLegacyMetaCompatibility(readDistText(enRelativePath), enRelativePath);
+  assert(
+    readPublicText(enRelativePath).includes('name="x-redirect-kind" content="taxonomy-merge"'),
+    `${enRelativePath} source migration marker missing`,
+  );
+  for (const legacyName of redirect.legacyRouteNames) {
+    assertMigrationRoute({ type: redirect.taxonGroup, locale: 'ja', legacyName, fallbackId: redirect.duplicateId, targetInsect: canonical });
+  }
+  for (const legacyName of redirect.legacyEnglishRouteNames) {
+    assertMigrationRoute({ type: redirect.taxonGroup, locale: 'en', legacyName, fallbackId: redirect.duplicateId, targetInsect: canonical });
+  }
+  for (const legacyName of redirect.canonicalLegacyRouteNames) {
+    assertMigrationRoute({ type: redirect.taxonGroup, locale: 'ja', legacyName, fallbackId: redirect.canonicalId, targetInsect: canonical });
+  }
+  for (const legacyName of redirect.canonicalLegacyEnglishRouteNames) {
+    assertMigrationRoute({ type: redirect.taxonGroup, locale: 'en', legacyName, fallbackId: redirect.canonicalId, targetInsect: canonical });
+  }
+}
+for (const rename of nameIntegrityRedirects.renames) {
+  const insect = runtimeInsectsByType.get(rename.taxonGroup).get(rename.insectId);
+  assert(insect, `renamed insect is missing from runtime data: ${rename.insectId}`);
+  for (const legacyName of rename.legacyRouteNames) {
+    assertMigrationRoute({ type: rename.taxonGroup, locale: 'ja', legacyName, fallbackId: rename.insectId, targetInsect: insect });
+  }
+  for (const legacyName of rename.legacyEnglishRouteNames) {
+    assertMigrationRoute({ type: rename.taxonGroup, locale: 'en', legacyName, fallbackId: rename.insectId, targetInsect: insect });
+  }
+}
+
+// 植物の別名ページ: 正規名のページへの恒久転送になっていて、転送先は実ページ、サイトマップには載せない
+const readCanonicalHref = (html) => unescapeHtmlAttribute(
+  html.match(/<link\s+rel=["']canonical["'][^>]*href=["']([^"']+)/i)?.[1] || '',
+);
+let plantAliasRedirectCount = 0;
+for (const locale of ['ja', 'en']) {
+  const routeRoot = path.join(DIST_DIR, ...(locale === 'en' ? ['en', 'plant'] : ['plant']));
+  const sitemap = readDistText(locale === 'en' ? 'sitemap-en-plant.xml' : 'sitemap-plant.xml');
+  for (const entry of fs.readdirSync(routeRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const relativePath = path.join(...(locale === 'en' ? ['en'] : []), 'plant', entry.name, 'index.html');
+    const html = readDistText(relativePath);
+    if (!html.includes('name="x-redirect-kind" content="taxonomy-merge"')) continue;
+    plantAliasRedirectCount++;
+    const target = readCanonicalHref(html);
+    assert(/http-equiv=["']refresh["']/i.test(html), `${relativePath} must refresh immediately`);
+    assert(!hasNoindexRobotsMeta(html), `${relativePath} migration must remain crawlable`);
+    const targetHtml = readDistText(siteUrlToDistRelativeFile(target));
+    assert(
+      !targetHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'),
+      `${relativePath} must point to a real plant page, not another redirect: ${target}`,
+    );
+    assert(
+      !sitemap.includes(`/plant/${encodeURIComponent(entry.name)}/<`),
+      `${relativePath} migration URL must not be submitted in the sitemap`,
+    );
+  }
+}
+assert(plantAliasRedirectCount > 150, `expected plant alias redirects, found ${plantAliasRedirectCount}`);
+const reedAlias = readDistText(path.join('plant', 'アシ', 'index.html'));
+assert(
+  readCanonicalHref(reedAlias) === `https://orau98.github.io${buildPlantPath('ヨシ', 'ja')}`,
+  'plant/アシ/ must redirect to the ヨシ page',
+);
+assert(/<dt>別名<\/dt>\s*<dd>[^<]*アシ/.test(readPublicText(path.join('meta', 'plant', 'ヨシ.html'))), 'ヨシ page must list アシ as an alias');
+const plantConsolidation = JSON.parse(fs.readFileSync(PLANT_CONSOLIDATION_AUDIT_PATH, 'utf8'));
+for (const retired of plantConsolidation.english_retired_pages) {
+  const targetPath = buildPlantPath(retired.target_plant, 'en');
+  assert(
+    fs.existsSync(path.join(DIST_DIR, siteUrlToDistRelativeFile(targetPath))),
+    `retired English plant target is missing: ${targetPath}`,
+  );
+  if (retired.old_route_name !== retired.target_plant) {
+    const relativePath = path.join('en', 'plant', retired.old_route_name, 'index.html');
+    const html = readDistText(relativePath);
+    assert(html.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${relativePath} migration marker missing`);
+    assert(readCanonicalHref(html) === `https://orau98.github.io${targetPath}`, `${relativePath} canonical mismatch`);
+  }
+  if (retired.old_meta_slug) {
+    const relativePath = path.join('en', 'meta', 'plant', `${retired.old_meta_slug}.html`);
+    assert(fs.existsSync(path.join(DIST_DIR, relativePath)), `retired English plant meta URL is missing: ${relativePath}`);
+  }
 }
 
 assert(

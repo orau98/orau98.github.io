@@ -986,8 +986,11 @@ const collectExistingPlantRouteIndexes = (baseDir, locale, legacyRouteMap = {}) 
       const indexPath = path.join(baseDir, entry.name, 'index.html');
       let canonicalIndexable = false;
       let profileHtml = '';
+      let taxonomyMergeRedirect = false;
       try {
         const sourceHtml = fs.readFileSync(indexPath, 'utf8');
+        // 別名の植物ページ（正規名のページへ統合済み）は、転送ページのまま残す
+        taxonomyMergeRedirect = sourceHtml.includes('name="x-redirect-kind" content="taxonomy-merge"');
         const canonicalHref = extractCanonicalHref(sourceHtml);
         if (canonicalHref) {
           const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
@@ -1041,9 +1044,12 @@ const collectExistingPlantRouteIndexes = (baseDir, locale, legacyRouteMap = {}) 
         sourceDir: path.join(baseDir, entry.name),
         targetDir: path.join(baseDir, plantName),
         indexPath,
+        taxonomyMergeRedirect,
       };
     })
-    .filter(({ plantName, indexPath }) => isSafeRouteSegment(plantName) && fs.existsSync(indexPath));
+    .filter(({ plantName, indexPath, taxonomyMergeRedirect }) => (
+      !taxonomyMergeRedirect && isSafeRouteSegment(plantName) && fs.existsSync(indexPath)
+    ));
 };
 
 const ensurePlantProfileRouteShells = () => {

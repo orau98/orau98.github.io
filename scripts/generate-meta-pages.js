@@ -38,9 +38,10 @@ import {
   collectPlantPageNames,
   isIndexablePlantProfile,
   isValidPlantName,
+  resolvePlantCanonical,
   SUSPICIOUS_PLANT_NAME_SET,
 } from './lib/dataLiteBuilders.mjs';
-import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
+import { loadInsectNameIntegrityRedirects, loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 import { createPlantMetaTargetResolver } from './lib/metaPageLinks.mjs';
 import {
   DEFERRED_EN_ALTERNATES_PATH,
@@ -104,6 +105,10 @@ const BUTTERFLY_CANONICAL_AUDIT_PATH = path.join(
   __dirname,
   '../data/source_audits/butterfly-canonical-taxonomy-merge-2026-07-12.json',
 );
+const NAME_INTEGRITY_AUDIT_PATH = path.join(
+  __dirname,
+  '../data/source_audits/insect-name-integrity-2026-10-02.json',
+);
 
 const INSECT_RESIZED_DIR = path.join(__dirname, '../public/images/resized/insects');
 const insectResizedFiles = fs.existsSync(INSECT_RESIZED_DIR)
@@ -154,6 +159,7 @@ for (const section of INSECT_SECTION_CONFIGS) {
 }
 
 const plantDetailIndex = readJsonOrEmpty(PLANT_DETAILS_PATH);
+const plantYlistLite = readJsonOrEmpty(path.join(__dirname, '../public/assets/data-lite/ylist-lite.json'));
 
 function buildJapaneseInsectPath(insect, fallbackType = 'moth') {
   const runtimeRoute = runtimeInsectRouteById.get(String(insect?.id || '').trim());
@@ -958,6 +964,27 @@ function plantPageKey(name) {
   return stripPlantFamilySuffix(normalizePlantName(name));
 }
 
+// 植物ページの名前。食草記録の名前が別名なら、アプリの植物詳細（data-lite）と同じ規則
+// （resolvePlantCanonical）で正規名のページにまとめる（例: アシ → ヨシ）。
+// まとめた別名は mergedPlantAliases に記録し、別名のURLを正規ページへ恒久転送する。
+const mergedPlantAliases = new Map(); // 別名 -> { canonical, family }
+function plantPageKeyFor(name, family = '') {
+  const key = plantPageKey(name);
+  if (!key) return key;
+  const familyLabel = normalizePlantFamilyLabel(family || '') || extractPlantFamilySuffix(normalizePlantName(name));
+  const { canonical } = resolvePlantCanonical(
+    key,
+    familyLabel,
+    plantYlistLite.aliasToCanonical || {},
+    plantYlistLite.plants || {},
+  );
+  if (!canonical || canonical === key || !plantDetailIndex[canonical]) return key;
+  if (!mergedPlantAliases.has(key)) mergedPlantAliases.set(key, { canonical, family: familyLabel });
+  return canonical;
+}
+// getPlantUsage は記録ごとに (名前, 記録) で呼ぶので、記録の科名で正規名を決める
+const plantRecordPageKey = (name, record = null) => plantPageKeyFor(name, record?.family || '');
+
 function normalizePlantFamilyLabel(value) {
   if (!value || typeof value !== 'string') return '';
   return value
@@ -1327,11 +1354,11 @@ function renderCoOccurringInsects(insect, fallbackType, hostPlantsArray = [], ho
   const selfId = insect && insect.id;
   const seen = new Map();
   for (const plant of hostPlantsArray) {
-    const list = hostPlantsMap.get(plantPageKey(plant));
+    const list = hostPlantsMap.get(plantPageKeyFor(plant));
     if (!Array.isArray(list)) continue;
     for (const other of list) {
       if (!other || !other.id || other.id === selfId) continue;
-      if (!getPlantInsectUsage(other, plant, plantPageKey).host) continue;
+      if (!getPlantInsectUsage(other, plantPageKeyFor(plant), plantRecordPageKey).host) continue;
       const name = other.japaneseName || other.name;
       if (!name) continue;
       if (!seen.has(other.id)) {
@@ -1424,10 +1451,10 @@ function generateInsectHTML(
     if (!isValidPlantName(normalizedPlant)) {
       return `<li>${escapeRedirectHtml(plant)}</li>`;
     }
-    // リンク先は科名を除いた正規ページ（統合先）。科名は隣接テキストで補足表示する。
+    // リンク先は科名を除いた正規ページ（統合先。別名ならアプリと同じ正規名）。科名は隣接テキストで補足表示する。
     const key = plantPageKey(plant);
     const fam = extractPlantFamilySuffix(normalizedPlant);
-    const targetName = resolvePlantMetaTarget ? resolvePlantMetaTarget(key) : '';
+    const targetName = resolvePlantMetaTarget ? resolvePlantMetaTarget(plantPageKeyFor(plant, fam)) : '';
     const label = escapeRedirectHtml(key);
     const familyLabel = fam ? `（${escapeRedirectHtml(fam)}）` : '';
     if (!targetName) {
@@ -2007,7 +2034,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   // plantFamily は科名（例「バラ科」）。ページ識別子には含めず本文属性として表示する。
   const dataPlantName = originalPlantName || plantName;
   relatedInsects = uniqueInsects(relatedInsects);
-  const usageById = new Map(relatedInsects.map((insect) => [insect.id, getPlantInsectUsage(insect, dataPlantName, plantPageKey)]));
+  const usageById = new Map(relatedInsects.map((insect) => [insect.id, getPlantInsectUsage(insect, dataPlantName, plantRecordPageKey)]));
   const hostInsects = relatedInsects.filter((insect) => usageById.get(insect.id).host);
   const flowerInsects = relatedInsects.filter((insect) => usageById.get(insect.id).flower);
   const relationSummary = `食草・寄主記録${hostInsects.length}種、成虫の訪花記録${flowerInsects.length}種（両方に含まれる昆虫もいます）`;
@@ -2018,8 +2045,14 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const canonicalPlantName = originalPlantName || displayPlantName;
   const safeCanonicalName = canonicalPlantName.replace(/[/\\?%*:|"<>]/g, '-');
 
-  // 植物の別名を取得（データ用の名前で取得）
-  const plantAliases = getPlantAliases(dataPlantName);
+  // 植物の別名を取得（データ用の名前で取得）。このページにまとめた食草記録の別名（例: ヨシ のページの アシ）も載せる
+  const plantAliases = [...new Set([
+    ...getPlantAliases(dataPlantName),
+    ...[...mergedPlantAliases]
+      .filter(([, merged]) => merged.canonical === dataPlantName)
+      .map(([alias]) => alias)
+      .sort((left, right) => left.localeCompare(right, 'ja')),
+  ])];
 
   // 形態・分布プロフィールは画像・robots・メタ情報・本文で共通利用する。
   const plantDetail = getPlantDetailForMeta(dataPlantName);
@@ -2869,7 +2902,7 @@ async function generateMetaPages() {
       // キーは科名を除いた基底名に統一し、同名植物（例「サクラ」と「サクラ(バラ科)」）を
       // 1つの正規ページに統合する。科名は plantFamilyByKey に退避し本文属性として表示する。
       insectHostPlants.forEach(hostPlant => {
-        const key = plantPageKey(hostPlant.displayName);
+        const key = plantPageKeyFor(hostPlant.displayName, hostPlant.family);
         if (isValidPlantName(key)) {
           if (!hostPlantsMap.has(key)) {
             hostPlantsMap.set(key, []);
@@ -2950,7 +2983,7 @@ async function generateMetaPages() {
         
         const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
-          const key = plantPageKey(plant);
+          const key = plantPageKeyFor(plant);
           if (isValidPlantName(key)) {
             if (!hostPlantsMap.has(key)) {
               hostPlantsMap.set(key, []);
@@ -3032,7 +3065,7 @@ async function generateMetaPages() {
         
         const plants = [...new Set(processedHostPlants.split(/[、,，;；]/).map(p => p.trim()).filter(p => p && p !== '' && p !== '不明'))];
         plants.forEach(plant => {
-          const key = plantPageKey(plant);
+          const key = plantPageKeyFor(plant);
           if (isValidPlantName(key)) {
             if (!hostPlantsMap.has(key)) {
               hostPlantsMap.set(key, []);
@@ -3083,6 +3116,7 @@ async function generateMetaPages() {
       kamikiriPath: KAMIKIRI_AUDIT_PATH,
       leafBeetlePath: LEAF_BEETLE_CANONICAL_AUDIT_PATH,
       butterflyPath: BUTTERFLY_CANONICAL_AUDIT_PATH,
+      nameIntegrityPath: NAME_INTEGRITY_AUDIT_PATH,
     });
     for (const redirect of mergedTaxonRedirects) {
       const canonical = insectPageById.get(redirect.canonicalId);
@@ -3122,11 +3156,52 @@ async function generateMetaPages() {
         redirect.legacyJapaneseName,
         redirect.duplicateJapaneseName,
         redirect.sourceJapaneseName,
+        ...(redirect.legacyRouteNames || []),
       ].filter((name) => name && !canonicalRouteNames.has(String(name).trim())))) {
         queueLegacyRedirect(
           `/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.duplicateId)}/index.html`,
           cleanTargetPath,
           title,
+          'ja',
+          'taxonomy-merge',
+        );
+      }
+      // 正規ID側も、統合前は同名の重複があったため ID のURL（/moth/species-3593/ 等）を使っていた
+      for (const legacyName of redirect.canonicalLegacyRouteNames || []) {
+        if (canonicalRouteNames.has(legacyName)) continue;
+        queueLegacyRedirect(
+          `/${canonical.type}/${buildLegacyInsectSlug(legacyName, redirect.canonicalId)}/index.html`,
+          cleanTargetPath,
+          `${canonical.insect.japaneseName || canonical.insect.name || redirect.canonicalId} | 昆虫植物図鑑`,
+          'ja',
+          'taxonomy-merge',
+        );
+      }
+    }
+
+    // 和名欄の修復で名前が変わった昆虫の旧URLを、新しいURLへ恒久転送する（ID のURL・旧和名・学名のURL）
+    const renamedInsectRedirects = loadInsectNameIntegrityRedirects(NAME_INTEGRITY_AUDIT_PATH).renames;
+    for (const rename of renamedInsectRedirects) {
+      const page = insectPageById.get(rename.insectId);
+      if (!page || page.type !== rename.taxonGroup) {
+        throw new Error(`[meta] renamed insect page is missing: ${rename.insectId}`);
+      }
+      const targetPath = buildJapaneseInsectPath(page.insect, page.type);
+      const runtimeRoute = runtimeInsectRouteById.get(rename.insectId);
+      const currentRouteNames = new Set([
+        runtimeRoute?.name,
+        runtimeRoute?.legacyName,
+        page.insect.name,
+        page.insect.japaneseName,
+      ].map((value) => String(value || '').trim()).filter(Boolean));
+      for (const legacyName of rename.legacyRouteNames) {
+        if (currentRouteNames.has(legacyName)) {
+          throw new Error(`[meta] legacy route of a renamed insect is still current: ${rename.insectId} ${legacyName}`);
+        }
+        queueLegacyRedirect(
+          `/${page.type}/${buildLegacyInsectSlug(legacyName, rename.insectId)}/index.html`,
+          targetPath,
+          `${page.insect.japaneseName || page.insect.scientificName || rename.insectId} | 昆虫植物図鑑`,
           'ja',
           'taxonomy-merge',
         );
@@ -3174,6 +3249,39 @@ async function generateMetaPages() {
         }
       }
     });
+
+    // 別名の植物ページ（例: /plant/アシ/）は正規名のページ（/plant/ヨシ/）にまとめたので、
+    // 旧URLと旧メタページを正規ページへ恒久転送する（被リンク・検索結果を404にしない）。
+    let mergedPlantAliasRedirects = 0;
+    for (const [aliasName, { canonical, family }] of mergedPlantAliases) {
+      if (plantPageNames.includes(aliasName) || !isValidPlantName(aliasName) || !isValidPlantName(canonical)) continue;
+      const safeAlias = aliasName.replace(/[/\\?%*:|"<>]/g, '-');
+      const safeCanonical = canonical.replace(/[/\\?%*:|"<>]/g, '-');
+      const title = `${canonical} | 昆虫植物図鑑`;
+      queueLegacyRedirect(
+        `/plant/${encodeURIComponent(aliasName)}/index.html`,
+        buildPlantPath(safeCanonical, 'ja'),
+        title,
+        'ja',
+        'taxonomy-merge',
+      );
+      fs.writeFileSync(path.join(__dirname, `../public/meta/plant/${safeAlias}.html`), buildLegacyRedirectHtml({
+        lang: 'ja',
+        title,
+        targetUrl: `${BASE_ORIGIN}/meta/plant/${encodeURIComponent(safeCanonical)}.html`,
+        noindex: false,
+        redirectKind: 'taxonomy-merge',
+      }));
+      if (family) {
+        const safeLegacy = `${aliasName}(${family})`.replace(/[/\\?%*:|"<>]/g, '-');
+        fs.writeFileSync(path.join(__dirname, `../public/meta/plant/${safeLegacy}.html`), buildLegacyRedirectHtml({
+          lang: 'ja',
+          title,
+          targetUrl: `${BASE_ORIGIN}${buildPlantPath(safeCanonical, 'ja')}`,
+        }));
+      }
+      mergedPlantAliasRedirects++;
+    }
 
     // 削除前の /guides/plants/*.html へ今も入ってくる検索・外部リンク流入を、
     // 同じ植物の現行 canonical ページへ一対一で回収する。0秒 meta refresh は
@@ -3297,8 +3405,10 @@ async function generateMetaPages() {
     console.log(`- ハムシ: ${leafbeetleCount}種`);
     console.log(`- アブラムシ: ${aphidCount}種`);
     console.log(`- 食草: ${plantCount}種`);
+    console.log(`- 別名の植物ページ redirect: ${mergedPlantAliasRedirects}件`);
     console.log(`- レガシールート redirect: ${legacyRedirects.size}件`);
     console.log(`- 統合分類群ID redirect: ${mergedTaxonRedirects.length}件`);
+    console.log(`- 名前変更による旧URL redirect: ${renamedInsectRedirects.length}種`);
     console.log(`- 実流入ガイド redirect: ${legacyGuideRedirectCount}件`);
     if (skippedPlants > 0) {
       console.log(`- スキップされた無効な植物: ${skippedPlants}件`);

@@ -241,13 +241,49 @@ const familyConflictsWithYlistAlias = (family, canonical, ylistPlants) => {
   return Boolean(canonicalFamily && canonicalFamily !== sourceFamily);
 };
 
-const resolvePlantCanonical = (rawName, family, aliasToCanonical, ylistPlants) => {
+// YList-lite の別名索引には、同名の別種や総称が別の種の別名として入っているものがある。
+// 食草記録の名前としては別の植物（または植物のまとまり）を指すので、その種へ寄せずに名前どおりのページにする。
+// （スナップショットに単独の項目がある名前は、resolvePlantCanonical がもともとそのまま残す）
+export const YLIST_ALIAS_HOMONYMS = Object.freeze(new Set([
+  // 同名の別種
+  'ツルソバ', // Persicaria chinensis。YList-lite ではソバカズラ（Fallopia convolvulus）の別名
+  'ヤブエンゴサク', // Corydalis lineariloba。ジロボウエンゴサク（C. decumbens）とは別種
+  'ウコギ', // ヒメウコギ（Eleutherococcus sieboldianus）。ヤマウコギとは別種
+  'カイドウ', // 一般にはハナカイドウ。ミカイドウとは別種
+  'カラスノエンドウ', // ヤハズエンドウ（Vicia sativa subsp. nigra）。イブキノエンドウ（V. sepium）とは別種
+  // 植物のまとまり（総称）。特定の1種の別名として寄せると、別の種の記録まで混ざる
+  'ブドウ',
+  'ナラ',
+  'キイチゴ',
+  'ポプラ',
+  'カボチャ',
+  'シャクナゲ',
+  'トリカブト',
+  'ミツバツツジ',
+  'ツバキ',
+  'ニレ',
+  'ハコベ',
+  'ヒバ',
+  'モクマオウ',
+]));
+
+// 食草記録の植物名を、植物ページの正規名にする。メタページ生成（generate-meta-pages.js）も
+// 同じ関数を使い、アプリと静的ページで「1つの植物に1ページ」をそろえる。
+export const resolvePlantCanonical = (rawName, family, aliasToCanonical = {}, ylistPlants = {}) => {
   const normalized = normalizePlantNameLite(rawName) || rawName;
   const aliasCanonical =
     aliasToCanonical[normalized] ||
     aliasToCanonical[rawName] ||
     '';
-  const preserveLocalTaxonomy = familyConflictsWithYlistAlias(family, aliasCanonical, ylistPlants);
+  // 名前そのものが YList の標準名（または上の同名異種）なら、別の種の別名でも寄せない。
+  // 例: ゴヨウマツ⇔ヒメコマツ は互いを別名に持ち、寄せると食草が入れ替わっていた。
+  const keepsOwnName = Boolean(
+    aliasCanonical
+    && aliasCanonical !== normalized
+    && (ylistPlants?.[normalized] || YLIST_ALIAS_HOMONYMS.has(normalized)),
+  );
+  const preserveLocalTaxonomy = keepsOwnName
+    || familyConflictsWithYlistAlias(family, aliasCanonical, ylistPlants);
   return {
     normalized,
     canonical: preserveLocalTaxonomy ? normalized : (aliasCanonical || normalized),
@@ -533,6 +569,9 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
       (yDetail.aliases || []).forEach((alias) => {
         const trimmedAlias = cleanString(alias);
         if (!trimmedAlias) return;
+        // 別名でも、それ自体が別の植物ページ（正規名）になっている名前は別名に含めない。
+        // 含めると植物一覧の統合（plantListMerge.js）がそのページを吸収してしまう。
+        if (trimmedAlias !== name && plantDetailsRaw[trimmedAlias]) return;
         detail.aliases.add(trimmedAlias);
         if (!aliasToCanonical[trimmedAlias]) aliasToCanonical[trimmedAlias] = canonical;
       });
@@ -545,6 +584,8 @@ export function buildHostPlantDataset(allInsects = [], ylistLite = {}, plantProf
   Object.entries(plantDetailsRaw).forEach(([name, detail]) => {
     const aliases = Array.from(detail.aliases)
       .filter(Boolean)
+      // 自分以外の植物ページ（正規名）になっている名前は別名として出さない
+      .filter((alias) => alias === name || !plantDetailsRaw[alias])
       .sort((a, b) => a.localeCompare(b, 'ja'));
     const sortedProfiles = (detail.profiles || [])
       .slice()

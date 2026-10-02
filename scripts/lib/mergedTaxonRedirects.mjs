@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 
+import { EN_TYPE_LABELS } from './englishNaming.mjs';
 import { loadKamikiriMergedTaxonRedirects } from './kamikiriAuditRedirects.mjs';
 
 const clean = (value) => String(value ?? '').trim();
@@ -136,7 +137,90 @@ export function loadButterflyMergedTaxonRedirects(filePath) {
   });
 }
 
-export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath, butterflyPath }) {
+const INSECT_TYPES = new Set(['moth', 'butterfly', 'beetle', 'longhornbeetle', 'barkbeetle', 'leafbeetle', 'aphid']);
+const routeNameList = (value, label) => {
+  if (value === undefined) return [];
+  if (!Array.isArray(value) || value.some((name) => !clean(name) || /[/\\?#%]/.test(name))) {
+    throw new Error(`${label}: invalid legacy route names`);
+  }
+  return value.map(clean);
+};
+
+// 2026-10-02 の重複ID統合と和名欄の修復。統合した重複IDと、名前が変わってURLが変わる昆虫の
+// 旧URL（台帳の legacy_route_names）を、正規ページへの恒久転送として返す。
+export function loadInsectNameIntegrityRedirects(filePath) {
+  const audit = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  if (
+    audit.schema_version !== 1
+    || audit.audit_name !== '昆虫の重複ID統合と和名欄の修復'
+    || !Array.isArray(audit.merges)
+    || !Array.isArray(audit.renames)
+    || audit.counts?.merges !== audit.merges.length
+    || audit.counts?.renames !== audit.renames.length
+  ) throw new Error(`${filePath}: unexpected insect name-integrity ledger`);
+
+  const merges = audit.merges.map((merge) => {
+    const duplicateId = clean(merge.duplicate_id);
+    const canonicalId = clean(merge.canonical_id);
+    const taxonGroup = clean(merge.taxon_group);
+    const duplicateJapaneseName = clean(merge.duplicate_japanese_name);
+    const legacyScientificName = clean(merge.duplicate_scientific_name);
+    const legacyEnglishMetaSlug = clean(merge.legacy_english_meta_slug);
+    const label = `${filePath}: ${duplicateId} -> ${canonicalId}`;
+    if (
+      !duplicateId
+      || !canonicalId
+      || duplicateId === canonicalId
+      || !INSECT_TYPES.has(taxonGroup)
+      || !legacyScientificName
+      || !/^[a-z0-9-]+$/.test(legacyEnglishMetaSlug)
+      || clean(merge.decision) !== 'merge_duplicate_taxon'
+      || !clean(merge.evidence)
+    ) throw new Error(`${label}: invalid merge entry`);
+    return {
+      auditId: `${duplicateId}->${canonicalId}`,
+      duplicateId,
+      canonicalId,
+      duplicateJapaneseName,
+      sourceJapaneseName: duplicateJapaneseName,
+      sourceTaxon: legacyScientificName,
+      legacyJapaneseName: duplicateJapaneseName,
+      legacyScientificName,
+      legacyRouteName: '',
+      legacyDisplayName: duplicateJapaneseName || legacyScientificName,
+      legacyRouteNames: routeNameList(merge.legacy_route_names, label),
+      legacyEnglishRouteNames: routeNameList(merge.legacy_english_route_names, label),
+      canonicalLegacyRouteNames: routeNameList(merge.canonical_legacy_route_names, label),
+      canonicalLegacyEnglishRouteNames: routeNameList(merge.canonical_legacy_english_route_names, label),
+      legacyEnglishMetaSlug,
+      taxonGroup,
+      englishTypeLabel: EN_TYPE_LABELS[taxonGroup],
+    };
+  });
+
+  const renames = audit.renames
+    .map((rename) => {
+      const insectId = clean(rename.insect_id);
+      const label = `${filePath}: ${insectId}`;
+      const taxonGroup = clean(rename.taxon_group);
+      if (!insectId || !INSECT_TYPES.has(taxonGroup) || !clean(rename.evidence)) {
+        throw new Error(`${label}: invalid rename entry`);
+      }
+      return {
+        insectId,
+        taxonGroup,
+        previousJapaneseName: clean(rename.before_japanese_name),
+        legacyRouteNames: routeNameList(rename.legacy_route_names, label),
+        legacyEnglishRouteNames: routeNameList(rename.legacy_english_route_names, label),
+      };
+    })
+    .filter(({ legacyRouteNames, legacyEnglishRouteNames }) => (
+      legacyRouteNames.length > 0 || legacyEnglishRouteNames.length > 0
+    ));
+  return { merges, renames };
+}
+
+export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath, butterflyPath, nameIntegrityPath }) {
   const redirects = [
     ...loadKamikiriMergedTaxonRedirects(kamikiriPath).map((redirect) => ({
       ...redirect,
@@ -145,6 +229,7 @@ export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath, butterf
     })),
     ...loadLeafBeetleMergedTaxonRedirects(leafBeetlePath),
     ...(butterflyPath ? loadButterflyMergedTaxonRedirects(butterflyPath) : []),
+    ...(nameIntegrityPath ? loadInsectNameIntegrityRedirects(nameIntegrityPath).merges : []),
   ];
   const duplicateIds = new Set();
   for (const redirect of redirects) {
