@@ -60,6 +60,21 @@ import {
 
 const APP_BUILD_ID = typeof __APP_BUILD_ID__ !== 'undefined' ? String(__APP_BUILD_ID__) : '';
 
+// トップ・一覧ページでは、起動直後（データを待つ間）に一覧画面の JS を読み始める。
+// 画面を描く時まで待つと、遅い回線では全分類のデータと帯域を取り合ってトップの表示が遅れる。
+// HTML の modulepreload にすると最初の描画と CPU・帯域を取り合うため、アプリの起動時に始める。
+const prefetchExplorerRoute = () => {
+  if (typeof window === 'undefined') return;
+  const { pathname, search } = window.location;
+  if (!isExplorerRoutePath(pathname)) return;
+  import('./InsectsHostPlantExplorer').catch(() => {});
+  const tab = new URLSearchParams(search).get('tab')
+    || (/\/plant\/?$/.test(pathname) ? 'plants' : 'insects');
+  if (tab === 'plants') import('./components/HostPlantList').catch(() => {});
+  else import('./components/MothList').catch(() => {});
+};
+prefetchExplorerRoute();
+
 // 静的パス強制遷移のループ検知窓。この時間内に同じURLで再びSPAが起動したら
 // 「サーバーが静的ファイルではなくSPAシェルを返している」と判断する
 const STATIC_DOC_NAV_LOOP_WINDOW_MS = 10000;
@@ -629,6 +644,8 @@ function App() {
     onNeedInsectsData: triggerInsectsDataLoad,
     onNeedPlantsData: triggerPlantsDataLoad,
     insectPreview: homePreview,
+    // 全分類のデータが揃ったか（揃うまでトップは先読みの48件のまま出し、届いた分ごとに組み直さない）
+    insectDataComplete: routeDataReady,
   };
 
   const detailBaseProps = {

@@ -31,7 +31,7 @@ const PER_PAGE_OPTIONS = [20, 50, 100];
 
 const EMPTY_INSECT_LIST = [];
 
-const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", plantDetails = {}, locale = 'ja', preview = null }) => {
+const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedded = false, initialSearchTerm = "", plantDetails = {}, locale = 'ja', preview = null, dataComplete = true }) => {
   // 先読み（トップの最初の48件）があるときは、最初の描画を空の一覧で行って先読みのカードを先に出し、
   // 約1万種の絞り込み・並べ替え（スマホでは数秒かかる）はその後の描画に回す
   const moths = useDeferredValue(
@@ -39,6 +39,35 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
     Array.isArray(preview?.records) && !isEnglishLocale(locale) ? EMPTY_INSECT_LIST : mothsProp,
   );
   const isEnglish = isEnglishLocale(locale);
+  // 画像ファイル名の解決は useInsectImageMap に集約
+  // （インデックス取得・全種の事前解決・再マウント間キャッシュ込み）
+  const {
+    insectImageMap: mothImageMap,
+    isImageIndexReady,
+    imageIndexResolved,
+    isImageMapCurrent,
+  } = useInsectImageMap(moths);
+  // 全分類のデータが揃うまで（分類ごとに届く途中を含む）は、先読みの1ページ目を出し続ける。
+  // 届いた分だけで一覧を組み直すと、カードが何度も入れ替わって画面がずれる。
+  // 「揃った」の合図（dataComplete）は一覧の配列より先に届くことがあるため、件数が先読みの
+  // 全件数（ビルド時に数えた値）に達し、描画を後回しにした値（useDeferredValue）も追いつき、
+  // 写真の解決（写真あり優先の並びに使う）も済んでから切り替える。
+  // 一度切り替えたら、その後の追加読み込みで先読みに戻さない
+  const expectedInsectTotal = Number(preview?.total) || 0;
+  const loadedInsectCount = moths?.length ?? 0;
+  const fullInsectDataShown = dataComplete && moths === mothsProp && isImageMapCurrent &&
+    loadedInsectCount > 0 && loadedInsectCount >= expectedInsectTotal;
+  const [previewReleased, setPreviewReleased] = useState(false);
+  useEffect(() => {
+    if (fullInsectDataShown && !previewReleased) setPreviewReleased(true);
+  }, [fullInsectDataShown, previewReleased]);
+  // 保険: 件数が合わないまま先読みに留まらないよう、揃った合図から5秒で切り替える
+  useEffect(() => {
+    if (!dataComplete || previewReleased) return undefined;
+    const timer = setTimeout(() => setPreviewReleased(true), 5000);
+    return () => clearTimeout(timer);
+  }, [dataComplete, previewReleased]);
+  const insectDataPending = !(previewReleased || fullInsectDataShown);
   const ui = useMemo(
     () => ({
       filterTitle: isEnglish ? 'Advanced filters' : '詳細フィルタ',
@@ -351,11 +380,11 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
   // 一覧に複数グループが混在している場合のみグループ切替チップを出す
   const availableGroups = useMemo(() => {
     // 先読み表示中（全データ未着）はビルド時に数えたグループ別件数で切替チップを出す
-    const present = (moths?.length ?? 0) === 0 && preview?.groupCounts
+    const present = insectDataPending && preview?.groupCounts
       ? new Set(Object.keys(preview.groupCounts).filter((type) => preview.groupCounts[type] > 0))
       : new Set((moths || []).map((m) => m?.type || 'moth'));
     return INSECT_SECTION_CONFIGS.filter((section) => present.has(section.type));
-  }, [moths, preview]);
+  }, [insectDataPending, moths, preview]);
   const activeFilters = useMemo(() => {
     const filters = [];
     if (hasSearchQuery) filters.push({ type: isEnglish ? 'Search' : '検索', value: searchQuery, clear: clearSearch });
@@ -681,21 +710,13 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
     [criteriaFilteredMoths, groupFilter],
   );
 
-  // 画像ファイル名の解決は useInsectImageMap に集約
-  // （インデックス取得・全種の事前解決・再マウント間キャッシュ込み）
-  const {
-    insectImageMap: mothImageMap,
-    isImageIndexReady,
-    imageIndexResolved,
-  } = useInsectImageMap(moths);
-
   // 先読み（トップの最初の48件）: 全分類のデータと画像索引が揃うまでの間だけ、
   // ビルド時に同じ並び（写真あり優先→五十音順）で作った1ページ目をそのまま出す。
   // 検索・絞り込み・2ページ目以降は全データが要るので、その間はスケルトンにする
   const previewRecords = !isEnglish && Array.isArray(preview?.records) ? preview.records : null;
   const isImageIndexPending = !isImageIndexReady && !imageIndexResolved;
-  const isPreviewMode = Boolean(previewRecords) && ((moths?.length ?? 0) === 0 || isImageIndexPending);
-  const hasPreviewData = isPreviewMode && (moths?.length ?? 0) === 0;
+  const isPreviewMode = Boolean(previewRecords) && (insectDataPending || isImageIndexPending);
+  const hasPreviewData = Boolean(previewRecords) && insectDataPending;
 
   // グループ切替チップの件数（写真ありフィルタは一覧と同じ条件で反映する）
   const groupCounts = useMemo(() => {

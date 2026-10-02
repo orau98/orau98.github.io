@@ -3,6 +3,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { META_PAGE_SECTIONS } from '../src/utils/siteTaxonomy.js';
 import { isIndexablePlantProfile } from './lib/dataLiteBuilders.mjs';
+import {
+  SITEMAP_LASTMOD_FILENAME,
+  buildSitemapLastmodManifest,
+  computePageContentHash,
+  loadPreviousSitemapLastmodManifest,
+  resolveSitemapLastmod,
+  toSitemapLastmodKey,
+} from './lib/sitemapLastmod.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -117,17 +125,6 @@ function escapeXml(value) {
     .replace(/'/g, '&apos;');
 }
 
-function getFileLastmod(filePath) {
-  try {
-    const stat = fs.statSync(filePath);
-    const now = Date.now();
-    const clamped = Math.min(stat.mtimeMs || stat.mtime.getTime(), now);
-    return formatDate(new Date(clamped));
-  } catch {
-    return formatDate(new Date());
-  }
-}
-
 function isNonCanonicalPage(filePath) {
   try {
     const html = fs.readFileSync(filePath, 'utf-8');
@@ -143,7 +140,9 @@ function isNonCanonicalPage(filePath) {
 function getCanonicalUrl(filePath, fallbackUrl, baseUrl) {
   try {
     const html = fs.readFileSync(filePath, 'utf-8');
-    const href = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+    // 引用符は対応するものだけで閉じる（学名の「D'Anthoine」などの ' で途中で切らない）
+    const href = html.match(/<link\s+rel=["']canonical["']\s+href=(?:"([^"]+)"|'([^']+)')/i)
+      ?.slice(1).find(Boolean);
     if (!href) return fallbackUrl;
     const canonical = new URL(href, baseUrl);
     return canonical.origin === new URL(baseUrl).origin ? canonical.href : fallbackUrl;
@@ -183,14 +182,15 @@ function writePublicAndDistFile(filename, content, distPath) {
   }
 }
 
-function addStaticPageToMain(sitemaps, baseUrl, routePath, filePath, options = {}) {
+function addStaticPageToMain(lastmodFor, sitemaps, baseUrl, routePath, filePath, options = {}) {
   if (!fs.existsSync(filePath) || isNonCanonicalPage(filePath)) {
     return false;
   }
   const targetKey = options.targetKey || 'main';
+  const loc = `${baseUrl}${routePath}`;
   sitemaps[targetKey].push({
-    loc: `${baseUrl}${routePath}`,
-    lastmod: getFileLastmod(filePath),
+    loc,
+    lastmod: lastmodFor(loc, filePath),
     changefreq: options.changefreq || 'monthly',
     priority: options.priority || '0.6',
   });
@@ -206,7 +206,7 @@ const EN_META_PAGE_SECTIONS = META_PAGE_SECTIONS.map((section) => ({
 }));
 
 // サイトマップを分割して生成
-function generateSplitSitemaps() {
+async function generateSplitSitemaps() {
   console.log('分割サイトマップ生成を開始します...');
 
   const baseUrl = process.env.BASE_ORIGIN || 'https://orau98.github.io';
@@ -214,13 +214,40 @@ function generateSplitSitemaps() {
   // --- changefreq 差別化のためのデータ読み込み ---
   const today = new Date();
   const generatedAt = formatDate(today);
-  // 全メタページ共通の lastmod。テンプレート変更やデータ一括更新で実際に
-  // ページ本文が変わった日に、手動でこの日付を更新すること。
-  // かつてはデータ充実度に応じて「今月1日/先月1日/3ヶ月前1日」を返す人工的な
-  // lastmod を使っていたが、内容が変わらないのに毎月日付が転がる虚偽シグナルは
-  // Google に lastmod 全体を無視される要因になるため廃止した。
+  // lastmod は「そのページの内容が実際に変わった日」（scripts/lib/sitemapLastmod.mjs）。
+  // 本文の指紋を前回公開時の記録（公開サイトの sitemap-lastmod.json）と比べ、
+  // 同じなら前回の日付を引き継ぎ、違えば今日にする。内容が変わらないのに日付だけ
+  // 進めると Google に lastmod 全体を無視されるため、日付を人工的に動かさない。
   // 充実度の差別化は changefreq（weekly/monthly）にのみ反映する。
-  const META_CONTENT_LASTMOD = '2026-07-13';
+  // SITEMAP_LASTMOD_SOURCE で記録の読み込み元（URL・ファイル・none）を変えられる。
+  const previousLastmodManifest = await loadPreviousSitemapLastmodManifest({
+    source: process.env.SITEMAP_LASTMOD_SOURCE ?? `${baseUrl}/${SITEMAP_LASTMOD_FILENAME}`,
+    log: (message) => console.log(`[sitemap] ${message}`),
+  });
+  const lastmodEntries = new Map();
+  const lastmodStats = { kept: 0, updated: 0, initial: 0 };
+  const lastmodFor = (loc, filePath) => {
+    const key = toSitemapLastmodKey(loc);
+    if (lastmodEntries.has(key)) return lastmodEntries.get(key)[1];
+    let html = '';
+    try {
+      html = fs.readFileSync(filePath, 'utf-8');
+    } catch {
+      // 読めないページは空の本文として扱う
+    }
+    const hash = computePageContentHash(html);
+    const lastmod = resolveSitemapLastmod({
+      manifest: previousLastmodManifest,
+      key,
+      hash,
+      today: generatedAt,
+    });
+    if (!previousLastmodManifest) lastmodStats.initial++;
+    else if (lastmod === generatedAt) lastmodStats.updated++;
+    else lastmodStats.kept++;
+    lastmodEntries.set(key, [hash, lastmod]);
+    return lastmod;
+  };
 
   const normalizedDataDir = path.join(__dirname, '../normalized_data');
   const hostplantCountMap = buildHostplantCountMap(
@@ -275,12 +302,13 @@ function generateSplitSitemaps() {
   const topLevelFile = path.join(__dirname, '../index.html');
   sitemaps.main.push({
     loc: `${baseUrl}/`,
-    lastmod: getFileLastmod(topLevelFile),
+    lastmod: lastmodFor(`${baseUrl}/`, topLevelFile),
     changefreq: 'weekly',
     priority: '1.0'
   });
 
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/quiz/',
@@ -289,6 +317,7 @@ function generateSplitSitemaps() {
   );
 
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/en/',
@@ -297,6 +326,7 @@ function generateSplitSitemaps() {
   );
 
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/en/quiz/',
@@ -307,6 +337,7 @@ function generateSplitSitemaps() {
   // 一覧ハブ（SPAルート）。postbuild-cleanup.mjs が dist に静的シェルを
   // 書き出すため 200 で配信される。lastmod は quiz と同じく index.html 基準。
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/moth/',
@@ -315,6 +346,7 @@ function generateSplitSitemaps() {
   );
 
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/plant/',
@@ -323,6 +355,7 @@ function generateSplitSitemaps() {
   );
 
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/en/moth/',
@@ -331,6 +364,7 @@ function generateSplitSitemaps() {
   );
 
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/en/plant/',
@@ -339,6 +373,7 @@ function generateSplitSitemaps() {
   );
 
   addStaticPageToMain(
+    lastmodFor,
     sitemaps,
     baseUrl,
     '/sitemap.html',
@@ -384,13 +419,15 @@ function generateSplitSitemaps() {
         ? isRichPlantPage(file)
         : isRichInsectPage(file.replace(/\.html$/i, ''));
 
+      const filePath = path.join(absDir, file);
+      const loc = getCanonicalUrl(
+        filePath,
+        `${baseUrl}${routePrefix}${encodeFilename(file)}`,
+        baseUrl,
+      );
       sitemaps[key].push({
-        loc: getCanonicalUrl(
-          path.join(absDir, file),
-          `${baseUrl}${routePrefix}${encodeFilename(file)}`,
-          baseUrl,
-        ),
-        lastmod: META_CONTENT_LASTMOD,
+        loc,
+        lastmod: lastmodFor(loc, filePath),
         changefreq: isRich ? 'weekly' : 'monthly',
         priority,
       });
@@ -686,6 +723,14 @@ function generateSplitSitemaps() {
     writePublicAndDistFile(filename, content, distPath);
   });
 
+  // 次回のビルドが「前回の記録」として読むため、指紋と日付を公開サイトに置く
+  const lastmodManifest = buildSitemapLastmodManifest(lastmodEntries, generatedAt);
+  writePublicAndDistFile(SITEMAP_LASTMOD_FILENAME, `${JSON.stringify(lastmodManifest)}\n`, distPath);
+  console.log(
+    `[sitemap] lastmod: 前回と同じ ${lastmodStats.kept} / 今日更新 ${lastmodStats.updated} / ` +
+    `前回の記録なし（初回の日付） ${lastmodStats.initial}`,
+  );
+
   const robotsTxt = buildRobotsTxt(baseUrl);
   const robotsPath = path.join(__dirname, '../public/robots.txt');
   fs.writeFileSync(robotsPath, robotsTxt, 'utf-8');
@@ -732,4 +777,4 @@ function generateSplitSitemaps() {
 }
 
 // メイン処理
-generateSplitSitemaps();
+await generateSplitSitemaps();

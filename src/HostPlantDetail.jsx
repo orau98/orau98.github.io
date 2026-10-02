@@ -894,13 +894,18 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         ? `${decodedPlantName}の形態・分布・類似種との見分け方（${familyLabel || '植物'}）と、当サイトに登録済みの関連昆虫・写真を掲載。`
         : `${decodedPlantName}を食草とする昆虫情報（${familyLabel || '植物'}）。関連する昆虫の一覧や写真ギャラリーを掲載。`;
   const canonicalPlantName = resolvedCanonicalName || decodedPlantName;
+  // SEO 上の正規名。ビルド時の静的ページがこの名前で作られているときは、その名前を正規とする
+  // （アプリだけ別名扱いにして別の植物を canonical にすると、Google が見る内容と食い違う）
+  const seoPlantName = isPrerenderedHeadFor(absUrl(buildPlantPath(decodedPlantName, locale)))
+    ? decodedPlantName
+    : canonicalPlantName;
   const quizFocusHref = canonicalPlantName
     ? `${localizePath('/quiz', locale)}?mode=plant-to-insect&style=photo&focusPlant=${encodeURIComponent(canonicalPlantName)}`
     : '';
-  const japanesePlantPath = buildPlantPath(canonicalPlantName, 'ja');
-  const canonicalHref = absUrl(buildPlantPath(canonicalPlantName, locale));
+  const japanesePlantPath = buildPlantPath(seoPlantName, 'ja');
+  const canonicalHref = absUrl(buildPlantPath(seoPlantName, locale));
   const alternateJaHref = absUrl(japanesePlantPath);
-  const alternateEnHref = absUrl(buildPlantPath(canonicalPlantName, 'en'));
+  const alternateEnHref = absUrl(buildPlantPath(seoPlantName, 'en'));
   const shareUrl =
     canonicalHref ||
     (typeof window !== 'undefined' && window.location?.href) ||
@@ -1538,10 +1543,13 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           const aliases = Array.isArray(info.aliases) ? info.aliases.filter(a => a && a !== canonical) : [];
           setAliasNames(aliases);
           // If the URL contained stray characters or an alias, redirect to canonical clean URL
+          // （ビルド時の静的ページがこの名前で作られているときは、別名でも移動しない）
           if (
-            (rawDecodedPlantName && rawDecodedPlantName !== target) ||
-            (normalizedTarget && normalizedTarget !== target) ||
-            (canonical && canonical !== target)
+            !isPrerenderedHeadFor(absUrl(buildPlantPath(target, locale))) && (
+              (rawDecodedPlantName && rawDecodedPlantName !== target) ||
+              (normalizedTarget && normalizedTarget !== target) ||
+              (canonical && canonical !== target)
+            )
           ) {
             navigate(buildPlantPath(canonical || target, locale), { replace: true, state: location.state });
           }
@@ -1805,7 +1813,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           setAliasNames(aliases);
 
           // もし別名で到達していたら正規の和名へリダイレクト（URL統一）
-          if (canonical && canonical !== decodedPlantName && !/科$/.test(target) && !/目$/.test(target)) {
+          // （ビルド時の静的ページがこの名前で作られているときは移動しない）
+          if (
+            canonical && canonical !== decodedPlantName && !/科$/.test(target) && !/目$/.test(target) &&
+            !isPrerenderedHeadFor(absUrl(buildPlantPath(decodedPlantName, locale)))
+          ) {
             navigate(buildPlantPath(canonical, locale), { replace: true, state: location.state });
           }
         }

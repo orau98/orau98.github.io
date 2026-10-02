@@ -78,6 +78,8 @@ loadProductionEnv();
 
 const BASE_ORIGIN = process.env.BASE_ORIGIN || 'https://orau98.github.io';
 const DEFAULT_SOCIAL_IMAGE_PATH = '/images/resized/insects/Cucullia_argentea.1024.jpg';
+// 写真のないページの共有画像はサイト共通の蛾の写真。その種・植物の写真と誤解させない説明にする
+const DEFAULT_SOCIAL_IMAGE_ALT = '昆虫植物図鑑のサイト共通画像（アオモンギンセダカモクメ）';
 const META_STYLE_PATH = '/assets/meta-styles.css?v=4';
 // generate-meta:all では英語ページより先に日本語ページを作るため、英語版へのリンク（hreflang="en"）は
 // 目印だけ置いて記録し、英語の生成後に apply-meta-en-alternates.mjs が置き換える（全ページの2回生成を避ける）。
@@ -1358,6 +1360,7 @@ function generateInsectHTML(
   enSlugEntry = null,
   hostPlantsMap = null,
   resolvePlantMetaTarget = null,
+  sharedJapaneseNames = null,
 ) {
   const typeNames = INSECT_TYPE_NAMES;
   
@@ -1381,7 +1384,7 @@ function generateInsectHTML(
   const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = imageUrl
     ? `${insect.japaneseName}（${scientificName}）の写真`
-    : `${insect.japaneseName}のイメージ画像`;
+    : DEFAULT_SOCIAL_IMAGE_ALT;
   
   // 食草リストを配列として処理
   // セミコロン区切りも処理する（例：センモンヤガの場合）
@@ -1558,9 +1561,13 @@ function generateInsectHTML(
   const explorerSearchPath = buildExplorerSearchPath('insects', insect.japaneseName);
   const insectPageUrl = `${BASE_ORIGIN}${buildJapaneseInsectPath(insect, type)}`;
   const familyTitlePart = familyName ? `（${familyName}）` : '';
+  // 同じ和名の別種（別ID）がいるときは、タイトルで見分けられるよう学名を添える
+  const titleName = sharedJapaneseNames?.has(String(insect.japaneseName || '').trim()) && scientificName
+    ? `${insect.japaneseName}（${scientificName}）`
+    : insect.japaneseName;
   const insectTitle = hostPlantsArray.length > 0
-    ? `${insect.japaneseName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`
-    : `${insect.japaneseName}${familyTitlePart}の分類・生態 - ${typeNames[type]}図鑑`;
+    ? `${titleName}の食草・寄主植物・分類 - ${typeNames[type]}図鑑`
+    : `${titleName}${familyTitlePart}の分類・生態 - ${typeNames[type]}図鑑`;
   const insectKeywords = insectKeywordList.join(',');
   const insectEntityId = `${insectPageUrl}#species`;
   const insectImageObject = imageUrl ? {
@@ -2031,7 +2038,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   const socialImageUrl = `${BASE_ORIGIN}${mainImageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
   const socialImageAlt = mainImageUrl
     ? `${displayPlantName}の写真`
-    : `${displayPlantName}のイメージ画像`;
+    : DEFAULT_SOCIAL_IMAGE_ALT;
   const robotsContent = computePlantRobotsContent({
     isAlias,
     relatedInsects,
@@ -3046,6 +3053,14 @@ async function generateMetaPages() {
       plantDetails: plantDetailIndex,
       pageNames: plantPageNames,
     });
+    const japaneseNameCounts = new Map();
+    insectPageQueue.forEach(({ insect }) => {
+      const name = String(insect.japaneseName || '').trim();
+      if (name) japaneseNameCounts.set(name, (japaneseNameCounts.get(name) || 0) + 1);
+    });
+    const sharedJapaneseNames = new Set(
+      [...japaneseNameCounts].filter(([, count]) => count > 1).map(([name]) => name),
+    );
     insectPageQueue.forEach(({ insect, type, enSlugEntry, filename, enKey }) => {
       const html = generateInsectHTML(
         insect,
@@ -3053,6 +3068,7 @@ async function generateMetaPages() {
         enSlugEntry,
         hostPlantsMap,
         resolvePlantMetaTarget,
+        sharedJapaneseNames,
       );
       fs.writeFileSync(filename, html);
       if (DEFER_EN_ALTERNATES) deferredEnAlternatePages.push({ file: filename, kind: 'insect', key: enKey });

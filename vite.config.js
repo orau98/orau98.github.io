@@ -1,10 +1,15 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { earlyRouteResourcesPlugin } from './scripts/lib/earlyRouteResources.mjs';
 
 const appBuildId = process.env.GITHUB_SHA?.slice(0, 12) || String(Date.now());
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [react()],
+  // earlyRouteResourcesPlugin: 起動直後に読むデータ（manifest・トップの最初の48件）を HTML の時点で先読みさせる
+  plugins: [react(), earlyRouteResourcesPlugin({ appBuildId, rootDir })],
   base: '/',
   define: {
     __APP_BUILD_ID__: JSON.stringify(appBuildId),

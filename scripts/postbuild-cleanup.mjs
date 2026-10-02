@@ -3,6 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import { RETAINED_INSECT_JPEGS as RETAINED_INSECT_JPEG_LIST } from './lib/imageAssetConstants.mjs';
+import { ROUTE_PRELOAD_ATTRIBUTE, stripHomeOnlyPreloads } from './lib/earlyRouteResources.mjs';
 
 // Keep a small margin below GitHub Pages' 1 GiB published-site limit.
 const MAX_PAGES_DIST_BYTES = 980 * 1024 * 1024;
@@ -290,7 +291,10 @@ const ensureSpa404 = () => {
       /<meta\s+name="robots"\s+content="[^"]*"\s*>/i,
       noindexMeta.trimEnd(),
     );
-    const targetHtml = htmlWithNoindex.replace('</head>', `${fallbackFlag}  </head>`);
+    // 404 ではトップ専用のデータ（最初の48件）を使わないので先読みしない
+    const targetHtml = stripHomeOnlyPreloads(
+      htmlWithNoindex.replace('</head>', `${fallbackFlag}  </head>`),
+    );
     fs.writeFileSync(targetPath, targetHtml, 'utf8');
     console.log('[postbuild] Synced SPA 404.html from index.html (no redirect hop).');
   } catch (error) {
@@ -371,7 +375,12 @@ const extractProfileHead = (html = '') => {
 const extractProfileBody = (html = '') => {
   const body = String(html || '').match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
   const main = body.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
-  return main
+  if (!main) return '';
+  // 種名・植物名の見出し（h1）は main の手前の meta-header にあるため、一緒に載せる
+  const heading = body.match(
+    /<header\b[^>]*\bclass=["'][^"']*\bmeta-header\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i,
+  )?.[0] || '';
+  return `${heading}${main}`
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/>\s+</g, '><')
@@ -412,6 +421,8 @@ const extractSpaAssetTags = (indexHtml) => {
   return Array.from(headHtml.matchAll(
     /<link\b[^>]+href="\/assets\/[^"]+"[^>]*>|<script\b[^>]+src="\/assets\/[^"]+"[^>]*>\s*<\/script>/gi,
   ))
+    // トップ専用データ（最初の48件）の先読みは詳細ページでは使わない
+    .filter((match) => !match[0].includes(`${ROUTE_PRELOAD_ATTRIBUTE}=`))
     .map((match) => `    ${match[0].trim()}`)
     .join('\n');
 };
@@ -533,9 +544,10 @@ const ensureSpaRouteShells = () => {
     for (const route of SPA_ROUTE_SHELLS) {
       const routeDir = path.join('dist', ...route.segments);
       fs.mkdirSync(routeDir, { recursive: true });
+      // 最初の48件の先読みはトップ専用
       fs.writeFileSync(
         path.join(routeDir, 'index.html'),
-        buildSpaRouteShell(indexHtml, route),
+        stripHomeOnlyPreloads(buildSpaRouteShell(indexHtml, route)),
         'utf8',
       );
       count++;
@@ -567,6 +579,24 @@ const INSECT_PROFILE_COLLECTION_KEYS = {
   aphid: 'aphids',
 };
 
+// 種の静的ページ（メタページ）が宣言する正規URL。同じ言語の昆虫詳細URLのときだけ使う。
+const resolveInsectProfileCanonicalUrl = (profileHtml, locale) => {
+  const declared = extractCanonicalHref(profileHtml);
+  if (!declared) return '';
+  let url;
+  try {
+    url = new URL(declared, BASE_ORIGIN);
+  } catch {
+    return '';
+  }
+  if (url.origin !== BASE_ORIGIN) return '';
+  const localePrefix = locale === 'en' ? '/en' : '';
+  const routePattern = new RegExp(
+    `^${localePrefix}/(?:${INSECT_PROFILE_ROUTE_SEGMENTS.join('|')})/[^/]+/$`,
+  );
+  return routePattern.test(url.pathname) ? url.href : '';
+};
+
 const buildInsectProfileRouteShell = ({
   indexHtml,
   routeName,
@@ -588,7 +618,10 @@ const buildInsectProfileRouteShell = ({
   const title = profileHead.title || fallbackTitle;
   const description = profileHead.description || fallbackDescription;
   const canonicalPath = `/${isEnglish ? 'en/' : ''}${routeSegment}/${encodeURIComponent(routeName)}/`;
-  const canonicalUrl = new URL(canonicalPath, BASE_ORIGIN).href;
+  // 別名やID違いのURL（同じ種への別の入口）は、その種の静的ページが宣言する正規URLを
+  // canonical にする。自分自身を canonical にすると、同じ内容のページが2つの正規URLを持つ。
+  const canonicalUrl = resolveInsectProfileCanonicalUrl(profileHtml, locale)
+    || new URL(canonicalPath, BASE_ORIGIN).href;
   const robotsContent = canonicalIndexable ? SPA_ROUTE_INDEX_ROBOTS : SPA_ROUTE_NOINDEX_ROBOTS;
   const assetTags = extractSpaAssetTags(indexHtml);
   if (!assetTags) {
