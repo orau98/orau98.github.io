@@ -629,9 +629,12 @@ const allLegacyMetaFiles = [...metaFiles, ...englishMetaFiles];
 const legacyHubFiles = allLegacyMetaFiles.filter((filePath) =>
   /^(?:index|page-\d+)\.html$/i.test(path.basename(filePath)),
 );
+// 公開済みの /meta/ URL を1つも減らさないための件数。2026-10-02 に、名前を直した昆虫・植物の正規名の
+// 新しいページが増え（旧URLはすべて転送として残る）、29,583件から29,743件になった。
+const EXPECTED_LEGACY_META_DETAIL_FILES = 29743;
 ensure(
-  allLegacyMetaFiles.length - legacyHubFiles.length === 29583,
-  `legacy meta detail inventory mismatch: expected 29583, got ${allLegacyMetaFiles.length - legacyHubFiles.length}`,
+  allLegacyMetaFiles.length - legacyHubFiles.length === EXPECTED_LEGACY_META_DETAIL_FILES,
+  `legacy meta detail inventory mismatch: expected ${EXPECTED_LEGACY_META_DETAIL_FILES}, got ${allLegacyMetaFiles.length - legacyHubFiles.length}`,
 );
 ensure(
   legacyHubFiles.length === 37,
