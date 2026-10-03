@@ -2,6 +2,7 @@ import logger from './utils/logger';
 import { isStaticDocumentPath } from './utils/staticDocumentPaths';
 import { recoverFromChunkLoadError } from './utils/chunkRecovery';
 import { trackError } from './utils/analytics';
+import { capturePrerenderedSnapshot } from './utils/prerenderedSnapshot';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
@@ -236,7 +237,12 @@ if (
   });
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root');
+// React が #root を描き換える前に、静的HTMLの本文（個別ページ）の写しを取る。
+// アプリの画面が描けるまで、スケルトンの代わりにこの本文を出し続ける（utils/prerenderedSnapshot）
+capturePrerenderedSnapshot(rootElement, window.location.pathname);
+
+ReactDOM.createRoot(rootElement).render(
   <BrowserRouter basename={import.meta.env.BASE_URL}>
     <PageViewTracker />
     <App />

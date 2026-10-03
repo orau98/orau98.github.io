@@ -135,6 +135,10 @@ npm run lint         # ESLint
 - Open Graph/Twitter Card対応
 - 適切なcanonical URL設定（別名やID違いのURLのルートシェルは、種の静的ページが宣言する正規URLを canonical にする）
 - ルートシェル（`/{type}/{名前}/`）の `#root` には、メタページの見出し（meta-header の h1）と本文（main）を JavaScript 前の表示用に載せる
+  - アプリは起動時にこの本文の写しを取り、データや画面のJSを待つ間はスケルトンの代わりに写しを main の先頭に出し続ける（`src/utils/prerenderedSnapshot.js`・`src/components/PrerenderedSnapshot.jsx`。待つ間のスケルトンは写しが無いときだけ `RouteLoadingFallback` が出す）。
+    アプリの画面を描いたら、静的ページ用のスタイルシート（`meta-styles.css`）は描画の前に外し（残すと見た目が崩れ、描画後に外すと画面がずれる。`check:browser` が確かめる）、
+    写しは CSS（`index.css` の `data-route-page`）ですぐ隠してから描画の後に片付ける（`src/hooks/useReleasePrerenderedSnapshot.js`。描画前に片付けると植物ページで重いスタイル再計算が起きる）。
+  - 個別ページを直接開いたときは、画面のJS（MothDetail / HostPlantDetail）も起動直後に読み始める（`src/App.jsx` の `prefetchDetailRoute`）。
 
 ### サイトマップ
 - 植物、蛾、蝶、タマムシ、カミキリムシ、ハムシ、アブラムシ別 + 英語版（`sitemap-en-*.xml`）の分割サイトマップ

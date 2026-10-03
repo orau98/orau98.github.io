@@ -7,12 +7,13 @@ import InstagramEmbed from './components/InstagramEmbed';
 import ImageWithFallback from './components/ImageWithFallback';
 import { resolvePlaceholderSubject } from './utils/placeholderSubject';
 import ImageModal from './components/ImageModal';
-import { DetailSkeleton } from './components/SkeletonLoader';
+import RouteLoadingFallback from './components/RouteLoadingFallback';
 import SourceCitation from './components/ui/SourceCitation';
 import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, BarkBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
 import useNearViewport from './hooks/useNearViewport';
+import useReleasePrerenderedSnapshot from './hooks/useReleasePrerenderedSnapshot';
 import {
   EN_SITE_NAME,
   buildLocalizedTaxonomyChip,
@@ -248,6 +249,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   // 一覧用catalogは検索・カード表示に必要な項目だけを持つ。
   // 個別種ではAppが該当分類の完全データへ差し替えるまで詳細骨格を維持する。
   const isDataLoading = isAnyInsectDataLoading || moth?._detail === false;
+  // 種のページを描けたら、静的HTMLの本文の写しを片付ける（components/PrerenderedSnapshot）
+  useReleasePrerenderedSnapshot(!isDataLoading);
 
   const resolvedInsectId = moth?.id || resolveInsectId(mappedInsectId);
   // 各分類ごとのID（構造化データ用）
@@ -944,14 +947,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   }, [canonicalHref, isDataLoading, moth]);
 
   // Show loading state if data is still loading
-  // （スピナー1個の全画面ではなく、実レイアウトに合わせたスケルトンでシフトを抑える）
+  // （最初に開いたページなら静的HTMLの本文を出し続け、それ以外は実レイアウトに合わせたスケルトン）
   if (isDataLoading) {
-    return <DetailSkeleton />;
+    return <RouteLoadingFallback />;
   }
 
   if (!moth) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+      <div data-route-page className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
         <div className="text-center p-8">
           <div className="w-20 h-20 mx-auto mb-6 bg-blue-400 rounded-full flex items-center justify-center">
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1158,7 +1161,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 sm:pt-6">
+    <div data-route-page className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 sm:pt-6">
       {/* 構造化データ（静的HTMLにあるページでは静的なものを使い、二重にしない） */}
       {!isPrerenderedHeadFor(canonicalHref) && (
         <>

@@ -625,6 +625,25 @@ img[loading="lazy"] {
   touch-action: pan-y !important;
 }
 
+/* 個別ページの静的HTMLの本文の写し（アプリの画面が描けるまでの表示。components/RouteLoadingFallback）。
+   植物ページでは数千pxになるため、読み込み中の再計算が重くならないよう、
+   画面外の区切りの描画を省き、外の変化の影響を本文の中へ広げない */
+[data-prerendered-snapshot] {
+  contain: layout style paint;
+}
+
+[data-prerendered-snapshot] section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+  backdrop-filter: none;
+}
+
+/* ページの画面を描いた瞬間に写しを隠す。写しの片付け（DOMから外す）は描画の後に回すため、
+   それまでの間に本文が二重に出ないようにする（hooks/useReleasePrerenderedSnapshot） */
+main > [data-route-page] ~ [data-prerendered-snapshot] {
+  display: none;
+}
+
 /* Performance optimization for transformed elements */
 .will-change-transform {
   will-change: transform;
