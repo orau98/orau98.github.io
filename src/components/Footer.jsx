@@ -42,7 +42,11 @@ const Footer = ({ locale = 'ja' }) => {
         { to: localizePath('/quiz', locale), label: '4択クイズ' },
       ];
   const hubLink = (segment, label) => ({
-    href: `${import.meta.env.BASE_URL}${metaBase}/${segment}/index.html`,
+    // 日本語の名前一覧は、検索画面へ置き換わる旧metaハブではなく
+    // 各分類の全詳細へたどれるHTML一覧を使う。
+    href: isEnglish
+      ? `${import.meta.env.BASE_URL}${metaBase}/${segment}/index.html`
+      : `${import.meta.env.BASE_URL}sitemap/${segment}/`,
     label,
   });
   const utilityLinks = isEnglish

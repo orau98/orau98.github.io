@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { META_PAGE_SECTIONS } from '../src/utils/siteTaxonomy.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { SITEMAP_LASTMOD_FILENAME, toSitemapLastmodKey } from './lib/sitemapLastmod.mjs';
@@ -498,6 +499,36 @@ for (const filePath of supportHtmlFiles) {
     ensure(false, `${path.relative(ROOT, filePath)} not found`);
   }
 }
+
+// XMLに載せた日本語の詳細へ、HTMLの名前一覧からも必ず到達できること。
+const directoryFiles = collectHtmlFiles(path.join(DIST_DIR, 'sitemap'));
+ensure(directoryFiles.length > 0, 'HTML name directories not found');
+const directoryTargets = new Set();
+for (const file of directoryFiles) {
+  const html = readFile(file);
+  validateHtml(file, html, { requireAnalytics: true });
+  ensure(!html.includes('id="root"'), `${file}: directory must remain visible without the SPA`);
+  for (const tag of getTags(html, 'a')) {
+    const href = parseAttributes(tag).href;
+    if (!href?.startsWith('/')) continue;
+    const target = resolveSitePathToDistPath(`${SITE_ORIGIN}${href}`);
+    ensure(target && fs.existsSync(target), `${file}: broken directory link -> ${href}`);
+    if (/^\/(?:moth|butterfly|beetle|longhornbeetle|barkbeetle|leafbeetle|aphid|plant)\/[^/]+\/$/.test(href)) {
+      directoryTargets.add(`${SITE_ORIGIN}${href}`);
+    }
+  }
+}
+const expectedDirectoryTargets = new Set(META_PAGE_SECTIONS.flatMap(({ key }) => {
+  const file = path.join(DIST_DIR, `sitemap-${key}.xml`);
+  return fs.existsSync(file) ? extractSitemapLocs(readFile(file)).map(decodeHtmlAttribute) : [];
+}));
+for (const loc of expectedDirectoryTargets) ensure(directoryTargets.has(loc), `HTML directory missing -> ${loc}`);
+for (const loc of directoryTargets) ensure(expectedDirectoryTargets.has(loc), `HTML directory contains non-indexable URL -> ${loc}`);
+const directoryRoot = readFile(path.join(DIST_DIR, 'sitemap.html'));
+for (const { key } of META_PAGE_SECTIONS) {
+  ensure(directoryRoot.includes(`href="/sitemap/${key}/"`), `Directory category missing from sitemap.html: ${key}`);
+}
+console.log(`[audit-seo] HTML directories: ${directoryFiles.length} pages, ${directoryTargets.size} detail links`);
 
 // 食草ガイドは廃止したため、ガイドページ在庫の検証は行わない。
 
