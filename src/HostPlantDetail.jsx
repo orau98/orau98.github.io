@@ -8,6 +8,7 @@ import ImageModal from './components/ImageModal';
 import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
 import useNearViewport from './hooks/useNearViewport';
+import useReleasePrerenderedSnapshot from './hooks/useReleasePrerenderedSnapshot';
 import {
   EN_SITE_NAME,
   buildLocalizedTaxonomyChip,
@@ -495,6 +496,8 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
 
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], barkbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja', insectPartitionsReady = true }) => {
   const isEnglish = isEnglishLocale(locale);
+  // 植物のページを描いたら、静的HTMLの本文の写しを片付ける（components/PrerenderedSnapshot）
+  useReleasePrerenderedSnapshot();
   const { plantName } = useParams();
   // useParamsの値はReact Routerが復号済み。ここでの再復号は %を含む値で
   // throwし得る（ChunkErrorBoundaryがチャンク障害と誤認してリロードループになる）
@@ -1861,7 +1864,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   }, [decodedPlantName, plantDetails, taxonomy.genus, taxonomy.scientificName]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div data-route-page className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* モバイルはヘッダー直下の余白を詰める（pt-3）。sm以上は従来の余白 */}
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-8 sm:pt-8">
       {/* パンくずリスト（昆虫詳細と同じく最上部に配置） */}

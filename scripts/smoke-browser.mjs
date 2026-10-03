@@ -104,7 +104,10 @@ async function checkPage(browser, origin, page, viewport) {
   const startedAt = Date.now();
   await tab.goto(origin + page.path, { waitUntil: 'domcontentloaded' });
   try {
-    await tab.waitForFunction((text) => document.querySelector('main')?.innerText.includes(text), page.waitFor, { timeout: 30000 });
+    // 個別ページは、アプリの画面が描けるまで静的HTMLの本文の写し（data-prerendered-snapshot）を出す。
+    // 写しにも同じ文字があるので、写しが消えてアプリの画面に切り替わるまで待つ
+    await tab.waitForFunction((text) => !document.querySelector('[data-prerendered-snapshot]') &&
+      document.querySelector('main')?.innerText.includes(text), page.waitFor, { timeout: 30000 });
   } catch {
     problems.push(`「${page.waitFor}」が30秒以内に表示されない`);
   }
@@ -112,10 +115,13 @@ async function checkPage(browser, origin, page, viewport) {
   const state = await tab.evaluate(() => ({
     alert: document.querySelector('[role=alert]')?.innerText || '',
     overflow: document.documentElement.scrollWidth - window.innerWidth,
+    staticStylesheet: Boolean(document.querySelector('link[href*="meta-styles.css"]')),
     cards: document.querySelectorAll('#panel-insects article h3').length,
   }));
   if (state.alert) problems.push(`エラー表示: ${state.alert.split('\n')[0]}`);
   if (state.overflow > 2) problems.push(`横にはみ出し ${state.overflow}px`);
+  // 静的ページ用のスタイルシートは JavaScript 実行前の表示専用。アプリの画面に残ると見た目が崩れる
+  if (state.staticStylesheet) problems.push('静的ページ用のスタイルシート（meta-styles.css）がアプリの画面に残っている');
   if (page.expectCards && state.cards === 0) problems.push('昆虫カードが1枚も表示されない');
   if (page.seo) {
     const expected = readStaticSeo(page.path);

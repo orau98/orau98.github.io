@@ -7,7 +7,9 @@ const InsectsHostPlantExplorer = lazyWithRetry(() => import('./InsectsHostPlantE
 const MothDetail = lazyWithRetry(() => import('./MothDetail'));
 const HostPlantDetail = lazyWithRetry(() => import('./HostPlantDetail'));
 const QuizPage = lazyWithRetry(() => import('./QuizPage'));
-import SkeletonLoader, { DetailSkeleton } from './components/SkeletonLoader';
+import SkeletonLoader from './components/SkeletonLoader';
+import RouteLoadingFallback from './components/RouteLoadingFallback';
+import PrerenderedSnapshot from './components/PrerenderedSnapshot';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -27,7 +29,11 @@ import {
 import { shouldDeferHeavyWork } from './utils/plantMetadata';
 import { loadInsectImageIndexes } from './services/imageIndex';
 import fetchWithRetryShared from './utils/fetchWithRetry';
-import { getLocaleFromPath, isEnglishLocale } from './utils/locale';
+import { getLocaleFromPath, isEnglishLocale, stripLocalePrefix } from './utils/locale';
+import {
+  getPrerenderedSnapshotFor,
+  releasePrerenderedSnapshot,
+} from './utils/prerenderedSnapshot';
 import {
   buildCurrentHashHref,
   findSectionTarget,
@@ -74,6 +80,20 @@ const prefetchExplorerRoute = () => {
   else import('./components/MothList').catch(() => {});
 };
 prefetchExplorerRoute();
+
+// 個別ページ（昆虫・植物）を直接開いたときも、起動直後に画面の JS を読み始める。
+// 以前はデータ（植物データ約300KBなど）が届いてから読み始めていたため、遅い回線では
+// その分だけ本文の表示が遅れていた。データの到着待ちの間は静的HTMLの本文を出している。
+const prefetchDetailRoute = () => {
+  if (typeof window === 'undefined') return;
+  const { pathname } = window.location;
+  if (getInsectDetailCollectionKey(pathname)) {
+    import('./MothDetail').catch(() => {});
+  } else if (/^\/plant\/[^/]+/.test(stripLocalePrefix(pathname))) {
+    import('./HostPlantDetail').catch(() => {});
+  }
+};
+prefetchDetailRoute();
 
 // 静的パス強制遷移のループ検知窓。この時間内に同じURLで再びSPAが起動したら
 // 「サーバーが静的ファイルではなくSPAシェルを返している」と判断する
@@ -688,23 +708,33 @@ function App() {
     ...INSECT_DETAIL_ROUTE_PATTERNS.map((path) => ({
       path,
       element: <MothDetail {...detailBaseProps} />,
-      fallback: <DetailSkeleton />,
+      fallback: <RouteLoadingFallback />,
     })),
     {
       path: '/plant/:plantName',
       element: <HostPlantDetail {...detailBaseProps} />,
-      fallback: <DetailSkeleton />,
+      fallback: <RouteLoadingFallback />,
     },
     {
       path: '/en/plant/:plantName',
       element: <HostPlantDetail {...detailBaseProps} />,
-      fallback: <DetailSkeleton />,
+      fallback: <RouteLoadingFallback />,
     },
     {
       path: '*',
       element: <NotFoundPage locale={locale} />,
     },
   ];
+
+  const showRouteLoading = loading || (!routeDataReady && !(showHomePreview && !visibleLoadError));
+  const isDetailRoute = routeConfigs.some(
+    ({ path, fallback }) => fallback && matchPath({ path, end: true }, location.pathname),
+  );
+  // 最初に開いたページの静的HTMLの本文の写しは、別のページへ移ったら片付ける
+  // （そのページの画面を描いたときは hooks/useReleasePrerenderedSnapshot が片付ける）
+  useEffect(() => {
+    if (!getPrerenderedSnapshotFor(location.pathname)) releasePrerenderedSnapshot();
+  }, [location.pathname]);
 
   if (shouldForceDocumentNavigation) {
     return (
@@ -795,11 +825,13 @@ function App() {
       )}
 
       <main id="main-content" role="main" tabIndex={-1}>
-        {(loading || (!routeDataReady && !(showHomePreview && !visibleLoadError))) ? (visibleLoadError ? null : (
-          routeConfigs.some(({ path, fallback }) => fallback && matchPath({ path, end: true }, location.pathname))
-            ? <DetailSkeleton />
-            : <SkeletonLoader />
-        )) : (
+        {showRouteLoading ? (
+          // 個別ページは、最初に開いたページなら静的HTMLの本文をそのまま出し続ける。
+          // データの読み込みに失敗したときも、本文があれば消さずに残す
+          isDetailRoute
+            ? <RouteLoadingFallback showSkeleton={!visibleLoadError} />
+            : (visibleLoadError ? null : <SkeletonLoader />)
+        ) : (
         <Routes>
           {routeConfigs.map(({ path, element, fallback }) => (
             <Route
@@ -810,6 +842,9 @@ function App() {
           ))}
         </Routes>
       )}
+        {/* 最初に開いた個別ページの本文（静的HTMLの写し）。ページの画面を描くまで同じ位置に出し続ける。
+            ページの画面（data-route-page）が前に入った瞬間に CSS で隠し（index.css）、描画の後に片付ける */}
+        <PrerenderedSnapshot />
       </main>
         <FloatingActionButton />
       {/* 404（キャッチオール）では広告を出さない: 低価値ページへの広告はポリシー上も体験上も避ける */}

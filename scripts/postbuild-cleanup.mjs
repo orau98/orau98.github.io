@@ -372,6 +372,9 @@ const extractProfileHead = (html = '') => {
 // /meta/ source before JavaScript runs. React still mounts into #root and
 // replaces this snapshot for interactive users, while crawlers and no-JS
 // clients receive the complete profile instead of an empty app shell.
+// The app keeps showing a copy of it until the React page is ready
+// (src/utils/prerenderedSnapshot.js strips the ad slot and <main> wrapper).
+// Keep this markup free of ids, scripts and extra ad slots.
 const extractProfileBody = (html = '') => {
   const body = String(html || '').match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
   const main = body.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
