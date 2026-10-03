@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { buildHtmlDirectory, directoryLabel } from './lib/htmlDirectory.mjs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { META_PAGE_SECTIONS } from '../src/utils/siteTaxonomy.js';
@@ -382,6 +383,8 @@ async function generateSplitSitemaps() {
   );
 
 
+  const directoryEntries = new Map(META_PAGE_SECTIONS.map(({ key }) => [key, []]));
+
   // 詳細ページのサイトマップURLは、静的メタページ自身が宣言するcanonicalを正とする。
   // メタHTMLは旧URLの互換入口として残し、検索エンジンには200を返す短い詳細URLを送る。
   const addMetaDirToSitemap = ({ key, dir, routePrefix, priority }) => {
@@ -425,6 +428,12 @@ async function generateSplitSitemaps() {
         `${baseUrl}${routePrefix}${encodeFilename(file)}`,
         baseUrl,
       );
+      if (directoryEntries.has(key)) {
+        // 元のデータ分類と公開ルートが異なる種は、正規URL側の分類へ載せる。
+        const routeKey = new URL(loc).pathname.split('/')[1];
+        if (!directoryEntries.has(routeKey)) throw new Error(`Unknown directory route: ${loc}`);
+        directoryEntries.get(routeKey).push({ loc, label: directoryLabel(fs.readFileSync(filePath, 'utf8')) });
+      }
       sitemaps[key].push({
         loc,
         lastmod: lastmodFor(loc, filePath),
@@ -459,6 +468,28 @@ async function generateSplitSitemaps() {
     ]),
   );
   
+  // 旧meta一覧はpostbuildで検索UIへ置き換わるため、名前一覧を独立したURLに残す。
+  // XMLと同じフィルタ済みの集合を使い、別名・noindexを入口へ混ぜない。
+  const directoryPages = buildHtmlDirectory(META_PAGE_SECTIONS.map(({ key, title }) => ({
+    key, title, entries: directoryEntries.get(key),
+  })));
+  for (const outputRoot of ['public', 'dist']) {
+    const root = path.join(__dirname, '..', outputRoot);
+    if (!fs.existsSync(root)) continue;
+    fs.rmSync(path.join(root, 'sitemap'), { recursive: true, force: true });
+    for (const { route, html } of directoryPages) {
+      const target = path.join(root, route.slice(1), 'index.html');
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.writeFileSync(target, html);
+    }
+  }
+  for (const { route } of directoryPages) {
+    addStaticPageToMain(lastmodFor, sitemaps, baseUrl, route,
+      path.join(__dirname, '../public', route.slice(1), 'index.html'),
+      { changefreq: 'monthly', priority: '0.5' });
+  }
+  console.log(`[sitemap] HTML name directories: ${directoryPages.length} pages`);
+
   // XMLを生成する関数
   const generateXML = (urls, options = {}) => {
     const {
