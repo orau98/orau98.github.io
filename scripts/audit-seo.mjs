@@ -657,17 +657,24 @@ if (fs.existsSync(englishMetaDir)) {
 }
 
 const allLegacyMetaFiles = [...metaFiles, ...englishMetaFiles];
-const legacyHubFiles = allLegacyMetaFiles.filter((filePath) =>
-  /^(?:index|page-\d+)\.html$/i.test(path.basename(filePath)),
-);
+// 植物の訪花・写真ページが増えても、生成元の全ルートがdistに残ることを検証する。
+// 件数の固定値では、正当なページ追加が失敗し、同数の欠落・余分なコピーを見逃す。
+const sourceLegacyFiles = [
+  ...collectHtmlFiles(path.join(PUBLIC_DIR, 'meta')),
+  ...collectHtmlFiles(path.join(PUBLIC_DIR, 'en', 'meta')),
+].filter((filePath) => !filePath.endsWith('support-test.html'));
+const sourceLegacyPaths = new Set(sourceLegacyFiles.map((filePath) => path.relative(PUBLIC_DIR, filePath)));
+const distLegacyPaths = new Set(allLegacyMetaFiles.map((filePath) => path.relative(DIST_DIR, filePath)));
 ensure(
-  allLegacyMetaFiles.length - legacyHubFiles.length === 29583,
-  `legacy meta detail inventory mismatch: expected 29583, got ${allLegacyMetaFiles.length - legacyHubFiles.length}`,
+  sourceLegacyPaths.size === distLegacyPaths.size,
+  `legacy meta inventory mismatch: expected ${sourceLegacyPaths.size}, got ${distLegacyPaths.size}`,
 );
-ensure(
-  legacyHubFiles.length === 37,
-  `legacy meta hub inventory mismatch: expected 37, got ${legacyHubFiles.length}`,
-);
+for (const sourcePath of sourceLegacyPaths) {
+  ensure(distLegacyPaths.has(sourcePath), `legacy meta generated route missing: ${sourcePath}`);
+}
+for (const distPath of distLegacyPaths) {
+  ensure(sourceLegacyPaths.has(distPath), `legacy meta unexpected route: ${distPath}`);
+}
 
 // hreflang 相互整合: 別言語ページを hreflang で指す場合、相手側からも
 // hreflang で指し返されていないと Google はアノテーション自体を無視する。

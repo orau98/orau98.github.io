@@ -3048,7 +3048,16 @@ async function generateMetaPages() {
     // 2パス目: hostPlantsMap が全ループで完成した後に種ページを書き出す。
     // 「同じ食草を利用する他の昆虫」を相互リンクし、各ページの内容を厚くする。
     console.log(`[meta] 種ページを書き出します（共起昆虫リンク付き）: ${insectPageQueue.length}件`);
-    const plantPageNames = collectPlantPageNames(hostPlantsMap, plantDetailIndex);
+    const primaryPlantPageNames = collectPlantPageNames(hostPlantsMap, plantDetailIndex);
+    const primaryPlantPageSet = new Set(primaryPlantPageNames);
+    // 写真のあるプロフィールのみの植物も、既存のSEO基準ではindex対象。
+    // 元表記のページが既にある別名はそちらを正規URLとして保ち、新しい重複を作らない。
+    const photoProfileNames = Object.entries(plantDetailIndex)
+      .filter(([name, detail]) => !primaryPlantPageSet.has(name)
+        && !(detail?.aliases || []).some((alias) => primaryPlantPageSet.has(alias))
+        && getPlantImageFilesForMeta(name, allPlantImages).length > 0)
+      .map(([name]) => name);
+    const plantPageNames = collectPlantPageNames(hostPlantsMap, plantDetailIndex, photoProfileNames);
     const resolvePlantMetaTarget = createPlantMetaTargetResolver({
       plantDetails: plantDetailIndex,
       pageNames: plantPageNames,
@@ -3396,7 +3405,7 @@ async function generateMetaPages() {
 
     // 植物インデックス用データ（科名別グループ）を構築
     const plantIndexByFamily = {};
-    collectPlantPageNames(hostPlantsMap, plantDetailIndex).forEach((plantName) => {
+    plantPageNames.forEach((plantName) => {
       if (!isValidPlantName(plantName)) return;
       // キーは基底名なので科名は plantFamilyByKey から引く（科別グルーピング用）
       const family = plantFamilyByKey.get(plantName) || getPlantDetailForMeta(plantName)?.family || '科名未設定';

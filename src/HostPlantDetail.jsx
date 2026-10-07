@@ -48,7 +48,7 @@ import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
 import { buildSourceLabel, normalizePlantProfileText } from './utils/plantProfileText';
-import { getCachedPlantProfile, loadPlantProfile } from './services/dataLiteAssets';
+import { fetchDataLiteJson, getCachedPlantProfile, loadPlantProfile } from './services/dataLiteAssets';
 import SourceCitation from './components/ui/SourceCitation';
 import InfoPopover from './components/InfoPopover';
 import {
@@ -610,6 +610,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const [aliasNames, setAliasNames] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [plantSeoRoute, setPlantSeoRoute] = useState(null);
+  const plantRoutePath = buildPlantPath(decodedPlantName, locale);
+  const generatedSeoRoute = plantSeoRoute?.path === plantRoutePath ? plantSeoRoute.record : null;
+
+  // SPA内から開いた場合も、静的ページと同じ正規URL・index設定を使う。
+  // 別名や1昆虫だけのページで、再読み込み前後のSEO状態が食い違うのを防ぐ。
+  useEffect(() => {
+    if (!decodedPlantName || isPrerenderedHeadFor(absUrl(plantRoutePath))) return;
+    let active = true;
+    fetchDataLiteJson('plant-seo-routes.json').then((routes) => {
+      if (active) setPlantSeoRoute({ path: plantRoutePath, record: routes?.[locale]?.[decodedPlantName] || null });
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [decodedPlantName, locale, plantRoutePath]);
 
   // Normalize old no-slash links before a reload can hit GitHub Pages'
   // problematic directory redirect. decodeSlug also repairs URLs that have
@@ -899,9 +913,11 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   const canonicalPlantName = resolvedCanonicalName || decodedPlantName;
   // SEO 上の正規名。ビルド時の静的ページがこの名前で作られているときは、その名前を正規とする
   // （アプリだけ別名扱いにして別の植物を canonical にすると、Google が見る内容と食い違う）
-  const seoPlantName = isPrerenderedHeadFor(absUrl(buildPlantPath(decodedPlantName, locale)))
-    ? decodedPlantName
-    : canonicalPlantName;
+  const seoPlantName = generatedSeoRoute?.canonicalName || (
+    isPrerenderedHeadFor(absUrl(buildPlantPath(decodedPlantName, locale)))
+      ? decodedPlantName
+      : canonicalPlantName
+  );
   const quizFocusHref = canonicalPlantName
     ? `${localizePath('/quiz', locale)}?mode=plant-to-insect&style=photo&focusPlant=${encodeURIComponent(canonicalPlantName)}`
     : '';
@@ -1465,10 +1481,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     try {
       // 昆虫パーティション未着のうちは「関連0種」が確定ではないため、
       // noindexへの切替判定を保留する（着弾後に正しく再評価される）
-      if (!insectPartitionsReady) return;
       // 静的HTMLにあるページはビルド時の判定をそのまま使う（写真や植物プロフィールだけで
       // index にしている植物もあり、ここで「関連0種」として noindex にすると食い違う）
       if (isPrerenderedHeadFor(canonicalHref)) return;
+      if (generatedSeoRoute) {
+        setRobotsMetaContent(generatedSeoRoute.indexable ? INDEX_FOLLOW_ROBOTS : NOINDEX_FOLLOW_ROBOTS);
+        return;
+      }
+      if (!insectPartitionsReady) return;
       const isTaxonList = isFamily || isOrder || isGenus;
       const shouldIndex =
         isTaxonList ||
@@ -1476,7 +1496,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         (Array.isArray(flowerVisitInsects) && flowerVisitInsects.length > 0);
       setRobotsMetaContent(shouldIndex ? INDEX_FOLLOW_ROBOTS : NOINDEX_FOLLOW_ROBOTS);
     } catch {}
-  }, [insectPartitionsReady, isFamily, isOrder, isGenus, hostPlantInsects, flowerVisitInsects, canonicalHref]);
+  }, [insectPartitionsReady, isFamily, isOrder, isGenus, hostPlantInsects, flowerVisitInsects, canonicalHref, generatedSeoRoute]);
 
   // Load classification: prefer lite JSON, fallback to CSV
   useEffect(() => {

@@ -176,7 +176,7 @@ export function isIndexablePlantProfile(profile = {}, detail = {}) {
   return !PLANT_PROFILE_OCR_CORRUPTION_PATTERNS.some((pattern) => pattern.test(auditedText));
 }
 
-export function collectPlantPageNames(hostPlantsMap = {}, plantDetails = {}) {
+export function collectPlantPageNames(hostPlantsMap = {}, plantDetails = {}, additionalPageNames = []) {
   const hostNames = hostPlantsMap instanceof Map
     ? [...hostPlantsMap.keys()]
     : Object.keys(hostPlantsMap || {});
@@ -188,7 +188,7 @@ export function collectPlantPageNames(hostPlantsMap = {}, plantDetails = {}) {
     .filter(([, detail]) => [detail?.profile, ...(detail?.additionalProfiles || [])]
       .some((profile) => cleanString(profile?.distinguishingFeatures)))
     .map(([name]) => name);
-  return [...new Set([...hostNames, ...profileNames])]
+  return [...new Set([...hostNames, ...profileNames, ...additionalPageNames])]
     .filter(Boolean)
     .sort((left, right) => left.localeCompare(right, 'ja'));
 }

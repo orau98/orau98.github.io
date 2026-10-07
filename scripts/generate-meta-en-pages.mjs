@@ -28,6 +28,7 @@ import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 import { buildAnalyticsHeadTags } from './lib/analyticsHeadTags.mjs';
 import { SITE_LOGO_SRC } from '../src/utils/siteBrand.js';
+import { buildPlantCanonicalMaps, mergePlantEntries } from '../src/utils/plantListMerge.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -498,12 +499,20 @@ function getPlantImageFiles(plantName, plantDetail, allPlantImages) {
   }).sort(comparePlantImageDisplayPriority);
 }
 
-function buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite) {
-  const aliasToCanonical = { ...(ylistLite?.aliasToCanonical || {}) };
+function buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite, additionalPageNames = []) {
+  // plantDetails はデータ構築時に別名を統合済み。古い別名索引で正規名を再写像すると、
+  // チシャノキ等の有効な一覧リンクが別植物へ移り、英語ルート自体も欠落する。
+  const { aliasToCanonical: detailAliases } = buildPlantCanonicalMaps(plantDetails);
+  const plantPageNames = [...new Set([...Object.keys(hostPlantsMap), ...additionalPageNames])];
+  const aliasToCanonical = {
+    ...(ylistLite?.aliasToCanonical || {}),
+    ...Object.fromEntries(detailAliases),
+    ...Object.fromEntries([...Object.keys(plantDetails), ...plantPageNames].map((name) => [name, name])),
+  };
   const usedSlugs = new Set();
   const plantRecords = new Map();
 
-  Object.keys(hostPlantsMap)
+  plantPageNames
     .sort((a, b) => a.localeCompare(b, 'ja'))
     .forEach((plantName) => {
       const normalized = normalizePlantNameLite(plantName) || plantName;
@@ -1209,8 +1218,13 @@ async function generateEnglishMetaPages() {
     leafbeetle: loadJson('leafbeetles.json', []),
     aphid: loadJson('aphids.json', []),
   };
-  const hostPlantsMap = loadJson('hostplants.json', {});
+  const recordedHostPlants = loadJson('hostplants.json', {});
   const plantDetails = loadJson('plant-details.json', {});
+  const hostPlantsMap = mergePlantEntries({
+    hostPlants: recordedHostPlants,
+    flowerVisitPlants: loadJson('flower-visit-plants.json', {}),
+    maps: buildPlantCanonicalMaps(plantDetails),
+  });
   const ylistLite = loadJson('ylist-lite.json', { plants: {}, aliasToCanonical: {} });
   const preservedEnglishStaticFiles = readPreservedEnglishStaticFiles();
 
@@ -1219,7 +1233,10 @@ async function generateEnglishMetaPages() {
   restorePreservedEnglishStaticFiles(preservedEnglishStaticFiles);
   Object.keys(insectsByType).forEach((type) => ensureDir(path.join(EN_META_DIR, type)));
   ensureDir(path.join(EN_META_DIR, 'plant'));
-  const { plantRecords, aliasToCanonical } = buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite);
+  const photoProfileNames = Object.keys(plantDetails).filter((name) =>
+    getPlantImageFiles(name, plantDetails[name], allPlantImages).length > 0,
+  );
+  const { plantRecords, aliasToCanonical } = buildPlantRecordMap(hostPlantsMap, plantDetails, ylistLite, photoProfileNames);
 
   const insectEntriesByType = new Map();
   const insectEntriesById = new Map();
