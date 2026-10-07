@@ -3,6 +3,7 @@ import React, { useMemo, useRef, useEffect, useCallback, useState } from 'react'
 import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ForceGraph2D from 'react-force-graph-2d';
+import { createTextTooltip } from '../utils/textTooltip.js';
 import useInsectImageIndex from '../hooks/useInsectImageIndex';
 import usePlantImageFilenames from '../hooks/usePlantImageFilenames';
 import { createSafeScientificPlantFilename } from '../utils/filename';
@@ -2442,8 +2443,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             width={graphSize.width}
             height={graphSize.height}
             graphData={graphData}
-            nodeLabel="name"
-            linkLabel={link => `${relationStyleLabel(link.relation)}${link.count > 1 ? ` (${link.count}${isEnglish ? ' relationships' : '関係'})` : ''}`}
+            nodeLabel={node => createTextTooltip(node.name)}
+            linkLabel={link => createTextTooltip(`${relationStyleLabel(link.relation)}${link.count > 1 ? ` (${link.count}${isEnglish ? ' relationships' : '関係'})` : ''}`)}
             onRenderFramePre={(_ctx, globalScale) => {
               labelBoxesRef.current = [];
               nodeBoxesRef.current = graphData.nodes

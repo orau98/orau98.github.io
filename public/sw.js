@@ -57,7 +57,7 @@ self.addEventListener('activate', (event) => {
       const keys = await caches.keys();
       await Promise.all(
         keys
-          .filter((key) => !ACTIVE_CACHES.includes(key))
+          .filter((key) => key.startsWith('ihpe-') && !ACTIVE_CACHES.includes(key))
           .map((key) => caches.delete(key)),
       );
       // 旧SW時代にオフライン用キャッシュへ入った画像は今後参照されないため掃除する
@@ -125,8 +125,8 @@ const handleNetworkFirst = async (request) => {
     if (isCacheableResponse(response)) {
       const cache = await caches.open(OFFLINE_CACHE);
       cache.put(request, response.clone()).catch(() => {});
-      // 成功したナビゲーション(=シェルHTML)は正準キーにも複製して常に最新へ更新
-      if (request.mode === 'navigate') {
+      // 正準ルートのHTMLだけをシェルへ複製する。静的詳細ページ等で上書きしない。
+      if (request.mode === 'navigate' && new URL(request.url).pathname === new URL(SHELL_URL).pathname) {
         cache.put(SHELL_URL, response.clone()).catch(() => {});
       }
     }
@@ -158,6 +158,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   if (url.origin !== self.location.origin) return;
+  // 同じオリジンにある別のPagesサイトには関与しない。
+  if (url.pathname === '/hirokiakimoto.github.io' || url.pathname.startsWith('/hirokiakimoto.github.io/')) return;
 
   if (isImageRequest(request, url)) {
     event.respondWith(handleImageRequest(event));
