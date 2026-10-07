@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { RETAINED_INSECT_JPEGS as RETAINED_INSECT_JPEG_LIST } from './lib/imageAssetConstants.mjs';
 import { ROUTE_PRELOAD_ATTRIBUTE, stripHomeOnlyPreloads } from './lib/earlyRouteResources.mjs';
+import { mergePlantEntries } from '../src/utils/plantListMerge.js';
+import { isIndexablePlantProfile } from './lib/dataLiteBuilders.mjs';
 
 // Keep a small margin below GitHub Pages' 1 GiB published-site limit.
 const MAX_PAGES_DIST_BYTES = 980 * 1024 * 1024;
@@ -989,8 +991,10 @@ const collectExistingPlantRouteIndexes = (baseDir, locale, legacyRouteMap = {}) 
       const indexPath = path.join(baseDir, entry.name, 'index.html');
       let canonicalIndexable = false;
       let profileHtml = '';
+      let searchAlias = false;
       try {
         const sourceHtml = fs.readFileSync(indexPath, 'utf8');
+        searchAlias = sourceHtml.includes('window.__PLANT_SEARCH_ALIAS__');
         const canonicalHref = extractCanonicalHref(sourceHtml);
         if (canonicalHref) {
           const canonicalUrl = new URL(canonicalHref, BASE_ORIGIN);
@@ -1044,9 +1048,10 @@ const collectExistingPlantRouteIndexes = (baseDir, locale, legacyRouteMap = {}) 
         sourceDir: path.join(baseDir, entry.name),
         targetDir: path.join(baseDir, plantName),
         indexPath,
+        searchAlias,
       };
     })
-    .filter(({ plantName, indexPath }) => isSafeRouteSegment(plantName) && fs.existsSync(indexPath));
+    .filter(({ plantName, indexPath, searchAlias }) => !searchAlias && isSafeRouteSegment(plantName) && fs.existsSync(indexPath));
 };
 
 const ensurePlantProfileRouteShells = () => {
@@ -1066,6 +1071,27 @@ const ensurePlantProfileRouteShells = () => {
       );
     } catch {}
     let count = 0;
+    const readPlantData = (name) => JSON.parse(
+      readTextIfExists(path.join('dist', 'assets', 'data-lite', `${name}.json`)) || '{}',
+    );
+    const plantDetails = readPlantData('plant-details');
+    // 一覧と同じ統合名を使う。元表記だけを生成すると、別名に統合された一覧リンクや
+    // プロフィールのみの植物はアプリ内では開けても直接アクセスが404になる。
+    const searchablePlants = mergePlantEntries({
+      hostPlants: readPlantData('hostplants'),
+      flowerVisitPlants: readPlantData('flower-visit-plants'),
+      plantDetails,
+    });
+    let aliasCount = 0;
+    let fallbackCount = 0;
+    const plantSeoRoutes = { ja: {}, en: {} };
+    const recordPlantSeoRoute = (locale, plantName, html) => {
+      const canonical = new URL(extractCanonicalHref(html), BASE_ORIGIN);
+      plantSeoRoutes[locale][plantName] = {
+        canonicalName: decodeRouteSegment(canonical.pathname.split('/').filter(Boolean).at(-1)),
+        indexable: !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html),
+      };
+    };
 
     for (const { baseDir, locale } of routeGroups) {
       const routes = collectExistingPlantRouteIndexes(
@@ -1086,16 +1112,56 @@ const ensurePlantProfileRouteShells = () => {
         if (readTextIfExists(routeIndexPath) !== shellHtml) {
           fs.writeFileSync(routeIndexPath, shellHtml, 'utf8');
         }
+        recordPlantSeoRoute(locale, plantName, shellHtml);
         if (sourceDir !== targetDir && fs.existsSync(sourceDir)) {
           fs.rmSync(sourceDir, { recursive: true, force: true });
         }
         count++;
       }
+      const existingNames = new Set(routes.map(({ plantName }) => plantName));
+      for (const plantName of Object.keys(searchablePlants)) {
+        if (!isSafeRouteSegment(plantName) || existingNames.has(plantName)) continue;
+        const aliases = plantDetails[plantName]?.aliases || plantDetails[plantName]?.aliasNames || [];
+        // 元表記に静的な内容があれば、その正規URLとindex設定をそのまま継承する。
+        // 履歴でURLを正規化してからReactを起動し、アプリによるcanonicalの再変更を防ぐ。
+        const target = routes.find((route) => aliases.includes(route.plantName) && extractProfileBody(route.profileHtml));
+        const targetDir = path.join(baseDir, plantName);
+        fs.mkdirSync(targetDir, { recursive: true });
+        let shellHtml;
+        if (target) {
+          const targetPath = `/${locale === 'en' ? 'en/' : ''}plant/${encodeURIComponent(target.plantName)}/`;
+          shellHtml = buildLegacyMetaCompatibilityShell({
+            cleanHtml: readTextIfExists(path.join(baseDir, target.plantName, 'index.html')),
+            sourceHtml: '',
+            sourcePath: `/${locale === 'en' ? 'en/' : ''}plant/${encodeURIComponent(plantName)}/`,
+            targetPath,
+          }).replace('</head>', '    <script>window.__PLANT_SEARCH_ALIAS__ = true;</script>\n  </head>');
+          aliasCount++;
+        } else {
+          // index対象の本文はメタ生成が担当する。対象外の短いプロフィールや
+          // 1昆虫だけのページにはnoindexのアプリ入口を用意し、SEO基準は変えない。
+          const detail = plantDetails[plantName] || {};
+          if (searchablePlants[plantName].length >= 2 || (locale === 'ja'
+            && [detail.profile, ...(detail.additionalProfiles || [])]
+              .some((profile) => profile && isIndexablePlantProfile(profile, detail)))) {
+            throw new Error(`Indexable plant content is missing: ${locale}/${plantName}`);
+          }
+          shellHtml = buildPlantProfileRouteShell(indexHtml, plantName, locale, false);
+          fallbackCount++;
+        }
+        fs.writeFileSync(path.join(targetDir, 'index.html'), shellHtml, 'utf8');
+        recordPlantSeoRoute(locale, plantName, shellHtml);
+      }
     }
+    const seoMapPath = path.join('dist', 'assets', 'data-lite', 'plant-seo-routes.json');
+    fs.mkdirSync(path.dirname(seoMapPath), { recursive: true });
+    fs.writeFileSync(seoMapPath, JSON.stringify(plantSeoRoutes), 'utf8');
 
     console.log(`[postbuild] Synced ${count} plant profile SPA route shell(s).`);
+    console.log(`[postbuild] Synced ${aliasCount} plant search alias entrance(s) and ${fallbackCount} noindex fallback(s).`);
   } catch (error) {
     console.warn('[postbuild] Failed to sync plant profile SPA route shells:', error?.message || error);
+    process.exitCode = 1;
   }
 };
 
