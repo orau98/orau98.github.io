@@ -42,7 +42,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci
-          npm install sharp --save-dev
       
       - name: Get changed images
         id: changed-files
