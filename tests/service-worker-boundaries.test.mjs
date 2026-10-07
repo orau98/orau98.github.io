@@ -105,6 +105,7 @@ test('a static page cannot replace the root shell used for offline navigation', 
   assert.equal((await cache.match(origin + '/meta/plant/example.html')).body, 'static detail HTML');
   assert.equal((await cache.match(shellUrl)).body, 'root shell');
   harness.setNetwork('', true);
+  assert.equal((await harness.request('/meta/plant/example.html')).body, 'static detail HTML');
   assert.equal((await harness.request('/plant/uncached/')).body, 'root shell');
 });
 
@@ -115,4 +116,6 @@ test('the separate Pages project is passed through without fetching or caching',
   }
   assert.deepEqual(harness.networkCalls, []);
   assert.equal(harness.stores.size, 0);
+  assert.equal((await harness.request('/hirokiakimoto.github.io-other/')).body, 'root shell');
+  assert.equal(harness.networkCalls.length, 1);
 });
