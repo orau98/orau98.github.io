@@ -1,10 +1,5 @@
 export const AMAZON_ASSOCIATE_TAG = 'hostplant01-22';
 
-export const AMAZON_ASSOCIATES_DISCLOSURE = {
-  ja: 'Amazonのアソシエイトとして、昆虫植物図鑑は適格販売により収入を得ています。',
-  en: 'As an Amazon Associate, Insect Host Plant Database earns from qualifying purchases.',
-};
-
 export const buildAmazonBookUrl = (asin) => {
   const normalizedAsin = String(asin || '').trim().toUpperCase();
   if (!/^[0-9A-Z]{10}$/.test(normalizedAsin)) {

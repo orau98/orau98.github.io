@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 
 import { bibliography } from '../src/utils/bibliography.js';
 import {
-  AMAZON_ASSOCIATES_DISCLOSURE,
   AMAZON_ASSOCIATE_TAG,
   buildAmazonBookUrl,
   isAmazonAssociateUrl,
@@ -73,13 +72,9 @@ test('book references use the restored Amazon Associate tag', () => {
   }
 });
 
-test('bibliography book URLs and disclosure preserve Amazon Associate attribution', () => {
+test('bibliography book URLs preserve Amazon Associate attribution', () => {
   const amazonEntries = bibliography.filter((entry) => isAmazonAssociateUrl(entry.url));
   assert.equal(amazonEntries.length, 11);
-  assert.equal(
-    AMAZON_ASSOCIATES_DISCLOSURE.ja,
-    'Amazonのアソシエイトとして、昆虫植物図鑑は適格販売により収入を得ています。',
-  );
 });
 
 test('books without a current Amazon product page keep their publisher or society links', () => {

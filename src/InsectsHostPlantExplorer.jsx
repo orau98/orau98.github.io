@@ -10,7 +10,6 @@ import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
 import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
 import {
-  AMAZON_ASSOCIATES_DISCLOSURE,
   isAmazonAssociateUrl,
 } from "./utils/amazonAssociates";
 import useSeoMeta from "./hooks/useSeoMeta";
@@ -564,9 +563,6 @@ const InsectsHostPlantExplorer = memo(
         policySummary: isEnglish
           ? "This site publishes curated insect-plant relationship data compiled from field guides and academic literature. Please verify the original references for academic use."
           : "図鑑・文献ベースで整理した「昆虫と植物の関係データ」を公開しています。学術利用時は必ず原典をご確認ください。",
-        amazonAssociatesDisclosure: isEnglish
-          ? AMAZON_ASSOCIATES_DISCLOSURE.en
-          : AMAZON_ASSOCIATES_DISCLOSURE.ja,
         policyToggle: (open) => (isEnglish ? (open ? "Hide details" : "Show full policy") : (open ? "詳細を閉じる" : "詳細ポリシーを表示")),
         introTitle: isEnglish ? "Introduction" : "はじめに",
         introBody: isEnglish
@@ -2066,9 +2062,6 @@ const InsectsHostPlantExplorer = memo(
                     <div className="rounded-xl border border-slate-200/70 dark:border-slate-700/70 bg-slate-50/70 dark:bg-slate-900/40 p-4">
                       <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         {infoUi.policySummary}
-                      </p>
-                      <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                        {infoUi.amazonAssociatesDisclosure}
                       </p>
                       <button
                         type="button"

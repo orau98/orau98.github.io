@@ -207,7 +207,6 @@ const labelsFor = (isEnglish) => ({
   incorrect: isEnglish ? 'Review this one' : '復習しよう',
   correctPair: isEnglish ? 'Correct link' : '正しいつながり',
   yourChoice: isEnglish ? 'Your choice' : '選んだ答え',
-  learningPoint: isEnglish ? 'Learning point' : '覚えるポイント',
   comparePhotos: isEnglish ? 'Photo comparison' : '写真で確認',
   loading: isEnglish ? 'Preparing quiz data...' : 'クイズデータを準備しています…',
   notReady: isEnglish
@@ -259,43 +258,6 @@ const buildCorrectLinkLabel = (question, isEnglish) => {
   const insectName = question.explanation?.insect?.name || question.prompt?.title || '';
   const plantName = question.explanation?.plant?.name || question.explanation?.correctLabel || '';
   return isEnglish ? `${insectName} - ${plantName}` : `${insectName} → ${plantName}`;
-};
-
-const buildLearningPoint = ({ question, selectedOption, correctOption, isEnglish }) => {
-  if (!question || !correctOption) return '';
-  if (question.mode === QUIZ_MODES.INSECT_TO_PLANT) {
-    const rankLabel = getPlantRankLabel(correctOption.taxonRank, isEnglish);
-    const family = correctOption.family || question.explanation?.plant?.family || '';
-    const correctGroup = family || correctOption.label;
-    if (selectedOption && selectedOption.id !== correctOption.id) {
-      if (family && selectedOption.family === family) {
-        return isEnglish
-          ? `Both choices are in ${family}. Use the exact host-plant name after checking the family.`
-          : `選んだ候補も${family}です。まず科をそろえた上で、正確な食草名を見分ける問題です。`;
-      }
-      return isEnglish
-        ? `This is a ${rankLabel} question. The correct answer is ${correctGroup}.`
-        : `これは${rankLabel}を選ぶ問題です。正解は${correctGroup}です。`;
-    }
-    return isEnglish
-      ? `You matched the insect to the recorded ${rankLabel}${family ? ` in ${family}` : ''}.`
-      : `${rankLabel}${family ? `（${family}）` : ''}として記録された食草を選べています。`;
-  }
-
-  const insectFamily = getInsectFamily(question.explanation?.insect);
-  if (selectedOption && selectedOption.id !== correctOption.id) {
-    if (insectFamily && selectedOption.family === insectFamily) {
-      return isEnglish
-        ? `Both insects are in ${insectFamily}. The useful cue is the exact host-plant link.`
-        : `選んだ昆虫も${insectFamily}です。科だけでなく、この植物との食草関係で見分けます。`;
-    }
-    return isEnglish
-      ? `The recorded insect is in ${insectFamily || 'the linked moth/butterfly group'}.`
-      : `この植物に記録されている昆虫は${insectFamily || '関連する蛾・蝶のグループ'}です。`;
-  }
-  return isEnglish
-    ? `You matched the plant to the linked insect${insectFamily ? ` in ${insectFamily}` : ''}.`
-    : `この植物と結びつく昆虫${insectFamily ? `（${insectFamily}）` : ''}を選べています。`;
 };
 
 const countBy = (items, getKey) => {
@@ -839,12 +801,6 @@ const QuizPage = ({
       correctOptionId: currentQuestion.correctOptionId,
       correctLabel: correctOption?.label || '',
       correctOption,
-      learningPoint: buildLearningPoint({
-        question: currentQuestion,
-        selectedOption: option,
-        correctOption,
-        isEnglish,
-      }),
       isCorrect,
       question: currentQuestion,
     };
@@ -855,7 +811,7 @@ const QuizPage = ({
       next[currentIndex] = answer;
       return next;
     });
-  }, [currentIndex, currentQuestion, isEnglish, selectedOptionId]);
+  }, [currentIndex, currentQuestion, selectedOptionId]);
 
   const nextQuestion = useCallback(() => {
     if (!currentQuestion || !selectedOptionId) return;
@@ -1024,8 +980,6 @@ const QuizPage = ({
       mode === QUIZ_MODES.PLANT_TO_INSECT ? labels.plantPrompt : labels.insectPrompt;
     const feedbackIcon = currentAnswer?.isCorrect ? CheckCircleIcon : XCircleIcon;
     const FeedbackIcon = feedbackIcon;
-    const correctOption = currentQuestion.options.find((item) => item.id === currentQuestion.correctOptionId);
-    const selectedOption = currentAnswer?.selectedOption;
     const questionGridClass = isPhotoStyle
       ? 'grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(22rem,0.75fr)]'
       : 'grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]';
@@ -1174,21 +1128,6 @@ const QuizPage = ({
                       {labels.yourChoice}: {currentAnswer.selectedLabel}
                     </p>
                   )}
-                  {(currentAnswer?.learningPoint || buildLearningPoint({
-                    question: currentQuestion,
-                    selectedOption,
-                    correctOption,
-                    isEnglish,
-                  })) && (
-                    <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-                      {labels.learningPoint}: {currentAnswer?.learningPoint || buildLearningPoint({
-                        question: currentQuestion,
-                        selectedOption,
-                        correctOption,
-                        isEnglish,
-                      })}
-                    </p>
-                  )}
                   {currentQuestion.explanation.sourceLabel && (
                     <SourceCitation
                       sources={currentQuestion.explanation.sourceLabel}
@@ -1322,9 +1261,6 @@ const QuizPage = ({
                     <p className="mt-1 text-base font-bold text-slate-950 dark:text-white">
                       {answer.correctLabel}
                     </p>
-                    {answer.learningPoint && (
-                      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{answer.learningPoint}</p>
-                    )}
                   </div>
                 ))}
               </div>
@@ -1354,11 +1290,6 @@ const QuizPage = ({
                   <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                     {isEnglish ? 'Your answer:' : 'あなたの回答:'} {answer.selectedLabel}
                   </p>
-                  {answer.learningPoint && (
-                    <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-                      {labels.learningPoint}: {answer.learningPoint}
-                    </p>
-                  )}
                   {renderDetailLinks(answer.question)}
                 </div>
               ))}

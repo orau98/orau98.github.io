@@ -26,7 +26,6 @@ import {
 import { bibliography } from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
 import {
-  AMAZON_ASSOCIATES_DISCLOSURE,
   isAmazonAssociateUrl,
 } from '../src/utils/amazonAssociates.js';
 import {
@@ -336,16 +335,6 @@ function formatCitationShortHtml(entry, rawReference = '') {
   const isAssociate = isAmazonAssociateUrl(link);
   const rel = isAssociate ? 'sponsored nofollow noopener noreferrer' : 'noopener noreferrer';
   return `<cite><a href="${escapeRedirectHtml(link)}" target="_blank" rel="${rel}">${label}</a></cite>`;
-}
-
-function renderAmazonAssociatesDisclosureHtml(citationEntries = []) {
-  const hasAssociateLink = citationEntries.some(({ entry, rawReference }) => {
-    const link = entry?.url || getSourceLink(rawReference);
-    return isAmazonAssociateUrl(link);
-  });
-  if (!hasAssociateLink) return '';
-
-  return `<p class="amazon-associates-disclosure">${escapeRedirectHtml(AMAZON_ASSOCIATES_DISCLOSURE.ja)}</p>`;
 }
 
 function buildCitationEntriesFromReferences(rawReferences = []) {
@@ -1828,7 +1817,6 @@ function generateInsectHTML(
       <a href="/" class="back-link">図鑑トップへ</a>
       <a href="${safeExplorerSearchPath}" class="detail-link">図鑑で検索</a>
     </section>
-    ${renderAmazonAssociatesDisclosureHtml(citationEntries)}
   </div>
   
   <script>
@@ -2444,7 +2432,6 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
       <a href="/" class="back-link">図鑑トップへ</a>
       <a href="${safePlantActionPath}" class="detail-link">${safePlantFooterActionLabel}</a>
     </section>
-    ${renderAmazonAssociatesDisclosureHtml(citationEntries)}
   </div>
   
   <script>
