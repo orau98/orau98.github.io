@@ -193,6 +193,7 @@ Flavocrambus striatellus Leech
 Gabala_argentata
 Garella_ruficirra
 Gesonia_fallax
+Gesonia_obeditalis
 Gigantalcis_flavolinearia
 Glyphodes_onychinalis
 Gonepatica_opalina
@@ -660,6 +661,7 @@ Zizeeria_maha
 カラカネハナカミキリ
 カラスヨトウ
 カラフトホソコバネカミキリ
+カラマツイトヒキハマキ
 カワムラトガリバ
 キアシネクイハムシ
 キイロエグリヅマエダシャク
@@ -857,6 +859,7 @@ Zizeeria_maha
 セアカキンウワバ
 セグロシャチホコ
 セスジヨトウ
+セダカコブヤハズカミキリ関東近畿亜種
 セダカシャチホコ
 セダカモクメ
 ソトウスグロアツバ
