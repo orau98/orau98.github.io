@@ -10,7 +10,9 @@ env:
 
 jobs:
   build-and-validate:
-    runs-on: ubuntu-latest
+    # ubuntu-latest は 2026年11月に Ubuntu 26.04 へ移り、Playwright 1.56.1 がブラウザを入れられなくなった
+    # （"Playwright does not support chromium on ubuntu26.04-x64"）。画面確認に使うので対応版に固定する
+    runs-on: ubuntu-24.04
     env:
       NODE_OPTIONS: --max-old-space-size=4096
       SKIP_RESPONSIVE_IMAGES: "1"
