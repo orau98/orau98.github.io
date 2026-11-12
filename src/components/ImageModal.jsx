@@ -123,6 +123,37 @@ const ImageModal = ({ image, isOpen, onClose, onImageError, images = [], current
     };
   }, [isActive]);
 
+  // スマホでは拡大表示を「戻る」で閉じる操作が自然なので、開いている間だけ履歴を1つ積む。
+  // 以前は拡大中に「戻る」を押すとページごと前の画面（一覧）へ戻ってしまっていた。
+  // 積む履歴は今の履歴の内容（React Router の key・idx など）をそのまま写して目印だけ足すので、
+  // 戻ったときも同じページ・同じ位置のまま。ボタンや Esc で閉じたときは積んだ履歴を取り消す
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+  useEffect(() => {
+    if (!isActive || typeof window === 'undefined' || !window.history?.pushState) return undefined;
+    const marker = `image-modal:${Date.now()}:${Math.random().toString(36).slice(2)}`;
+    try {
+      window.history.pushState({ ...(window.history.state || {}), imageModal: marker }, '');
+    } catch {
+      return undefined;
+    }
+    let closedByHistory = false;
+    const handlePopState = () => {
+      if (window.history.state?.imageModal === marker) return;
+      closedByHistory = true;
+      onCloseRef.current?.();
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      if (!closedByHistory && window.history.state?.imageModal === marker) {
+        window.history.back();
+      }
+    };
+  }, [isActive]);
+
   // モーダル表示中は背景ページのスクロールを止める（閉じたら元の値へ戻す）
   useEffect(() => {
     if (!isActive || typeof document === 'undefined') return undefined;

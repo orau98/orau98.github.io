@@ -27,7 +27,7 @@ export function PresetFilterChips({ label, chips = [], scrollable = false, local
       {typeof chip.count === 'number' && (
         <span
           className={`ml-1.5 font-medium tabular-nums ${
-            chip.active ? 'text-emerald-700/80 dark:text-emerald-200/80' : 'text-slate-400 dark:text-slate-500'
+            chip.active ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           {formatCount(chip.count, locale)}

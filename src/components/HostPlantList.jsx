@@ -16,12 +16,13 @@ import {
   createSafeScientificPlantFilename,
   splitFilenameBase,
 } from "../utils/filename";
-import { hiraganaToKatakana, normalizeNFKC } from "../utils/text";
 import { getSearchMatchTier } from "../utils/searchRelevance";
+import { PLANT_QUERY_ALIASES, filterBySearchQuery, getRelevanceTerm, parseSearchQuery } from "../utils/searchQuery";
 import usePlantImageFilenames from "../hooks/usePlantImageFilenames";
 import { getAssetBase, getAssetVersionQuery } from "../utils/assetPaths";
 import Pagination from "./Pagination";
 import ListFilterPanel from "./ListFilterPanel";
+import MobileFilterSheet from "./MobileFilterSheet";
 import { isEnglishLocale } from "../utils/locale";
 import { makeDetailLinkState } from "../utils/navState";
 import { normalizePlantKey } from "../utils/plantNameUtils";
@@ -670,7 +671,12 @@ const HostPlantList = ({
   // フィルタと検索チップ/空状態表示が常に一致するようにする（URL q との二系統ずれを解消）
   const debouncedPlantSearch = useDebounce(initialSearchTerm, 300);
   // 既定の並び（写真あり優先）で検索中は、名前の一致度を最優先にする
-  const relevancePlantSearch = String(debouncedPlantSearch || "").trim();
+  const plantSearchQuery = useMemo(
+    () => parseSearchQuery(debouncedPlantSearch, PLANT_QUERY_ALIASES),
+    [debouncedPlantSearch],
+  );
+  // 一致度の並べ替えは読み替え後の語で行う（例:「桜」→「サクラ」本体を先頭に）
+  const relevancePlantSearch = getRelevanceTerm(plantSearchQuery);
   const isRelevanceSort = sortMode === "image" && relevancePlantSearch.length > 0;
   // 戻る/進む(POP)による復元をユーザーの絞り込み操作と区別するために参照する
   const navigationType = useNavigationType();
@@ -773,7 +779,6 @@ const HostPlantList = ({
   const filterIdBase = useId();
   const orderFilterId = `${filterIdBase}-order`;
   const familyFilterId = `${filterIdBase}-family`;
-  const visitFilterId = `${filterIdBase}-visit`;
   const filtersPanelId = `${filterIdBase}-filters`;
 
   // Update itemsPerPage on resize to keep pages filling complete rows
@@ -971,22 +976,13 @@ const HostPlantList = ({
     logger.debug(
       "DEBUG: Filtering plants (summary only)",
       Object.keys(mergedHostPlants).length,
-      "search term:",
-      debouncedPlantSearch,
     );
     if (!mergedHostPlants || Object.keys(mergedHostPlants).length === 0) {
       logger.debug("DEBUG: No host plants available");
       return [];
     }
-    // NFKC正規化で半角カナ・全角英数の表記ゆれを吸収（例: ﾌﾞﾅ→ブナ）
-    const nfkcPlantSearch = normalizeNFKC(debouncedPlantSearch);
-    const lowerCaseSearchTerm = nfkcPlantSearch.toLowerCase();
-    // ひらがな入力をカタカナに変換して検索
-    const katakanaSearchTerm =
-      hiraganaToKatakana(nfkcPlantSearch).toLowerCase();
-
-    const includeProfileOnlyPlants = showAllPlants || nfkcPlantSearch.trim().length > 0;
-    const filtered = Object.entries(mergedHostPlants).filter(([plantName, insects]) => {
+    const includeProfileOnlyPlants = showAllPlants || Boolean(plantSearchQuery);
+    const criteriaFiltered = Object.entries(mergedHostPlants).filter(([plantName, insects]) => {
       // Explicitly exclude empty, undefined, or invalid plant names
       if (
         !plantName ||
@@ -1057,48 +1053,29 @@ const HostPlantList = ({
         return false;
       }
 
-      // Apply Search Term
-      if (!lowerCaseSearchTerm) {
-        return true; // No search term, pass
-      }
+      return true;
+    });
 
-      const family = (detail.family || "").toLowerCase();
-      const familyLatin = (detail.familyLatin || "").toLowerCase();
-      const scientificName = normalizeLatinBinomialPlain(
-        detail.scientificName || "",
-      ).toLowerCase();
-      const genus = (detail.genus || "").toLowerCase();
-      const order = (detail.order || "").toLowerCase();
-      const orderLatin = (detail.orderLatin || "").toLowerCase();
+    // 検索語での絞り込み（和名・別名・科・属・目・学名）。空白で区切った語はすべて含むもの、
+    // 無ければどれかを含むもの（例:「コナラ クヌギ」→ コナラとクヌギ）。漢字・通称は図鑑の表記に読み替える
+    const filtered = filterBySearchQuery(criteriaFiltered, plantSearchQuery, ([plantName]) => {
+      const detail = safePlantDetails[plantName] || {};
       const aliasesRaw = detail.aliases || detail.aliasNames;
       const aliases = Array.isArray(aliasesRaw)
         ? aliasesRaw
         : aliasesRaw instanceof Set
           ? Array.from(aliasesRaw)
           : [];
-      const aliasHit = aliases.some((a) => {
-        const aLower = (a || "").toLowerCase();
-        return (
-          aLower.includes(lowerCaseSearchTerm) ||
-          aLower.includes(katakanaSearchTerm)
-        );
-      });
-
-      // オリジナルの検索条件に加えて、カタカナ変換後の検索も追加
-      return (
-        plantName.toLowerCase().includes(lowerCaseSearchTerm) ||
-        plantName.toLowerCase().includes(katakanaSearchTerm) ||
-        family.includes(lowerCaseSearchTerm) ||
-        family.includes(katakanaSearchTerm) ||
-        familyLatin.includes(lowerCaseSearchTerm) ||
-        scientificName.includes(lowerCaseSearchTerm) ||
-        genus.includes(lowerCaseSearchTerm) ||
-        genus.includes(katakanaSearchTerm) ||
-        order.includes(lowerCaseSearchTerm) ||
-        order.includes(katakanaSearchTerm) ||
-        orderLatin.includes(lowerCaseSearchTerm) ||
-        aliasHit
-      );
+      return [
+        plantName,
+        detail.family,
+        detail.familyLatin,
+        normalizeLatinBinomialPlain(detail.scientificName || ""),
+        detail.genus,
+        detail.order,
+        detail.orderLatin,
+        ...aliases,
+      ].map((value) => String(value || "").toLowerCase());
     });
 
     const getRelatedCount = (plantName, insects = []) => {
@@ -1163,7 +1140,7 @@ const HostPlantList = ({
     flowerVisitPlants,
     safeHostPlants,
     safePlantDetails,
-    debouncedPlantSearch,
+    plantSearchQuery,
     plantImageMap,
     familyFilter,
     orderFilter,
@@ -1336,7 +1313,8 @@ const HostPlantList = ({
       { value: "family", label: ui.sortFamily },
       { value: "related", label: ui.sortRelated },
     ];
-    const resultsLabel = ui.resultCount(filteredHostPlants?.length ?? 0);
+    const resultCountValue = filteredHostPlants?.length ?? 0;
+    const resultsLabel = ui.resultCount(resultCountValue);
     const displayLabels = {
       view: ui.view,
       cards: ui.cards,
@@ -1350,7 +1328,6 @@ const HostPlantList = ({
       const panelId = `${filtersPanelId}${idSuffix}`;
       const orderId = `${orderFilterId}${idSuffix}`;
       const familyId = `${familyFilterId}${idSuffix}`;
-      const visitId = `${visitFilterId}${idSuffix}`;
 
       return (
       <>
@@ -1405,25 +1382,6 @@ const HostPlantList = ({
             locale={locale}
           />
 
-        <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={visitId}>{ui.flowerVisit}</label>
-          <div className="relative">
-            <select
-              id={visitId}
-              value={visitFilter}
-              onChange={(e) => setPVisitFilter(e.target.value)}
-              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
-            >
-              <option value="all">{ui.any}</option>
-              <option value="flower">{ui.flowerOnly}</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-        </div>
         {!mobileInline && (
           <PerPageSelect
             block
@@ -1459,30 +1417,16 @@ const HostPlantList = ({
             <PresetFilterChips label={ui.familyLabel} chips={familyChips} scrollable locale={locale} />
           </div>
         )}
-        <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 [&::-webkit-details-marker]:hidden">
-            <span className="min-w-0 truncate text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
-              {resultsLabel}
-            </span>
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300/70 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-600/70 dark:bg-slate-800 dark:text-slate-200">
-              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              {ui.filtersButton}
-              {activeFilters.length > 0 && (
-                <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[11px] tabular-nums text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
-                  {activeFilters.length}
-                </span>
-              )}
-              <svg className="h-3.5 w-3.5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </span>
-          </summary>
-          <div className="border-t border-slate-200/70 px-3 pb-3 pt-3 dark:border-slate-700/70">
-            {renderFullControls({ showResultsLabel: false, mobileInline: true })}
-          </div>
-        </details>
+        {/* スマホの絞り込みは下から出るシート（結果を押し下げない）。sm以上は一覧の上の絞り込み欄 */}
+        <MobileFilterSheet
+          locale={locale}
+          resultsLabel={resultsLabel}
+          resultCount={resultCountValue}
+          activeCount={activeFilters.length}
+          buttonLabel={ui.filtersButton}
+        >
+          {renderFullControls({ showResultsLabel: false, mobileInline: true })}
+        </MobileFilterSheet>
         <div className="hidden sm:block">
           {renderFullControls()}
         </div>

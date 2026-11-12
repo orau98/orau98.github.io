@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import {
   PLANT_TAXON_RANKS,
+  QUIZ_LEVELS,
   QUIZ_MODES,
   buildQuizQuestions,
   getQuizHostPlantRecords,
@@ -309,4 +310,55 @@ test('priority subject keys place a focused quiz detail item first', () => {
 
   assert.equal(plantQuestions.length, 4);
   assert.equal(plantQuestions[0].prompt.plantName, 'スミレ');
+});
+
+const fagaceaeHeavyInsects = () => [
+  insect({ id: 'target', name: '対象ガ', plants: [hostRecord('コナラ', 'ブナ科')] }),
+  ...['クヌギ', 'ミズナラ', 'カシワ', 'アラカシ', 'シラカシ'].map((plant, index) =>
+    insect({ id: `fagaceae-${index}`, name: `ブナ科食いガ${index}`, plants: [hostRecord(plant, 'ブナ科')] })),
+  insect({ id: 'rose', name: 'バラ科食いガ', family: 'シャクガ科', subfamily: 'エダシャク亜科', plants: [hostRecord('サクラ', 'バラ科')] }),
+  insect({ id: 'willow', name: 'ヤナギ科食いガ', family: 'シャクガ科', subfamily: 'エダシャク亜科', plants: [hostRecord('ヤナギ', 'ヤナギ科')] }),
+  insect({ id: 'violet', name: 'スミレ食いチョウ', type: 'butterfly', family: 'タテハチョウ科', subfamily: 'ドクチョウ亜科', plants: [hostRecord('スミレ', 'スミレ科')] }),
+];
+
+const distractorFamilies = (level) => {
+  const [question] = buildQuizQuestions({
+    moths: fagaceaeHeavyInsects(),
+    mode: QUIZ_MODES.INSECT_TO_PLANT,
+    questionCount: 1,
+    seed: `family-spread-${level}`,
+    reviewKeys: [`${QUIZ_MODES.INSECT_TO_PLANT}:target:コナラ`],
+    level,
+  });
+  return question.options
+    .filter((option) => option.id !== question.correctOptionId)
+    .map((option) => option.family);
+};
+
+test('標準でも、正解と同じ科の誤答は1つまで（4択すべて同じ科にしない）', () => {
+  const families = distractorFamilies(QUIZ_LEVELS.STANDARD);
+  assert.equal(families.length, 3);
+  assert.ok(families.filter((family) => family === 'ブナ科').length <= 1, families.join(','));
+});
+
+test('初級の誤答は正解と別の科から選ぶ', () => {
+  const families = distractorFamilies(QUIZ_LEVELS.BEGINNER);
+  assert.equal(families.length, 3);
+  assert.ok(!families.includes('ブナ科'), families.join(','));
+});
+
+test('同じ科しか候補が無いときは条件を緩めて4択をそろえる', () => {
+  const [question] = buildQuizQuestions({
+    moths: [
+      insect({ id: 'target', name: '対象ガ', plants: [hostRecord('コナラ', 'ブナ科')] }),
+      ...['クヌギ', 'ミズナラ', 'カシワ'].map((plant, index) =>
+        insect({ id: `only-${index}`, name: `ブナ科のみ${index}`, plants: [hostRecord(plant, 'ブナ科')] })),
+    ],
+    mode: QUIZ_MODES.INSECT_TO_PLANT,
+    questionCount: 1,
+    seed: 'family-relax',
+    reviewKeys: [`${QUIZ_MODES.INSECT_TO_PLANT}:target:コナラ`],
+    level: QUIZ_LEVELS.BEGINNER,
+  });
+  assert.equal(question.options.length, 4);
 });

@@ -17,7 +17,7 @@ import useDebounce from "./hooks/useDebounce";
 import useInsectImageIndex from "./hooks/useInsectImageIndex";
 import usePlantImageFilenames from "./hooks/usePlantImageFilenames";
 import lazyWithRetry from "./utils/lazyWithRetry";
-import { hiraganaToKatakana } from "./utils/text";
+import { hiraganaToKatakana, normalizeNFKC } from "./utils/text";
 import { normalizePlantKey } from "./utils/plantNameUtils";
 import { isPlantHostRecord } from "./utils/hostResource";
 import {
@@ -782,6 +782,20 @@ const InsectsHostPlantExplorer = memo(
       } catch {}
     };
 
+    // 一覧を表示している間は、ブラウザのスクロールアンカー（内容の高さが変わっても見ていた要素の
+    // 位置を保つ機能）を止める。詳細から戻ったとき、位置を戻した直後に骨組み→カード、写真の
+    // 読み込み表示への切り替えで高さが変わり、アンカーに引っ張られて先頭付近や下の方へ飛んでいた
+    // （分類チップで絞った一覧で 943px → 125px、検索結果で 1078px → 2308px）。位置は下の復元処理が戻す
+    useEffect(() => {
+      if (typeof document === 'undefined') return undefined;
+      const root = document.documentElement;
+      const previous = root.style.overflowAnchor;
+      root.style.overflowAnchor = 'none';
+      return () => {
+        root.style.overflowAnchor = previous;
+      };
+    }, []);
+
     // Save scroll position before navigating away (single source of truth)
     useEffect(() => {
       // Save scroll position on click of any link that navigates to detail page
@@ -1498,9 +1512,11 @@ const InsectsHostPlantExplorer = memo(
     }, [plantImageFilenames]);
 
     const suggestions = useMemo(() => {
-      if (!debouncedSuggestionTerm || debouncedSuggestionTerm.trim() === "") return [];
-      const term = debouncedSuggestionTerm.toLowerCase();
-      const katakanaTerm = hiraganaToKatakana(debouncedSuggestionTerm).toLowerCase();
+      // 全角スペース（NFKCで半角になる）や半角カナも吸収してから比べる
+      const normalizedSuggestionTerm = normalizeNFKC(debouncedSuggestionTerm || "").trim();
+      if (!normalizedSuggestionTerm) return [];
+      const term = normalizedSuggestionTerm.toLowerCase();
+      const katakanaTerm = hiraganaToKatakana(normalizedSuggestionTerm).toLowerCase();
       const suggestionsByKey = new Map();
       let sequence = 0;
 
@@ -1931,11 +1947,11 @@ const InsectsHostPlantExplorer = memo(
             {/* 逆引き動線: 検索語があるとき、反対カテゴリの概算一致件数つきリンクを1本だけ出す。
                 説明文（「○○を表示中」）は冗長なので撤去し、行動リンクに集約。 */}
             {activeSearchTerm.trim() && (
-              <div className="flex justify-center border-b border-line bg-surface-raised px-4 py-1.5 text-xs">
+              <div className="flex justify-center border-b border-line bg-surface-raised px-4 py-0.5 text-sm">
                 <button
                   type="button"
                   onClick={crossSearchOtherTab}
-                  className="inline-flex items-center gap-1 font-medium text-brand-600 underline decoration-brand-300 underline-offset-2 transition-colors hover:text-brand-700 dark:text-brand-300 dark:hover:text-brand-200"
+                  className="inline-flex min-h-[36px] items-center gap-1 font-medium text-brand-700 underline decoration-brand-300 underline-offset-2 transition-colors hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200"
                 >
                   {crossLinkLabel}
                   <span aria-hidden="true">→</span>

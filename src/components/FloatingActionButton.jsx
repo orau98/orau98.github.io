@@ -15,6 +15,9 @@ const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [tocItems, setTocItems] = useState([]);
+  // 下へ読み進めている間はボタンを隠す（右下の固定ボタンが食草欄のラベルなどに重なっていた）。
+  // 少しでも上へ戻すと再び出る
+  const [isScrollHidden, setIsScrollHidden] = useState(false);
   const location = useLocation();
   const locale = getLocaleFromPath(location.pathname || '/');
   const isEnglish = isEnglishLocale(locale);
@@ -28,6 +31,27 @@ const FloatingActionButton = () => {
   useEffect(() => {
     setIsVisible(isDetailPage);
   }, [isDetailPage]);
+
+  useEffect(() => {
+    if (!isVisible || typeof window === 'undefined') return undefined;
+    let lastY = window.scrollY;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const delta = y - lastY;
+      if (Math.abs(delta) < 8) return;
+      setIsScrollHidden(delta > 0 && y > 240);
+      lastY = y;
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isVisible]);
 
   // Close menu when location changes
   useEffect(() => {
@@ -121,7 +145,10 @@ const FloatingActionButton = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 md:right-6 z-[70] flex flex-col items-end gap-3">
+    <div className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 md:right-6 z-[70] flex flex-col items-end gap-3 transition-all duration-300 ${
+      isScrollHidden && !isOpen ? 'pointer-events-none translate-y-24 opacity-0' : 'translate-y-0 opacity-100'
+    }`}
+    >
       {/* Menu Items */}
       <div
         id="fab-menu"
@@ -176,17 +203,17 @@ const FloatingActionButton = () => {
       {/* Main FAB Toggle */}
       <button
         onClick={toggleMenu}
-        className={`relative z-[70] flex h-12 items-center justify-center gap-1.5 rounded-full px-4 shadow-xl transition-all duration-300 md:h-14 md:px-5 ${
+        className={`relative z-[70] flex h-11 items-center justify-center gap-1 rounded-full px-3.5 shadow-xl transition-all duration-300 md:h-14 md:gap-1.5 md:px-5 ${
           isOpen
             ? 'bg-slate-700 text-white'
-            : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-105'
+            : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:scale-105'
         }`}
         aria-label={isOpen ? (isEnglish ? 'Close contents' : '目次を閉じる') : (isEnglish ? 'Open contents' : '目次を開く')}
         aria-expanded={isOpen}
         aria-controls="fab-menu"
       >
         <svg
-          className={`h-7 w-7 transition-transform duration-300 md:h-8 md:w-8 ${isOpen ? 'rotate-45' : ''}`}
+          className={`h-5 w-5 transition-transform duration-300 md:h-8 md:w-8 ${isOpen ? 'rotate-45' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

@@ -225,6 +225,9 @@ const SearchInput = React.forwardRef(({
   const inputRef = useRef(null);
   const listboxId = useId();
   const blurTimeoutRef = useRef(null);
+  // 候補の強調がキーボード（↑↓）で選ばれたものか。マウスを候補の上に置いたまま入力して
+  // Enter を押したときに、意図しない候補のページへ移らないよう、Enter はキーボードで選んだ候補だけに使う
+  const activeByKeyboardRef = useRef(false);
   const isMobile = useIsMobile();
   const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory(historyScope);
   const setInputRef = useCallback((node) => {
@@ -271,6 +274,9 @@ const SearchInput = React.forwardRef(({
 
   const handleChange = (e) => {
     const newValue = e.target.value;
+    // 入力し直したら、キーボードで選んでいた候補は解除する（Enter は入力した語で検索）
+    activeByKeyboardRef.current = false;
+    setActiveIndex(-1);
     // ローカル値は常に更新（IME変換中の表示用）
     setLocalValue(newValue);
     setShowSuggestions(true);
@@ -360,6 +366,7 @@ const SearchInput = React.forwardRef(({
     }
     if (!expanded) {
       if (e.key === "ArrowDown" && activeItemsLength > 0) {
+        activeByKeyboardRef.current = true;
         setShowSuggestions(true);
         setActiveIndex(0);
         e.preventDefault();
@@ -370,6 +377,7 @@ const SearchInput = React.forwardRef(({
     if (e.key === "ArrowDown") {
       if (activeItemsLength === 0) return;
       e.preventDefault();
+      activeByKeyboardRef.current = true;
       setActiveIndex((prev) => {
         const next = prev + 1;
         return next >= activeItemsLength ? 0 : next;
@@ -379,6 +387,7 @@ const SearchInput = React.forwardRef(({
     if (e.key === "ArrowUp") {
       if (activeItemsLength === 0) return;
       e.preventDefault();
+      activeByKeyboardRef.current = true;
       setActiveIndex((prev) => {
         if (prev <= 0) return activeItemsLength - 1;
         return prev - 1;
@@ -387,7 +396,7 @@ const SearchInput = React.forwardRef(({
     }
     if (e.key === "Enter") {
       e.preventDefault();
-      if (activeIndex >= 0 && activeIndex < activeItemsLength) {
+      if (activeByKeyboardRef.current && activeIndex >= 0 && activeIndex < activeItemsLength) {
         const selected = activeItems[activeIndex];
         const selectValue =
           typeof selected === "object" && selected !== null
@@ -516,7 +525,7 @@ const SearchInput = React.forwardRef(({
                           aria-selected={index === activeIndex}
                           tabIndex={-1}
                           onMouseDown={() => handleSelect(term)}
-                          onMouseEnter={() => setActiveIndex(index)}
+                          onMouseEnter={() => { activeByKeyboardRef.current = false; setActiveIndex(index); }}
                           className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-2.5 text-left sm:gap-3 sm:px-2 sm:py-3"
                         >
                           <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -527,7 +536,7 @@ const SearchInput = React.forwardRef(({
                         <button
                           type="button"
                           onMouseDown={(e) => { e.preventDefault(); removeFromHistory(term); }}
-                          onMouseEnter={() => setActiveIndex(index)}
+                          onMouseEnter={() => { activeByKeyboardRef.current = false; setActiveIndex(index); }}
                           className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                           aria-label={labels.removeHistory(term)}
                         >
@@ -564,7 +573,7 @@ const SearchInput = React.forwardRef(({
                         aria-selected={index === activeIndex}
                         tabIndex={-1}
                         onMouseDown={() => handleSelect(suggestion)}
-                        onMouseEnter={() => setActiveIndex(index)}
+                        onMouseEnter={() => { activeByKeyboardRef.current = false; setActiveIndex(index); }}
                         className={`flex min-h-[52px] w-full items-center gap-2.5 px-3 py-2 text-left text-slate-700 transition-all duration-150 dark:text-slate-200 sm:min-h-[56px] sm:gap-3 sm:px-4 sm:py-2.5 ${
                           index === activeIndex
                             ? "bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-700/70 dark:to-slate-700/30"

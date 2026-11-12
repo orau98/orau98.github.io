@@ -143,6 +143,7 @@ npm run lint         # ESLint
 ### サイトマップ
 - 植物、蛾、蝶、タマムシ、カミキリムシ、ハムシ、アブラムシ別 + 英語版（`sitemap-en-*.xml`）の分割サイトマップ
 - インデックスは `public/sitemap.xml`
+- 手書きの静的ページ: `public/sitemap.html`（名前から探す）と `public/privacy.html`（サイトについて・免責・写真・プライバシーポリシー・誤りの報告先）。後者はフッターと個別ページの「誤りを報告」からリンクする（報告先のURLは `src/utils/siteContact.js`）
 - lastmod は「そのページの内容が実際に変わった日」。本文の指紋を前回公開時の記録（公開サイトの `sitemap-lastmod.json`）と比べ、
   同じなら前回の日付、違えば今日にする（`scripts/lib/sitemapLastmod.mjs`。読み込み元は `SITEMAP_LASTMOD_SOURCE` で変更可）。
   記録を読めないときは全ページを初回の日付（`INITIAL_SITEMAP_LASTMOD`）にし、「今日更新」を一斉に出さない。`audit:seo` が記録と sitemap の一致を確かめる。

@@ -14,8 +14,12 @@ const SkeletonCard = () => (
 
 const SkeletonLoader = () => {
   return (
-    <div className="animate-pulse space-y-6" role="status" aria-live="polite" aria-busy="true">
+    // 読み上げ用の文言（sr-only）は流れの外にあるため、space-y の先頭扱いにならず、
+    // 次のブロックの上余白（24px）が main の外へはみ出していた。本文が出た瞬間に
+    // 画面全体が24px上へずれていたので、余白は骨組みの中だけに付ける
+    <div className="animate-pulse" role="status" aria-live="polite" aria-busy="true">
       <span className="sr-only">読み込み中…</span>
+      <div className="space-y-6">
       {/* ヒーロー相当のブロック */}
       <div aria-hidden="true" className="h-40 rounded-2xl bg-gradient-to-br from-slate-300/60 to-slate-200/60 dark:from-slate-800/80 dark:to-slate-900/80 sm:h-44 sm:rounded-3xl" />
       {/* 種一覧カードグリッド相当 */}
@@ -23,6 +27,7 @@ const SkeletonLoader = () => {
         {Array.from({ length: 8 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}
+      </div>
       </div>
     </div>
   );

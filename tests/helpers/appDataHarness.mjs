@@ -85,7 +85,7 @@ export async function createAppHarness(initialPath, { failedFiles = [], cache = 
   };
   const exact = {
     react: 'const R=globalThis.PROBE.React; export default R; export const {useState,useEffect,useRef}=R;',
-    'react-router-dom': 'export const Routes="Routes", Route="Route"; export const matchPath=()=>null; export const useLocation=()=>globalThis.PROBE.location; export const useNavigationType=()=>"POP";',
+    'react-router-dom': 'export const Routes="Routes", Route="Route"; export const matchPath=(pattern,pathname)=>{const p=typeof pattern==="string"?pattern:pattern.path;if(p==="*")return{pathname};const re=new RegExp("^"+p.replace(/\\/+$/,"").replace(/:[^/]+/g,"[^/]+")+"/?$");return re.test(pathname)?{pathname}:null;}; export const useLocation=()=>globalThis.PROBE.location; export const useNavigationType=()=>"POP";',
     './utils/logger': 'export default {debug(){},warn(){},error(){}};',
     './utils/lazyWithRetry': 'export default function lazy(){return "LazyComponent"}',
     './services/datasetCache': 'export const loadDatasetFromCache=async()=>globalThis.PROBE.cache; export const saveDatasetToCache=async()=>{};',
