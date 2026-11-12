@@ -704,6 +704,8 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   // PCでのホイールズームはクリックで有効化する（ページスクロールを奪わないため）。
   // マウスがグラフ外へ出たら自動的に無効へ戻す
   const [desktopZoomActive, setDesktopZoomActive] = useState(false);
+  // スマホで図そのものを動かす操作中か（それ以外は1本指でページをスクロールする）
+  const [touchGraphActive, setTouchGraphActive] = useState(false);
   const showRelatedInsects = true;
   // 中心からの基準リンク距離（最内リングの半径）。ノード数が多い場合は
   // computeRingLayout がこの値を基準に複数リングへ距離を割り振る
@@ -1804,6 +1806,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
 
   const handlePointerDownCapture = useCallback((event) => {
     if (event.pointerType !== 'touch') return;
+    if (isCompactPanel && !touchGraphActive) return;
     if (event.target instanceof Element && event.target.closest('[data-fg-ui]')) return;
     markUserInteracted();
 
@@ -1831,7 +1834,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
       longPressStartRef.current = null;
       beginPinDrag(node, pointerId);
     }, 450);
-  }, [beginPinDrag, cancelLongPress, findNearestNode, getRelativePoint, markUserInteracted]);
+  }, [beginPinDrag, cancelLongPress, findNearestNode, getRelativePoint, isCompactPanel, markUserInteracted, touchGraphActive]);
 
   const handlePointerMoveCapture = useCallback((event) => {
     if (event.pointerType !== 'touch') return;
@@ -1893,14 +1896,24 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
   }, [pinnedNodeCount, viewStats, isEnglish, collapsedGroups.length]);
 
   const interactionHint = isCompactPanel
-    ? (isEnglish ? 'Tap to select; pinch to zoom. Use the list to search every species.' : 'タップで選択、ピンチで拡大。種の一覧から全種を検索できます。')
+    ? (touchGraphActive
+      ? (isEnglish ? 'Drag to move and pinch to zoom. Tap "Done" to scroll the page again.' : 'ドラッグで移動、ピンチで拡大。「完了」でページのスクロールに戻ります。')
+      : (isEnglish ? 'Tap to select. Use "Move graph" to drag or pinch the graph.' : 'タップで選択。図を動かすときは「図を動かす」を押してください。'))
     : (isEnglish ? 'Click to select; drag to move. Click the graph to enable wheel zoom.' : 'クリックで選択、ドラッグで移動。図をクリックするとホイールで拡大できます。');
 
-  const enablePanInteraction = !isPinDragging;
+  // スマホ: 図は画面の大半を占めるため、1本指の操作は常にページのスクロールに使う
+  // （以前は図の移動に取られ、図の上ではページが進まなかった）。
+  // 図を動かしたいときだけ「図を動かす」を押す。拡大・縮小・全体表示は右上のボタンでいつでもできる
+  // （マウスでのドラッグはページのスクロールと競合しないので、狭い画面でもそのまま図を動かせる）
+  const graphGesturesEnabled = !isCompactPanel || touchGraphActive;
+  const enablePanInteraction = useCallback(
+    (event) => !isPinDragging && (graphGesturesEnabled || !String(event?.type || '').startsWith('touch')),
+    [graphGesturesEnabled, isPinDragging],
+  );
   // PC: ノードドラッグは常時有効（ページスクロールと競合しない）。
   // ホイールズームはグラフをクリックしてから有効（スクロールジャック防止）
-  const enableZoomInteraction = (isCompactPanel || desktopZoomActive) && !isPinDragging;
-  const enableNodeDrag = !isPinDragging;
+  const enableZoomInteraction = ((isCompactPanel && touchGraphActive) || desktopZoomActive) && !isPinDragging;
+  const enableNodeDrag = graphGesturesEnabled && !isPinDragging;
   const desktopControlButtonClass = 'shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900/60 hover:bg-slate-50 dark:hover:bg-slate-800';
   const graphCursor = isPinDragging ? 'grabbing' : hoverNodeId ? 'pointer' : 'grab';
 
@@ -2435,7 +2448,7 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
         </div>}
       </div>
       <div className={`flex min-h-0 flex-1 ${isCompactPanel ? 'flex-col' : 'flex-row'}`}>
-        <div ref={containerRef} data-network-canvas className="food-web-graph-touch relative min-h-0 min-w-0 flex-1 overflow-hidden" style={{ cursor: graphCursor }} role="region" aria-label={graphAriaLabel} onWheelCapture={handleGraphWheelCapture} onPointerDownCapture={handlePointerDownCapture} onPointerMoveCapture={handlePointerMoveCapture} onPointerUpCapture={handlePointerUpCapture} onPointerCancelCapture={handlePointerUpCapture} onClick={activateDesktopZoom} onMouseLeave={deactivateDesktopZoom}>
+        <div ref={containerRef} data-network-canvas className={`food-web-graph-touch relative min-h-0 min-w-0 flex-1 overflow-hidden ${isCompactPanel && touchGraphActive ? 'food-web-graph-touch--active ring-2 ring-inset ring-emerald-500' : ''}`} style={{ cursor: graphCursor }} role="region" aria-label={graphAriaLabel} onWheelCapture={handleGraphWheelCapture} onPointerDownCapture={handlePointerDownCapture} onPointerMoveCapture={handlePointerMoveCapture} onPointerUpCapture={handlePointerUpCapture} onPointerCancelCapture={handlePointerUpCapture} onClick={activateDesktopZoom} onMouseLeave={deactivateDesktopZoom}>
           <div aria-live="polite" aria-atomic="true" className="sr-only">{selectedNodeAnnouncement}</div>
           <ForceGraph2D
             ref={fgRef}
@@ -2506,6 +2519,24 @@ const FoodWebGraph = React.memo(function FoodWebGraph({
             }}
           />
 
+          {isCompactPanel && (
+            <button
+              type="button"
+              data-fg-ui
+              onClick={() => { markUserInteracted(); setTouchGraphActive((active) => !active); }}
+              aria-pressed={touchGraphActive}
+              className={`absolute left-2 top-2 z-10 inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border px-3 text-xs font-bold shadow-sm backdrop-blur ${touchGraphActive
+                ? 'border-emerald-700 bg-emerald-700 text-white'
+                : 'border-slate-200 bg-white/90 text-slate-700 dark:border-slate-600 dark:bg-slate-900/85 dark:text-slate-200'}`}
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                {touchGraphActive
+                  ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11V5.5a1.5 1.5 0 013 0V11m0-4.5a1.5 1.5 0 013 0V11m0-3.5a1.5 1.5 0 013 0V13a6 6 0 01-6 6h-.5a5.5 5.5 0 01-4.6-2.5L4.2 13.8a1.5 1.5 0 012.5-1.7L7 12.6" />}
+              </svg>
+              {touchGraphActive ? (isEnglish ? 'Done' : '完了') : (isEnglish ? 'Move graph' : '図を動かす')}
+            </button>
+          )}
           {/* 拡大・縮小・全体表示は地図アプリのように図の右上に小さく置く */}
           <div className="absolute right-2 top-2 z-10 flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white/90 shadow-sm backdrop-blur dark:border-slate-600 dark:bg-slate-900/85">
             <button type="button" className={zoomButtonClass} onClick={zoomIn} aria-label={isEnglish ? 'Zoom in' : '拡大'} title={isEnglish ? 'Zoom in' : '拡大'}>＋</button>

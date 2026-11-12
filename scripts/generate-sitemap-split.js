@@ -382,6 +382,15 @@ async function generateSplitSitemaps() {
     { changefreq: 'monthly', priority: '0.5' },
   );
 
+  addStaticPageToMain(
+    lastmodFor,
+    sitemaps,
+    baseUrl,
+    '/privacy.html',
+    path.join(__dirname, '../public/privacy.html'),
+    { changefreq: 'yearly', priority: '0.3' },
+  );
+
 
   const directoryEntries = new Map(META_PAGE_SECTIONS.map(({ key }) => [key, []]));
 

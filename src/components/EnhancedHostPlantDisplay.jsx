@@ -1,5 +1,5 @@
 import { isFlowerVisitRecord } from '../utils/flowerVisitPlants.js';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SourceCitation from './ui/SourceCitation';
 import { makeDetailLinkState } from '../utils/navState';
@@ -10,6 +10,7 @@ import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx'
 import { getHostResourceType } from '../utils/hostResource';
 import { HOST_STYLE, FLOWER_STYLE, buildShowMoreLabel } from '../utils/hostVisitStyle';
 import { getPublicHostPlantNoteSegments } from '../utils/publicHostPlantNotes';
+import { buildPlantUseSummary } from '../utils/plantUseSummary';
 import {
   getObservationTypePresentation,
   getObservationTypePriority,
@@ -171,6 +172,236 @@ const getPlantPartLabel = (plantPart, isEnglish = false) => {
     新芽: 'Bud',
     芽: 'Bud',
   })[plantPart] || plantPart;
+};
+
+// 食草欄の備考から、植物の利用に関係する文だけを取り出す（出現時期など生活史の重複は除く）
+const isLifecycleNote = (s) => /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(s);
+const isPlantRelevantNote = (s) => /葉|花|蕾|若葉|茎|根|枝|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
+const getPlantRelevantNotes = (records = []) => {
+  const notes = new Set();
+  records.forEach((record) => {
+    if (!record.notes) return;
+    getPublicHostPlantNoteSegments(record.notes).forEach((segment) => {
+      if (!segment) return;
+      if (isLifecycleNote(segment) && !isPlantRelevantNote(segment)) return;
+      notes.add(segment);
+    });
+  });
+  return Array.from(notes);
+};
+
+const getPrimaryRecord = (records) => records.reduce((prev, current) => (
+  getObservationTypePriority(current.observationType) < getObservationTypePriority(prev.observationType) ? current : prev
+));
+
+const INITIAL_PLANT_LIMIT = 30;
+
+/**
+ * 食草・訪花の植物を科ごとに短い行で並べる。
+ * 全件に共通する利用（幼虫・葉など）・記録の種類・出典は上に1回だけ出し、植物ごとには違う所だけを添える。
+ */
+const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} }) => {
+  const location = useLocation();
+  const isEnglish = isEnglishLocale(locale);
+  const [showAll, setShowAll] = useState(false);
+  const style = kind === 'flower' ? FLOWER_STYLE : HOST_STYLE;
+
+  const summary = useMemo(() => buildPlantUseSummary(groups, {
+    usageLabelOf: (record) => (isFlowerVisitRecord(record)
+      ? ''
+      : [getLifeStageLabel(record.lifeStage, isEnglish), getPlantPartLabel(record.plantPart, isEnglish)]
+        .filter(Boolean)
+        .join(isEnglish ? ' / ' : '・')),
+    observationOf: (group) => {
+      const primary = getPrimaryRecord(group.records);
+      const presentation = getObservationTypePresentation(primary.observationType, isEnglish);
+      return {
+        key: presentation.label,
+        label: presentation.label,
+        stated: Boolean(String(primary.observationType || '').trim()),
+        priority: getObservationTypePriority(primary.observationType),
+        presentation,
+      };
+    },
+    notesOf: (group) => getPlantRelevantNotes(group.records),
+  }), [groups, isEnglish]);
+
+  if (summary.plantCount === 0) return null;
+
+  const plantLabel = (name) => {
+    const detail = plantDetails?.[name] || {};
+    if (!isEnglish) return name;
+    const primary = getPrimaryEnglishName({ scientificName: detail.scientificName, japaneseName: name, fallback: name });
+    return detail.scientificName ? formatScientificNameReact(primary) : primary;
+  };
+
+  // 表示件数の上限（「他N種を表示」で全件）。科の見出しだけの記録も1件と数える
+  let remaining = showAll ? Infinity : INITIAL_PLANT_LIMIT;
+  const visibleFamilies = [];
+  summary.families.forEach((family) => {
+    if (remaining <= 0) return;
+    const items = family.items.slice(0, Math.max(0, remaining - (family.hasFamilyRecord ? 1 : 0)));
+    remaining -= items.length + (family.hasFamilyRecord ? 1 : 0);
+    visibleFamilies.push({ ...family, items });
+  });
+  const shownCount = visibleFamilies.reduce((total, family) => total + family.items.length + (family.hasFamilyRecord ? 1 : 0), 0);
+  const hiddenCount = summary.plantCount - shownCount;
+
+  const renderExtras = (item) => (
+    <>
+      {summary.commonUsage === null && item.usage && (
+        <span className="text-[11px] font-normal text-slate-600 dark:text-slate-300">{item.usage}</span>
+      )}
+      {summary.commonObservation === null && item.observation.stated && (
+        <span className={`rounded border px-1 text-[11px] font-normal leading-4 ${item.observation.presentation.borderColor} ${item.observation.presentation.textColor}`}>
+          {item.observation.label}
+        </span>
+      )}
+      {item.referenceNumbers.length > 0 && (
+        <sup
+          className="text-[10px] font-normal text-slate-600 dark:text-slate-300"
+          aria-label={isEnglish ? `Sources ${item.referenceNumbers.join(', ')}` : `出典${item.referenceNumbers.join('・')}`}
+        >
+          {item.referenceNumbers.join(',')}
+        </sup>
+      )}
+    </>
+  );
+
+  const familyCount = summary.familyCount;
+  const notes = summary.items.filter((item) => item.notes.length > 0);
+
+  return (
+    <div className="space-y-2">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <div className={`text-xs font-semibold uppercase tracking-wide ${style.labelText}`}>
+          {kind === 'flower'
+            ? (isEnglish ? 'Adult flower visits' : '成虫の訪花')
+            : (isEnglish ? 'Host plants' : '食草・寄主植物')}
+        </div>
+        <div className="text-xs text-slate-600 dark:text-slate-300">
+          {isEnglish
+            ? `${summary.plantCount} plants${familyCount > 1 ? ` in ${familyCount} families` : ''}`
+            : `${summary.plantCount}件${familyCount > 1 ? `（${familyCount}科）` : ''}`}
+        </div>
+      </div>
+
+      {(summary.commonUsage || (summary.commonObservation && summary.commonObservation.stated)) && (
+        <p className="text-xs text-slate-600 dark:text-slate-300">
+          {summary.commonUsage && (
+            <span className="mr-3">{isEnglish ? 'Use: ' : '利用: '}{summary.commonUsage}</span>
+          )}
+          {summary.commonObservation && summary.commonObservation.stated && (
+            <span>{isEnglish ? 'Record type: ' : '記録の種類: '}{summary.commonObservation.label}</span>
+          )}
+        </p>
+      )}
+
+      <ul className="divide-y divide-slate-200/70 dark:divide-slate-700/60">
+        {visibleFamilies.map((family) => {
+          const familyRecord = family.hasFamilyRecord ? summary.items.find((item) => item.isFamilyRecord && item.familyKey === family.key) : null;
+          return (
+            <li key={family.key || '__unknown'} className="py-2 first:pt-0 last:pb-0">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                {family.key ? (
+                  <Link
+                    to={buildPlantPath(family.key, locale)}
+                    state={makeDetailLinkState(location)}
+                    className="inline-flex min-h-[28px] items-center text-sm font-semibold text-slate-800 underline-offset-2 hover:text-emerald-700 hover:underline dark:text-slate-100 dark:hover:text-emerald-300"
+                  >
+                    {plantLabel(family.key)}
+                  </Link>
+                ) : (
+                  <span className="inline-flex min-h-[28px] items-center text-sm font-semibold text-slate-700 dark:text-slate-200">
+                    {isEnglish ? 'Family unknown' : '科の記載なし'}
+                  </span>
+                )}
+                {familyRecord ? (
+                  <span className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
+                    {isEnglish ? '(recorded at family level)' : '（科として記録）'}
+                    {renderExtras(familyRecord)}
+                  </span>
+                ) : (
+                  <span className="text-xs text-slate-600 dark:text-slate-300">{family.count}</span>
+                )}
+              </div>
+              {family.items.length > 0 && (
+                <ul className="mt-1 flex flex-wrap gap-1.5">
+                  {family.items.map((item) => {
+                    const isUnknownPlant = item.name === '不明';
+                    const className = 'inline-flex min-h-[32px] items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm font-medium text-emerald-800 dark:border-slate-700 dark:bg-slate-900/50 dark:text-emerald-300';
+                    return (
+                      <li key={item.name}>
+                        {isUnknownPlant ? (
+                          <span className={className}>{plantLabel(item.name)}{renderExtras(item)}</span>
+                        ) : (
+                          <Link
+                            to={buildPlantPath(item.name, locale)}
+                            state={makeDetailLinkState(location)}
+                            className={`${className} transition-colors hover:border-emerald-300 hover:bg-emerald-50 dark:hover:border-emerald-600 dark:hover:bg-emerald-950/40`}
+                          >
+                            {plantLabel(item.name)}
+                            {renderExtras(item)}
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+
+      {hiddenCount > 0 || showAll ? (
+        summary.plantCount > INITIAL_PLANT_LIMIT && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setShowAll(!showAll)}
+              aria-expanded={showAll}
+              className={`inline-flex min-h-[40px] items-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 ${style.labelText}`}
+            >
+              {showAll ? (isEnglish ? 'Show less' : '簡略表示') : buildShowMoreLabel(hiddenCount, isEnglish)}
+            </button>
+          </div>
+        )
+      ) : null}
+
+      {summary.commonObservation === null && summary.items.some((item) => !item.observation.stated) && (
+        <p className="text-[11px] leading-4 text-slate-600 dark:text-slate-300">
+          {isEnglish
+            ? 'Plants without a record-type label have no record type stated in the source.'
+            : '「野外」「文献」などの表示がない植物は、出典に記録の種類の記載がありません。'}
+        </p>
+      )}
+
+      {notes.length > 0 && (
+        <div className="text-xs text-slate-600 dark:text-slate-300">
+          <div className="font-medium">{isEnglish ? 'Notes' : '備考'}</div>
+          <ul className="mt-0.5 list-disc space-y-0.5 pl-5">
+            {notes.flatMap((item) => item.notes.map((note) => (
+              <li key={`${item.name}-${note}`}>{item.isFamilyRecord || item.name === '不明' ? '' : `${item.name}: `}{note}</li>
+            )))}
+          </ul>
+        </div>
+      )}
+
+      {summary.commonReferences && summary.commonReferences.length > 0 && (
+        <SourceCitation sources={summary.commonReferences} isEnglish={isEnglish} />
+      )}
+      {summary.referenceOrder.length > 0 && (
+        <ol className="space-y-0.5">
+          {summary.referenceOrder.map((ref, index) => (
+            <li key={ref}>
+              <SourceCitation sources={[ref]} isEnglish={isEnglish} label={`${isEnglish ? 'Source' : '出典'} ${index + 1}`} />
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
 };
 
 const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetails = {} }) => {
@@ -379,14 +610,12 @@ const EnhancedHostPlantDisplay = ({
   hostPlants = [], 
   hostPlantsDetailed = [], 
   showDetailsByDefault = false,
-  maxDisplayCount = 5,
+  maxDisplayCount: _maxDisplayCount = 5,
   locale = 'ja',
   plantDetails = {},
 }) => {
   const isEnglish = isEnglishLocale(locale);
   const [expandedItems, setExpandedItems] = useState(new Set());
-  const [showAllHost, setShowAllHost] = useState(false);
-  const [showAllFlower, setShowAllFlower] = useState(false);
   
   // 詳細情報がある場合はそれを優先、なければ従来形式を使用
   let plantsToDisplay = hostPlantsDetailed && hostPlantsDetailed.length > 0 
@@ -466,93 +695,15 @@ const EnhancedHostPlantDisplay = ({
   };
 
   const { hostGroups, flowerGroups, resourceGroups } = splitGroupsByUsage(sortedGroups);
-  const hostDisplayCount = showAllHost ? hostGroups.length : Math.min(maxDisplayCount, hostGroups.length);
-  const flowerDisplayCount = showAllFlower ? flowerGroups.length : Math.min(maxDisplayCount, flowerGroups.length);
-  const hasMoreHost = hostGroups.length > maxDisplayCount;
-  const hasMoreFlower = flowerGroups.length > maxDisplayCount;
   
   return (
     <div className="space-y-4">
       {hostGroups.length > 0 && (
-        <div className="space-y-2">
-          <div className={`text-xs font-semibold uppercase tracking-wide ${HOST_STYLE.labelText}`}>
-            {isEnglish ? 'Host plants' : '食草・寄主植物'}
-          </div>
-          <div className="space-y-2">
-            {hostGroups.slice(0, hostDisplayCount).map((plantGroup, index) => {
-              const key = `host-${index}`;
-              return (
-                <HostPlantDetailCard
-                  key={`${plantGroup.name}-${key}`}
-                  plantGroup={plantGroup}
-                  isExpanded={expandedItems.has(key) || showDetailsByDefault}
-                  onToggle={() => toggleExpanded(key)}
-                  locale={locale}
-                  plantDetails={plantDetails}
-                />
-              );
-            })}
-          </div>
-          {hasMoreHost && (
-            <div className="text-center">
-              <button
-                onClick={() => setShowAllHost(!showAllHost)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
-              >
-                {showAllHost ? (isEnglish ? 'Show less' : '簡略表示') : buildShowMoreLabel(hostGroups.length - maxDisplayCount, isEnglish)}
-                <svg 
-                  className={`ml-1 w-4 h-4 transition-transform ${showAllHost ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
-          )}
-        </div>
+        <PlantUseList groups={hostGroups} kind="host" locale={locale} plantDetails={plantDetails} />
       )}
 
       {flowerGroups.length > 0 && (
-        <div className="space-y-2">
-          <div className={`text-xs font-semibold uppercase tracking-wide ${FLOWER_STYLE.labelText}`}>
-            {isEnglish ? 'Adult flower visits' : '成虫の訪花'}
-          </div>
-          <div className="space-y-2">
-            {flowerGroups.slice(0, flowerDisplayCount).map((plantGroup, index) => {
-              const key = `flower-${index}`;
-              return (
-                <HostPlantDetailCard
-                  key={`${plantGroup.name}-${key}`}
-                  plantGroup={plantGroup}
-                  isExpanded={expandedItems.has(key) || showDetailsByDefault}
-                  onToggle={() => toggleExpanded(key)}
-                  locale={locale}
-                  plantDetails={plantDetails}
-                />
-              );
-            })}
-          </div>
-          {hasMoreFlower && (
-            <div className="text-center">
-              <button
-                onClick={() => setShowAllFlower(!showAllFlower)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors"
-              >
-                {showAllFlower ? (isEnglish ? 'Show less' : '簡略表示') : buildShowMoreLabel(flowerGroups.length - maxDisplayCount, isEnglish)}
-                <svg 
-                  className={`ml-1 w-4 h-4 transition-transform ${showAllFlower ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-            </div>
-          )}
-        </div>
+        <PlantUseList groups={flowerGroups} kind="flower" locale={locale} plantDetails={plantDetails} />
       )}
 
       {resourceGroups.length > 0 && (

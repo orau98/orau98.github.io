@@ -22,7 +22,9 @@ import { getAssetBase } from './utils/assetPaths';
 import {
   DEFAULT_QUIZ_LENGTH,
   QUIZ_MODES,
+  QUIZ_LEVELS,
   buildQuizQuestions,
+  normalizeQuizLevel,
   getQuizHostPlantRecords,
   isCorrectAnswer,
   normalizePlantNameForQuiz,
@@ -220,6 +222,15 @@ const labelsFor = (isEnglish) => ({
   keyboard: isEnglish ? 'Keys 1-4 answer, Enter advances.' : '1〜4で回答、Enterで次へ進めます。',
   mode: isEnglish ? 'Mode' : 'モード',
   style: isEnglish ? 'Style' : '表示',
+  level: isEnglish ? 'Level' : '難しさ',
+  beginnerLevel: isEnglish ? 'Beginner' : '初級',
+  standardLevel: isEnglish ? 'Standard' : '標準',
+  beginnerLevelDesc: isEnglish
+    ? 'Familiar species only: insects with photos and widely used plants. Wrong choices come from other families.'
+    : '写真のある身近な昆虫と、よく知られた植物だけを出します。誤答は別の科から選びます。',
+  standardLevelDesc: isEnglish
+    ? 'All species. Wrong choices include close relatives.'
+    : 'すべての種から出します。近い仲間も選択肢に入ります。',
   guidedStyle: isEnglish ? 'Guided' : '標準',
   photoStyle: isEnglish ? 'Photo ID' : '写真識別',
   guidedStyleDesc: isEnglish ? 'Balanced photo and text practice.' : '写真と文字をバランスよく確認します。',
@@ -352,7 +363,7 @@ const PlantMedia = ({ plantName, plantDetails, plantImageFilenames, isEnglish, v
 
   return (
     <div className={`relative overflow-hidden rounded-lg bg-emerald-100 dark:bg-emerald-950/60 ${
-      variant === 'photo' ? 'aspect-[16/10] lg:aspect-[4/3]' : 'aspect-[4/3]'
+      variant === 'photo' ? 'aspect-[16/10] lg:aspect-[4/3]' : 'aspect-[16/9] sm:aspect-[4/3]'
     }`}
     >
       {filename ? (
@@ -381,7 +392,7 @@ const InsectMedia = ({ insect, isEnglish, variant = 'default' }) => {
   const candidates = useMemo(() => getImageCandidates(insect), [getImageCandidates, insect]);
   return (
     <div className={`relative overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800 ${
-      variant === 'photo' ? 'aspect-[16/10] lg:aspect-[4/3]' : 'aspect-[4/3]'
+      variant === 'photo' ? 'aspect-[16/10] lg:aspect-[4/3]' : 'aspect-[16/9] sm:aspect-[4/3]'
     }`}
     >
       {candidates.length > 0 ? (
@@ -490,7 +501,7 @@ const Metric = ({ icon: Icon, label, value, tone = 'slate' }) => {
           <Icon className="h-4 w-4" />
         </span>
         <span className="min-w-0">
-          <span className="block text-xs font-bold text-slate-500 dark:text-slate-400">{label}</span>
+          <span className="block text-xs font-bold text-slate-600 dark:text-slate-300">{label}</span>
           <span className="block text-base font-bold leading-tight text-slate-950 dark:text-white">{value}</span>
         </span>
       </div>
@@ -524,6 +535,7 @@ const QuizPage = ({
   const labels = labelsFor(isEnglish);
   const mode = normalizeQuizMode(searchParams.get('mode'));
   const quizStyle = normalizeQuizStyle(searchParams.get('style'));
+  const quizLevel = normalizeQuizLevel(searchParams.get('level'));
   const isPhotoStyle = quizStyle === QUIZ_STYLES.PHOTO;
   const focusedInsectKey = searchParams.get('focusInsect') || '';
   const focusedPlantKey = searchParams.get('focusPlant') || '';
@@ -676,6 +688,20 @@ const QuizPage = ({
     setStartFailed(false);
   }, [searchParams, setSearchParams]);
 
+  const setQuizLevel = useCallback((nextLevel) => {
+    const normalized = normalizeQuizLevel(nextLevel);
+    const next = new URLSearchParams(searchParams);
+    if (normalized === QUIZ_LEVELS.STANDARD) next.delete('level');
+    else next.set('level', normalized);
+    setSearchParams(next, { replace: true });
+    setQuestions([]);
+    setCurrentIndex(0);
+    setAnswers([]);
+    setSelectedOptionId('');
+    setPriorityIncluded(null);
+    setStartFailed(false);
+  }, [searchParams, setSearchParams]);
+
   const setQuizStyle = useCallback((nextStyle) => {
     const normalized = normalizeQuizStyle(nextStyle);
     const next = new URLSearchParams(searchParams);
@@ -732,6 +758,7 @@ const QuizPage = ({
           seed,
           reviewKeys,
           prioritySubjectKeys,
+          level: quizLevel,
         });
         setQuestions(nextQuestions);
         setStartFailed(nextQuestions.length === 0);
@@ -758,7 +785,7 @@ const QuizPage = ({
       return;
     }
     void prepareSession();
-  }, [butterflies, hasData, insectImageIndex, isStarting, locale, mode, moths, plantDetails, prioritySubjectKeys]);
+  }, [butterflies, hasData, insectImageIndex, isStarting, locale, mode, moths, plantDetails, prioritySubjectKeys, quizLevel]);
 
   const persistSession = useCallback((nextAnswers) => {
     const score = nextAnswers.filter((answer) => answer.isCorrect).length;
@@ -942,7 +969,21 @@ const QuizPage = ({
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
             {labels.settings}
           </p>
-          <div className="mt-3 grid gap-3 md:grid-cols-2">
+          <div className="mt-3 grid gap-3 md:grid-cols-3">
+            <div>
+              <p className="mb-2 text-sm font-bold text-slate-700 dark:text-slate-200">{labels.level}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <ModeButton active={quizLevel === QUIZ_LEVELS.BEGINNER} onClick={() => setQuizLevel(QUIZ_LEVELS.BEGINNER)}>
+                  {labels.beginnerLevel}
+                </ModeButton>
+                <ModeButton active={quizLevel === QUIZ_LEVELS.STANDARD} onClick={() => setQuizLevel(QUIZ_LEVELS.STANDARD)}>
+                  {labels.standardLevel}
+                </ModeButton>
+              </div>
+              <p className="mt-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                {quizLevel === QUIZ_LEVELS.BEGINNER ? labels.beginnerLevelDesc : labels.standardLevelDesc}
+              </p>
+            </div>
             <div>
               <p className="mb-2 text-sm font-bold text-slate-700 dark:text-slate-200">{labels.mode}</p>
               <div className="grid grid-cols-2 gap-2">
@@ -984,26 +1025,28 @@ const QuizPage = ({
       ? 'grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(22rem,0.75fr)]'
       : 'grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]';
     return (
-      <section className={`${isPhotoStyle ? 'mx-auto max-w-7xl' : 'mx-auto max-w-6xl'} px-3 py-4 md:px-8 md:py-7`}>
-        <div className="sticky top-0 z-20 -mx-3 mb-4 border-b border-slate-200 bg-slate-100/95 px-3 py-3 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 md:-mx-8 md:px-8">
+      // スマホでも写真・問題・4択が1画面に収まるよう、見出し帯と写真を小さくする。
+      // 回答後の「次の問題」はスマホでは画面下に固定する（以前は選択肢の3・4番目と「次の問題」が画面外だった）
+      <section className={`${isPhotoStyle ? 'mx-auto max-w-7xl' : 'mx-auto max-w-6xl'} px-3 py-2 md:px-8 md:py-7 ${selectedOptionId ? 'pb-28 lg:pb-7' : ''}`}>
+        <div className="sticky top-0 z-20 -mx-3 mb-3 border-b border-slate-200 bg-slate-100/95 px-3 py-2 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 md:-mx-8 md:mb-4 md:px-8 md:py-3">
           <div className="mx-auto max-w-6xl">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-                  {modeLabel}
-                </p>
-                <h1 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2 md:mb-3 md:gap-3">
+              <div className="flex min-w-0 items-baseline gap-2 md:block">
+                <h1 className="text-lg font-bold text-slate-950 dark:text-white md:order-2 md:mt-1 md:text-xl">
                   {currentIndex + 1}/{questions.length}
                 </h1>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-600 dark:text-slate-300 md:order-1">
+                  {modeLabel}
+                </p>
               </div>
-              <div className="flex flex-wrap gap-2 text-sm font-bold">
-                <span className="rounded-lg bg-white px-3 py-1.5 text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
+              <div className="flex flex-wrap gap-1.5 text-xs font-bold md:gap-2 md:text-sm">
+                <span className="rounded-lg bg-white px-2.5 py-1 text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200 md:px-3 md:py-1.5">
                   {labels.score} {currentScore}/{answeredCount}
                 </span>
-                <span className="rounded-lg bg-amber-100 px-3 py-1.5 text-amber-800 dark:bg-amber-950/60 dark:text-amber-200">
+                <span className="rounded-lg bg-amber-100 px-2.5 py-1 text-amber-800 dark:bg-amber-950/60 dark:text-amber-200 md:px-3 md:py-1.5">
                   {labels.streak} {currentStreak}
                 </span>
-                <span className="rounded-lg bg-blue-100 px-3 py-1.5 text-blue-800 dark:bg-blue-950/60 dark:text-blue-200">
+                <span className="hidden rounded-lg bg-blue-100 px-3 py-1.5 text-blue-800 dark:bg-blue-950/60 dark:text-blue-200 md:inline">
                   {selectedOptionId ? labels.stageCheck : labels.stageChoose}
                 </span>
               </div>
@@ -1012,7 +1055,7 @@ const QuizPage = ({
           </div>
         </div>
 
-        <div className={questionGridClass}>
+        <div className={`${questionGridClass} gap-3`}>
           <PromptMedia
             question={currentQuestion}
             plantDetails={plantDetails}
@@ -1021,25 +1064,25 @@ const QuizPage = ({
             variant={isPhotoStyle ? 'photo' : 'default'}
           />
 
-          <div className="rounded-card border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+          <div className="rounded-card border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
               {promptInstruction}
             </p>
-            <h2 className="mt-3 text-2xl font-bold leading-tight tracking-normal text-slate-950 dark:text-white sm:text-3xl">
+            <h2 className="mt-1.5 text-xl font-bold leading-tight tracking-normal text-slate-950 dark:text-white sm:mt-3 sm:text-3xl">
               {currentQuestion.prompt.title}
             </h2>
             {currentQuestion.prompt.subtitle && (
-              <p className="mt-2 text-base text-slate-500 dark:text-slate-300">
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 sm:mt-2 sm:text-base">
                 {currentQuestion.prompt.type === 'insect'
                   ? formatScientificNameReact(currentQuestion.prompt.subtitle)
                   : currentQuestion.prompt.subtitle}
               </p>
             )}
             {currentQuestion.prompt.family && (
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{currentQuestion.prompt.family}</p>
+              <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300 sm:mt-1 sm:text-sm">{currentQuestion.prompt.family}</p>
             )}
 
-            <div className="mt-5 grid gap-2.5">
+            <div className="mt-3 grid gap-2 sm:mt-5 sm:gap-2.5">
               {currentQuestion.options.map((option, index) => {
                 const isSelected = selectedOptionId === option.id;
                 const isCorrect = Boolean(selectedOptionId && option.id === currentQuestion.correctOptionId);
@@ -1050,7 +1093,7 @@ const QuizPage = ({
                     type="button"
                     onClick={() => answerQuestion(option.id)}
                     disabled={Boolean(selectedOptionId)}
-                    className={`group flex min-h-[4.35rem] w-full items-center gap-3 rounded-lg border px-3 py-3 text-left transition sm:px-4 ${
+                    className={`group flex min-h-[3.5rem] w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition sm:min-h-[4.35rem] sm:px-4 sm:py-3 ${
                       isCorrect
                         ? 'border-emerald-500 bg-emerald-50 text-emerald-950 dark:bg-emerald-950/50 dark:text-emerald-100'
                         : isWrong
@@ -1060,7 +1103,7 @@ const QuizPage = ({
                             : 'border-slate-200 bg-slate-50 text-slate-900 hover:border-slate-400 hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-slate-500'
                     }`}
                   >
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white text-sm font-bold text-slate-700 shadow-sm dark:bg-slate-950 dark:text-slate-100">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white text-sm font-bold text-slate-700 shadow-sm dark:bg-slate-950 dark:text-slate-100 sm:h-9 sm:w-9">
                       {optionNumbers[index]}
                     </span>
                     <span className="min-w-0">
@@ -1068,7 +1111,7 @@ const QuizPage = ({
                         {option.type === 'insect' && option.subtitle ? option.label : option.label}
                       </span>
                       {option.subtitle && (
-                        <span className="mt-0.5 block text-sm text-slate-500 dark:text-slate-300">
+                        <span className="mt-0.5 block text-xs text-slate-600 dark:text-slate-300 sm:text-sm">
                           {option.type === 'insect' ? formatScientificNameReact(option.subtitle) : option.subtitle}
                         </span>
                       )}
@@ -1111,15 +1154,17 @@ const QuizPage = ({
                       </p>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    ref={nextButtonRef}
-                    onClick={nextQuestion}
-                    className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
-                  >
-                    {labels.next}
-                    <ArrowRightIcon className="h-4 w-4" />
-                  </button>
+                  <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_16px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none dark:lg:bg-transparent">
+                    <button
+                      type="button"
+                      ref={nextButtonRef}
+                      onClick={nextQuestion}
+                      className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 lg:min-h-[44px] lg:w-auto"
+                    >
+                      {labels.next}
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mt-3 pl-12">

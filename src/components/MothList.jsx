@@ -8,10 +8,12 @@ import MothListItem from './MothListItem';
 import { buildPlantDisplayData } from '../utils/insectCardData';
 import Pagination from './Pagination';
 import ListFilterPanel from './ListFilterPanel';
+import MobileFilterSheet from './MobileFilterSheet';
 import logger from '../utils/logger';
 import { extractEmergenceTime, normalizeEmergenceTime, getEmergenceMonths } from '../utils/emergenceTimeUtils';
 import { hiraganaToKatakana, normalizeNFKC } from '../utils/text';
 import { getSearchMatchTier, splitNameList } from '../utils/searchRelevance';
+import { filterBySearchQuery, parseSearchQuery } from '../utils/searchQuery';
 import SearchableSelect from './SearchableSelect';
 import { ListDisplayControls, PerPageSelect, PresetFilterChips } from './ListToolbar';
 import ManualAdSlot from './ManualAdSlot';
@@ -93,6 +95,8 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
       summer: isEnglish ? 'Summer' : '夏',
       autumn: isEnglish ? 'Autumn' : '秋',
       winter: isEnglish ? 'Winter' : '冬',
+      seasonGroup: isEnglish ? 'Season' : '季節',
+      monthGroup: isEnglish ? 'Month' : '月',
       view: isEnglish ? 'View' : '表示',
       cards: isEnglish ? 'Cards' : 'カード',
       compact: isEnglish ? 'Compact' : 'コンパクト',
@@ -355,7 +359,6 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
   const [itemsPerPage, setItemsPerPage] = useState(computeItemsPerPage());
   const effectiveItemsPerPage = requestedItemsPerPage || itemsPerPage;
   const filterIdBase = useId();
-  const hostFilterId = `${filterIdBase}-host`;
   const familyFilterId = `${filterIdBase}-family`;
   const genusFilterId = `${filterIdBase}-genus`;
   const emergenceFilterId = `${filterIdBase}-emergence`;
@@ -592,10 +595,12 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
     return map;
   }, [moths]);
 
-  // グループ以外の全条件で絞った結果。グループ切替チップの件数はここから数える
-  const criteriaFilteredMoths = useMemo(() => {
+  const parsedSearch = useMemo(() => parseSearchQuery(debouncedSearchTerm), [debouncedSearchTerm]);
+
+  // 検索語以外の条件で絞った結果（検索語は下の criteriaFilteredMoths で絞る）
+  const nonSearchFilteredMoths = useMemo(() => {
     try {
-      logger.debug('DEBUG: Filtering moths, total count:', moths.length, 'search term:', debouncedSearchTerm);
+      logger.debug('DEBUG: Filtering moths, total count:', moths.length);
       
       if (!moths || moths.length === 0) {
         return [];
@@ -643,14 +648,8 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
             if (!checkSeasonMatch(moth, seasonFilter)) return false;
           }
 
-          // NFKC正規化で半角カナ・全角英数の表記ゆれを吸収（例: ﾌﾞﾅ→ブナ）
-          const nfkcSearchTerm = normalizeNFKC(debouncedSearchTerm);
-          const lowerCaseSearchTerm = nfkcSearchTerm.toLowerCase();
-          // ひらがなをカタカナに変換した検索語も用意
-          const katakanaSearchTerm = hiraganaToKatakana(nfkcSearchTerm).toLowerCase();
-
           // If there's a classification filter from URL, prioritize that
-          if (classificationFilter && !debouncedSearchTerm) {
+          if (classificationFilter && !parsedSearch) {
             const nfkcClassification = normalizeNFKC(classificationFilter);
             const lowerClassification = nfkcClassification.toLowerCase();
             const katakanaClassification = hiraganaToKatakana(nfkcClassification).toLowerCase();
@@ -666,32 +665,7 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
                    (moth.classification?.tribe?.toLowerCase().includes(lowerClassification)) ||
                    (moth.scientificName?.toLowerCase().includes(lowerClassification));
           }
-          
-          // If no search term, include all moths
-          if (!lowerCaseSearchTerm) {
-            return true;
-          }
-          
-          // Regular search filtering - check both original and katakana converted search terms
-          const alt = (moth.alternativeNames || '').toLowerCase();
-          // 食草・訪花植物名も検索対象に含める（UIの案内どおり「サクラ/ヤナギ/Quercus」等で
-          // その植物を食べる昆虫がヒットするようにする）
-          const hostSearch = hostSearchIndex.get(moth.id) || '';
-          return (moth.name?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.name?.toLowerCase().includes(katakanaSearchTerm)) ||
-                 (alt && (alt.includes(lowerCaseSearchTerm) || alt.includes(katakanaSearchTerm))) ||
-                 (moth.scientificName?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.familyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.familyJapanese?.toLowerCase().includes(katakanaSearchTerm)) ||
-                 (moth.classification?.subfamilyJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.subfamilyJapanese?.toLowerCase().includes(katakanaSearchTerm)) ||
-                 (moth.classification?.tribeJapanese?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.tribeJapanese?.toLowerCase().includes(katakanaSearchTerm)) ||
-                 (moth.classification?.genus?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.family?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.subfamily?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (moth.classification?.tribe?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                 (hostSearch && (hostSearch.includes(lowerCaseSearchTerm) || hostSearch.includes(katakanaSearchTerm)));
+          return true;
         } catch (error) {
           logger.error('Error filtering moth:', moth, error);
           return false;
@@ -701,8 +675,29 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
       logger.error('Error in filteredMoths calculation:', error);
       return [];
     }
-  }, [moths, debouncedSearchTerm, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, hasRealHost, hostSearchIndex, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
+  }, [moths, parsedSearch, classificationFilter, hostFilter, familyFilter, genusFilter, emergenceFilter, seasonFilter, hasRealHost, checkEmergenceMatch, checkSeasonMatch, normalizeText]);
 
+  // 検索語での絞り込み。和名・別名・学名・分類名に加えて食草・訪花植物名も対象にする
+  // （UIの案内どおり「サクラ/ヤナギ/Quercus」等でその植物を食べる昆虫がヒットするようにする）。
+  // 空白で区切った語はすべて含むもの（例:「コナラ クヌギ」→ 両方を食べる昆虫）、無ければどれかを含むもの
+  const criteriaFilteredMoths = useMemo(() => filterBySearchQuery(
+    nonSearchFilteredMoths,
+    parsedSearch,
+    (moth) => [
+      moth.name,
+      moth.alternativeNames,
+      moth.scientificName,
+      moth.classification?.familyJapanese,
+      moth.classification?.subfamilyJapanese,
+      moth.classification?.tribeJapanese,
+      moth.classification?.genus,
+      moth.classification?.family,
+      moth.classification?.subfamily,
+      moth.classification?.tribe,
+    ].map((value) => String(value || '').toLowerCase()).concat(hostSearchIndex.get(moth.id) || ''),
+  ), [nonSearchFilteredMoths, parsedSearch, hostSearchIndex]);
+
+  // グループ以外の全条件で絞った結果（criteriaFilteredMoths）。グループ切替チップの件数はここから数える
   const filteredMoths = useMemo(
     () => (groupFilter
       ? criteriaFilteredMoths.filter((moth) => (moth.type || 'moth') === groupFilter)
@@ -714,7 +709,15 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
   // ビルド時に同じ並び（写真あり優先→五十音順）で作った1ページ目をそのまま出す。
   // 検索・絞り込み・2ページ目以降は全データが要るので、その間はスケルトンにする
   const previewRecords = !isEnglish && Array.isArray(preview?.records) ? preview.records : null;
-  const isImageIndexPending = !isImageIndexReady && !imageIndexResolved;
+  // 写真の索引が届いた後も、全種の写真の割り当て（useInsectImageMap）は1タスク遅れて終わる。
+  // その前にカードを出すと「写真なし」の形で並んだ後に写真つきへ切り替わり、画面が大きくずれていた
+  // （英語トップ・検索結果のURLを直接開いたとき）。最初の割り当てが済むまでは骨組みを出す
+  const [imageMapSettled, setImageMapSettled] = useState(isImageMapCurrent);
+  useEffect(() => {
+    if (isImageMapCurrent && !imageMapSettled) setImageMapSettled(true);
+  }, [isImageMapCurrent, imageMapSettled]);
+  const isImageIndexPending = (!isImageIndexReady && !imageIndexResolved)
+    || (isImageIndexReady && !imageMapSettled && (moths?.length ?? 0) > 0);
   const isPreviewMode = Boolean(previewRecords) && (insectDataPending || isImageIndexPending);
   const hasPreviewData = Boolean(previewRecords) && insectDataPending;
 
@@ -1024,10 +1027,6 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
     const presetChips = [
       { key: 'host', label: ui.hasHostPlant, active: hostFilter === 'has', onClick: () => setIHostFilter(hostFilter === 'has' ? 'all' : 'has') },
       { key: 'photo', label: ui.withPhoto, active: photoFilter === 'has', onClick: () => setIPhotoFilter(photoFilter === 'has' ? 'all' : 'has') },
-      { key: 'spring', label: ui.spring, active: seasonFilter === 'spring', onClick: () => setISeasonFilter(seasonFilter === 'spring' ? '' : 'spring') },
-      { key: 'summer', label: ui.summer, active: seasonFilter === 'summer', onClick: () => setISeasonFilter(seasonFilter === 'summer' ? '' : 'summer') },
-      { key: 'autumn', label: ui.autumn, active: seasonFilter === 'autumn', onClick: () => setISeasonFilter(seasonFilter === 'autumn' ? '' : 'autumn') },
-      { key: 'winter', label: ui.winter, active: seasonFilter === 'winter', onClick: () => setISeasonFilter(seasonFilter === 'winter' ? '' : 'winter') },
       { key: 'unknown', label: ui.unregisteredOnly, active: hostFilter === 'none', onClick: () => setIHostFilter(hostFilter === 'none' ? 'all' : 'none') },
     ];
     const sortOptions = [
@@ -1037,7 +1036,8 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
       { value: 'plantCount', label: ui.sortPlantCount },
       { value: 'season', label: ui.sortSeason },
     ];
-    const resultsLabel = ui.resultCount(hasPreviewData ? listTotal : (sortedMoths?.length ?? filteredMoths?.length ?? 0));
+    const resultCountValue = hasPreviewData ? listTotal : (sortedMoths?.length ?? filteredMoths?.length ?? 0);
+    const resultsLabel = ui.resultCount(resultCountValue);
     const displayLabels = {
       view: ui.view,
       cards: ui.cards,
@@ -1049,7 +1049,6 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
     const renderFullControls = ({ showResultsLabel = true, mobileInline = false } = {}) => {
       const idSuffix = mobileInline ? '-mobile' : '';
       const panelId = `${filtersPanelId}${idSuffix}`;
-      const hostId = `${hostFilterId}${idSuffix}`;
       const familyId = `${familyFilterId}${idSuffix}`;
       const genusId = `${genusFilterId}${idSuffix}`;
       const emergenceId = `${emergenceFilterId}${idSuffix}`;
@@ -1087,27 +1086,6 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
           // クイック絞り込み（食草あり/写真あり/季節）は結果を押し下げないよう絞り込みの中へ
           beforeControls={<PresetFilterChips label={ui.presetLabel} chips={presetChips} />}
         >
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={hostId}>{ui.hostPlantFilter}</label>
-              <div className="relative">
-                <select
-                  id={hostId}
-                  value={hostFilter}
-                  onChange={(e) => setIHostFilter(e.target.value)}
-                  className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
-                >
-                  <option value="all">{ui.all}</option>
-                  <option value="has">{ui.hasHostPlant}</option>
-                  <option value="none">{ui.unregisteredOnly}</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
           <SearchableSelect
             id={familyId}
             label={ui.family}
@@ -1131,16 +1109,29 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
         <div className="space-y-1">
           <label className="text-xs font-medium text-slate-500 dark:text-slate-400 ml-1" htmlFor={emergenceId}>{ui.emergence}</label>
           <div className="relative">
+            {/* 季節（春夏秋冬）と月は同じ「出現期」の選択肢にまとめる（以前は季節のチップと月の選択欄が別々にあった） */}
             <select
               id={emergenceId}
-              value={emergenceFilter}
-              onChange={(e) => setIEmergenceFilter(e.target.value)}
+              value={seasonFilter ? `season:${seasonFilter}` : emergenceFilter}
+              onChange={(e) => {
+                // 季節と月は片方を選ぶともう片方が外れる（useInsectListParams）
+                const { value } = e.target;
+                if (value.startsWith('season:')) setISeasonFilter(value.slice('season:'.length));
+                else setIEmergenceFilter(value);
+              }}
               className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
             >
               <option value="">{ui.any}</option>
-              {emergenceOptions.map((em) => (
-                <option key={em} value={em}>{em}</option>
-              ))}
+              <optgroup label={ui.seasonGroup}>
+                {['spring', 'summer', 'autumn', 'winter'].map((season) => (
+                  <option key={season} value={`season:${season}`}>{ui[season]}</option>
+                ))}
+              </optgroup>
+              <optgroup label={ui.monthGroup}>
+                {emergenceOptions.map((em) => (
+                  <option key={em} value={em}>{em}</option>
+                ))}
+              </optgroup>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1183,30 +1174,16 @@ const MothList = ({ moths: mothsProp, title = "蛾", baseRoute = "/moth", embedd
             <PresetFilterChips label={ui.groupLabel} chips={groupChips} scrollable locale={locale} />
           </div>
         )}
-        <details className="group rounded-xl border border-slate-200/70 bg-white/75 dark:border-slate-700/70 dark:bg-slate-900/55 sm:hidden">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 [&::-webkit-details-marker]:hidden">
-            <span className="min-w-0 truncate text-xs font-semibold text-slate-600 dark:text-slate-300" role="status" aria-live="polite">
-              {resultsLabel}
-            </span>
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-300/70 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-600/70 dark:bg-slate-800 dark:text-slate-200">
-              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              {ui.filtersButton}
-              {activeFilters.length > 0 && (
-                <span className="rounded-full bg-emerald-100 px-1.5 py-0.5 text-[11px] tabular-nums text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
-                  {activeFilters.length}
-                </span>
-              )}
-              <svg className="h-3.5 w-3.5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </span>
-          </summary>
-          <div className="border-t border-slate-200/70 px-3 pb-3 pt-3 dark:border-slate-700/70">
-            {renderFullControls({ showResultsLabel: false, mobileInline: true })}
-          </div>
-        </details>
+        {/* スマホの絞り込みは下から出るシート（結果を押し下げない）。sm以上は一覧の上の絞り込み欄 */}
+        <MobileFilterSheet
+          locale={locale}
+          resultsLabel={resultsLabel}
+          resultCount={resultCountValue}
+          activeCount={activeFilters.length}
+          buttonLabel={ui.filtersButton}
+        >
+          {renderFullControls({ showResultsLabel: false, mobileInline: true })}
+        </MobileFilterSheet>
         <div className="hidden sm:block">
           {renderFullControls()}
         </div>

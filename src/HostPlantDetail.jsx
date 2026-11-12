@@ -9,6 +9,7 @@ import logger from './utils/logger';
 import useSeoMeta from './hooks/useSeoMeta';
 import useNearViewport from './hooks/useNearViewport';
 import useReleasePrerenderedSnapshot from './hooks/useReleasePrerenderedSnapshot';
+import ReportIssueLinks from './components/ReportIssueLinks';
 import {
   EN_SITE_NAME,
   buildLocalizedTaxonomyChip,
@@ -56,7 +57,7 @@ import {
   NOINDEX_FOLLOW_ROBOTS,
   setRobotsMetaContent,
 } from './utils/robotsMeta';
-import { buildPlantPath } from './utils/siteTaxonomy';
+import { INSECT_SECTION_CONFIGS, buildPlantPath } from './utils/siteTaxonomy';
 import Breadcrumb from './components/Breadcrumb';
 const FoodWebGraph = React.lazy(() => import('./components/FoodWebGraph'));
 
@@ -386,7 +387,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
   const normalizedTime = normalizeEmergenceTime(emergenceTime);
 
   return (
-    <Link to={href} state={linkState} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-2xl shadow-lg overflow-hidden border border-slate-200/70 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
+    <Link to={href} state={linkState} className="block bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg overflow-hidden border border-slate-200/70 dark:border-slate-700/50 hover:shadow-xl hover:-translate-y-0.5 transition h-full flex flex-col">
       <div className="relative aspect-[4/3] bg-blue-50 dark:bg-blue-900/20 overflow-hidden flex-shrink-0">
         {!imgError && hasImage ? (
           <div className="relative h-full w-full">
@@ -423,8 +424,8 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
         )}
       </div>
       
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-slate-800 dark:text-slate-100 font-bold text-lg mb-1 leading-tight">
+      <div className="p-3 sm:p-4 flex flex-col flex-grow">
+        <h3 className="text-slate-800 dark:text-slate-100 font-bold text-[15px] sm:text-lg mb-1 leading-tight">
           {isEnglish && insect.scientificName
             ? formatScientificNameReact(primaryName)
             : primaryName}
@@ -434,7 +435,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
             <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">{secondaryName}</p>
           )
         ) : insect.scientificName && (
-          <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">{formatScientificNameReact(insect.scientificName)}</p>
+          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">{formatScientificNameReact(insect.scientificName)}</p>
         )}
         
         {(() => {
@@ -451,7 +452,8 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
           }
 
           return (
-          <div className="mt-auto pt-2 border-t border-slate-100 dark:border-slate-700/50">
+          // スマホは2列に並べるため、出現期の帯は幅に余裕のあるsm以上だけに出す
+          <div className="mt-auto hidden pt-2 border-t border-slate-100 dark:border-slate-700/50 sm:block">
             <EmergenceTimeDisplay 
               emergenceTime={normalizedTime || ''}
               source={insect.source} 
@@ -493,6 +495,150 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
     </Link>
   );
 });
+
+// 植物ページの「この植物を利用する昆虫」。種数の多い植物（クヌギ 289種など）では、
+// 以前は1列の大きなカード（スマホ1画面に約2種）の後に、写真のない種の名前が見出しなしで約180個並んでいた。
+// 昆虫のグループ（蛾・カミキリムシなど）ごとに見出しを付け、スマホでも2列のカードにし、グループで絞り込めるようにする
+const PHOTO_LIMIT_PER_GROUP = 6;
+const CHIP_LIMIT_PER_GROUP = 18;
+const PHOTO_LIMIT_FILTERED = 24;
+const CHIP_LIMIT_FILTERED = 48;
+
+const PlantInsectList = ({
+  title,
+  titleClassName = '',
+  groups,
+  total,
+  expanded = false,
+  onToggleExpanded,
+  imageFilenames,
+  imageExtensions,
+  locale = 'ja',
+  cardKeyPrefix = 'insect',
+}) => {
+  const isEnglish = isEnglishLocale(locale);
+  const [groupFilter, setGroupFilter] = useState('');
+  const sections = useMemo(() => {
+    const typeOf = (insect) => insect?.type || 'moth';
+    return INSECT_SECTION_CONFIGS
+      .map((section) => ({
+        type: section.type,
+        label: isEnglish ? section.labelEn : section.label,
+        withPhoto: groups.withPhoto.filter((insect) => typeOf(insect) === section.type),
+        withoutPhoto: groups.withoutPhoto.filter((insect) => typeOf(insect) === section.type),
+      }))
+      .map((section) => ({ ...section, count: section.withPhoto.length + section.withoutPhoto.length }))
+      .filter((section) => section.count > 0);
+  }, [groups, isEnglish]);
+
+  const showGroupHeadings = sections.length > 1;
+  const visibleSections = groupFilter ? sections.filter((section) => section.type === groupFilter) : sections;
+  const isFiltered = Boolean(groupFilter) || !showGroupHeadings;
+  const photoLimit = expanded ? Infinity : (isFiltered ? PHOTO_LIMIT_FILTERED : PHOTO_LIMIT_PER_GROUP);
+  const chipLimit = expanded ? Infinity : (isFiltered ? CHIP_LIMIT_FILTERED : CHIP_LIMIT_PER_GROUP);
+  const hiddenCount = visibleSections.reduce(
+    (sum, section) => sum
+      + Math.max(0, section.withPhoto.length - photoLimit)
+      + Math.max(0, section.withoutPhoto.length - chipLimit),
+    0,
+  );
+  const canCollapse = expanded && visibleSections.some(
+    (section) => section.withPhoto.length > (isFiltered ? PHOTO_LIMIT_FILTERED : PHOTO_LIMIT_PER_GROUP)
+      || section.withoutPhoto.length > (isFiltered ? CHIP_LIMIT_FILTERED : CHIP_LIMIT_PER_GROUP),
+  );
+  const photoCount = groups.withPhoto.length;
+  const countText = (count, withPhotoCount) => (withPhotoCount > 0 && withPhotoCount < count
+    ? (isEnglish ? `${count}, ${withPhotoCount} with photos` : `${count}種・写真あり${withPhotoCount}種`)
+    : (isEnglish ? `${count}` : `${count}種`));
+
+  return (
+    <div>
+      <h3 className={`text-lg font-semibold mb-3 ${titleClassName}`}>
+        {title}{' '}
+        <span className="text-base font-medium">({countText(total, photoCount)})</span>
+      </h3>
+      {showGroupHeadings && (
+        <div className="mb-4 flex flex-wrap gap-2" role="group" aria-label={isEnglish ? 'Filter by insect group' : '昆虫のグループで絞り込む'}>
+          {[{ type: '', label: isEnglish ? 'All' : 'すべて', count: total }, ...sections].map((section) => (
+            <button
+              key={section.type || 'all'}
+              type="button"
+              aria-pressed={groupFilter === section.type}
+              onClick={() => setGroupFilter(section.type)}
+              className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border px-3 text-sm font-semibold transition-colors ${groupFilter === section.type
+                ? 'border-emerald-300 bg-emerald-100 text-emerald-900 dark:border-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-100'
+                : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'}`}
+            >
+              {section.label}
+              <span className="text-xs font-medium tabular-nums opacity-80">{section.count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="space-y-8">
+        {visibleSections.map((section) => {
+          const sectionHidden = Math.max(0, section.withPhoto.length - photoLimit) + Math.max(0, section.withoutPhoto.length - chipLimit);
+          return (
+            <section key={section.type} aria-label={showGroupHeadings ? section.label : undefined}>
+              {showGroupHeadings && (
+                <h4 className="mb-3 flex flex-wrap items-baseline gap-x-2 border-b border-slate-200 pb-1 text-base font-bold text-slate-800 dark:border-slate-700 dark:text-slate-100">
+                  {section.label}
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{countText(section.count, section.withPhoto.length)}</span>
+                </h4>
+              )}
+              {section.withPhoto.length > 0 && (
+                <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+                  {section.withPhoto.slice(0, photoLimit).map((insect, idx) => (
+                    <InsectCard key={`${cardKeyPrefix}-${insect.id || idx}`} insect={insect} imageFilenames={imageFilenames} imageExtensions={imageExtensions} locale={locale} />
+                  ))}
+                </div>
+              )}
+              {section.withoutPhoto.length > 0 && (
+                <div className={section.withPhoto.length > 0 ? 'mt-4' : ''}>
+                  {section.withPhoto.length > 0 && (
+                    <p className="mb-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                      {isEnglish ? 'No photo yet:' : '写真未登録:'}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-1.5">
+                    {section.withoutPhoto.slice(0, chipLimit).map((insect, idx) => (
+                      <InsectNameChip key={`${cardKeyPrefix}-chip-${insect.id || idx}`} insect={insect} locale={locale} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {!isFiltered && sectionHidden > 0 && (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={() => setGroupFilter(section.type)}
+                    className="inline-flex min-h-[40px] items-center rounded-lg px-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 dark:text-emerald-200 dark:hover:bg-emerald-900/30"
+                  >
+                    {isEnglish ? `Show all ${section.count} ${section.label}` : `${section.label}の${section.count}種をすべて見る`}
+                  </button>
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
+      {isFiltered && (hiddenCount > 0 || canCollapse) && (
+        <div className="mt-6 text-center">
+          <button
+            type="button"
+            onClick={onToggleExpanded}
+            aria-expanded={expanded}
+            className="inline-flex min-h-[44px] items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
+          >
+            {expanded
+              ? (isEnglish ? 'Show less' : '簡略表示')
+              : (isEnglish ? `Show ${hiddenCount} more` : `他${hiddenCount}種を表示`)}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [], barkbeetles = [], leafbeetles = [], aphids = [], hostPlants, plantDetails, theme, flowerVisitPlants = {}, locale = 'ja', insectPartitionsReady = true }) => {
   const isEnglish = isEnglishLocale(locale);
@@ -2271,107 +2417,32 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         ) : (
           <div className="space-y-10">
             {hostPlantInsects.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold text-emerald-700 dark:text-emerald-300 mb-4">
-                  {/* 「N種」に対しカードが少ないと混乱するため、写真あり件数を分けて明示する */}
-                  {hostInsectGroups.withPhoto.length > 0 && hostInsectGroups.withoutPhoto.length > 0
-                    ? (isEnglish
-                      ? `Insects using this plant as a host (${hostPlantInsects.length}, ${hostInsectGroups.withPhoto.length} with photos)`
-                      : `食草・寄主として利用する昆虫 (全${hostPlantInsects.length}種・写真あり${hostInsectGroups.withPhoto.length}種)`)
-                    : (isEnglish
-                      ? `Insects using this plant as a host (${hostPlantInsects.length})`
-                      : `食草・寄主として利用する昆虫 (${hostPlantInsects.length}種)`)}
-                </h3>
-                {hostInsectGroups.withPhoto.length > 0 && (
-                  <>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {(showAllHostInsectCards ? hostInsectGroups.withPhoto : hostInsectGroups.withPhoto.slice(0, 24)).map((insect, idx) => (
-                        <InsectCard key={`host-${insect.id || idx}`} insect={insect} imageFilenames={imageFilenames} imageExtensions={imageExtensions} locale={locale} />
-                      ))}
-                    </div>
-                    {hostInsectGroups.withPhoto.length > 24 && (
-                      <div className="mt-6 text-center">
-                        <button
-                          type="button"
-                          onClick={() => toggleInsectCardsExpansion('showAllHostInsectCards')}
-                          className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
-                        >
-                          {showAllHostInsectCards
-                            ? (isEnglish ? 'Show less' : '簡略表示')
-                            : (isEnglish
-                              ? `Show ${hostInsectGroups.withPhoto.length - 24} more`
-                              : `他${hostInsectGroups.withPhoto.length - 24}種を表示`)}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
-                {hostInsectGroups.withoutPhoto.length > 0 && (
-                  <div className={hostInsectGroups.withPhoto.length > 0 ? 'mt-5' : ''}>
-                    {hostInsectGroups.withPhoto.length > 0 && (
-                      <p className="mb-1.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">
-                        {isEnglish ? 'No photo yet:' : '写真未登録:'}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-1.5">
-                      {hostInsectGroups.withoutPhoto.map((insect, idx) => (
-                        <InsectNameChip key={`host-chip-${insect.id || idx}`} insect={insect} locale={locale} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <PlantInsectList
+                title={isEnglish ? 'Insects using this plant as a host' : '食草・寄主として利用する昆虫'}
+                titleClassName="text-emerald-800 dark:text-emerald-200"
+                groups={hostInsectGroups}
+                total={hostPlantInsects.length}
+                expanded={showAllHostInsectCards}
+                onToggleExpanded={() => toggleInsectCardsExpansion('showAllHostInsectCards')}
+                imageFilenames={imageFilenames}
+                imageExtensions={imageExtensions}
+                locale={locale}
+                cardKeyPrefix="host"
+              />
             )}
             {flowerVisitInsects.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold text-rose-600 dark:text-rose-300 mb-4">
-                  {flowerInsectGroups.withPhoto.length > 0 && flowerInsectGroups.withoutPhoto.length > 0
-                    ? (isEnglish
-                      ? `Insects recorded as flower visitors (${flowerVisitInsects.length}, ${flowerInsectGroups.withPhoto.length} with photos)`
-                      : `訪花で利用する昆虫 (全${flowerVisitInsects.length}種・写真あり${flowerInsectGroups.withPhoto.length}種)`)
-                    : (isEnglish
-                      ? `Insects recorded as flower visitors (${flowerVisitInsects.length})`
-                      : `訪花で利用する昆虫 (${flowerVisitInsects.length}種)`)}
-                </h3>
-                {flowerInsectGroups.withPhoto.length > 0 && (
-                  <>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {(showAllFlowerInsectCards ? flowerInsectGroups.withPhoto : flowerInsectGroups.withPhoto.slice(0, 24)).map((insect, idx) => (
-                        <InsectCard key={`flower-${insect.id || idx}`} insect={insect} imageFilenames={imageFilenames} imageExtensions={imageExtensions} locale={locale} />
-                      ))}
-                    </div>
-                    {flowerInsectGroups.withPhoto.length > 24 && (
-                      <div className="mt-6 text-center">
-                        <button
-                          type="button"
-                          onClick={() => toggleInsectCardsExpansion('showAllFlowerInsectCards')}
-                          className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-200/70 dark:hover:bg-emerald-800/50 transition-colors"
-                        >
-                          {showAllFlowerInsectCards
-                            ? (isEnglish ? 'Show less' : '簡略表示')
-                            : (isEnglish
-                              ? `Show ${flowerInsectGroups.withPhoto.length - 24} more`
-                              : `他${flowerInsectGroups.withPhoto.length - 24}種を表示`)}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
-                {flowerInsectGroups.withoutPhoto.length > 0 && (
-                  <div className={flowerInsectGroups.withPhoto.length > 0 ? 'mt-5' : ''}>
-                    {flowerInsectGroups.withPhoto.length > 0 && (
-                      <p className="mb-1.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">
-                        {isEnglish ? 'No photo yet:' : '写真未登録:'}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-1.5">
-                      {flowerInsectGroups.withoutPhoto.map((insect, idx) => (
-                        <InsectNameChip key={`flower-chip-${insect.id || idx}`} insect={insect} locale={locale} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <PlantInsectList
+                title={isEnglish ? 'Insects recorded as flower visitors' : '訪花で利用する昆虫'}
+                titleClassName="text-rose-700 dark:text-rose-300"
+                groups={flowerInsectGroups}
+                total={flowerVisitInsects.length}
+                expanded={showAllFlowerInsectCards}
+                onToggleExpanded={() => toggleInsectCardsExpansion('showAllFlowerInsectCards')}
+                imageFilenames={imageFilenames}
+                imageExtensions={imageExtensions}
+                locale={locale}
+                cardKeyPrefix="flower"
+              />
             )}
           </div>
         )}
@@ -2489,6 +2560,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                   : ''}
             </span>
           </div>
+        <ReportIssueLinks isEnglish={isEnglish} className="border-t border-slate-200/70 px-4 py-2 dark:border-slate-700/60" />
         </div>
       </div>
 

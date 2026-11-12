@@ -18,7 +18,7 @@ export const HOST_STYLE = {
   // セクション見出し・ラベル用の文字色
   headingText: 'text-emerald-700 dark:text-emerald-300',
   // 小見出し（uppercaseラベル等）用のやや濃い文字色
-  labelText: 'text-emerald-600 dark:text-emerald-300',
+  labelText: 'text-emerald-700 dark:text-emerald-300',
   // バッジ（枠付きピル）用
   badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
 };

@@ -726,7 +726,13 @@ function App() {
     },
   ];
 
-  const showRouteLoading = loading || (!routeDataReady && !(showHomePreview && !visibleLoadError));
+  // どの画面にも当たらないURL（404）はデータを使わないので、読み込みを待たずにすぐ案内を出す
+  // （以前は一覧用の骨組みを出してから404に切り替わり、画面が大きくずれていた）
+  const isCatchAllRoute = !routeConfigs.some(
+    ({ path }) => path !== '*' && matchPath({ path, end: true }, location.pathname),
+  );
+  const showRouteLoading = !isCatchAllRoute &&
+    (loading || (!routeDataReady && !(showHomePreview && !visibleLoadError)));
   const isDetailRoute = routeConfigs.some(
     ({ path, fallback }) => fallback && matchPath({ path, end: true }, location.pathname),
   );
@@ -848,7 +854,7 @@ function App() {
       </main>
         <FloatingActionButton />
       {/* 404（キャッチオール）では広告を出さない: 低価値ページへの広告はポリシー上も体験上も避ける */}
-      {routeConfigs.some(({ path }) => path !== '*' && matchPath({ path, end: true }, location.pathname)) && (
+      {!isCatchAllRoute && (
         <ManualAdSlot
           placement="footer"
           locale={locale}

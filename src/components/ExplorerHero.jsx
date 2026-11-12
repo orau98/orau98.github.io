@@ -141,7 +141,7 @@ const ExplorerHero = ({
                   <Icon className="h-[18px] w-[18px] shrink-0" />
                   <span className="md:hidden">{label}</span>
                   <span className="hidden md:inline">{longLabel}</span>
-                  <span className={`text-xs font-medium tabular-nums ${active ? "text-emerald-700/70" : "text-emerald-50/70"}`}>
+                  <span className={`text-xs font-medium tabular-nums ${active ? "text-emerald-800" : "text-emerald-50/80"}`}>
                     {formatCount(count, isEnglish)}
                   </span>
                 </button>

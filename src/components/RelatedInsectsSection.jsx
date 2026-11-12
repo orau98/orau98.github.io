@@ -13,8 +13,23 @@ import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
 const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja', plantDetails = {} }) => {
   const location = useLocation();
   const isEnglish = isEnglishLocale(locale);
-  // 各植物の展開状態を管理
+  // 各植物の展開状態を管理（写真カードの「残りN種」・写真なしの全件表示）
   const [expandedPlants, setExpandedPlants] = useState(new Set());
+  // 開いている植物のグループ。最初は先頭の1グループだけ開く
+  // （以前は全グループが開いていて、オオミズアオではページの約6割を占め、同じ種が何度も出ていた）
+  const [openPlants, setOpenPlants] = useState(() => new Set(Object.keys(relatedMothsByPlant || {}).slice(0, 1)));
+  // 植物が多い種（アゲハは49件）では、植物の行だけでも長くなるので最初は8件まで
+  const GROUP_LIMIT = 8;
+  const [showAllGroups, setShowAllGroups] = useState(false);
+  const plantEntries = Object.entries(relatedMothsByPlant || {});
+  const toggleOpen = (plant) => {
+    setOpenPlants((previous) => {
+      const next = new Set(previous);
+      if (next.has(plant)) next.delete(plant);
+      else next.add(plant);
+      return next;
+    });
+  };
   
   // 植物の展開状態をトグル
   const togglePlantExpansion = (plant) => {
@@ -30,6 +45,8 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
   // 折りたたみ時に表示する写真カード数（モバイル2列×3行）。
   // 横スクロールはモバイルで操作しづらいため使わず、常に折り返しグリッドで表示する
   const COLLAPSED_PHOTO_COUNT = 6;
+  // 写真なし種のチップも、展開するまでは数を絞る
+  const COLLAPSED_CHIP_COUNT = 16;
 
   // 写真なしチップの種別ドット色（写真カードの枠色と同じ系統で揃える）
   const typeDotClass = (type) => (
@@ -62,8 +79,8 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
         </div>
       </div>
       
-      <div className="p-4 space-y-6">
-        {Object.entries(relatedMothsByPlant).map(([plant, relatedMothNames]) => {
+      <div className="divide-y divide-slate-200/80 px-4 py-1 dark:divide-slate-700/60">
+        {plantEntries.slice(0, showAllGroups ? plantEntries.length : GROUP_LIMIT).map(([plant, relatedMothNames]) => {
           // 写真あり種はカード、写真なし種はコンパクトなチップに分ける
           // （写真なしの大きな空カードが並ぶのを避ける）
           const resolvedInsects = relatedMothNames
@@ -95,52 +112,48 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
               })
             : plant;
 
+          const isOpen = openPlants.has(plant);
+          const panelId = `related-${encodeURIComponent(plant)}`;
+          const hiddenChipCount = isExpanded ? 0 : Math.max(0, withoutPhoto.length - COLLAPSED_CHIP_COUNT);
+          const countLabel = withPhoto.length > 0 && withoutPhoto.length > 0
+            ? (isEnglish
+              ? `${relatedMothNames.length} species, ${withPhoto.length} with photos`
+              : `全${relatedMothNames.length}種・写真あり${withPhoto.length}種`)
+            : (isEnglish ? `${relatedMothNames.length} species` : `${relatedMothNames.length}種`);
+
           return (
-            <div key={plant} className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+            <div key={plant} className="space-y-4 py-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                   <Link
                     to={buildPlantPath(plant, locale)}
                     state={makeDetailLinkState(location)}
-                    className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
+                    className="inline-flex min-h-[32px] items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
                   >
                     {isEnglish && plantScientificName
                       ? formatScientificNameReact(plantLabel)
                       : plantLabel}
                   </Link>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">
-                    {/* 「20種」なのにカードが数枚だと混乱するため、写真あり件数を分けて明示する */}
-                    {withPhoto.length > 0 && withoutPhoto.length > 0
-                      ? (isEnglish
-                        ? `(${relatedMothNames.length} species, ${withPhoto.length} with photos)`
-                        : `(全${relatedMothNames.length}種・写真あり${withPhoto.length}種)`)
-                      : (isEnglish ? `(${relatedMothNames.length} species)` : `(${relatedMothNames.length}種)`)}
-                  </span>
+                  {/* 「20種」なのにカードが数枚だと混乱するため、写真あり件数を分けて明示する */}
+                  <span className="text-sm text-slate-600 dark:text-slate-300">({countLabel})</span>
                 </div>
-                
-                {/* 展開/折りたたみボタン */}
-                {showExpandButton && (
-                  <button
-                    onClick={() => togglePlantExpansion(plant)}
-                    className="flex items-center space-x-1 px-3 py-1 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all duration-200"
-                  >
-                    <span>
-                      {isExpanded
-                        ? (isEnglish ? 'Show less' : '少なく表示')
-                        : (isEnglish ? `Show ${hiddenPhotoCount} more` : `残り${hiddenPhotoCount}種を表示`)}
-                    </span>
-                    <svg 
-                      className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                )}
+
+                <button
+                  type="button"
+                  onClick={() => toggleOpen(plant)}
+                  aria-expanded={isOpen}
+                  aria-controls={panelId}
+                  className="inline-flex min-h-[40px] shrink-0 items-center gap-1 rounded-lg px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-blue-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-blue-300"
+                >
+                  {isOpen ? (isEnglish ? 'Hide' : '閉じる') : (isEnglish ? 'Show' : '表示')}
+                  <svg className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
               </div>
-            
+
+            {isOpen && (
+            <div id={panelId} className="space-y-4">
             {/* 写真あり種: コンテナ幅に自動追従する折り返しグリッド。
                 この列は写真パネル有無で幅が大きく変わる（狭いサイド列⇔全幅）ため、
                 ビューポート基準のbreakpointではなくauto-fillでカード幅を一定に保つ。
@@ -220,7 +233,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                   </p>
                 )}
                 <div className="flex flex-wrap gap-2">
-                  {withoutPhoto.map(({ name: relatedMothName, insect: relatedMoth }) => {
+                  {withoutPhoto.slice(0, isExpanded ? withoutPhoto.length : COLLAPSED_CHIP_COUNT).map(({ name: relatedMothName, insect: relatedMoth }) => {
                     const chipName = isEnglish
                       ? getPrimaryEnglishName({
                           scientificName: relatedMoth.scientificName,
@@ -248,10 +261,45 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                 </div>
               </div>
             )}
+
+            {(showExpandButton || hiddenChipCount > 0 || (isExpanded && withoutPhoto.length > COLLAPSED_CHIP_COUNT)) && (
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => togglePlantExpansion(plant)}
+                  aria-expanded={isExpanded}
+                  className="inline-flex min-h-[40px] items-center gap-1 rounded-lg px-3 text-sm font-medium text-blue-700 hover:bg-slate-100 dark:text-blue-300 dark:hover:bg-slate-700"
+                >
+                  {isExpanded
+                    ? (isEnglish ? 'Show less' : '少なく表示')
+                    : (isEnglish
+                      ? `Show all ${resolvedInsects.length}`
+                      : `残り${hiddenPhotoCount + hiddenChipCount}種を表示`)}
+                </button>
+              </div>
+            )}
+            </div>
+            )}
           </div>
           );
         })}
       </div>
+      {plantEntries.length > GROUP_LIMIT && (
+        <div className="border-t border-slate-200/80 px-4 py-2 text-center dark:border-slate-700/60">
+          <button
+            type="button"
+            onClick={() => setShowAllGroups((value) => !value)}
+            aria-expanded={showAllGroups}
+            className="inline-flex min-h-[40px] items-center rounded-lg px-3 text-sm font-semibold text-blue-700 hover:bg-slate-100 dark:text-blue-300 dark:hover:bg-slate-700"
+          >
+            {showAllGroups
+              ? (isEnglish ? 'Show fewer plants' : '植物を減らして表示')
+              : (isEnglish
+                ? `Show ${plantEntries.length - GROUP_LIMIT} more plants`
+                : `ほかの植物${plantEntries.length - GROUP_LIMIT}件も表示`)}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

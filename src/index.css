@@ -625,6 +625,12 @@ img[loading="lazy"] {
   touch-action: pan-y !important;
 }
 
+/* スマホで「図を動かす」を押している間だけ、1本指のドラッグとピンチを図に渡す */
+.food-web-graph-touch.food-web-graph-touch--active,
+.food-web-graph-touch.food-web-graph-touch--active canvas {
+  touch-action: none !important;
+}
+
 /* 個別ページの静的HTMLの本文の写し（アプリの画面が描けるまでの表示。components/RouteLoadingFallback）。
    植物ページでは数千pxになるため、読み込み中の再計算が重くならないよう、
    画面外の区切りの描画を省き、外の変化の影響を本文の中へ広げない */

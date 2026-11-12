@@ -38,7 +38,7 @@ export default function SourceCitation({
 
   return (
     <p className={cx('text-xs leading-5 text-ink-muted', className)}>
-      <span className="text-ink-subtle">{resolvedLabel}</span>{' '}
+      <span className="font-medium text-ink-muted">{resolvedLabel}</span>{' '}
       {items.map(({ displayLabel, link }, i) => (
         <Fragment key={`${displayLabel}-${i}`}>
           {i > 0 && <span className="text-ink-subtle">, </span>}
@@ -47,7 +47,8 @@ export default function SourceCitation({
               href={link}
               target="_blank"
               rel={isAmazonAssociateUrl(link) ? 'sponsored noopener noreferrer' : 'noopener noreferrer'}
-              className="underline decoration-line underline-offset-2 transition-colors hover:text-ink hover:decoration-ink-muted"
+              // 指で押しやすいよう上下に余白を足して高さ24pxにする（以前は文字の高さ15pxだけだった）
+              className="inline-block py-0.5 underline decoration-line underline-offset-2 transition-colors hover:text-ink hover:decoration-ink-muted"
             >
               {displayLabel}
             </a>

@@ -11,6 +11,23 @@ export const QUIZ_MODES = Object.freeze({
 });
 
 export const DEFAULT_QUIZ_MODE = QUIZ_MODES.INSECT_TO_PLANT;
+
+// 難しさ。初級は身近な種（写真のある昆虫と、多くの昆虫に使われるよく知られた植物）だけを出し、
+// 誤答の選択肢は正解と別の科から選ぶ。標準も、4択すべてが同じ科になって
+// 詳しい人でも区別しにくい出題にならないよう、正解と同じ科の誤答は1つまでにする
+export const QUIZ_LEVELS = Object.freeze({
+  BEGINNER: 'beginner',
+  STANDARD: 'standard',
+});
+export const DEFAULT_QUIZ_LEVEL = QUIZ_LEVELS.STANDARD;
+export const normalizeQuizLevel = (level) =>
+  Object.values(QUIZ_LEVELS).includes(level) ? level : DEFAULT_QUIZ_LEVEL;
+// 初級で「よく知られた植物」とみなす、その植物を食べる昆虫の種数
+const FAMILIAR_PLANT_MIN_INSECTS = 8;
+const MAX_SAME_FAMILY_DISTRACTORS = Object.freeze({
+  [QUIZ_LEVELS.BEGINNER]: 0,
+  [QUIZ_LEVELS.STANDARD]: 1,
+});
 export const DEFAULT_QUIZ_LENGTH = 10;
 
 const UNKNOWN_PLANT_RE =
@@ -335,6 +352,33 @@ const buildPlantOption = (record) => ({
   taxonRank: record.taxonRank || PLANT_TAXON_RANKS.UNKNOWN,
 });
 
+// 点数順の候補から誤答を3つ選ぶ。正解と同じ科は maxSameFamily 件まで、誤答どうしもなるべく別の科にする。
+// 条件を満たす候補が足りないときは、科の分散 → 同じ科の上限の順に緩めて必ず3つそろえる
+const pickDistractors = (sortedCandidates, { familyOf, correctFamily, maxSameFamily, count = 3 }) => {
+  const picked = [];
+  const pickedSet = new Set();
+  const usedFamilies = new Set();
+  let sameFamilyCount = 0;
+  const tryPick = ({ requireDistinctFamily, enforceSameFamilyLimit }) => {
+    for (const candidate of sortedCandidates) {
+      if (picked.length >= count) return;
+      if (pickedSet.has(candidate)) continue;
+      const family = familyOf(candidate) || '';
+      const isSameFamily = Boolean(correctFamily && family && family === correctFamily);
+      if (enforceSameFamilyLimit && isSameFamily && sameFamilyCount >= maxSameFamily) continue;
+      if (requireDistinctFamily && family && usedFamilies.has(family)) continue;
+      picked.push(candidate);
+      pickedSet.add(candidate);
+      if (family) usedFamilies.add(family);
+      if (isSameFamily) sameFamilyCount += 1;
+    }
+  };
+  tryPick({ requireDistinctFamily: true, enforceSameFamilyLimit: true });
+  tryPick({ requireDistinctFamily: false, enforceSameFamilyLimit: true });
+  tryPick({ requireDistinctFamily: false, enforceSameFamilyLimit: false });
+  return picked;
+};
+
 const buildInsectToPlantQuestionBases = (relationships) => {
   const {
     insects,
@@ -360,7 +404,7 @@ const buildInsectToPlantQuestionBases = (relationships) => {
   });
 };
 
-const buildInsectToPlantQuestion = (base, relationships, random) => {
+const buildInsectToPlantQuestion = (base, relationships, random, level = DEFAULT_QUIZ_LEVEL) => {
   const {
     plantDetails,
     insectToPlants,
@@ -372,22 +416,30 @@ const buildInsectToPlantQuestion = (base, relationships, random) => {
   const ownedPlants = insectToPlants.get(base.insectId) || new Set();
   const correctUsage = plantUseCounts.get(base.correctRecord.name) || 0;
   const correctRank = base.correctRecord.taxonRank || PLANT_TAXON_RANKS.UNKNOWN;
-  const distractors = sortByScore(
+  const isBeginner = level === QUIZ_LEVELS.BEGINNER;
+  const sortedCandidates = sortByScore(
     allPlantRecords.filter((record) =>
       !ownedPlants.has(record.name) &&
       (record.taxonRank || PLANT_TAXON_RANKS.UNKNOWN) === correctRank,
     ),
     (record) => {
+      const usage = plantUseCounts.get(record.name) || 0;
+      // 初級: よく知られた（多くの昆虫に使われる）植物を誤答にする
+      if (isBeginner) return Math.min(usage, 40);
       let score = 0;
       if (base.subfamily && subfamilyToPlants.get(base.subfamily)?.has(record.name)) score += 45;
       if (base.family && familyToPlants.get(base.family)?.has(record.name)) score += 35;
       if (record.family && record.family === base.correctRecord.family) score += 20;
-      const usage = plantUseCounts.get(record.name) || 0;
       score += Math.max(0, 16 - Math.abs(usage - correctUsage));
       return score;
     },
     random,
-  ).slice(0, 3);
+  );
+  const distractors = pickDistractors(sortedCandidates, {
+    familyOf: (record) => record.family,
+    correctFamily: base.correctRecord.family,
+    maxSameFamily: MAX_SAME_FAMILY_DISTRACTORS[level] ?? 1,
+  });
 
   if (distractors.length < 3) return null;
   const correctOption = buildPlantOption(base.correctRecord);
@@ -451,7 +503,7 @@ const buildPlantToInsectQuestionBases = (relationships) => {
   });
 };
 
-const buildPlantToInsectQuestion = (base, relationships, random) => {
+const buildPlantToInsectQuestion = (base, relationships, random, level = DEFAULT_QUIZ_LEVEL) => {
   const {
     insects,
     insectToPlants,
@@ -461,23 +513,31 @@ const buildPlantToInsectQuestion = (base, relationships, random) => {
   } = relationships;
   const correctHostCount = insectToPlants.get(base.correctInsectId)?.size || 0;
   const relatedToPromptPlant = plantToInsects.get(base.plantName) || new Set();
-  const distractors = sortByScore(
+  const isBeginner = level === QUIZ_LEVELS.BEGINNER;
+  const sortedCandidates = sortByScore(
     insects.filter((insect) => {
       const id = insect.id || insect.name;
       return id !== base.correctInsectId && !relatedToPromptPlant.has(id);
     }),
     (insect) => {
       const id = insect.id || insect.name;
+      const hostCount = insectToPlants.get(id)?.size || 0;
+      // 初級: 写真のある（身近な）昆虫を誤答にする
+      if (isBeginner) return (insect.quizHasImage ? 40 : 0) + Math.min(hostCount, 20);
       let score = 0;
       if (base.subfamily && subfamilyToInsects.get(base.subfamily)?.has(id)) score += 45;
       if (base.family && familyToInsects.get(base.family)?.has(id)) score += 35;
       if (insect.quizHasImage) score += 8;
-      const hostCount = insectToPlants.get(id)?.size || 0;
       score += Math.max(0, 16 - Math.abs(hostCount - correctHostCount));
       return score;
     },
     random,
-  ).slice(0, 3);
+  );
+  const distractors = pickDistractors(sortedCandidates, {
+    familyOf: (insect) => getFamily(insect),
+    correctFamily: base.family,
+    maxSameFamily: MAX_SAME_FAMILY_DISTRACTORS[level] ?? 1,
+  });
   if (distractors.length < 3) return null;
   const correctOption = buildInsectOption(base.correctInsect);
   return {
@@ -596,8 +656,10 @@ export const buildQuizQuestions = ({
   seed = Date.now(),
   reviewKeys = [],
   prioritySubjectKeys = [],
+  level = DEFAULT_QUIZ_LEVEL,
 } = {}) => {
   const normalizedMode = normalizeQuizMode(mode);
+  const normalizedLevel = normalizeQuizLevel(level);
   const random = createRandom(seed);
   const relationships = buildRelationships({
     moths,
@@ -606,14 +668,30 @@ export const buildQuizQuestions = ({
     insectImageNames,
     insectImageExtensions,
   });
-  const questionBases =
+  const allQuestionBases =
     normalizedMode === QUIZ_MODES.PLANT_TO_INSECT
       ? buildPlantToInsectQuestionBases(relationships)
       : buildInsectToPlantQuestionBases(relationships);
+  // 初級は身近な種だけ: 写真のある昆虫 × 多くの昆虫に使われる植物（種名で記録されたもの）。
+  // 該当が足りない（データの少ない環境・テスト）ときは全体から出す
+  const familiarBases = normalizedLevel === QUIZ_LEVELS.BEGINNER
+    ? allQuestionBases.filter((questionBase) => {
+        const plantName = questionBase.mode === QUIZ_MODES.PLANT_TO_INSECT
+          ? questionBase.plantName
+          : questionBase.correctRecord?.name;
+        const plantRank = questionBase.mode === QUIZ_MODES.PLANT_TO_INSECT
+          ? questionBase.plantRecord?.taxonRank
+          : questionBase.correctRecord?.taxonRank;
+        return questionBase.hasImage
+          && plantRank !== PLANT_TAXON_RANKS.FAMILY
+          && (relationships.plantUseCounts.get(plantName) || 0) >= FAMILIAR_PLANT_MIN_INSECTS;
+      })
+    : allQuestionBases;
+  const questionBases = familiarBases.length >= questionCount ? familiarBases : allQuestionBases;
   const buildQuestion =
     normalizedMode === QUIZ_MODES.PLANT_TO_INSECT
-      ? (questionBase) => buildPlantToInsectQuestion(questionBase, relationships, random)
-      : (questionBase) => buildInsectToPlantQuestion(questionBase, relationships, random);
+      ? (questionBase) => buildPlantToInsectQuestion(questionBase, relationships, random, normalizedLevel)
+      : (questionBase) => buildInsectToPlantQuestion(questionBase, relationships, random, normalizedLevel);
 
   return selectSessionQuestions({
     questionBases,

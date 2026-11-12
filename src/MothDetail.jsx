@@ -14,6 +14,7 @@ import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, 
 import useSeoMeta from './hooks/useSeoMeta';
 import useNearViewport from './hooks/useNearViewport';
 import useReleasePrerenderedSnapshot from './hooks/useReleasePrerenderedSnapshot';
+import ReportIssueLinks from './components/ReportIssueLinks';
 import {
   EN_SITE_NAME,
   buildLocalizedTaxonomyChip,
@@ -2296,6 +2297,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     : ''}
               </span>
             </div>
+          <ReportIssueLinks isEnglish={isEnglish} className="border-t border-slate-200/70 px-4 py-2 dark:border-slate-700/60" />
           </div>
         </div>
       </div>
