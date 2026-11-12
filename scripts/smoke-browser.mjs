@@ -156,6 +156,36 @@ async function checkPage(browser, origin, page, viewport) {
   return { problems, ms: Date.now() - startedAt };
 }
 
+async function checkTextTooltips(browser) {
+  const context = await browser.newContext({ serviceWorkers: 'block' });
+  await context.route(/^https?:/, (route) => route.abort());
+  const tab = await context.newPage();
+  const startedAt = Date.now();
+  try {
+    const moduleUrl = 'data:text/javascript;base64,' + Buffer.from(
+      fs.readFileSync(path.join(ROOT, 'src/utils/textTooltip.js'), 'utf8'),
+    ).toString('base64');
+    const problems = await tab.evaluate(async (url) => {
+      const { createTextTooltip } = await import(url);
+      const errors = [];
+      for (const value of ['クヌギ & <文字>', '<b data-audit-probe="tooltip">safe</b>', 7, null]) {
+        const label = createTextTooltip(value);
+        if (!(label instanceof HTMLElement)) errors.push('label is not an HTMLElement');
+        else {
+          document.body.append(label);
+          if (label.textContent !== String(value ?? '')) errors.push('label text changed');
+          if (label.childElementCount !== 0 || label.querySelector('[data-audit-probe]')) errors.push('label markup was parsed');
+          label.remove();
+        }
+      }
+      return errors;
+    }, moduleUrl);
+    return { problems, ms: Date.now() - startedAt };
+  } finally {
+    await context.close();
+  }
+}
+
 export async function runBrowserSmoke() {
   if (!fs.existsSync(path.join(DIST, 'index.html'))) throw new Error('dist がありません。先に npm run build を実行してください');
   const server = await startServer();
@@ -174,6 +204,13 @@ export async function runBrowserSmoke() {
           console.log(`[smoke-browser] ok ${label} (${ms}ms)`);
         }
       }
+    }
+    const tooltipResult = await checkTextTooltips(browser);
+    if (tooltipResult.problems.length) {
+      failures += 1;
+      console.error(`[smoke-browser] NG テキストtooltip\n  - ${tooltipResult.problems.join('\n  - ')}`);
+    } else {
+      console.log(`[smoke-browser] ok テキストtooltip (${tooltipResult.ms}ms)`);
     }
   } finally {
     await browser.close();
