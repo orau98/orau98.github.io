@@ -281,6 +281,10 @@ const targets = [
   path.join('dist', 'insects.csv.bak.butterfly_subfamily_fix_20260114125318'),
 ];
 
+// 日本語のトップ・昆虫検索・植物検索だけに、初期HTMLの名前一覧を残す。
+const stripDirectoryNavigation = (html) =>
+  html.replace(/<nav id="species-directory-nav"[^>]*>[\s\S]*?<\/nav>/, '');
+
 const ensureSpa404 = () => {
   try {
     const indexPath = path.join('dist', 'index.html');
@@ -289,7 +293,7 @@ const ensureSpa404 = () => {
     const indexHtml = fs.readFileSync(indexPath, 'utf8');
     const noindexMeta = '    <meta name="robots" content="noindex, follow, max-image-preview:none">\n';
     const fallbackFlag = '    <script>window.__SEO_FORCE_NOINDEX__ = true; window.__IS_SPA_404__ = true;</script>\n';
-    const htmlWithNoindex = indexHtml.replace(
+    const htmlWithNoindex = stripDirectoryNavigation(indexHtml).replace(
       /<meta\s+name="robots"\s+content="[^"]*"\s*>/i,
       noindexMeta.trimEnd(),
     );
@@ -489,7 +493,10 @@ const buildSpaRouteShell = (indexHtml, route) => {
       `    <link rel="alternate" hreflang="${escapeHtmlAttr(hreflang)}" href="${escapeHtmlAttr(`${BASE_ORIGIN}${routePath}`)}">`)
     .join('\n');
 
-  let html = indexHtml
+  const template = ['/moth/', '/plant/'].includes(route.canonicalPath)
+    ? indexHtml
+    : stripDirectoryNavigation(indexHtml);
+  let html = template
     .replace(/<html\s+lang="[^"]*"/i, `<html lang="${escapeHtmlAttr(route.lang)}"`)
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtmlAttr(route.title)}</title>`)
     .replace(/<link\s+rel="canonical"\s+href="[^"]*"\s*>/i, `<link rel="canonical" href="${escapeHtmlAttr(canonicalUrl)}">`)
