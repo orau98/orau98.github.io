@@ -1246,7 +1246,7 @@ const cleanRouteShellFile = (targetPath) => {
 
 const buildLegacyMetaCompatibilityShell = ({ cleanHtml, sourceHtml, sourcePath, targetPath }) => {
   const sourceNoindex = /<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(sourceHtml);
-  let html = cleanHtml.replace(
+  let html = stripDirectoryNavigation(cleanHtml).replace(
     /<div\s+id=["']root["'][^>]*>[\s\S]*<\/div>\s*<\/body>/i,
     '<div id="root"></div>\n  </body>',
   ).replace(
