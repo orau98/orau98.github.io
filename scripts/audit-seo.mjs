@@ -524,6 +524,18 @@ const expectedDirectoryTargets = new Set(META_PAGE_SECTIONS.flatMap(({ key }) =>
 }));
 for (const loc of expectedDirectoryTargets) ensure(directoryTargets.has(loc), `HTML directory missing -> ${loc}`);
 for (const loc of directoryTargets) ensure(expectedDirectoryTargets.has(loc), `HTML directory contains non-indexable URL -> ${loc}`);
+// ホームと検索画面から、JavaScript 実行前にも各分類を発見できること。
+const directoryEntryLinks = ['/sitemap.html', ...META_PAGE_SECTIONS.map(({ key }) => `/sitemap/${key}/`)];
+for (const entryPath of ['index.html', 'moth/index.html', 'plant/index.html']) {
+  const html = readFile(path.join(DIST_DIR, entryPath)).replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, '');
+  const navigation = html.match(/<nav id="species-directory-nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1] || '';
+  const hrefs = new Set(getTags(navigation, 'a').map((tag) => parseAttributes(tag).href));
+  for (const href of directoryEntryLinks) ensure(hrefs.has(href), `${entryPath}: missing initial directory link to ${href}`);
+}
+for (const entryPath of ['en/index.html', 'quiz/index.html', '404.html']) {
+  ensure(!readFile(path.join(DIST_DIR, entryPath)).includes('id="species-directory-nav"'),
+    `${entryPath}: Japanese search navigation copied from homepage`);
+}
 const directoryRoot = readFile(path.join(DIST_DIR, 'sitemap.html'));
 for (const { key } of META_PAGE_SECTIONS) {
   ensure(directoryRoot.includes(`href="/sitemap/${key}/"`), `Directory category missing from sitemap.html: ${key}`);
