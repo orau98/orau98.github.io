@@ -2,6 +2,7 @@
 // Remove non-public/development artifacts from the built output to keep Pages lean
 import fs from 'fs';
 import path from 'path';
+import { stripPrerenderedAds } from '../src/utils/prerenderedSnapshot.js';
 import { RETAINED_INSECT_JPEGS as RETAINED_INSECT_JPEG_LIST } from './lib/imageAssetConstants.mjs';
 import { ROUTE_PRELOAD_ATTRIBUTE, stripHomeOnlyPreloads } from './lib/earlyRouteResources.mjs';
 import { mergePlantEntries } from '../src/utils/plantListMerge.js';
@@ -378,9 +379,9 @@ const extractProfileHead = (html = '') => {
 // /meta/ source before JavaScript runs. React still mounts into #root and
 // replaces this snapshot for interactive users, while crawlers and no-JS
 // clients receive the complete profile instead of an empty app shell.
-// The app keeps showing a copy of it until the React page is ready
-// (src/utils/prerenderedSnapshot.js strips the ad slot and <main> wrapper).
-// Keep this markup free of ids, scripts and extra ad slots.
+// The app keeps showing a copy of it until the React page is ready.
+// Standalone meta pages have their own ad slot, but only the app should
+// request ads on a profile route.
 const extractProfileBody = (html = '') => {
   const body = String(html || '').match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
   const main = body.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
@@ -389,7 +390,7 @@ const extractProfileBody = (html = '') => {
   const heading = body.match(
     /<header\b[^>]*\bclass=["'][^"']*\bmeta-header\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i,
   )?.[0] || '';
-  return `${heading}${main}`
+  return stripPrerenderedAds(`${heading}${main}`)
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/>\s+</g, '><')

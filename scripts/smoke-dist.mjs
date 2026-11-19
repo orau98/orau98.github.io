@@ -10,6 +10,7 @@ import {
 } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 import { SITE_ICON_VERSION } from '../src/utils/siteBrand.js';
+import { getPlantObservationGuide } from '../src/utils/plantObservationGuides.js';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -545,6 +546,30 @@ assert(
     okinagusaRouteHtml.includes('rel="canonical" href="https://orau98.github.io/plant/%E3%82%AA%E3%82%AD%E3%83%8A%E3%82%B0%E3%82%B5/'),
   'オキナグサ interactive route must be the self-canonical plant profile',
 );
+
+const observationCatalog = INSECT_SECTION_CONFIGS.flatMap(({ collectionKey }) =>
+  readDistJson(`assets/data-lite/catalog/${collectionKey}.json`));
+for (const [plant, part, insect] of [
+  ['コナラ', 'ドングリ', 'ヒロバクロサンカクモンヒメハマキ'],
+  ['ケヤキ', '虫こぶ', 'ケヤキフシアブラムシ'],
+  ['サクラ', '葉で見つけた幼虫', 'モンクロシャチホコ'],
+]) {
+  const html = readDistText(`plant/${plant}/index.html`);
+  const guide = html.match(/<section[^>]*data-plant-observation-guide[\s\S]*?<\/section>/)?.[0] || '';
+  assert(
+    guide.includes(part) && [...guide.matchAll(/<a href="([^"]+)">([^<]+)/g)].some(([, href, label]) =>
+      label.includes(insect) && fs.existsSync(path.join(DIST_DIR, siteUrlToDistRelativeFile(href)))),
+    `${plant} initial HTML must link its observation example to an existing insect page`,
+  );
+  const guidePaths = [...guide.matchAll(/<a href="([^"]+)">/g)].map(([, href]) => href);
+  const appPaths = getPlantObservationGuide(plant, observationCatalog)?.sections
+    .flatMap((section) => section.insects.map((item) => buildInsectPath(item, 'ja'))) || [];
+  assert(
+    appPaths.length === guidePaths.length && appPaths.every((href) => guidePaths.includes(href)),
+    `${plant} observation examples must match between the static page and the lightweight catalog`,
+  );
+  assert(!html.includes('class="manual-ad-slot"'), `${plant} initial HTML must leave ad requests to the app`);
+}
 
 const identificationProfileHtml = readPublicText('meta/plant/グスクカンアオイ.html');
 assert(

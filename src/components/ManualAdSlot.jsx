@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import useNearViewport from '../hooks/useNearViewport';
 import { isEnglishLocale } from '../utils/locale';
 import logger from '../utils/logger';
 
@@ -11,26 +12,27 @@ const SLOT_IDS = Object.freeze({
   inFeed: import.meta.env.VITE_ADSENSE_SLOT_IN_FEED || '',
 });
 
-const ADSENSE_SCRIPT_ID = 'manual-adsense-script';
-
+const ADSENSE_SCRIPT_PATH = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
 let adsenseScriptPromise = null;
 
 const isLocalPreview = () => {
   if (typeof window === 'undefined') return true;
-  return ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+  return ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
 };
 
 const loadAdsenseScript = () => {
-  if (typeof document === 'undefined') return Promise.resolve();
-  const existing = document.getElementById(ADSENSE_SCRIPT_ID);
-  if (existing) return adsenseScriptPromise || Promise.resolve();
+  if (adsenseScriptPromise) return adsenseScriptPromise;
+  // 一覧などの初期HTMLに公式タグがある場合はそのキューを使う。
+  if (document.querySelector(`script[src^="${ADSENSE_SCRIPT_PATH}"]`)) {
+    return Promise.resolve();
+  }
 
   adsenseScriptPromise = new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.id = ADSENSE_SCRIPT_ID;
+    script.id = 'manual-adsense-script';
     script.async = true;
     script.crossOrigin = 'anonymous';
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
+    script.src = `${ADSENSE_SCRIPT_PATH}?client=${ADSENSE_CLIENT}`;
     script.onload = resolve;
     script.onerror = reject;
     document.head.appendChild(script);
@@ -39,106 +41,75 @@ const loadAdsenseScript = () => {
   return adsenseScriptPromise;
 };
 
-const scheduleAdRequest = (callback) => {
-  if (typeof window === 'undefined') return undefined;
-  if ('requestIdleCallback' in window) {
-    const id = window.requestIdleCallback(callback, { timeout: 1800 });
-    return () => window.cancelIdleCallback?.(id);
-  }
-  const id = window.setTimeout(callback, 900);
-  return () => window.clearTimeout(id);
-};
-
-const ManualAdSlot = ({
+const AdSlotInstance = ({
   placement,
-  locale = 'ja',
-  className = '',
-  minHeight = 'min-h-[120px]',
-  format = 'auto',
-  layout = undefined,
-  // ルート内スロット用の識別子（種ID等）。詳細→詳細のSPA遷移はコンポーネントが
-  // 再マウントされないため、これをadKeyに含めないと広告が更新されず、
-  // unfilled時のcollapsed状態も以降の全詳細ページへ持ち越される
-  instanceKey = '',
+  slotId,
+  locale,
+  className,
+  minHeight,
+  format,
+  layout,
+  showPreviewPlaceholder,
 }) => {
   const isEnglish = isEnglishLocale(locale);
-  const slotId = SLOT_IDS[placement] || '';
-  const localPreview = isLocalPreview();
-  const showPreviewPlaceholder = localPreview || (import.meta.env.DEV && !slotId);
-  const isRenderable = Boolean(slotId) || showPreviewPlaceholder;
-
-  const containerLabel = isEnglish ? 'Advertisement' : '広告';
-  const placeholderText = isEnglish
-    ? 'Manual ad slot'
-    : '手動広告枠';
-
-  // 広告リクエストはマウント時に1回だけ。ルートをキーに含めると、
-  // 常設スロット（フッター）がSPA遷移のたびに再マウント・再リクエストされ、
-  // 毎遷移のレイアウトシフトとポリシー上のリスク（実質オートリフレッシュ）になる。
-  // ルート内のスロット（一覧・詳細）はコンポーネント自体の再マウントで従来どおり更新される。
-  const adKey = useMemo(
-    () => `${placement}-${slotId || 'dev'}${instanceKey ? `-${instanceKey}` : ''}`,
-    [placement, slotId, instanceKey],
-  );
-
-  // 配信なし（unfilled）のとき、空の広告枠を出し続けないよう折りたたむ
-  // （Google公式が推奨するCLS/空枠対策。広告のクリッピングは行わない）
+  const label = isEnglish ? 'Advertisement' : '広告';
+  const containerRef = useRef(null);
   const insRef = useRef(null);
   const [collapsed, setCollapsed] = useState(false);
+  const isNear = useNearViewport(containerRef, {
+    rootMargin: '600px 0px',
+    disabled: showPreviewPlaceholder || collapsed,
+  });
 
   useEffect(() => {
-    setCollapsed(false);
-  }, [adKey]);
-
-  useEffect(() => {
-    if (!slotId || localPreview) return undefined;
+    const slot = insRef.current;
+    if (!isNear || !slot) return undefined;
 
     let cancelled = false;
-    const cancelScheduledRequest = scheduleAdRequest(() => {
-      loadAdsenseScript()
-        .then(() => {
-          if (cancelled) return;
-          window.adsbygoogle = window.adsbygoogle || [];
-          window.adsbygoogle.push({});
-        })
-        .catch((error) => {
-          logger.warn('AdSense manual slot failed to load:', error);
-        });
-    });
+    const checkStatus = () => {
+      if (slot.getAttribute('data-ad-status') === 'unfilled') setCollapsed(true);
+    };
+    const observer = typeof MutationObserver === 'undefined'
+      ? null
+      : new MutationObserver(checkStatus);
+    observer?.observe(slot, { attributes: true, attributeFilter: ['data-ad-status'] });
+    checkStatus();
+
+    loadAdsenseScript()
+      .then(() => {
+        if (cancelled || !slot.isConnected || slot.hasAttribute('data-adsbygoogle-status')) return;
+        window.adsbygoogle = window.adsbygoogle || [];
+        window.adsbygoogle.push({});
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setCollapsed(true);
+        logger.warn('AdSense manual slot failed to load:', error);
+      });
+
     return () => {
       cancelled = true;
-      cancelScheduledRequest?.();
+      observer?.disconnect();
     };
-  }, [adKey, localPreview, slotId]);
+  }, [isNear, collapsed]);
 
-  useEffect(() => {
-    if (!slotId || localPreview) return undefined;
-    const node = insRef.current;
-    if (!node || typeof MutationObserver === 'undefined') return undefined;
-    const check = () => {
-      if (node.getAttribute('data-ad-status') === 'unfilled') {
-        setCollapsed(true);
-      }
-    };
-    check();
-    const observer = new MutationObserver(check);
-    observer.observe(node, { attributes: true, attributeFilter: ['data-ad-status'] });
-    return () => observer.disconnect();
-  }, [adKey, localPreview, slotId]);
-
-  if (!isRenderable || collapsed) return null;
+  if (collapsed) return null;
 
   return (
     <aside
+      ref={containerRef}
       className={`manual-ad-slot rounded-xl border border-slate-200/70 bg-white/75 p-3 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/55 ${className}`}
-      aria-label={containerLabel}
+      aria-label={label}
     >
       <div className="mb-2 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400">
-        {containerLabel}
+        {label}
       </div>
-      {slotId && !showPreviewPlaceholder ? (
+      {showPreviewPlaceholder ? (
+        <div className={`${minHeight} flex items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-400`}>
+          {isEnglish ? 'Manual ad slot' : '手動広告枠'}{slotId ? `: ${placement}` : ''}
+        </div>
+      ) : isNear ? (
         <ins
-          key={adKey}
           ref={insRef}
           className={`adsbygoogle block ${minHeight}`}
           data-ad-client={ADSENSE_CLIENT}
@@ -148,11 +119,39 @@ const ManualAdSlot = ({
           data-full-width-responsive="true"
         />
       ) : (
-        <div className={`${minHeight} flex items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-400`}>
-          {slotId ? `${placeholderText}: ${placement}` : placeholderText}
-        </div>
+        <div className={minHeight} aria-hidden="true" />
       )}
     </aside>
+  );
+};
+
+const ManualAdSlot = ({
+  placement,
+  locale = 'ja',
+  className = '',
+  minHeight = 'min-h-[120px]',
+  format = 'auto',
+  layout,
+  instanceKey = '',
+}) => {
+  const slotId = SLOT_IDS[placement] || '';
+  const showPreviewPlaceholder = isLocalPreview() || (import.meta.env.DEV && !slotId);
+  if (!slotId && !showPreviewPlaceholder) return null;
+
+  // 同じ詳細コンポーネントで別種へ移動したときだけ枠を作り直す。
+  // 常設フッターはルート移動で再リクエストしない。
+  return (
+    <AdSlotInstance
+      key={`${placement}-${slotId}-${instanceKey}`}
+      placement={placement}
+      slotId={slotId}
+      locale={locale}
+      className={className}
+      minHeight={minHeight}
+      format={format}
+      layout={layout}
+      showPreviewPlaceholder={showPreviewPlaceholder}
+    />
   );
 };
 

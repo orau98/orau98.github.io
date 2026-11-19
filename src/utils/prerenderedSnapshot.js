@@ -20,12 +20,12 @@ export const normalizeSnapshotPath = (pathname = '') => {
   return value.replace(/\/+$/, '') || '/';
 };
 
-// 静的HTMLの本文を、アプリの画面内に置ける形にする。
-// - 静的ページ用の広告枠（中身の入っていない ins）は外す。残すとアプリの広告枠より先に
-//   こちらへ広告が入り、本文と一緒に消えてしまう
-// - アプリ側に main があるので、main の入れ子（ランドマークの重複）にならないよう div にする
-export const toSnapshotHtml = (html = '') => String(html || '')
-  .replace(/<aside\b[^>]*\bclass="[^"]*\bmanual-ad-slot\b[^"]*"[^>]*>[\s\S]*?<\/aside>/gi, '')
+// 静的メタページ用の枠がアプリへ持ち込まれると、枠だけが先に広告を受け取り消えてしまう。
+export const stripPrerenderedAds = (html = '') => String(html || '')
+  .replace(/<aside\b[^>]*\bclass="[^"]*\bmanual-ad-slot\b[^"]*"[^>]*>[\s\S]*?<\/aside>/gi, '');
+
+// アプリ側に main があるので、写しでは main を div にしてランドマークの重複を避ける。
+export const toSnapshotHtml = (html = '') => stripPrerenderedAds(html)
   .replace(/<script\b[\s\S]*?<\/script>/gi, '')
   .replace(/<main\b/gi, '<div')
   .replace(/<\/main>/gi, '</div>')

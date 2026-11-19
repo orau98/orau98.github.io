@@ -23,6 +23,7 @@ export const PAGES = [
   { name: '昆虫一覧ページ（/moth/）', path: '/moth/', waitFor: '件が見つかりました', seo: true },
   { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
   { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true },
+  { name: '観察ガイド（コナラ）', path: `/plant/${E('コナラ')}/`, waitFor: '見つけた場所から虫を調べる', seo: true, observationGuide: true },
   { name: '検索（アゲハ）', path: `/?q=${E('アゲハ')}`, waitFor: '件が見つかりました' },
   { name: '英語トップ', path: '/en/', waitFor: 'results', seo: true },
   { name: 'クイズ', path: '/quiz', waitFor: '問を始める', seo: true },
@@ -152,8 +153,72 @@ async function checkPage(browser, origin, page, viewport) {
       }
     }
   }
+  if (page.observationGuide) {
+    const jump = tab.getByRole('link', { name: '虫の記録へ', exact: true });
+    const links = tab.locator('[data-plant-observation-guide] a');
+    if (await jump.getAttribute('href', { timeout: 3000 }).catch(() => null) !== `${page.path}#related-insects` ||
+        !(await links.allTextContents()).includes('ヒロバクロサンカクモンヒメハマキ')) {
+      problems.push('コナラの観察ガイドに記録への導線またはドングリの掲載例がない');
+    } else {
+      await jump.click();
+      try {
+        await tab.waitForFunction(() => location.hash === '#related-insects' &&
+          document.querySelector('#related-insects').getBoundingClientRect().top < innerHeight,
+        null, { timeout: 4000 });
+      } catch {
+        problems.push('虫の記録へのリンクで関連昆虫の一覧に移動できない');
+      }
+    }
+  }
   await context.close();
   return { problems, ms: Date.now() - startedAt };
+}
+
+// モックの広告配信で、離れた位置では読み込まず、スクロール時にだけ既存の枠へ
+// リクエストすることを検証する。Google への通信や本番の広告表示は発生しない。
+async function checkProfileAdLoading(browser, origin) {
+  const testOrigin = 'https://ads-test.invalid';
+  const scriptPrefix = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+  try {
+    await context.route('**/*', async (route) => {
+      const url = new URL(route.request().url());
+      if (url.origin === testOrigin) {
+        const response = await route.fetch({ url: origin + url.pathname + url.search });
+        await route.fulfill({ response });
+        return;
+      }
+      if (url.href.startsWith(scriptPrefix)) {
+        await route.fulfill({
+          contentType: 'application/javascript',
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: `window.adsbygoogle = {
+            push: function () {
+              const slot = document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])');
+              if (slot) slot.setAttribute('data-adsbygoogle-status', 'done');
+            }
+          };`,
+        });
+        return;
+      }
+      await route.abort();
+    });
+    const tab = await context.newPage();
+    await tab.goto(`${testOrigin}/plant/${E('コナラ')}/?qa=1`);
+    const contentSlot = tab.locator('main [data-route-page] .manual-ad-slot');
+    await contentSlot.waitFor();
+    const adScripts = tab.locator(`script[src^="${scriptPrefix}"]`);
+    if (await adScripts.count() !== 0 || await contentSlot.locator('ins.adsbygoogle').count() !== 0) {
+      throw new Error('初期表示で画面外の広告枠がリクエストされた');
+    }
+
+    await contentSlot.scrollIntoViewIfNeeded();
+    await contentSlot.locator('ins[data-adsbygoogle-status="done"]').waitFor();
+    if (await adScripts.count() !== 1) throw new Error('広告スクリプトは文書につき1つ必要');
+    console.log('[smoke-browser] ok スマホ 既存広告枠を表示位置に近づいてから読み込む');
+  } finally {
+    await context.close();
+  }
 }
 
 export async function runBrowserSmoke() {
@@ -175,6 +240,7 @@ export async function runBrowserSmoke() {
         }
       }
     }
+    await checkProfileAdLoading(browser, origin);
   } finally {
     await browser.close();
     server.close();
