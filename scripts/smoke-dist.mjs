@@ -10,6 +10,7 @@ import {
 } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 import { SITE_ICON_VERSION } from '../src/utils/siteBrand.js';
+import { getPlantObservationGuide } from '../src/utils/plantObservationGuides.js';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
@@ -546,6 +547,8 @@ assert(
   'オキナグサ interactive route must be the self-canonical plant profile',
 );
 
+const observationCatalog = INSECT_SECTION_CONFIGS.flatMap(({ collectionKey }) =>
+  readDistJson(`assets/data-lite/catalog/${collectionKey}.json`));
 for (const [plant, part, insect] of [
   ['コナラ', 'ドングリ', 'ヒロバクロサンカクモンヒメハマキ'],
   ['ケヤキ', '虫こぶ', 'ケヤキフシアブラムシ'],
@@ -557,6 +560,13 @@ for (const [plant, part, insect] of [
     guide.includes(part) && [...guide.matchAll(/<a href="([^"]+)">([^<]+)/g)].some(([, href, label]) =>
       label.includes(insect) && fs.existsSync(path.join(DIST_DIR, siteUrlToDistRelativeFile(href)))),
     `${plant} initial HTML must link its observation example to an existing insect page`,
+  );
+  const guidePaths = [...guide.matchAll(/<a href="([^"]+)">/g)].map(([, href]) => href);
+  const appPaths = getPlantObservationGuide(plant, observationCatalog)?.sections
+    .flatMap((section) => section.insects.map((item) => buildInsectPath(item, 'ja'))) || [];
+  assert(
+    appPaths.length === guidePaths.length && appPaths.every((href) => guidePaths.includes(href)),
+    `${plant} observation examples must match between the static page and the lightweight catalog`,
   );
   assert(!html.includes('class="manual-ad-slot"'), `${plant} initial HTML must leave ad requests to the app`);
 }

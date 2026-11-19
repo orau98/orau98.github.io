@@ -90,11 +90,15 @@ export function getPlantObservationGuide(plantName, insects) {
     insects: examples.map(({ id, part, stage }) => {
       const insect = byId.get(id);
       const records = insect?.hostPlantsDetailed;
-      const hasRecord = Array.isArray(records) && records.some((record) =>
-        record?.reference &&
-        normalizePlantKey(record.displayName || record.name || record.plant) === plantName &&
-        record.plantPart === part &&
-        (!stage || record.lifeStage === stage));
+      // 個別記録の部位と段階は静的ページの生成時に確認する。画面の軽量一覧には
+      // 部位・段階が入らないため、同じIDと寄主名で、生成時に確認した例をたどる。
+      const hasRecord = Array.isArray(records)
+        ? records.some((record) => record?.reference &&
+          normalizePlantKey(record.displayName || record.name || record.plant) === plantName &&
+          record.plantPart === part &&
+          (!stage || record.lifeStage === stage))
+        : insect?._detail === false && Array.isArray(insect.hostPlants) &&
+          insect.hostPlants.some((host) => normalizePlantKey(host) === plantName);
       return hasRecord ? insect : null;
     }).filter(Boolean),
   })).filter((section) => section.insects.length > 0);
