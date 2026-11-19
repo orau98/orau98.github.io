@@ -48,6 +48,11 @@ import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceT
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
+import {
+  getPlantObservationGuide,
+  PLANT_OBSERVATION_HEADING,
+  PLANT_OBSERVATION_NOTE,
+} from './utils/plantObservationGuides';
 import { buildSourceLabel, normalizePlantProfileText } from './utils/plantProfileText';
 import { fetchDataLiteJson, getCachedPlantProfile, loadPlantProfile } from './services/dataLiteAssets';
 import SourceCitation from './components/ui/SourceCitation';
@@ -1034,6 +1039,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       })
     : decodedPlantName;
   const japaneseReference = isEnglish ? buildJapaneseReferenceLabel(decodedPlantName) : '';
+  const allInsects = useMemo(
+    () => [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...barkbeetles, ...leafbeetles, ...aphids],
+    [moths, butterflies, beetles, longhornbeetles, barkbeetles, leafbeetles, aphids],
+  );
+  const observationGuide = useMemo(
+    () => isEnglish ? null : getPlantObservationGuide(decodedPlantName, allInsects),
+    [allInsects, decodedPlantName, isEnglish],
+  );
   const pageTitle = isFamily
     ? (isEnglish ? `${primaryPlantName} plant index | ${EN_SITE_NAME}` : `${decodedPlantName}の植物一覧 | 昆虫植物図鑑`)
     : isOrder
@@ -1134,8 +1147,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
   }, [shareUrl]);
 
   const { setOgTwitterImage } = useSeoMeta({
-    title: pageTitle,
-    description: pageDesc,
+    title: observationGuide?.title || pageTitle,
+    description: observationGuide?.description || pageDesc,
     ogType: 'article',
     url: canonicalHref,
     locale: isEnglish ? 'en_US' : 'ja_JP',
@@ -1199,9 +1212,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
       if (s) s.remove();
     };
   }, [isFamily, isOrder, isGenus, classificationMembers, decodedPlantName, locale, canonicalHref]);
-  
-  // All insects for RelatedPlants component
-  const allInsects = [...moths, ...butterflies, ...beetles, ...longhornbeetles, ...barkbeetles, ...leafbeetles, ...aphids];
   
   // Debug: オニグルミを含む昆虫を探す
   if (decodedPlantName === 'オニグルミ') {
@@ -2152,6 +2162,14 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
               {formatScientificNameReact(taxonomy.scientificName)}
             </div>
           )}
+          {observationGuide && (
+            <a
+              href="#related-insects"
+              className="mr-3 mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-emerald-800 underline underline-offset-4 dark:text-emerald-200"
+            >
+              虫の記録へ
+            </a>
+          )}
           {/* クイズ導線は種名カード内に1つだけ置く（昆虫詳細と同じ配置） */}
           {quizFocusHref && (
             <Link
@@ -2402,6 +2420,37 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           </svg>
           {isEnglish ? 'Related insects' : '関連する昆虫'}
         </h2>
+        {observationGuide && (
+          <section data-plant-observation-guide className="mb-8 rounded-card border border-line bg-surface p-4 sm:p-5">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+              {PLANT_OBSERVATION_HEADING}
+            </h3>
+            <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              {PLANT_OBSERVATION_NOTE}
+            </p>
+            <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {observationGuide.sections.map(({ label, text, insects }) => (
+                <li key={label} className="border-l-2 border-emerald-300 pl-3 dark:border-emerald-700">
+                  <h4 className="font-semibold text-slate-800 dark:text-slate-100">{label}</h4>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{text}</p>
+                  <ul className="mt-1">
+                    {insects.map((insect) => (
+                      <li key={insect.id}>
+                        <Link
+                          to={buildInsectPath(insect, locale)}
+                          state={makeDetailLinkState(location)}
+                          className="inline-flex min-h-8 items-center text-sm font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300"
+                        >
+                          {insect.name || insect.japaneseName}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         {hostPlantInsects.length === 0 && flowerVisitInsects.length === 0 ? (
           !insectPartitionsReady ? (
             // 昆虫データ未着: 「見つかりませんでした」と断定せず読み込み中を示す

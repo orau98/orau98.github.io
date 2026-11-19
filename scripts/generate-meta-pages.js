@@ -18,6 +18,11 @@ import {
 } from '../src/utils/siteTaxonomy.js';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
 import {
+  getPlantObservationGuide,
+  PLANT_OBSERVATION_HEADING,
+  PLANT_OBSERVATION_NOTE,
+} from '../src/utils/plantObservationGuides.js';
+import {
   comparePlantImageDisplayPriority,
   createSafePlantFilename,
   createSafeScientificPlantFilename,
@@ -2041,6 +2046,18 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
   };
 
   const getInsectMetaRouteType = (insect) => insect.type || 'moth';
+  const observationGuide = getPlantObservationGuide(displayPlantName, hostInsects);
+  const observationGuideHtml = observationGuide ? `
+      <section class="description" data-plant-observation-guide>
+        <h3>${PLANT_OBSERVATION_HEADING}</h3>
+        <p>${PLANT_OBSERVATION_NOTE}</p>
+        ${observationGuide.sections.map(({ label, text, insects }) => `
+        <h4>${escapeRedirectHtml(label)}</h4>
+        <p>${escapeRedirectHtml(text)}</p>
+        <ul>
+          ${insects.map((insect) => `<li><a href="${escapeRedirectHtml(buildJapaneseInsectPath(insect, getInsectMetaRouteType(insect)))}">${escapeRedirectHtml(insect.japaneseName)}</a></li>`).join('')}
+        </ul>`).join('')}
+      </section>` : '';
 
   // 植物ページ用に昆虫を種類別に分類
   const insectsByType = {
@@ -2093,12 +2110,12 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     plantDetail,
     plantFamily,
   );
-  const plantDescription = hasRelatedInsects
+  const plantDescription = observationGuide?.description || (hasRelatedInsects
     ? insectBasedPlantDescription
-    : profileBasedPlantDescription;
-  const plantOgDescription = hasRelatedInsects
+    : profileBasedPlantDescription);
+  const plantOgDescription = observationGuide?.description || (hasRelatedInsects
     ? insectBasedPlantOgDescription
-    : profileBasedPlantDescription;
+    : profileBasedPlantDescription);
   // --- 植物ページ description テンプレート生成終わり ---
 
   // 関連昆虫があるページは昆虫検索へ、プロフィール単独ページは植物検索へつなぎ、
@@ -2116,9 +2133,9 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     .slice(0, 3)
     .join('・') || '特徴';
   const plantPageUrl = `${BASE_ORIGIN}${buildPlantPath(safeCanonicalName, 'ja')}`;
-  const plantTitle = hasRelatedInsects
+  const plantTitle = observationGuide?.title || (hasRelatedInsects
     ? `${displayPlantName}につく虫${relatedInsects.length}種｜食草記録と出典｜昆虫植物図鑑`
-    : `${displayPlantName}の${plantProfileTopicSummary}｜植物プロフィール｜昆虫植物図鑑`;
+    : `${displayPlantName}の${plantProfileTopicSummary}｜植物プロフィール｜昆虫植物図鑑`);
   const plantKeywords = hasRelatedInsects
     ? `${displayPlantName},食草,植物,昆虫図鑑,生態系,${relatedInsects.slice(0, 5).map(i => i.japaneseName).join(',')}`
     : [
@@ -2337,6 +2354,7 @@ function generatePlantHTML(plantName, relatedInsects, plantImages, originalPlant
     </section>` : ''}
     
     <main class="meta-content">
+      ${observationGuideHtml}
       <section class="basic-info">
         <h3>基本情報</h3>
         <dl>

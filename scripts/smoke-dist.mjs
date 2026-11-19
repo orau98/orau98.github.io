@@ -546,6 +546,21 @@ assert(
   'オキナグサ interactive route must be the self-canonical plant profile',
 );
 
+for (const [plant, part, insect] of [
+  ['コナラ', 'ドングリ', 'ヒロバクロサンカクモンヒメハマキ'],
+  ['ケヤキ', '虫こぶ', 'ケヤキフシアブラムシ'],
+  ['サクラ', '葉で見つけた幼虫', 'モンクロシャチホコ'],
+]) {
+  const html = readDistText(`plant/${plant}/index.html`);
+  const guide = html.match(/<section[^>]*data-plant-observation-guide[\s\S]*?<\/section>/)?.[0] || '';
+  assert(
+    guide.includes(part) && [...guide.matchAll(/<a href="([^"]+)">([^<]+)/g)].some(([, href, label]) =>
+      label.includes(insect) && fs.existsSync(path.join(DIST_DIR, siteUrlToDistRelativeFile(href)))),
+    `${plant} initial HTML must link its observation example to an existing insect page`,
+  );
+  assert(!html.includes('class="manual-ad-slot"'), `${plant} initial HTML must leave ad requests to the app`);
+}
+
 const identificationProfileHtml = readPublicText('meta/plant/グスクカンアオイ.html');
 assert(
   identificationProfileHtml.includes('類似種との見分け方') &&
