@@ -47,6 +47,7 @@ import ManualAdSlot from './components/ManualAdSlot';
 import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
 import EmergenceTimeDisplay from './components/EmergenceTimeDisplay';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
+import { buildCurrentHashHref } from './utils/sectionNavigation';
 import { normalizePlantKey as normalizePlantName } from './utils/plantNameUtils';
 import {
   getPlantObservationGuide,
@@ -2164,7 +2165,7 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           )}
           {observationGuide && (
             <a
-              href="#related-insects"
+              href={buildCurrentHashHref(location, 'related-insects')}
               className="mr-3 mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-emerald-800 underline underline-offset-4 dark:text-emerald-200"
             >
               虫の記録へ

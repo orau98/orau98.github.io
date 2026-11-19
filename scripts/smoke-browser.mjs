@@ -156,7 +156,7 @@ async function checkPage(browser, origin, page, viewport) {
   if (page.observationGuide) {
     const jump = tab.getByRole('link', { name: '虫の記録へ', exact: true });
     const links = tab.locator('[data-plant-observation-guide] a');
-    if (await jump.getAttribute('href', { timeout: 3000 }).catch(() => null) !== '#related-insects' ||
+    if (await jump.getAttribute('href', { timeout: 3000 }).catch(() => null) !== `${page.path}#related-insects` ||
         !(await links.allTextContents()).includes('ヒロバクロサンカクモンヒメハマキ')) {
       problems.push('コナラの観察ガイドに記録への導線またはドングリの掲載例がない');
     } else {
