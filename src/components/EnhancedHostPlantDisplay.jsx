@@ -12,9 +12,9 @@ import { HOST_STYLE, FLOWER_STYLE, buildShowMoreLabel } from '../utils/hostVisit
 import { getPublicHostPlantNoteSegments } from '../utils/publicHostPlantNotes';
 import { buildPlantUseSummary } from '../utils/plantUseSummary';
 import {
-  getObservationTypePresentation,
+  getObservationTypeCategory,
   getObservationTypePriority,
-  isDomesticObservationType,
+  groupObservationEvidence,
 } from '../utils/observationType';
 
 /**
@@ -176,7 +176,7 @@ const getPlantPartLabel = (plantPart, isEnglish = false) => {
 
 // 食草欄の備考から、植物の利用に関係する文だけを取り出す（出現時期など生活史の重複は除く）
 const isLifecycleNote = (s) => /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(s);
-const isPlantRelevantNote = (s) => /葉|花|蕾|若葉|茎|根|枝|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
+const isPlantRelevantNote = (s) => /葉|花|蕾|若葉|茎|根|枝|幹|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
 const getPlantRelevantNotes = (records = []) => {
   const notes = new Set();
   records.forEach((record) => {
@@ -190,9 +190,19 @@ const getPlantRelevantNotes = (records = []) => {
   return Array.from(notes);
 };
 
-const getPrimaryRecord = (records) => records.reduce((prev, current) => (
-  getObservationTypePriority(current.observationType) < getObservationTypePriority(prev.observationType) ? current : prev
-));
+const getObservationLabel = ({ label, regionLabel }, isEnglish) =>
+  regionLabel ? (isEnglish ? `${label} (${regionLabel})` : `${label}（${regionLabel}）`) : label;
+
+const getUsageLabel = (record, isEnglish) => {
+  if (isFlowerVisitRecord(record)) return '';
+  const usage = {
+    後食: isEnglish ? 'Adult feeding' : '後食',
+    採集植物: isEnglish ? 'Collection plant' : '採集植物',
+  }[record.observationType];
+  return [getLifeStageLabel(record.lifeStage, isEnglish), getPlantPartLabel(record.plantPart, isEnglish), usage]
+    .filter(Boolean)
+    .join(isEnglish ? ' / ' : '・');
+};
 
 const INITIAL_PLANT_LIMIT = 30;
 
@@ -207,20 +217,14 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
   const style = kind === 'flower' ? FLOWER_STYLE : HOST_STYLE;
 
   const summary = useMemo(() => buildPlantUseSummary(groups, {
-    usageLabelOf: (record) => (isFlowerVisitRecord(record)
-      ? ''
-      : [getLifeStageLabel(record.lifeStage, isEnglish), getPlantPartLabel(record.plantPart, isEnglish)]
-        .filter(Boolean)
-        .join(isEnglish ? ' / ' : '・')),
+    usageLabelOf: (record) => getUsageLabel(record, isEnglish),
     observationOf: (group) => {
-      const primary = getPrimaryRecord(group.records);
-      const presentation = getObservationTypePresentation(primary.observationType, isEnglish);
+      const evidence = groupObservationEvidence(group.records, isEnglish);
       return {
-        key: presentation.label,
-        label: presentation.label,
-        stated: Boolean(String(primary.observationType || '').trim()),
-        priority: getObservationTypePriority(primary.observationType),
-        presentation,
+        key: evidence.map((entry) => entry.key).sort().join('|'),
+        label: evidence.map((entry) => getObservationLabel(entry.presentation, isEnglish)).join(' / '),
+        priority: evidence[0].priority,
+        evidence,
       };
     },
     notesOf: (group) => getPlantRelevantNotes(group.records),
@@ -252,11 +256,11 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
       {summary.commonUsage === null && item.usage && (
         <span className="text-[11px] font-normal text-slate-600 dark:text-slate-300">{item.usage}</span>
       )}
-      {summary.commonObservation === null && item.observation.stated && (
-        <span className={`rounded border px-1 text-[11px] font-normal leading-4 ${item.observation.presentation.borderColor} ${item.observation.presentation.textColor}`}>
-          {item.observation.label}
+      {summary.commonObservation === null && item.observation.evidence.map(({ key, presentation }) => (
+        <span key={key} className={`rounded border px-1 text-[11px] font-normal leading-4 ${presentation.borderColor} ${presentation.textColor}`}>
+          {getObservationLabel(presentation, isEnglish)}
         </span>
-      )}
+      ))}
       {item.referenceNumbers.length > 0 && (
         <sup
           className="text-[10px] font-normal text-slate-600 dark:text-slate-300"
@@ -269,7 +273,8 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
   );
 
   const familyCount = summary.familyCount;
-  const notes = summary.items.filter((item) => item.notes.length > 0);
+  const notes = summary.items.filter((item) => item.observation.evidence.length === 1 && item.notes.length > 0);
+  const mixedEvidence = summary.items.filter((item) => item.observation.evidence.length > 1);
 
   return (
     <div className="space-y-2">
@@ -286,13 +291,13 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
         </div>
       </div>
 
-      {(summary.commonUsage || (summary.commonObservation && summary.commonObservation.stated)) && (
+      {(summary.commonUsage || summary.commonObservation) && (
         <p className="text-xs text-slate-600 dark:text-slate-300">
           {summary.commonUsage && (
             <span className="mr-3">{isEnglish ? 'Use: ' : '利用: '}{summary.commonUsage}</span>
           )}
-          {summary.commonObservation && summary.commonObservation.stated && (
-            <span>{isEnglish ? 'Record type: ' : '記録の種類: '}{summary.commonObservation.label}</span>
+          {summary.commonObservation && (
+            <span>{isEnglish ? 'Observation setting: ' : '観察条件: '}{summary.commonObservation.label}</span>
           )}
         </p>
       )}
@@ -369,13 +374,18 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
         )
       ) : null}
 
-      {summary.commonObservation === null && summary.items.some((item) => !item.observation.stated) && (
-        <p className="text-[11px] leading-4 text-slate-600 dark:text-slate-300">
-          {isEnglish
-            ? 'Plants without a record-type label have no record type stated in the source.'
-            : '「野外」「文献」などの表示がない植物は、出典に記録の種類の記載がありません。'}
-        </p>
-      )}
+      {mixedEvidence.map((item) => (
+        <dl key={item.name} className="space-y-1 text-xs text-slate-600 dark:text-slate-300">
+          <dt className="font-medium">{plantLabel(item.name)}</dt>
+          {item.observation.evidence.map(({ key, presentation, records }) => (
+            <dd key={key} className="ml-3">
+              <span className={presentation.textColor}>{getObservationLabel(presentation, isEnglish)}</span>
+              {getPlantRelevantNotes(records).map((note) => <p key={note}>{note}</p>)}
+              <SourceCitation sources={records.map((record) => record.reference)} isEnglish={isEnglish} />
+            </dd>
+          ))}
+        </dl>
+      ))}
 
       {notes.length > 0 && (
         <div className="text-xs text-slate-600 dark:text-slate-300">
@@ -411,15 +421,9 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
   // 「不明」は植物ページが存在しないため、リンクにしない
   // （文献記録しか無い種では全記録が「不明」のまま残ることがある）
   const isUnknownPlant = String(plantGroup.name || '').trim() === '不明';
-  // 最優先の観察タイプを決定（野外（国内）を最優先）
-  const primaryRecord = plantGroup.records.reduce((prev, current) => {
-    const prevPriority = getObservationTypePriority(prev.observationType);
-    const currentPriority = getObservationTypePriority(current.observationType);
-    return currentPriority < prevPriority ? current : prev;
-  });
-  
-  const obsStyle = getObservationTypePresentation(primaryRecord.observationType, isEnglish);
-  const isDomesticWild = isDomesticObservationType(primaryRecord.observationType);
+  const evidence = groupObservationEvidence(plantGroup.records, isEnglish);
+  const { presentation: obsStyle } = evidence[0];
+  const isDomesticWild = obsStyle.category === 'field' && obsStyle.region === 'domestic';
   
   // 利用情報をグループ化
   const usageInfo = plantGroup.records.reduce((acc, record) => {
@@ -429,18 +433,8 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
         isFlowerVisit: isFlowerVisitRecord(record),
         lifeStage: record.lifeStage,
         plantPart: record.plantPart,
-        observationTypes: new Set(),
-        references: new Set(),
-        notes: new Set()
       };
     }
-    if (record.observationType) acc[key].observationTypes.add(record.observationType);
-    if (record.reference) {
-      // セミコロンで区切られた複数の出典を分割
-      const refs = record.reference.split(';').map(r => r.trim()).filter(r => r);
-      refs.forEach(ref => acc[key].references.add(ref));
-    }
-    if (record.notes) acc[key].notes.add(record.notes);
     return acc;
   }, {});
   
@@ -549,39 +543,23 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
         )}
         {/* カード背景と同じ bgColor だとバッジが地の文に埋没するため白系の面+枠線にし、
             縦ずれ防止のため h-6 固定・行頭揃え(#63/#69)も維持する */}
-        <span className={`col-start-2 row-start-1 justify-self-end inline-flex items-center h-6 text-xs px-2 rounded shrink-0 border ${obsStyle.borderColor} bg-white/80 dark:bg-slate-900/50 ${obsStyle.textColor} font-medium sm:col-start-3`}>
-          {obsStyle.label}
-        </span>
+        {evidence.length === 1 && (
+          <span className={`col-start-2 row-start-1 justify-self-end inline-flex items-center h-6 text-xs px-2 rounded shrink-0 border ${obsStyle.borderColor} bg-white/80 dark:bg-slate-900/50 ${obsStyle.textColor} font-medium sm:col-start-3`}>
+            {getObservationLabel(obsStyle, isEnglish)}
+          </span>
+        )}
       </div>
 
       {/* 出典情報（必要時のみ下段に表示） */}
-      {(() => {
-        const allReferences = new Set();
-        const allNotes = new Set();
-        usageInfoArray.forEach(usage => {
-          usage.references.forEach(ref => allReferences.add(ref));
-          usage.notes.forEach(n => allNotes.add(n));
-        });
-        // 備考のフィルタリング: 食草セクションに不適切な生活史・発生時期系の文言を除去
-        const isLifecycleNote = (s) => /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(s);
-        const isPlantRelevant = (s) => /葉|花|蕾|若葉|茎|根|枝|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
-        const filteredNotesSet = new Set();
-        Array.from(allNotes).forEach(note => {
-          getPublicHostPlantNoteSegments(note).forEach(seg => {
-            if (!seg) return;
-            // 生活史重複（出現時期等）は除外
-            if (isLifecycleNote(seg) && !isPlantRelevant(seg)) return;
-            filteredNotesSet.add(seg);
-          });
-        });
-
-        if (allReferences.size === 0 && filteredNotesSet.size === 0) return null;
+      {evidence.map(({ key, presentation, records }) => {
+        const references = records.map((record) => record.reference).filter(Boolean);
+        const notes = getPlantRelevantNotes(records);
+        if (evidence.length === 1 && references.length === 0 && notes.length === 0) return null;
         return (
-          <div className="mt-2 pt-2 border-t border-emerald-200/30 dark:border-emerald-700/30 space-y-1.5">
-            {allReferences.size > 0 && (
-              <SourceCitation sources={Array.from(allReferences)} isEnglish={isEnglish} />
-            )}
-            {filteredNotesSet.size > 0 && (
+          <div key={key} className="mt-2 pt-2 border-t border-emerald-200/30 dark:border-emerald-700/30 space-y-1.5">
+            {evidence.length > 1 && <p className={`text-xs font-medium ${presentation.textColor}`}>{getObservationLabel(presentation, isEnglish)}</p>}
+            <SourceCitation sources={references} isEnglish={isEnglish} />
+            {notes.length > 0 && (
               <div className="flex items-start space-x-2">
                 <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v10a2 2 0 01-2 2z" />
@@ -589,8 +567,8 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
                 <div className="text-sm text-slate-600 dark:text-slate-300 space-y-1">
                   <div className="font-medium">{isEnglish ? 'Notes:' : '備考:'}</div>
                   <ul className="list-disc pl-5 space-y-0.5">
-                    {Array.from(filteredNotesSet).map((note, idx) => (
-                      <li key={idx}>{note}</li>
+                    {notes.map((note) => (
+                      <li key={note}>{note}</li>
                     ))}
                   </ul>
                 </div>
@@ -598,7 +576,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
             )}
           </div>
         );
-      })()}
+      })}
     </div>
   );
 });
@@ -635,7 +613,7 @@ const EnhancedHostPlantDisplay = ({
   // 「不明」植物のフィルタリング：野外食草情報がある場合は「不明」を除外
   const hasWildPlants = plantsToDisplay.some(plant => 
     plant.name && plant.name !== '不明' && 
-    plant.observationType && plant.observationType.includes('野外')
+    getObservationTypeCategory(plant.observationType) === 'field'
   );
   
   if (hasWildPlants) {

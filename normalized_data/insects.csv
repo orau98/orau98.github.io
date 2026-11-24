@@ -9951,3 +9951,8 @@ species-BTG-001,Nymphalidae,タテハチョウ科,Limenitidinae,イチモンジ�
 species-BTG-002,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Danaus,,melanippus,,Cramer,1777,スジグロシロマダラ,,,,"Danaus melanippus (Cramer, 1777)",,,
 species-BTG-003,Nymphalidae,タテハチョウ科,Danainae,マダラチョウ亜科,,,Euploea,,midamus,,Linnaeus,1758,ミダムスルリマダラ,,,,"Euploea midamus (Linnaeus, 1758)",,,
 species-BTG-004,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Suastus,,gremius,,Fabricius,1798,クロボシセセリ,,,,"Suastus gremius (Fabricius, 1798)",,,
+species-23155,Sesiidae,スカシバガ科,Tinthiinae,ヒメスカシバ亜科,,,Tinthia,,cuprealis,,(Moore),1877,カジノキヒメスカシバ,,,,"Tinthia cuprealis (Moore), 1877",,新記録・再分類等,
+species-23156,Tortricidae,ハマキガ科,Chlidanotinae,マダラハマキガ亜科,Polyorthini,フサゲマダラハマキガ族,Polylopha,,cassiicola,,Liu & Kawabe,1993,リュウキュウマダラハマキ,,,,"Polylopha cassiicola Liu & Kawabe, 1993",,新記録・再分類等,
+species-23157,Tortricidae,ハマキガ科,Chlidanotinae,マダラハマキガ亜科,Polyorthini,フサゲマダラハマキガ族,Lopharcha,,moriutii,,Nasu,2006,モリウチマダラハマキ,,,,"Lopharcha moriutii Nasu, 2006",,新記録・再分類等,
+species-23158,Tortricidae,ハマキガ科,Chlidanotinae,マダラハマキガ亜科,Polyorthini,フサゲマダラハマキガ族,Lopharcha,,tominagai,,Nasu,2021,ウスアサギマダラハマキ,,,,"Lopharcha tominagai Nasu, 2021",,新記録・再分類等,
+species-23159,Tortricidae,ハマキガ科,Chlidanotinae,マダラハマキガ亜科,Polyorthini,フサゲマダラハマキガ族,Lopharcha,,bicolor,,Nasu,2021,モトキマダラハマキ,,,,"Lopharcha bicolor Nasu, 2021",,新記録・再分類等,

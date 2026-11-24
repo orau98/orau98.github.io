@@ -335,7 +335,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             name: plant,
             family: (cols[iFamily] || '').trim(),
             displayName: (cols[iFamily] || '').trim() ? `${plant}（${(cols[iFamily] || '').trim()}）` : plant,
-            observationType: (cols[iObs] || '').trim() || '文献',
+            observationType: (cols[iObs] || '').trim(),
             plantPart: (cols[iPart] || '').trim() || '',
             lifeStage: (cols[iStage] || '').trim() || '',
             reference: (cols[iRef] || '').trim() || '',

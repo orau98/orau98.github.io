@@ -107,6 +107,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
     const detailKey = (d) => [
       (d?.name || '').trim(),
+      (d?.observationType || '').trim(),
       (d?.lifeStage || '').trim(),
       (d?.plantPart || '').trim(),
       (d?.reference || '').trim(),
@@ -132,7 +133,6 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       detailKey,
       (a, b) => {
         a.displayName = preferValue(a.displayName, b.displayName);
-        a.observationType = preferValue(a.observationType, b.observationType);
         a.plantPart = preferValue(a.plantPart, b.plantPart);
         a.lifeStage = preferValue(a.lifeStage, b.lifeStage);
         a.reference = preferValue(a.reference, b.reference);

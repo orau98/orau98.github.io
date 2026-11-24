@@ -6,8 +6,15 @@ import { normalizeHostRecord } from '../src/utils/hostRecord.js';
 import { convertNormalizedDataToStandardFormat } from '../src/utils/normalizedDataParser.js';
 import { isFlowerVisitRecord } from '../src/utils/flowerVisitPlants.js';
 import { buildPlantDisplayData } from '../src/utils/insectCardData.js';
-import { getObservationTypePresentation } from '../src/utils/observationType.js';
+import { getObservationTypePresentation, groupObservationEvidence } from '../src/utils/observationType.js';
+import { getSourceLink } from '../src/utils/sourceLinks.js';
+import { bibliography } from '../src/utils/bibliography.js';
 import { parseIntegratedHostPlants, convertLegacyToIntegratedFormat } from '../src/utils/integratedDataParser.js';
+
+const readCsv = (path) => Papa.parse(fs.readFileSync(new URL(path, import.meta.url), 'utf8'), {
+  header: true,
+  skipEmptyLines: true,
+}).data;
 
 test('unspecified stage, plant part and observation remain empty for every source and resource', () => {
   for (const reference of ['日本産タマムシ大図鑑', '日本原色アブラムシ図鑑', '日本のハマキガ1', '日本産カミキリムシ', '']) {
@@ -35,9 +42,8 @@ test('explicit evidence remains intact and an unknown stage is not inferred to b
 });
 
 test('all retained normalized host records preserve source metadata instead of fabricating defaults', () => {
-  const read = (name) => Papa.parse(fs.readFileSync(new URL(`../normalized_data/${name}.csv`, import.meta.url), 'utf8'), { header: true, skipEmptyLines: true }).data;
-  const hosts = read('hostplants');
-  const converted = convertNormalizedDataToStandardFormat(read('insects'), hosts, []);
+  const hosts = readCsv('../normalized_data/hostplants.csv');
+  const converted = convertNormalizedDataToStandardFormat(readCsv('../normalized_data/insects.csv'), hosts, []);
   const records = new Map(Object.values(converted).flat().flatMap((insect) => insect.hostPlantsDetailed || []).map((row) => [row.recordId, row]));
   let blanks = 0;
   for (const source of hosts) {
@@ -66,13 +72,49 @@ test('legacy format fallbacks preserve uncertainty too', () => {
   });
 });
 
-test('an absent observation category is labeled not stated, not other or domestic', () => {
-  assert.equal(getObservationTypePresentation('').label, '未記載');
-  assert.equal(getObservationTypePresentation('', true).label, 'Not stated');
+test('an absent observation category is displayed as unknown', () => {
+  assert.equal(getObservationTypePresentation('').label, '不明');
+  assert.equal(getObservationTypePresentation('', true).label, 'Unknown');
 });
 
 test('unknown flower use stays in host relationships instead of disappearing from list cards', () => {
   const insect = { hostPlantsDetailed: [normalizeHostRecord({ plant_name: 'ガマズミ', plant_part: '花' })] };
   const display = buildPlantDisplayData(insect);
   assert.ok(JSON.stringify(display).includes('ガマズミ'));
+});
+
+test('November literature records match the approved page evidence and stay distinct on display', () => {
+  const audit = readCsv('../data/source_audits/japanese-moth-host-literature-2026-11-24.csv');
+  const insects = readCsv('../normalized_data/insects.csv');
+  const hosts = readCsv('../normalized_data/hostplants.csv');
+  const hostsById = new Map(hosts.map((row) => [row.record_id, row]));
+  const insectsById = new Map(insects.map((row) => [row.insect_id, row]));
+  const approvedHosts = audit.filter((row) => row.decision === 'include' && row.entity.startsWith('host_'));
+  const bibliographyKeys = new Set(bibliography.map((entry) => entry.key));
+  assert.ok(approvedHosts.length > 0);
+  for (const entry of audit.filter((row) => row.decision === 'include')) {
+    assert.ok(entry.pdf_page && entry.printed_page, entry.record_id);
+    assert.match(entry.source_pdf_sha256 || entry.source_page_sha256, /^[a-f0-9]{64}$/);
+    assert.ok(getSourceLink(entry.reference), entry.reference);
+    assert.ok(bibliographyKeys.has(entry.bibliography_key), entry.bibliography_key);
+    const insect = insectsById.get(entry.insect_id);
+    assert.equal(insect.japanese_name, entry.insect_name, entry.record_id);
+    assert.equal(insect.scientific_name, entry.scientific_name, entry.record_id);
+  }
+  for (const entry of approvedHosts) {
+    const row = hostsById.get(entry.record_id);
+    for (const field of ['insect_id', 'plant_name', 'plant_family', 'observation_type', 'plant_part', 'life_stage', 'reference']) {
+      assert.equal(row[field], entry[field], `${entry.record_id}: ${field}`);
+    }
+    assert.equal(row.notes, entry.approved_note, entry.record_id);
+  }
+  assert.equal(hosts.filter((row) => row.record_id.startsWith('host-literature-20261124-')).length,
+    approvedHosts.filter((row) => row.entity === 'host_add').length);
+
+  const { moths } = convertNormalizedDataToStandardFormat(insects, hosts, []);
+  const moth = moths.find((item) => item.name === 'サザナミノメイガ');
+  const sasa = moth.hostPlantsDetailed.filter((row) => row.name === 'ネザサ類');
+  const evidence = groupObservationEvidence(sasa);
+  assert.deepEqual(evidence.map((group) => group.presentation.category), ['field', 'reared']);
+  assert.ok(evidence.every((group) => group.records.length === 1 && group.records[0].reference === '松井ら (2023)'));
 });

@@ -1,85 +1,87 @@
 const PRESENTATIONS = {
-  domestic: {
-    labels: { ja: '国内', en: 'Japan' },
+  field: {
+    labels: { ja: '野外', en: 'Field' },
     bgColor: 'bg-green-50 dark:bg-green-900/20',
     textColor: 'text-green-700 dark:text-green-300',
     borderColor: 'border-green-200 dark:border-green-700',
   },
-  domesticInferred: {
-    labels: { ja: '国内推定', en: 'Japan inferred' },
-    bgColor: 'bg-amber-50 dark:bg-amber-900/20',
-    textColor: 'text-amber-700 dark:text-amber-300',
-    borderColor: 'border-amber-200 dark:border-amber-700',
-  },
-  literature: {
-    labels: { ja: '文献', en: 'Literature' },
-    bgColor: 'bg-amber-50 dark:bg-amber-900/20',
-    textColor: 'text-amber-700 dark:text-amber-300',
-    borderColor: 'border-amber-200 dark:border-amber-700',
-  },
   reared: {
-    labels: { ja: '飼育', en: 'Reared' },
+    labels: { ja: '飼育', en: 'Captive rearing' },
     bgColor: 'bg-blue-50 dark:bg-blue-900/20',
     textColor: 'text-blue-700 dark:text-blue-300',
     borderColor: 'border-blue-200 dark:border-blue-700',
   },
-  overseas: {
-    labels: { ja: '海外', en: 'Overseas' },
-    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-    textColor: 'text-purple-700 dark:text-purple-300',
-    borderColor: 'border-purple-200 dark:border-purple-700',
-  },
-  unknownRegion: {
-    labels: { ja: '地域不明', en: 'Region unclear' },
-    bgColor: 'bg-gray-50 dark:bg-gray-900/20',
-    textColor: 'text-gray-700 dark:text-gray-300',
-    borderColor: 'border-gray-200 dark:border-gray-700',
-  },
-  other: {
-    labels: { ja: 'その他', en: 'Other' },
+  unknown: {
+    labels: { ja: '不明', en: 'Unknown' },
     bgColor: 'bg-gray-50 dark:bg-gray-900/20',
     textColor: 'text-gray-700 dark:text-gray-300',
     borderColor: 'border-gray-200 dark:border-gray-700',
   },
 };
 
-export const getObservationTypeCategory = (observationType = '') => {
+const REGION_LABELS = {
+  domestic: { ja: '国内', en: 'Japan' },
+  domesticInferred: { ja: '国内推定', en: 'Japan inferred' },
+  overseas: { ja: '国外', en: 'Outside Japan' },
+  unknown: { ja: '地域不明', en: 'Region unknown' },
+};
+
+const FIELD_TYPE = /^野外(?:記録)?(?:[（(](?:国内|国外|海外)[）)])?$/;
+const REARED_TYPE = /^飼育(?:記録)?(?:[（(](?:国内|国外|海外)[）)])?$/;
+
+export function getObservationTypeCategory(observationType = '') {
   const value = String(observationType || '').trim();
+  if (FIELD_TYPE.test(value)) return 'field';
+  if (REARED_TYPE.test(value)) return 'reared';
+  return 'unknown';
+}
 
-  if (value.includes('地域不明')) return 'unknownRegion';
+export function getObservationRegion(observationType = '') {
+  const value = String(observationType || '').trim();
+  if (value.includes('地域不明')) return 'unknown';
   if (value.includes('国内') && value.includes('論文範囲')) return 'domesticInferred';
-  if (value === '国内' || value.includes('国内')) return 'domestic';
-  if (value.includes('海外') || value.includes('国外')) return 'overseas';
-  if (value === '飼育' || value === '飼育記録') return 'reared';
-  if (value === '文献') return 'literature';
-  return 'other';
-};
+  if (value.includes('国内')) return 'domestic';
+  if (value.includes('国外') || value.includes('海外')) return 'overseas';
+  return '';
+}
 
-export const getObservationTypePresentation = (observationType, isEnglish = false) => {
+export function getObservationTypePresentation(observationType, isEnglish = false) {
   const category = getObservationTypeCategory(observationType);
+  const region = getObservationRegion(observationType);
   const presentation = PRESENTATIONS[category];
-  const isDomesticFieldRecord = String(observationType || '').trim() === '野外（国内）';
+  const language = isEnglish ? 'en' : 'ja';
   return {
     ...presentation,
-    label: !String(observationType || '').trim()
-      ? (isEnglish ? 'Not stated' : '未記載')
-      : isDomesticFieldRecord
-        ? (isEnglish ? 'Field' : '野外')
-        : presentation.labels[isEnglish ? 'en' : 'ja'],
+    category,
+    region,
+    label: presentation.labels[language],
+    regionLabel: REGION_LABELS[region]?.[language] || '',
   };
-};
+}
 
-export const getObservationTypePriority = (observationType) => ({
-  domestic: 1,
-  domesticInferred: 2,
-  literature: 3,
-  reared: 3,
-  overseas: 4,
-  unknownRegion: 5,
-  other: 6,
-})[getObservationTypeCategory(observationType)];
-
-export const isDomesticObservationType = (observationType) => {
+export function getObservationTypePriority(observationType) {
   const category = getObservationTypeCategory(observationType);
-  return category === 'domestic' || category === 'domesticInferred';
-};
+  if (category === 'field') {
+    const region = getObservationRegion(observationType);
+    return { domestic: 0, '': 1, overseas: 2 }[region] ?? 1;
+  }
+  return category === 'reared' ? 3 : 4;
+}
+
+export function groupObservationEvidence(records, isEnglish = false) {
+  const groups = new Map();
+  for (const record of records) {
+    const presentation = getObservationTypePresentation(record.observationType, isEnglish);
+    const key = `${presentation.category}:${presentation.region}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        key,
+        presentation,
+        priority: getObservationTypePriority(record.observationType),
+        records: [],
+      });
+    }
+    groups.get(key).records.push(record);
+  }
+  return [...groups.values()].sort((a, b) => a.priority - b.priority);
+}

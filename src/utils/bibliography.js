@@ -444,7 +444,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-305-kohno-2023',
     type: 'article',
-    title: 'Memorandum on an occurrence of Dendrolimus punctatus larvae on Ishigaki-jima Island',
+    title: 'Memorandum on an occurrence of Dendrolimus punctatus (Walker, 1855) (Lepidoptera, Lasiocampidae) larvae on Ishigaki-jima Island, the Ryukyus, Japan in February 2004',
     authors: ['河野勝行'],
     year: '2023',
     journal: '蛾類通信',
@@ -1603,6 +1603,26 @@ export const bibliography = [
     pages: '377-378'
   },
   {
+    key: 'ga-tsushin-125-matsui-1984',
+    type: 'article',
+    title: 'ハガタクチバ老熟幼虫をシラカシから採集',
+    authors: ['松井英子'],
+    year: '1984',
+    journal: '蛾類通信',
+    issue: '125',
+    pages: '401'
+  },
+  {
+    key: 'ga-tsushin-187-ohbayashi-takeuchi-1996',
+    type: 'article',
+    title: 'ナカグロクチバの幼虫と食草について',
+    authors: ['大林隆司', '竹内浩二'],
+    year: '1996',
+    journal: '蛾類通信',
+    issue: '187',
+    pages: '195-196'
+  },
+  {
     key: 'ga-tsushin-198-tominaga-1998',
     type: 'article',
     title: 'イチモンジホウジャクの食草について',
@@ -1691,6 +1711,16 @@ export const bibliography = [
     journal: '蛾類通信',
     issue: '201',
     pages: '12'
+  },
+  {
+    key: 'ga-tsushin-202-koshino-1999',
+    type: 'article',
+    title: 'ナカグロクチバをナンキンハゼで飼育',
+    authors: ['越野誠一郎'],
+    year: '1999',
+    journal: '蛾類通信',
+    issue: '202',
+    pages: '31-32'
   },
   {
     key: 'ga-tsushin-202-sasaki-1999',
