@@ -28,7 +28,13 @@ import {
   createSafeScientificPlantFilename,
   PLANT_IMAGE_SUFFIXES,
 } from '../src/utils/filename.js';
-import { bibliography, getBibliographyEntry, normalizeCitationMatchKey } from '../src/utils/bibliography.js';
+import {
+  bibliography,
+  formatBibliographyCitation,
+  formatCitationContributors,
+  getBibliographyEntry,
+  normalizeCitationMatchKey,
+} from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
 import {
   isAmazonAssociateUrl,
@@ -247,18 +253,6 @@ function splitReferenceTokens(value = '') {
     .filter(Boolean);
 }
 
-function formatCitationAuthors(authors = []) {
-  if (!Array.isArray(authors) || authors.length === 0) return '';
-  return authors.join('・');
-}
-
-function formatCitationContributors(entry = {}) {
-  const authors = formatCitationAuthors(entry.authors);
-  if (authors) return authors;
-  const editors = formatCitationAuthors(entry.editors);
-  return editors ? `${editors}（編）` : '';
-}
-
 function findBibliographyEntry(rawReference = '') {
   const raw = String(rawReference || '').trim();
   if (!raw) return null;
@@ -292,29 +286,7 @@ function formatCitationShortPlain(entry, rawReference = '') {
 }
 
 function formatCitationPlain(entry, rawReference = '') {
-  if (!entry) return extractAuthorYearLabel(rawReference);
-
-  const contributors = formatCitationContributors(entry);
-  const contributorYear = [contributors, entry.year ? `(${entry.year})` : '']
-    .filter(Boolean)
-    .join(' ');
-  const title = [entry.title, entry.note].filter(Boolean).join(' — ');
-  const journalNumber = entry.volume
-    ? `${entry.volume}${entry.issue ? `(${entry.issue})` : ''}`
-    : entry.issue ? `第${entry.issue}号` : '';
-  const publication = entry.journal
-    ? [entry.journal, journalNumber, entry.pages ? `pp. ${entry.pages}` : '']
-      .filter(Boolean)
-      .join(' ')
-    : [entry.publisher, entry.place, entry.pages].filter(Boolean).join('、');
-  const isbn = entry.isbn13 || entry.isbn10;
-
-  return [
-    contributorYear,
-    title,
-    publication,
-    isbn ? `ISBN ${isbn}` : '',
-  ].filter(Boolean).join('。');
+  return entry ? formatBibliographyCitation(entry) : extractAuthorYearLabel(rawReference);
 }
 
 function formatCitationHtml(entry, rawReference = '') {

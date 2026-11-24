@@ -1,5 +1,5 @@
 import { buildAmazonBookUrl } from './amazonAssociates.js';
-import { getBibliographyEntry } from './bibliography.js';
+import { formatBibliographyCitation, getBibliographyEntry } from './bibliography.js';
 
 // 文献名とリンクのマッピング（書籍はAmazonアソシエイト、非売品・論文等は一次情報）
 export const sourceLinks = {
@@ -120,12 +120,13 @@ export const normalizeReference = (source) => {
 export const getReferenceMeta = (source) => {
   const raw = typeof source === 'string' ? source.trim() : '';
   const entry = getBibliographyEntry(raw);
-  const displayLabel = entry?.journal ? raw : normalizeReference(raw);
+  const showBibliography = entry && (entry.type === 'article' || entry.journal || raw === entry.key);
+  const displayLabel = showBibliography ? formatBibliographyCitation(entry) : normalizeReference(raw);
 
   return {
     displayLabel,
     link: getSourceLink(raw),
-    key: entry?.journal ? entry.key : displayLabel,
+    key: showBibliography ? entry.key : displayLabel,
   };
 };
 
@@ -145,7 +146,7 @@ export const getReferenceMetaList = (sources) => {
 
       if (!seen.has(key)) {
         const entry = {
-          displayLabel: key,
+          displayLabel: meta.displayLabel || raw,
           link: meta.link,
         };
         seen.set(key, entry);

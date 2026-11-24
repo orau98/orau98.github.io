@@ -109,3 +109,30 @@ test('getSourceLink resolves the primary Scolytinae papers', () => {
     'https://www.ffpri.go.jp/pubs/bulletin/301/documents/314-4.pdf',
   );
 });
+
+test('species citations render the full bibliography for titles, references and record keys', () => {
+  const sources = [
+    '岡本清 (1995) 「メイガ幼虫の食草について」',
+    'メイガ幼虫の食草について',
+    'tentomushi-okamoto-foodplants-1995',
+  ];
+  const expected = {
+    displayLabel: '岡本清 (1995)。メイガ幼虫の食草について。てんとうむし 特別号「遊蟲千年」 pp. 19-21',
+    link: 'https://www.konchukan.net/pdf/tentomushi/specialnumber/tentomushi_specialnumber_19-21.pdf',
+  };
+
+  assert.deepEqual(getReferenceMetaList(sources), [expected]);
+  assert.deepEqual(getReferenceMetaList([sources[2]]), [expected]);
+});
+
+test('different articles in the same issue remain distinct in the source list', () => {
+  const metas = getReferenceMetaList([
+    'suzumushi-140-nakamura-2005-p95-tamagawa',
+    'suzumushi-140-nakamura-2005-p95-96-bisei',
+  ]);
+
+  assert.equal(metas.length, 2);
+  assert.equal(metas[0].link, metas[1].link);
+  assert.match(metas[0].displayLabel, /高梁市玉川町.*すずむし 第140号 pp\. 95$/);
+  assert.match(metas[1].displayLabel, /美星町中央部.*すずむし 第140号 pp\. 95-96$/);
+});

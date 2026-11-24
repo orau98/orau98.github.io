@@ -2144,7 +2144,7 @@ export const normalizeCitationMatchKey = (value = '') => String(value || '')
 
 const bibliographyByReference = new Map();
 for (const entry of bibliography) {
-  for (const reference of [entry.title, ...(entry.references || [])]) {
+  for (const reference of [entry.key, entry.title, ...(entry.references || [])]) {
     const key = normalizeCitationMatchKey(reference);
     if (!key) continue;
     if (bibliographyByReference.has(key) && bibliographyByReference.get(key) !== entry) {
@@ -2157,3 +2157,33 @@ for (const entry of bibliography) {
 
 export const getBibliographyEntry = (reference) =>
   bibliographyByReference.get(normalizeCitationMatchKey(reference)) || null;
+
+const formatCitationNames = (names) => Array.isArray(names) ? names.join('・') : '';
+
+export const formatCitationContributors = (entry) => {
+  const authors = formatCitationNames(entry.authors);
+  if (authors) return authors;
+  const editors = formatCitationNames(entry.editors);
+  return editors ? `${editors}（編）` : '';
+};
+
+export const formatBibliographyCitation = (entry) => {
+  const authorYear = [formatCitationContributors(entry), entry.year ? `(${entry.year})` : '']
+    .filter(Boolean)
+    .join(' ');
+  const title = [entry.title, entry.note].filter(Boolean).join(' — ');
+  let journalNumber = entry.issue || '';
+  if (entry.volume) {
+    journalNumber = entry.issue ? `${entry.volume}(${entry.issue})` : entry.volume;
+  } else if (/^\d+(?:\/\d+)?$/.test(journalNumber)) {
+    journalNumber = `第${journalNumber}号`;
+  }
+  const publication = entry.journal
+    ? [entry.journal, journalNumber, entry.pages ? `pp. ${entry.pages}` : ''].filter(Boolean).join(' ')
+    : [entry.publisher, entry.place, entry.pages].filter(Boolean).join('、');
+  const isbn = entry.isbn13 || entry.isbn10;
+
+  return [authorYear, title, publication, isbn ? `ISBN ${isbn}` : '']
+    .filter(Boolean)
+    .join('。');
+};
