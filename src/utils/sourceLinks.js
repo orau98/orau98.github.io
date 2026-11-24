@@ -1,4 +1,5 @@
 import { buildAmazonBookUrl } from './amazonAssociates.js';
+import { getBibliographyEntry } from './bibliography.js';
 
 // 文献名とリンクのマッピング（書籍はAmazonアソシエイト、非売品・論文等は一次情報）
 export const sourceLinks = {
@@ -70,6 +71,10 @@ const getLinkByReferenceKey = (key = "") => {
 // 出典から参考リンクを取得する関数
 export const getSourceLink = (source) => {
   if (!source) return null;
+  const bibliographyEntry = getBibliographyEntry(source);
+  if (bibliographyEntry?.url) return bibliographyEntry.url;
+  const journalLink = getLinkByReferenceKey(bibliographyEntry?.journal);
+  if (journalLink) return journalLink;
 
   const matchedKey = findKnownReferenceKey(String(source));
   if (matchedKey) {
@@ -114,11 +119,13 @@ export const normalizeReference = (source) => {
 
 export const getReferenceMeta = (source) => {
   const raw = typeof source === 'string' ? source.trim() : '';
-  const displayLabel = normalizeReference(raw);
+  const entry = getBibliographyEntry(raw);
+  const displayLabel = entry?.journal ? raw : normalizeReference(raw);
 
   return {
     displayLabel,
-    link: getSourceLink(displayLabel || raw),
+    link: getSourceLink(raw),
+    key: entry?.journal ? entry.key : displayLabel,
   };
 };
 
@@ -133,7 +140,7 @@ export const getReferenceMetaList = (sources) => {
     .filter(Boolean)
     .forEach((raw) => {
       const meta = getReferenceMeta(raw);
-      const key = meta.displayLabel || raw;
+      const key = meta.key || raw;
       if (!key) return;
 
       if (!seen.has(key)) {

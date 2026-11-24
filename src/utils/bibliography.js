@@ -1,7 +1,7 @@
+import { additionalBibliography } from './bibliographySupplement.js';
 import { buildAmazonBookUrl } from './amazonAssociates.js';
 
-// 書誌情報（主要出典）
-// 可能な範囲で安全に分かっている情報のみを記載。著者名・発行年など未確認項目は省略。
+// サイトに掲載した記録の書誌情報。
 export const bibliography = [
   {
     key: 'nihonsan-garui-hyojun-1',
@@ -404,6 +404,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-305-umetsu-2023',
     type: 'article',
+    references: ["梅津 (2023)"],
     title: '日本未記録のMompha raschkiella (Zeller, 1839)（アカバナキバガ科）について',
     authors: ['梅津一史'],
     year: '2023',
@@ -434,6 +435,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-305-hirano-2023',
     type: 'article',
+    references: ["平野 (2023)"],
     title: '長野県で採集したCaloptilia 2種とRobinia pseudoacacia ハリエンジュの葉に潜るChrysaster 2種の記録（ホソガ科）',
     authors: ['平野長男'],
     year: '2023',
@@ -444,6 +446,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-305-kohno-2023',
     type: 'article',
+    references: ["河野 (2023)"],
     title: 'Memorandum on an occurrence of Dendrolimus punctatus (Walker, 1855) (Lepidoptera, Lasiocampidae) larvae on Ishigaki-jima Island, the Ryukyus, Japan in February 2004',
     authors: ['河野勝行'],
     year: '2023',
@@ -454,6 +457,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-305-matsui-2023',
     type: 'article',
+    references: ["松井ら (2023)"],
     title: 'サザナミノメイガの幼生期と寄主植物',
     authors: ['松井悠樹', '冨永智', '中秀司'],
     year: '2023',
@@ -509,6 +513,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-21-2-kishida-2010',
+    references: ["Kishida, Y. (2010)"],
     type: 'article',
     title: 'Descriptions of new species and new subspecies of Japanese Macrolepidoptera (1)',
     authors: ['Kishida, Y.'],
@@ -520,6 +525,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-21-5-sato-2011',
+    references: ["Sato, Fu & Kawakami (2011)"],
     type: 'article',
     title: 'Description of a new species of the genus Scardamia Guenée (Geometridae, Ennominae) from Japan and Taiwan, with taxonomic notes on the related species',
     authors: ['Sato, R.', 'Fu, C.-M.', 'Kawakami, Y.'],
@@ -531,6 +537,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-22-1-nasu-2012',
+    references: ["Nasu (2012)"],
     type: 'article',
     title: 'New olethreutine moths from Japan (Lepidoptera, Tortricidae, Olethreutinae)',
     authors: ['Nasu, Y.'],
@@ -542,6 +549,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-22-3-gielis-2013',
+    references: ["Gielis & Mano (2013)"],
     type: 'article',
     title: 'Additions to the Pterophoridae fauna of Japan (Lepidoptera)',
     authors: ['Gielis, C.', 'Mano, T.'],
@@ -553,6 +561,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-23-1-kishida-2014',
+    references: ["Kishida, Kudo & Kudo (2014)"],
     type: 'article',
     title: 'A new species of Nokona Matsumura from Japan (Lepidoptera, Sesiidae)',
     authors: ['Kishida, Y.', 'Kudo, T.', 'Kudo, S.'],
@@ -564,6 +573,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-23-1-hirano-2014',
+    references: ["Hirano (2014)"],
     type: 'article',
     title: 'Six new and an unrecorded species of Stigmella Schrank, 1802 from Japan (Lepidoptera, Nepticulidae)',
     authors: ['Hirano, N.'],
@@ -575,6 +585,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-23-4-arita-2016',
+    references: ["Arita & Yata (2016)"],
     type: 'article',
     title: 'Vicariance in the Macroscelesia japona species-group (Lepidoptera, Sesiidae) in the Ryukyus, Japan',
     authors: ['Arita, Y.', 'Kimura, M.', 'Yata, N.', 'Nagase, M.'],
@@ -597,6 +608,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-23-4-yamanaka-2016',
+    references: ["Yamanaka (2016)"],
     type: 'article',
     title: 'Descriptions of two new species of the subfamily Phycitinae (Pyralidae) from Japan',
     authors: ['Yamanaka, H.'],
@@ -608,6 +620,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-25-1-hashimoto-2019',
+    references: ["Hashimoto (2019)"],
     type: 'article',
     title: 'New and newly recorded species of the genus Sauris Guenée (Geometridae: Larentiinae) from Japan, with a taxonomic review of S. hirudinata Guenée',
     authors: ['Hashimoto, S.'],
@@ -619,6 +632,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-26-1-nasu-2021',
+    references: ["Nasu (2021)"],
     type: 'article',
     title: 'Japanese Polyorthini (Tortricidae, Chlidanotinae), with descriptions of four new species and on two newly recorded species from Japan',
     authors: ['Nasu, Y.'],
@@ -643,6 +657,7 @@ export const bibliography = [
   {
     key: 'japanese-journal-entomology-61-2-teramoto-1993',
     type: 'article',
+    references: ["寺本憲之 (1993)", "寺本憲之 (1994)"],
     title: 'Immature Stages of a Stictopterine Moth, Lophoptera hayesi (Lepidoptera, Noctuidae)',
     authors: ['Teramoto, N.'],
     year: '1993',
@@ -654,6 +669,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-103-yamamoto-1979',
+    references: ["山本光人 (1979)"],
     type: 'article',
     title: 'ミヤマオビキリガの幼虫',
     authors: ['山本光人'],
@@ -664,6 +680,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-103-sugi-1979',
+    references: ["宮田保 (1979)", "杉繁郎 (1979)"],
     type: 'article',
     title: 'リュウキュウキノカワガの幼期について',
     authors: ['宮田保'],
@@ -674,6 +691,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-108-iijima-1980',
+    references: ["飯島一雄 (1980)"],
     type: 'article',
     title: '本邦から再発見されたナワメナミシャク',
     authors: ['飯島一雄'],
@@ -684,6 +702,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-111-shimbo-1981',
+    references: ["神保一義・柳田慶浩 (1981)"],
     type: 'article',
     title: '木曾御岳の高山蛾（2）ならびに高山植物を食餌とする蛾の幼虫について（3）',
     authors: ['神保一義', '柳田慶浩'],
@@ -694,6 +713,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-114-sugi-1982a',
+    references: ["杉繁郎 (1982)"],
     type: 'article',
     title: '沖縄本島のMasca abactalis Walkerウラモンシロクチバ（新称）',
     authors: ['杉繁郎'],
@@ -704,6 +724,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-114-togashi-1982',
+    references: ["富樫一次 (1982)"],
     type: 'article',
     title: '石川県産蛾類の食草 1',
     authors: ['富樫一次'],
@@ -714,6 +735,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-114-ogi-1982',
+    references: ["小木広行 (1982)"],
     type: 'article',
     title: 'オビウスイロヨトウの幼虫',
     authors: ['小木広行'],
@@ -724,6 +746,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-116-shimbo-1982',
+    references: ["神保一義・柳田慶浩 (1982)"],
     type: 'article',
     title: '乗鞍岳高山帯の蛾 ならびに高山植物を食餌とする蛾の幼虫 (4)',
     authors: ['神保一義', '柳田慶浩'],
@@ -734,6 +757,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-118-ohwada-1982b',
+    references: ["大和田守 (1982)"],
     type: 'article',
     title: 'オオキイロアツバの予想外の食草',
     authors: ['大和田守'],
@@ -744,6 +768,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-119-yamamoto-1982',
+    references: ["山本光人 (1982)"],
     type: 'article',
     title: 'フタテンアツバの幼虫と食草',
     authors: ['山本光人'],
@@ -764,6 +789,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-121-togashi-1983',
+    references: ["富樫一次 (1983)"],
     type: 'article',
     title: '石川県産蛾類の食草 2',
     authors: ['富樫一次'],
@@ -784,6 +810,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-122-ohwada-yamamoto-1983',
+    references: ["大和田守,山本光人 (1983)"],
     type: 'article',
     title: '"岩場の蛾"に関する新知見',
     authors: ['大和田守', '山本光人'],
@@ -794,6 +821,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-123-kita-1983',
+    references: ["喜多斉 (1983)"],
     type: 'article',
     title: 'イブキシモツケよりナマリキシタバ幼虫を採る',
     authors: ['喜多斉'],
@@ -804,6 +832,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-124-watanabe-1984',
+    references: ["渡辺一雄 (1984)"],
     type: 'article',
     title: '浜松市の中心部にツキワクチバ多数飛来',
     authors: ['渡辺一雄'],
@@ -814,6 +843,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-126-ogi-1984',
+    references: ["小木広行 (1984)"],
     type: 'article',
     title: 'シラクモアツバの食草と幼虫',
     authors: ['小木広行'],
@@ -824,6 +854,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-126-gyotoku-1984',
+    references: ["行徳直巳 (1984)"],
     type: 'article',
     title: 'クロモンシタバ幼虫の食樹と採集資料',
     authors: ['行徳直巳'],
@@ -854,6 +885,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-128-nakamura-1984',
+    references: ["中村正直 (1984) 蛾類通信128:34"],
     type: 'article',
     title: 'ケンモンキリガの食樹追加',
     authors: ['中村正直'],
@@ -864,6 +896,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-129-ito-1984',
+    references: ["伊藤国彦 (1984)"],
     type: 'article',
     title: 'アベマキを食するフシキキシタバ幼虫の発見',
     authors: ['伊藤国彦'],
@@ -874,6 +907,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-129-togashi-1984',
+    references: ["富樫一次 (1984) 蛾類通信129:59-62"],
     type: 'article',
     title: 'ブナを食害する蛾類',
     authors: ['富樫一次'],
@@ -884,6 +918,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-130-fujisawa-1985a',
+    references: ["藤沢勝利 (1985)"],
     type: 'article',
     title: '松村松年博士の記載したマルハキバガ科Depressaria属2種について',
     authors: ['藤沢勝利'],
@@ -914,6 +949,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-131-sugi-1985',
+    references: ["杉繁郎 (1985)"],
     type: 'article',
     title: '日本産ヤガ科の3新種の記載',
     authors: ['杉繁郎'],
@@ -934,6 +970,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-132-togashi-1985',
+    references: ["富樫一次 (1985)"],
     type: 'article',
     title: '石川県産蛾類の食草4',
     authors: ['富樫一次'],
@@ -944,6 +981,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-133-yasuda-watanabe-1985',
+    references: ["保田信紀,渡辺康之 (1985)"],
     type: 'article',
     title: '北海道大雪山系ニセイカウシュッペ山の蛾類',
     authors: ['保田信紀', '渡辺康之'],
@@ -1004,6 +1042,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-137-togashi-1986',
+    references: ["富樫一次 (1986)", "富樫一次 (1986) 蛾類通信137:183-185"],
     type: 'article',
     title: '石川県産蛾類の食草 5',
     authors: ['富樫一次'],
@@ -1024,6 +1063,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-139-kudo-1986',
+    references: ["工藤広悦 (1986)"],
     type: 'article',
     title: 'スゲドクガの幼生期について',
     authors: ['工藤広悦'],
@@ -1034,6 +1074,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-139-nishio-1986',
+    references: ["西尾規孝 (1986)"],
     type: 'article',
     title: 'オレクギリンガの営巣',
     authors: ['西尾規孝'],
@@ -1044,6 +1085,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-139-nozaki-miyata-1986',
+    references: ["野崎敦士, 宮田彬 (1986)"],
     type: 'article',
     title: 'コエビガラスズメの幼虫アベリアを食す',
     authors: ['野崎敦士', '宮田彬'],
@@ -1054,6 +1096,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-140-nozaki-1987',
+    references: ["野崎敦士 (1987)"],
     type: 'article',
     title: 'ナカシロテンアツバの幼虫，食草と未記載の雌',
     authors: ['野崎敦士'],
@@ -1084,6 +1127,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-142-nakamura-1987',
+    references: ["中村正直 (1987)", "中村正直, 山本光人 (1987)"],
     type: 'article',
     title: 'フジシロミャクヨトウの幼虫と蛹（富士山亜高山帯砂礫地帯の蛾I）',
     authors: ['中村正直'],
@@ -1104,6 +1148,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-149-nakamura-yamamoto-1988',
+    references: ["中村正直, 山本光人 (1988)"],
     type: 'article',
     title: 'ウスクビグロクチバの幼生期の記載（富士山亜高山帯砂礫地帯の蛾III）',
     authors: ['中村正直', '山本光人'],
@@ -1114,6 +1159,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-149-togashi-1988',
+    references: ["富樫一次 (1988)"],
     type: 'article',
     title: '石川県産蛾類の食草6',
     authors: ['富樫一次'],
@@ -1125,6 +1171,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-150-ogi-1988',
     type: 'article',
+    references: ["小木 (1988)"],
     title: 'シベチャキリガの食草とその幼生期',
     authors: ['小木広行'],
     year: '1988',
@@ -1135,6 +1182,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-152-funakoshi-1989',
     type: 'article',
+    references: ["船越 (1989)"],
     title: 'ニセシロマダラコヤガ（新称）の幼虫と蛹',
     authors: ['船越進太郎'],
     year: '1989',
@@ -1154,6 +1202,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-154-ogi-1989',
+    references: ["小木広行 (1989)"],
     type: 'article',
     title: 'クモガタキリガの食草と幼虫',
     authors: ['小木広行'],
@@ -1174,6 +1223,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-156-iwasaki-1989',
+    references: ["岩崎史郎 (1989)"],
     type: 'article',
     title: 'キタミスジアツバの幼虫飼育の1例',
     authors: ['岩崎史郎'],
@@ -1184,6 +1234,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-156-nakamura-sugi-1989',
+    references: ["杉繁郎 (1989)", "中村正直, 杉繁郎 (1989)"],
     type: 'article',
     title: 'プライヤアオシャチホコの新食草',
     authors: ['中村正直', '杉繁郎'],
@@ -1204,6 +1255,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-158-ogi-1990',
+    references: ["小木広行 (1990)"],
     type: 'article',
     title: 'ツメクサキシタバの食草と幼虫',
     authors: ['小木広行'],
@@ -1214,6 +1266,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-158-watanabe-1990',
+    references: ["渡辺一雄 (1990)"],
     type: 'article',
     title: 'ヒメカンアオイについていたワイギンモンウワバとビロードハマキの幼虫',
     authors: ['渡辺一雄'],
@@ -1224,6 +1277,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-159-nakamura-funakoshi-1990',
+    references: ["中村正直 (1990)", "中村正直,船越進太郎 (1990)"],
     type: 'article',
     title: '夏のニセタマナヤガ',
     authors: ['中村正直', '船越進太郎'],
@@ -1234,6 +1288,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-161-sugi-1991',
+    references: ["杉繁郎 (1991) 蛾類通信161:180-181"],
     type: 'article',
     title: '石垣島のババアシブトクチバの記録',
     authors: ['杉繁郎'],
@@ -1364,6 +1419,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-175-sugi-yamamoto-1993',
+    references: ["杉繁郎・山本光人 (1993)"],
     type: 'article',
     title: '針葉につくフタスジョトウ',
     authors: ['杉繁郎', '山本光人'],
@@ -1423,17 +1479,8 @@ export const bibliography = [
     pages: '40'
   },
   {
-    key: 'ga-tsushin-179-nakamura-1994',
-    type: 'article',
-    title: '朝霧高原でヨモギから獲られた3種のヤガ科幼虫',
-    authors: ['中村正直'],
-    year: '1994',
-    journal: '蛾類通信',
-    issue: '179',
-    pages: '50-55'
-  },
-  {
     key: 'ga-tsushin-179-nakamura-kudo-1994',
+    references: ["中村正直・工藤広悦 (1994)"],
     type: 'article',
     title: '朝霧高原でヨモギから獲られた3種のヤガ科幼虫',
     authors: ['中村正直', '工藤広悦'],
@@ -1454,6 +1501,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-179-murase-1994',
+    references: ["村瀬ますみ (1994)"],
     type: 'article',
     title: 'キスジツマキリヨトウの終齢幼虫',
     authors: ['村瀬ますみ'],
@@ -1464,6 +1512,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-181-yano-1994',
+    references: ["矢野高広 (1994)"],
     type: 'article',
     title: 'フトオビホソバスズメの幼虫',
     authors: ['矢野高広'],
@@ -1474,6 +1523,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-190-shimbo-1996',
+    references: ["神保一義・中谷正彦・小木広行 (1996)"],
     type: 'article',
     title: '北海道低地のホクトギンウワバの記録',
     authors: ['神保一義', '中谷正彦', '小木広行'],
@@ -1484,6 +1534,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-191-nakamura-kudo-1996',
+    references: ["中村正直 (1996)", "中村正直, 工藤広悦, 内孝之助 (1996)"],
     type: 'article',
     title: 'ホソバスズメ幼虫の確認',
     authors: ['中村正直', '工藤広悦', '内孝之助'],
@@ -1494,6 +1545,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-191-togashi-1996',
+    references: ["富樫一次 (1996)"],
     type: 'article',
     title: '石川県産蛾類の食草9',
     authors: ['富樫一次'],
@@ -1504,6 +1556,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-192-mitamura-1997',
+    references: ["三田村敏正 (1997)"],
     type: 'article',
     title: 'ヤママユのイヌブナへの産卵例',
     authors: ['三田村敏正'],
@@ -1524,6 +1577,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-193-ogi-1997',
+    references: ["小木広行 (1997)"],
     type: 'article',
     title: 'Hadena属（ヤガ科）3種の幼虫と食草',
     authors: ['小木広行'],
@@ -1545,6 +1599,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-195-matsuura-1997',
     type: 'article',
+    references: ["松浦, 上田 (1997)"],
     title: 'ウスアオリンガの食草',
     authors: ['松浦友紀子'],
     year: '1997',
@@ -1574,6 +1629,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-197-sasaki-1998',
+    references: ["佐々木明夫 (1998)"],
     type: 'article',
     title: '日本産 Kitanola マダライラガ属の再検討と2新種の記載',
     authors: ['佐々木明夫'],
@@ -1593,18 +1649,9 @@ export const bibliography = [
     pages: '377-378'
   },
   {
-    key: 'ga-tsushin-198-tanahara-e-1998a',
-    type: 'article',
-    title: '沖縄本島におけるリュウキュウオオスカシバの幼虫と食草について',
-    authors: ['棚原恵'],
-    year: '1998',
-    journal: '蛾類通信',
-    issue: '198',
-    pages: '377-378'
-  },
-  {
     key: 'ga-tsushin-125-matsui-1984',
     type: 'article',
+    references: ["松井英子 (1984)"],
     title: 'ハガタクチバ老熟幼虫をシラカシから採集',
     authors: ['松井英子'],
     year: '1984',
@@ -1615,6 +1662,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-187-ohbayashi-takeuchi-1996',
     type: 'article',
+    references: ["大林隆司・竹内浩二 (1996)"],
     title: 'ナカグロクチバの幼虫と食草について',
     authors: ['大林隆司', '竹内浩二'],
     year: '1996',
@@ -1625,6 +1673,7 @@ export const bibliography = [
   {
     key: 'ga-tsushin-198-tominaga-1998',
     type: 'article',
+    references: ["富永智 (1998) 蛾類通信198号"],
     title: 'イチモンジホウジャクの食草について',
     authors: ['富永智'],
     year: '1998',
@@ -1637,16 +1686,6 @@ export const bibliography = [
     type: 'article',
     title: '沖縄本島におけるシタベニセスジスズメの幼虫と食草について',
     authors: ['棚原功'],
-    year: '1998',
-    journal: '蛾類通信',
-    issue: '199',
-    pages: '408-409'
-  },
-  {
-    key: 'ga-tsushin-199-tanahara-e-1998',
-    type: 'article',
-    title: '沖縄本島におけるシタベニセスジスズメの幼虫と食草について',
-    authors: ['棚原恵'],
     year: '1998',
     journal: '蛾類通信',
     issue: '199',
@@ -1674,6 +1713,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-201-tominaga-sugi-1998',
+    references: ["杉繁郎 (1998)", "富永智, 杉繁郎 (1998)"],
     type: 'article',
     title: 'ヘリグロキイロノメイガの食草はクサトベラ',
     authors: ['富永智', '杉繁郎'],
@@ -1774,6 +1814,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-204-koshino-1999',
+    references: ["越野誠一郎 (1999)"],
     type: 'article',
     title: 'シラキハマキホソガ（新称）の季節型について',
     authors: ['越野誠一郎'],
@@ -1794,6 +1835,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-205-takeuchi-1999',
+    references: ["竹内浩二・大林隆司 (1999)"],
     type: 'article',
     title: 'オガサワラチズモンアオシャクの幼虫と食草について',
     authors: ['竹内浩二', '大林隆司'],
@@ -1824,6 +1866,7 @@ export const bibliography = [
   },
   {
     key: 'ga-tsushin-206-miyata-1999',
+    references: ["宮田彬 (1999)"],
     type: 'article',
     title: 'アカヒトリの生活史',
     authors: ['宮田彬'],
@@ -1835,16 +1878,6 @@ export const bibliography = [
 ,
   {
     key: 'sayabane-1-高桑正敏-2011',
-    type: 'article',
-    title: '御蔵島におけるシラホシカミキリ属2種の後食植物',
-    authors: ['高桑正敏', '岸本年郎', '岸田泰則', '須田真一'],
-    year: '2011',
-    journal: 'さやばね ニューシリーズ',
-    issue: '1',
-    pages: '18-21'
-  },
-  {
-    key: 'sayabane-1-高桑正敏-2011-p18',
     type: 'article',
     title: '御蔵島におけるシラホシカミキリ属2種の後食植物',
     authors: ['高桑正敏', '岸本年郎', '岸田泰則', '須田真一'],
@@ -1884,16 +1917,6 @@ export const bibliography = [
     pages: '1-7'
   },
   {
-    key: 'sayabane-3-吉武啓-2011-p1',
-    type: 'article',
-    title: '特定外来生物オオフサモを食害する日本産クチブトサルゾウムシ族2種に関する覚書',
-    authors: ['吉武啓'],
-    year: '2011',
-    journal: 'さやばね ニューシリーズ',
-    issue: '3',
-    pages: '1-7'
-  },
-  {
     key: 'sayabane-5-今坂正一-2012',
     type: 'article',
     title: 'サツマイモヒサゴトビハムシのエンサイへの加害，および国内における分布と単為生殖個体群の存在について',
@@ -1914,16 +1937,6 @@ export const bibliography = [
     pages: '22-27'
   },
   {
-    key: 'sayabane-5-日下部良康-2012-p22',
-    type: 'article',
-    title: 'シカの採食に伴う林床植生の単純化がハムシ科甲虫数種の食性に及ぼす影響',
-    authors: ['日下部良康'],
-    year: '2012',
-    journal: 'さやばね ニューシリーズ',
-    issue: '5',
-    pages: '22-27'
-  },
-  {
     key: 'sayabane-5-高桑正敏-2012',
     type: 'article',
     title: '御蔵島および三宅島におけるシラホシカミキリ属の後食植物の追加知見（短報）',
@@ -1934,17 +1947,8 @@ export const bibliography = [
     pages: '53-54'
   },
   {
-    key: 'sayabane-5-高桑正敏-2012-p53',
-    type: 'article',
-    title: '御蔵島および三宅島におけるシラホシカミキリ属の後食植物の追加知見（短報）',
-    authors: ['高桑正敏'],
-    year: '2012',
-    journal: 'さやばね ニューシリーズ',
-    issue: '5',
-    pages: '53-54'
-  },
-  {
     key: 'sayabane-6-日下部良康-2012',
+    references: ["さやばね ニューシリーズ (さやばね ニューシリーズ No.6)"],
     type: 'article',
     title: '神奈川県におけるルリカミキリによるセイヨウベニカナメモチへの加害例（短報）',
     authors: ['日下部良康'],
@@ -1955,6 +1959,7 @@ export const bibliography = [
   },
   {
     key: 'sayabane-8-森正人-2012',
+    references: ["さやばね ニューシリーズ (さやばね ニューシリーズ No.8)"],
     type: 'article',
     title: 'アオナガタマムシの寄主植物について（短報）',
     authors: ['森正人'],
@@ -1965,16 +1970,6 @@ export const bibliography = [
   },
   {
     key: 'sayabane-10-末長晴輝-2013',
-    type: 'article',
-    title: '北海道におけるアシナガトビハムシ属Longitarsus4種の分布記録と生態に関する知見',
-    authors: ['末長晴輝', '堀繁久'],
-    year: '2013',
-    journal: 'さやばね ニューシリーズ',
-    issue: '10',
-    pages: '20-22'
-  },
-  {
-    key: 'sayabane-10-末長晴輝-2013-p20',
     type: 'article',
     title: '北海道におけるアシナガトビハムシ属Longitarsus4種の分布記録と生態に関する知見',
     authors: ['末長晴輝', '堀繁久'],
@@ -2055,6 +2050,7 @@ export const bibliography = [
   },
   {
     key: 'sayabane-23-naotada-2016',
+    references: ["さやばね ニューシリーズ (23)"],
     type: 'article',
     title: 'Life cycle of an endangered beetle, Agapanthia (Epotes) japonica Kano, especially on the relation of open burning of grassland and pupation (Coleoptera, Cerambycidae, Lamiinae)',
     authors: ['Naotada Kako, Michihiro Ogawa, Hiroshi Wakimoto, Takeshi Kishimoto, Takashi Nishimoto'],
@@ -2075,6 +2071,7 @@ export const bibliography = [
   },
   {
     key: 'sayabane-25-haruki-2017',
+    references: ["さやばね ニューシリーズ (25)"],
     type: 'article',
     title: 'Epitrix hirtipennis (Melsheimer) Collected from Salpichroa origanifolia in Tokyo, Japan',
     authors: ['Haruki Suenaga and Masayuki Minami'],
@@ -2085,6 +2082,7 @@ export const bibliography = [
   },
   {
     key: 'sayabane-28-kunio-2017',
+    references: ["さやばね ニューシリーズ (28)"],
     type: 'article',
     title: 'Chrysochus chinensis Baly, 1859 (Chrysomelidae, Eumolpinae) in Toyama Prefecture, Chubu District, Japan, with Some Notes on Its Host Plants',
     authors: ['Kunio Suzuki, Taku Iwata, Masayuki Minami'],
@@ -2095,16 +2093,6 @@ export const bibliography = [
   },
   {
     key: 'sayabane-30-kunio-2017',
-    type: 'article',
-    title: 'Geographical Distribution and Host Plants of Cryptocephalus perelegans Baly, 1873 and C. ohnoi Kimoto, 1983 (Chrysomelidae, Cryptocephalinae) in Japan',
-    authors: ['Kunio Suzuki, Masayuki Minami'],
-    year: '2017',
-    journal: 'さやばね ニューシリーズ',
-    issue: '30',
-    pages: '10-21'
-  },
-  {
-    key: 'sayabane-30-kunio-2017-p10',
     type: 'article',
     title: 'Geographical Distribution and Host Plants of Cryptocephalus perelegans Baly, 1873 and C. ohnoi Kimoto, 1983 (Chrysomelidae, Cryptocephalinae) in Japan',
     authors: ['Kunio Suzuki, Masayuki Minami'],
@@ -2135,6 +2123,7 @@ export const bibliography = [
   },
   {
     key: 'sayabane-32-kunio-2018',
+    references: ["さやばね ニューシリーズ (32)"],
     type: 'article',
     title: 'Discovery of the Second Habitat of Chrysolina (Euchrysolina) virgata (Motschulsky, 1860) from Toyama Prefecture',
     authors: ['Kunio Suzuki'],
@@ -2142,5 +2131,29 @@ export const bibliography = [
     journal: 'さやばね ニューシリーズ',
     issue: '32',
     pages: '20'
-  }
+  },
+  ...additionalBibliography,
 ];
+
+export const normalizeCitationMatchKey = (value = '') => String(value || '')
+  .normalize('NFKC')
+  .replace(/[「」『』]/g, '')
+  .replace(/[‐‑‒–—−]/g, '-')
+  .replace(/\s+/g, '')
+  .toLowerCase();
+
+const bibliographyByReference = new Map();
+for (const entry of bibliography) {
+  for (const reference of [entry.title, ...(entry.references || [])]) {
+    const key = normalizeCitationMatchKey(reference);
+    if (!key) continue;
+    if (bibliographyByReference.has(key) && bibliographyByReference.get(key) !== entry) {
+      bibliographyByReference.set(key, null);
+    } else {
+      bibliographyByReference.set(key, entry);
+    }
+  }
+}
+
+export const getBibliographyEntry = (reference) =>
+  bibliographyByReference.get(normalizeCitationMatchKey(reference)) || null;

@@ -28,7 +28,7 @@ import {
   createSafeScientificPlantFilename,
   PLANT_IMAGE_SUFFIXES,
 } from '../src/utils/filename.js';
-import { bibliography } from '../src/utils/bibliography.js';
+import { bibliography, getBibliographyEntry, normalizeCitationMatchKey } from '../src/utils/bibliography.js';
 import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
 import {
   isAmazonAssociateUrl,
@@ -240,13 +240,6 @@ const isInternalSourceLabel = (value = '') => {
   return !source || /\.csv\b|hostplants|insects|normalized_data|public\//i.test(source);
 };
 
-const normalizeCitationMatchKey = (value = '') => String(value || '')
-  .normalize('NFKC')
-  .replace(/[「」『』]/g, '')
-  .replace(/[‐‑‒–—−]/g, '-')
-  .replace(/\s+/g, '')
-  .toLowerCase();
-
 function splitReferenceTokens(value = '') {
   return String(value || '')
     .split(/[;；]|(?:\s+[\/／]\s+)/)
@@ -269,6 +262,8 @@ function formatCitationContributors(entry = {}) {
 function findBibliographyEntry(rawReference = '') {
   const raw = String(rawReference || '').trim();
   if (!raw) return null;
+  const exact = getBibliographyEntry(raw);
+  if (exact) return exact;
   const candidates = [
     raw,
     normalizeReference(raw),
@@ -304,8 +299,11 @@ function formatCitationPlain(entry, rawReference = '') {
     .filter(Boolean)
     .join(' ');
   const title = [entry.title, entry.note].filter(Boolean).join(' — ');
+  const journalNumber = entry.volume
+    ? `${entry.volume}${entry.issue ? `(${entry.issue})` : ''}`
+    : entry.issue ? `第${entry.issue}号` : '';
   const publication = entry.journal
-    ? [entry.journal, entry.issue ? `第${entry.issue}号` : '', entry.pages ? `pp. ${entry.pages}` : '']
+    ? [entry.journal, journalNumber, entry.pages ? `pp. ${entry.pages}` : '']
       .filter(Boolean)
       .join(' ')
     : [entry.publisher, entry.place, entry.pages].filter(Boolean).join('、');

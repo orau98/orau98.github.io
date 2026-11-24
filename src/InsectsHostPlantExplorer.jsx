@@ -8,7 +8,7 @@ import StickyHeader from "./components/StickyHeader";
 import { ExplorerStructuredData } from "./components/StructuredData";
 import logger from "./utils/logger";
 import { bibliography as rawBibliography } from "./utils/bibliography";
-import { getSourceLink, normalizeReference } from "./utils/sourceLinks";
+import { getSourceLink } from "./utils/sourceLinks";
 import {
   isAmazonAssociateUrl,
 } from "./utils/amazonAssociates";
@@ -584,9 +584,9 @@ const InsectsHostPlantExplorer = memo(
         contactBodyAfterLink: isEnglish ? "." : "までお寄せください。",
         formLinkLabel: isEnglish ? "this Google Form" : "こちらのGoogleフォーム",
         referencesTitle: isEnglish ? "Bibliography" : "出典一覧",
-        bibliographyToggle: (open) => (isEnglish ? (open ? "Hide bibliography" : "Show selected bibliography") : "主要引用文献リストを表示"),
-        otherTitle: isEnglish ? "Other" : "その他",
-        otherItem: isEnglish ? "Additional academic papers and references" : "各種学術論文等",
+        bibliographyToggle: (open) => (isEnglish
+          ? (open ? "Hide bibliography" : "Show bibliography")
+          : (open ? "引用文献一覧を閉じる" : "引用文献一覧を表示")),
         instagramTagline: isEnglish ? "Field notes and wildlife observation posts" : "野生生物の観察記録を投稿しています",
         instagramToggle: (open) => (isEnglish ? (open ? "Close Instagram" : "Open Instagram") : (open ? "Instagramを閉じる" : "Instagramを開く")),
         instagramUnavailable: isEnglish ? "Instagram posts are unavailable right now" : "Instagramの投稿を表示できません",
@@ -2185,26 +2185,15 @@ const InsectsHostPlantExplorer = memo(
                                   names && names.length > 0 ? names[0] : "",
                                 );
                               };
-                              const bibliography = Array.from(
-                                rawBibliography.reduce((map, entry) => {
-                                  const title = (entry?.title || "").trim();
-                                  const canonicalTitle = normalizeReference(title) || title;
-                                  if (!canonicalTitle) return map;
-                                  if (!map.has(canonicalTitle)) {
-                                    map.set(canonicalTitle, entry);
-                                  }
-                                  return map;
-                                }, new Map()).values(),
-                              ).sort((a, b) =>
+                              const bibliography = [...rawBibliography].sort((a, b) =>
                                 authorKey(a).localeCompare(
                                   authorKey(b),
-                                  "en",
+                                    isEnglish ? "en" : "ja",
                                   { sensitivity: "base" },
                                 ),
                               );
                               return bibliography.map((b) => {
-                                const href =
-                                  b.url || getSourceLink(normalizeReference(b.title)) || undefined;
+                                const href = b.url || getSourceLink(b.title) || getSourceLink(b.journal) || undefined;
                                 const authorStr =
                                   joinBibliographyNames(b.authors) ||
                                   (b.editors
@@ -2269,7 +2258,7 @@ const InsectsHostPlantExplorer = memo(
                                             <span>
                                               {volStr
                                                 ? `(${issueStr})`
-                                                : `(${issueStr})`}
+                                                : issueStr}
                                             </span>
                                           )}
                                           {pagesStr && (
@@ -2310,6 +2299,7 @@ const InsectsHostPlantExplorer = memo(
                                             <span>{", "}</span>
                                           )}
                                           {yearStr && <span>{yearStr}</span>}
+                                          {pagesStr && <span>{`, ${pagesStr}`}</span>}
                                           {(publisherStr || yearStr) && "."}
                                         </>
                                       )}
@@ -2319,19 +2309,6 @@ const InsectsHostPlantExplorer = memo(
                               });
                             })()}
                           </ul>
-                          <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-700/50">
-                            <p className="font-medium text-xs mb-2 text-slate-500 dark:text-slate-400">
-                              {infoUi.otherTitle}
-                            </p>
-                            <ul className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
-                              <li className="flex items-start">
-                                <span className="text-slate-400 mr-2">
-                                  •
-                                </span>
-                                <span>{infoUi.otherItem}</span>
-                              </li>
-                            </ul>
-                          </div>
                         </div>
                       )}
                     </div>
