@@ -42,7 +42,8 @@ import RelatedInsectsSection from './components/RelatedInsectsSection';
 import NativeShareButton from './components/NativeShareButton';
 import DetailNavigation from './components/DetailNavigation';
 import ManualAdSlot from './components/ManualAdSlot';
-import { extractEmergenceTime, normalizeEmergenceTime } from './utils/emergenceTimeUtils';
+import { extractEmergenceTime } from './utils/emergenceTimeUtils';
+import { buildInsectDetailNotes } from './utils/insectDetailNotes.js';
 import { getBackTarget, makeDetailLinkState } from './utils/navState';
 import { isPlantHostRecord } from './utils/hostResource';
 import { orderTaxonomyRanks, sortInsectsTaxonomically } from './utils/taxonomicOrder';
@@ -630,17 +631,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return Array.from(combined).join('、');
   }, [moth?.alternativeNames, moth?.name, nameAliasInfo?.aliases, displayName]);
 
-  // General-notes emergence-time detector (type is not fixed)
-  const isEmergenceNote = (note) => {
-    const t = (note?.type || '').trim();
-    const c = (note?.content || '').trim();
-    if (!c) return false;
-    const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
-      .some(k => t.includes(k));
-    const contentHit = /\d+\s*月|成虫|発生/.test(c);
-    return typeHit || (!t && contentHit);
-  };
-
   const cleanPlantName = (plant = '') => {
     if (!plant) return '';
     return String(plant).replace(/[（(][^）)]*科[^）)]*[）)]/g, '').trim();
@@ -803,8 +793,6 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     feedingHabitLabel: isEnglish ? 'Feeding habit:' : '食性:',
     detailsLabel: isEnglish ? 'Details:' : '詳細情報:',
     adultSeasonLabel: isEnglish ? 'Adult season' : '発生時期',
-    extractedFromNotes: isEnglish ? 'Extracted from notes' : '備考欄から抽出',
-    extractedFromGeneralNotes: isEnglish ? 'Extracted from general_notes.csv' : 'general_notes.csvから抽出',
     literatureHostPlantLabel: isEnglish ? 'Host-plant record from literature:' : '食草情報（文献記録）:',
   };
   const translateFeedingHabit = (value = '') => {
@@ -815,25 +803,10 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       狭食性: 'Oligophagous',
     })[value] || value;
   };
-  const ecologyNotes = React.useMemo(() => {
-    const notes = Array.isArray(moth?.generalNotes) ? moth.generalNotes : [];
-    const seen = new Set();
-    return notes
-      .filter((note) => {
-        const type = (note?.type || '').trim();
-        const content = (note?.content || '').trim();
-        return (type === '生態情報' || type === '生態') && content && content !== '不明';
-      })
-      .map((note) => ({
-        content: String(note.content || '').trim(),
-        reference: note.reference || '',
-      }))
-      .filter((note) => {
-        if (seen.has(note.content)) return false;
-        seen.add(note.content);
-        return true;
-      });
-  }, [moth?.generalNotes]);
+  const { showSeason, seasonTexts, seasonSources, ecologyNotes } = React.useMemo(
+    () => buildInsectDetailNotes(moth),
+    [moth]
+  );
   const shareXUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareLineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`;
   const [copyFeedback, setCopyFeedback] = useState('idle');
@@ -1966,37 +1939,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
         {/* 食草ネットワーク */}
         
 
-        {/* Emergence Period Section (Full Width) */}
-            {(moth.type === 'leafbeetle' || moth.type === 'moth' || moth.type === 'butterfly') && (() => {
-              const hasDetailedTime = moth.emergenceTimeDetailed && moth.emergenceTimeDetailed.length > 0;
-              const hasExistingTime = moth.emergenceTime && moth.emergenceTime !== '不明';
-              // チョウは発生時期がgeographicalRemarksに入る（HostPlantDetailのInsectCardと同じ扱い）
-              const emergenceSourceText = [
-                moth.notes,
-                moth.type === 'butterfly' ? moth.geographicalRemarks : '',
-              ].map((text) => String(text || '').trim()).filter(Boolean).join('\n');
-              const { emergenceTime } = extractEmergenceTime(emergenceSourceText);
-              const normalizedTime = normalizeEmergenceTime(emergenceTime);
-              const hasExtractedTime = normalizedTime && normalizedTime !== '不明';
-              const supplementalEmergenceTexts = Array.from(new Set([
-                emergenceSourceText,
-                ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : [])
-              ].map((text) => String(text || '').trim()).filter(Boolean)));
-              const hasSupplementalEmergenceHint = supplementalEmergenceTexts.some((text) =>
-                /(成虫|出現|羽化|発生|得られ|見られ|採れ|採集|越冬|越年|春の蛾|夏の蛾|秋の蛾|冬の蛾|周年|通年|年中|翌春|翌夏|翌秋|翌冬)/.test(text)
-              );
-              
-              // generalNotesから出現時期を抽出（共通関数で柔軟に判定）
-              const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(isEmergenceNote);
-              const hasGeneralNotesTime = emergenceFromGeneralNotes && emergenceFromGeneralNotes.content !== '不明';
-              // 出現時期タイプのノートが存在するか（内容が不明でもセクションを表示）
-              const hasEmergenceTypeNote = Array.isArray(moth.generalNotes) && moth.generalNotes.some(n => {
-                const t = (n?.type || '').trim();
-                return t.includes('出現時期') || t.includes('成虫発生時期') || t.includes('発生時期') || t.includes('出現');
-              });
-              
-              return hasDetailedTime || hasExistingTime || hasExtractedTime || hasGeneralNotesTime || hasEmergenceTypeNote || hasSupplementalEmergenceHint;
-            })() && (
+            {showSeason && (
               <div id="adult-season" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden scroll-mt-28">
                 <div className="p-4 bg-orange-500/10 dark:bg-orange-500/20 border-b border-orange-200/30 dark:border-orange-700/30">
                   <div className="flex items-center space-x-3">
@@ -2012,125 +1955,11 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 </div>
                 
                 <div className="p-4">
-                  {(() => {
-                    // まず備考欄から発生時期を抽出（チョウはgeographicalRemarksも対象）
-                    const emergenceSourceText = [
-                      moth.notes,
-                      moth.type === 'butterfly' ? moth.geographicalRemarks : '',
-                    ].map((text) => String(text || '').trim()).filter(Boolean).join('\n');
-                    const { emergenceTime: extractedTime } = extractEmergenceTime(emergenceSourceText);
-                    const normalizedTime = normalizeEmergenceTime(extractedTime);
-                    
-                    // 統合された発生時期データを作成
-                    let allEmergenceTimeData = [];
-                    
-                    // 詳細データがある場合はそれを追加
-                    if (moth.emergenceTimeDetailed && moth.emergenceTimeDetailed.length > 0) {
-                      allEmergenceTimeData = [...moth.emergenceTimeDetailed];
-                    }
-                    
-                    // 既存のemergenceTimeがある場合は追加
-                    if (moth.emergenceTime && moth.emergenceTime !== '不明') {
-                      allEmergenceTimeData.push({
-                        period: moth.emergenceTime,
-                        source: moth.emergenceTimeSource || '',
-                        region: '',
-                        notes: moth.emergenceTimeDescription || ''
-                      });
-                    }
-                    
-                    // 備考欄から抽出した発生時期がある場合は追加
-                    if (normalizedTime && normalizedTime !== '不明') {
-                      allEmergenceTimeData.push({
-                        period: normalizedTime,
-                        source: moth.source || '',
-                        region: '',
-                        notes: detailUi.extractedFromNotes
-                      });
-                    }
-                    
-                    // generalNotesから出現時期を追加（柔軟判定）
-                    const emergenceFromGeneralNotes = moth.generalNotes && moth.generalNotes.find(isEmergenceNote);
-                    if (emergenceFromGeneralNotes && emergenceFromGeneralNotes.content !== '不明') {
-                      allEmergenceTimeData.push({
-                        period: emergenceFromGeneralNotes.content,
-                        source: emergenceFromGeneralNotes.reference || '',
-                        region: '',
-                        notes: detailUi.extractedFromGeneralNotes
-                      });
-                    }
-                    
-                    // 最適な発生時期データを選択（年越しや範囲の広い表現を優先）
-                    const scorePeriod = (s = '') => {
-                      if (!s) return 0;
-                      let score = 0;
-                      if (/翌年/.test(s)) score += 100; // 年越しを最優先
-                      if (/[~〜～\-]|から|まで/.test(s)) score += 10; // 範囲表現
-                      const months = (s.match(/(\d{1,2})月/g) || []).map(m => parseInt(m));
-                      const uniq = Array.from(new Set(months));
-                      score += uniq.length; // 含まれる月数を加点
-                      return score;
-                    };
-
-                    let best = null;
-                    let bestScore = -1;
-                    allEmergenceTimeData.forEach(item => {
-                      const sc = scorePeriod(item.period || '');
-                      if (sc > bestScore) {
-                        bestScore = sc;
-                        best = item;
-                      }
-                    });
-
-                    const primaryEmergenceTime = best ? best.period : '不明';
-                    // 出典は選択アイテムのsource。空なら他の候補から最初の非空を補う
-                    let primarySource = (best && best.source) ? best.source : '';
-                    if (!primarySource) {
-                      const withSource = allEmergenceTimeData.find(i => i.source && i.source.trim());
-                      if (withSource) primarySource = withSource.source;
-                    }
-                    if (!primarySource) {
-                      const noteWithSource = Array.isArray(moth.generalNotes)
-                        ? moth.generalNotes.find((note) => note?.reference && String(note.reference).trim())
-                        : null;
-                      if (noteWithSource) primarySource = noteWithSource.reference;
-                    }
-                    if (!primarySource) {
-                      primarySource = moth.source || '';
-                    }
-
-                    const emergenceOriginalTextCandidates = Array.from(new Set([
-                      best?.notes || '',
-                      moth.emergenceTimeDescription || '',
-                      ...(Array.isArray(moth.emergenceTimeDetailed) ? moth.emergenceTimeDetailed.map((item) => item?.notes || '') : []),
-                      ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : []),
-                    ].map((text) => String(text || '').trim()).filter(Boolean)));
-                    const originalEmergenceText = emergenceOriginalTextCandidates.find((text) => {
-                      if (!text || text === primaryEmergenceTime || text === '不明') return false;
-                      if (text === detailUi.extractedFromNotes || text === detailUi.extractedFromGeneralNotes) return false;
-                      if (/^p\.\s*\d+/i.test(text)) return false;
-                      return /\d+\s*月|春|夏|秋|冬|羽化|出現|発生|得られ|見られ|採れ|採集|越冬|越年|から|まで|頃/.test(text);
-                    }) || '';
-
-                    const supplementalEmergenceTexts = Array.from(new Set([
-                      emergenceSourceText,
-                      ...(Array.isArray(moth.generalNotes) ? moth.generalNotes.filter(isEmergenceNote).map((note) => note?.content || '') : []),
-                      ...allEmergenceTimeData.map((item) => item?.period || ''),
-                      ...allEmergenceTimeData.map((item) => item?.notes || ''),
-                    ].map((text) => String(text || '').trim()).filter(Boolean)));
-                    
-                    return (
-                      <EmergenceTimeDisplay
-                        emergenceTime={primaryEmergenceTime}
-                        source={primarySource}
-                        compact={false}
-                        supplementalTexts={supplementalEmergenceTexts}
-                        originalText={originalEmergenceText}
-                        locale={locale}
-                      />
-                    );
-                  })()}
-
+                  <EmergenceTimeDisplay
+                    seasonTexts={seasonTexts}
+                    source={seasonSources}
+                    locale={locale}
+                  />
                 </div>
               </div>
             )}
@@ -2155,9 +1984,9 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     {ecologyNotes.map((note, index) => (
                       <li key={index} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                         • {note.content}
-                        {note.reference && (
+                        {note.sources.length > 0 && (
                           <SourceCitation
-                            sources={note.reference}
+                            sources={note.sources}
                             collapsible
                             isEnglish={isEnglish}
                             className="mt-1"

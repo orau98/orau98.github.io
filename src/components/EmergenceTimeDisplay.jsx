@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { parseEmergenceTime, shouldAnalyzeEmergenceHint } from '../utils/emergenceTime.js';
+import { parseInsectDetailSeason } from '../utils/insectDetailNotes.js';
 import SourceCitation from './ui/SourceCitation';
 import { isEnglishLocale } from '../utils/locale';
 
@@ -21,7 +22,7 @@ const MONTHS = [
 
 // Date parsing is shared with list cards and independently tested.
 
-const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = false, supplementalTexts = [], originalText = '', locale = 'ja' }) => {
+const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = false, supplementalTexts = [], seasonTexts, locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const getPeriodLabel = (periodNum) => {
     if (!isEnglish) return periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
@@ -36,26 +37,24 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
     return mode === 'header' ? month.short : month.short;
   };
   const emergenceData = useMemo(
-    () => parseEmergenceTime(emergenceTime, supplementalTexts),
-    [emergenceTime, supplementalTexts]
+    () => seasonTexts?.length
+      ? parseInsectDetailSeason(seasonTexts)
+      : parseEmergenceTime(emergenceTime, supplementalTexts),
+    [emergenceTime, supplementalTexts, seasonTexts]
   );
   const activeMonths = emergenceData.months;
   const activePeriods = emergenceData.periods;
   const fuzzyMonths = emergenceData.fuzzyMonths || [];
   const fuzzyPeriods = emergenceData.fuzzyPeriods || [];
   const displayText = useMemo(() => {
+    if (seasonTexts?.length) return seasonTexts[0];
     const primary = String(emergenceTime || '').trim();
     if (primary && primary !== '不明') return primary;
     const emergenceHintText = (supplementalTexts || [])
       .map((text) => String(text || '').trim())
       .find((text) => shouldAnalyzeEmergenceHint(text));
     return emergenceHintText || (supplementalTexts || []).map((text) => String(text || '').trim()).find(Boolean) || '';
-  }, [emergenceTime, supplementalTexts]);
-  const originalDisplayText = useMemo(() => {
-    const original = String(originalText || '').trim();
-    if (!original || original === '不明' || original === displayText) return '';
-    return original;
-  }, [displayText, originalText]);
+  }, [emergenceTime, supplementalTexts, seasonTexts]);
   
   if ((!displayText || displayText === '不明') && activeMonths.length === 0 && fuzzyMonths.length === 0) {
     return (
@@ -151,7 +150,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
   // 主張してしまい期間が読み取りにくかった。
   return (
     <div className="space-y-4">
-      <div>
+      {(activePeriods.length > 0 || fuzzyPeriods.length > 0) && <div>
         {/* タイムライン（旬単位・連続バー） */}
         <div className="flex h-7 overflow-hidden rounded-full border border-slate-200 bg-slate-100 sm:h-8 dark:border-slate-600 dark:bg-slate-700">
           {MONTHS.map((month, monthIndex) => (
@@ -206,20 +205,12 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
             </span>
           )}
         </div>
-      </div>
-      {/* 原文表示 - 食草セクションと同じ構造で色違い */}
+      </div>}
       <div>
-        <div className="bg-surface-raised rounded-card p-3 border border-line">
-          <div className="flex items-center space-x-3">
-            <span className="font-medium text-ink">
-              {displayText}
-            </span>
-          </div>
-          {originalDisplayText && (
-            <div className="mt-2 text-sm text-ink-muted">
-              <span className="font-medium">{isEnglish ? 'Original:' : '原文:'}</span> {originalDisplayText}
-            </div>
-          )}
+        <div className="space-y-2 bg-surface-raised rounded-card p-3 border border-line">
+          {(seasonTexts?.length ? seasonTexts : [displayText]).map((text) => (
+            <p key={text} className="font-medium leading-relaxed text-ink">{text}</p>
+          ))}
         </div>
         {source && (
           <div className="mt-4 pt-4 border-t border-line">
