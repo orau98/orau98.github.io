@@ -28,7 +28,7 @@ export const PAGES = [
   { name: '観察ガイド（コナラ）', path: `/plant/${E('コナラ')}/`, waitFor: '見つけた場所から虫を調べる', seo: true, observationGuide: true },
   { name: '検索（アゲハ）', path: `/?q=${E('アゲハ')}`, waitFor: '件が見つかりました' },
   { name: '英語トップ', path: '/en/', waitFor: 'results', seo: true },
-  { name: 'クイズ', path: '/quiz', waitFor: '問を始める', seo: true },
+  { name: 'クイズ', path: '/quiz', waitFor: '問を始める', seo: true, quizFeedback: true },
 ];
 
 const TYPES = {
@@ -172,8 +172,32 @@ async function checkPage(browser, origin, page, viewport) {
       }
     }
   }
+  if (page.quizFeedback) {
+    try {
+      await tab.getByRole('button', { name: '10問を始める' }).click({ timeout: 10000 });
+      const options = tab.getByRole('group', { name: '選択肢' });
+      const choices = options.getByRole('button');
+      await choices.last().waitFor({ timeout: 25000 });
+      if (await choices.count() !== 4) problems.push('クイズの選択肢が4つ表示されない');
+      await choices.first().click();
+      await options.getByRole('button', { name: /\s正解$/ }).waitFor({ timeout: 5000 });
+      const redundant = tab.getByText(/^(正しいつながり|選んだ答え)[:：]/);
+      if (await redundant.count() > 0) problems.push('回答済みの選択肢と同じ情報を繰り返し表示している');
+      await tab.getByRole('button', { name: '次の問題' }).click();
+      await tab.getByRole('heading', { name: '2/10', exact: true }).waitFor({ timeout: 5000 });
+    } catch (error) {
+      problems.push(`クイズの回答後表示を確認できない: ${error.message.split('\n')[0]}`);
+    }
+  }
+
   if (page.flowerCitation) {
     try {
+      const hosts = tab.getByRole('region', { name: '食草・食樹', exact: true });
+      const beech = hosts.getByRole('link', { name: 'ブナ', exact: true });
+      const partBadge = beech.locator('xpath=following-sibling::*[1]');
+      if (await partBadge.innerText({ timeout: 5000 }) !== '葉' || /幼虫/.test(await hosts.innerText())) {
+        problems.push('食草名の直後に部位バッジがない、または幼虫との重複表記が残っている');
+      }
       await tab.getByRole('button', { name: /^リョウブの出典/ }).click({ timeout: 10000 });
       const citation = tab.getByRole('link', { name: '池ノ上 利幸 (2008)', exact: true });
       await citation.waitFor({ timeout: 10000 });

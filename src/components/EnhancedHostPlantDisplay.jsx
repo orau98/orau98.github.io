@@ -203,7 +203,8 @@ const getUsageLabel = (record, isEnglish) => {
     後食: isEnglish ? 'Adult feeding' : '後食',
     採集植物: isEnglish ? 'Collection plant' : '採集植物',
   }[record.observationType];
-  return [getLifeStageLabel(record.lifeStage, isEnglish), getPlantPartLabel(record.plantPart, isEnglish), usage]
+  const stage = record.lifeStage === '幼虫' ? '' : getLifeStageLabel(record.lifeStage, isEnglish);
+  return [stage, usage]
     .filter(Boolean)
     .join(isEnglish ? ' / ' : '・');
 };
@@ -240,6 +241,10 @@ const PlantUseRow = ({ item, label, familyLabel, locale, sharedUsage }) => {
   const isEnglish = isEnglishLocale(locale);
   const sourcePanelId = useId();
   const [isOpen, setIsOpen] = useState(false);
+  const plantParts = [...new Set(item.group.records
+    .filter((record) => !isFlowerVisitRecord(record))
+    .map((record) => record.plantPart?.trim())
+    .filter((part) => part && !['記載なし', '未記載', '不明'].includes(part)))];
   const sources = getPlantSources(item.group.records);
   const sourceCount = sources.filter(({ key }) => key).length;
   const hasDetails = sourceCount > 0 || item.notes.length > 0;
@@ -262,6 +267,18 @@ const PlantUseRow = ({ item, label, familyLabel, locale, sharedUsage }) => {
           <span className="text-sm font-semibold text-ink">{isEnglish ? 'Unknown plant' : '不明'}</span>
         ) : (
           <RecordPlantLink name={item.name} locale={locale}>{label}</RecordPlantLink>
+        )}
+        {plantParts.length > 0 && (
+          <span className="inline-flex min-w-0 flex-wrap items-center gap-1" role="group" aria-label={isEnglish ? 'Plant parts used' : '利用部位'}>
+            {plantParts.map((part) => {
+              const { color, bgColor } = getPlantPartIcon(part);
+              return (
+                <span key={part} className={`min-w-0 break-words rounded border border-line px-1.5 text-xs font-medium leading-5 ${color} ${bgColor}`}>
+                  {getPlantPartLabel(part, isEnglish)}
+                </span>
+              );
+            })}
+          </span>
         )}
         {observationBadges(item.observation.evidence, isEnglish)}
         {item.familyKey && !item.isFamilyRecord && (

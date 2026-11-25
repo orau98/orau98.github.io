@@ -206,9 +206,8 @@ const labelsFor = (isEnglish) => ({
   details: isEnglish ? 'Show details' : '詳しい記録を見る',
   hideDetails: isEnglish ? 'Hide details' : '詳細を閉じる',
   correct: isEnglish ? 'Correct' : '正解',
-  incorrect: isEnglish ? 'Review this one' : '復習しよう',
-  correctPair: isEnglish ? 'Correct link' : '正しいつながり',
-  yourChoice: isEnglish ? 'Your choice' : '選んだ答え',
+  incorrect: isEnglish ? 'Incorrect' : '不正解',
+  options: isEnglish ? 'Answer choices' : '選択肢',
   comparePhotos: isEnglish ? 'Photo comparison' : '写真で確認',
   loading: isEnglish ? 'Preparing quiz data...' : 'クイズデータを準備しています…',
   notReady: isEnglish
@@ -264,12 +263,6 @@ const getPlantRankLabel = (rank, isEnglish) => {
 
 const getInsectFamily = (insect = {}) =>
   insect.classification?.familyJapanese || insect.classification?.family || insect.family || '';
-
-const buildCorrectLinkLabel = (question, isEnglish) => {
-  const insectName = question.explanation?.insect?.name || question.prompt?.title || '';
-  const plantName = question.explanation?.plant?.name || question.explanation?.correctLabel || '';
-  return isEnglish ? `${insectName} - ${plantName}` : `${insectName} → ${plantName}`;
-};
 
 const countBy = (items, getKey) => {
   const map = new Map();
@@ -1019,8 +1012,10 @@ const QuizPage = ({
   const renderQuestion = () => {
     const promptInstruction =
       mode === QUIZ_MODES.PLANT_TO_INSECT ? labels.plantPrompt : labels.insectPrompt;
-    const feedbackIcon = currentAnswer?.isCorrect ? CheckCircleIcon : XCircleIcon;
-    const FeedbackIcon = feedbackIcon;
+    const correctAnswerLabel = currentQuestion.explanation.correctLabel;
+    const incorrectFeedback = isEnglish
+      ? `${labels.incorrect}. The correct answer is ${correctAnswerLabel}.`
+      : `${labels.incorrect}。正解は${correctAnswerLabel}です。`;
     const questionGridClass = isPhotoStyle
       ? 'grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(22rem,0.75fr)]'
       : 'grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]';
@@ -1082,7 +1077,7 @@ const QuizPage = ({
               <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300 sm:mt-1 sm:text-sm">{currentQuestion.prompt.family}</p>
             )}
 
-            <div className="mt-3 grid gap-2 sm:mt-5 sm:gap-2.5">
+            <div className="mt-3 grid gap-2 sm:mt-5 sm:gap-2.5" role="group" aria-label={labels.options}>
               {currentQuestion.options.map((option, index) => {
                 const isSelected = selectedOptionId === option.id;
                 const isCorrect = Boolean(selectedOptionId && option.id === currentQuestion.correctOptionId);
@@ -1116,43 +1111,43 @@ const QuizPage = ({
                         </span>
                       )}
                     </span>
-                    {isCorrect && <CheckCircleIcon className="ml-auto h-6 w-6 flex-shrink-0 text-emerald-600 dark:text-emerald-300" />}
-                    {isWrong && <XCircleIcon className="ml-auto h-6 w-6 flex-shrink-0 text-rose-600 dark:text-rose-300" />}
+                    {isCorrect && (
+                      <>
+                        <CheckCircleIcon aria-hidden="true" className="ml-auto h-6 w-6 flex-shrink-0 text-emerald-600 dark:text-emerald-300" />
+                        <span className="sr-only">{labels.correct}</span>
+                      </>
+                    )}
+                    {isWrong && (
+                      <>
+                        <XCircleIcon aria-hidden="true" className="ml-auto h-6 w-6 flex-shrink-0 text-rose-600 dark:text-rose-300" />
+                        <span className="sr-only">{labels.incorrect}</span>
+                      </>
+                    )}
                   </button>
                 );
               })}
             </div>
 
+            <p className="sr-only" role="status">
+              {currentAnswer && (currentAnswer.isCorrect ? labels.correct : incorrectFeedback)}
+            </p>
             <p className="mt-3 hidden text-xs text-slate-500 dark:text-slate-400 sm:block">{labels.keyboard}</p>
 
             {selectedOptionId && (
-              // role=status + aria-live で正誤と正解をスクリーンリーダーへ即時通知する
-              <div
-                className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-700"
-                role="status"
-                aria-live="polite"
-              >
+              <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-700">
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex min-w-0 flex-1 gap-3">
-                    <span className={`mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg ${
-                      currentAnswer?.isCorrect
-                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200'
-                        : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-200'
-                    }`}
-                    >
-                      <FeedbackIcon className="h-5 w-5" />
-                    </span>
-                    <div className="min-w-0">
-                      <p className={`text-sm font-bold ${currentAnswer?.isCorrect ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
-                        {currentAnswer?.isCorrect ? labels.correct : labels.incorrect}
-                      </p>
-                      <p className="mt-1 text-lg font-bold text-slate-950 dark:text-white">
-                        {currentQuestion.explanation.correctLabel}
-                      </p>
-                      <p className="mt-1 text-sm font-semibold text-slate-600 dark:text-slate-300">
-                        {labels.correctPair}: {buildCorrectLinkLabel(currentQuestion, isEnglish)}
-                      </p>
-                    </div>
+                  <div className="min-w-0 flex-1">
+                    {currentQuestion.explanation.sourceLabel && (
+                      <SourceCitation
+                        sources={currentQuestion.explanation.sourceLabel}
+                        isEnglish={isEnglish}
+                        resolveLinks={false}
+                      />
+                    )}
+                    {midpointMessage && (
+                      <p className="mt-2 text-sm font-semibold text-amber-700 dark:text-amber-300">{midpointMessage}</p>
+                    )}
+                    {!currentAnswer?.isCorrect && renderDetailLinks(currentQuestion)}
                   </div>
                   <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_16px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none dark:lg:bg-transparent">
                     <button
@@ -1167,30 +1162,10 @@ const QuizPage = ({
                   </div>
                 </div>
 
-                <div className="mt-3 pl-12">
-                  {currentAnswer?.selectedLabel && !currentAnswer?.isCorrect && (
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                      {labels.yourChoice}: {currentAnswer.selectedLabel}
-                    </p>
-                  )}
-                  {currentQuestion.explanation.sourceLabel && (
-                    <SourceCitation
-                      sources={currentQuestion.explanation.sourceLabel}
-                      isEnglish={isEnglish}
-                      resolveLinks={false}
-                      className="mt-1"
-                    />
-                  )}
-                  {midpointMessage && (
-                    <p className="mt-2 text-sm font-semibold text-amber-700 dark:text-amber-300">{midpointMessage}</p>
-                  )}
-                  {!currentAnswer?.isCorrect && renderDetailLinks(currentQuestion)}
-                </div>
-
                 <button
                   type="button"
                   onClick={() => setDetailsOpen((value) => !value)}
-                  className="mt-4 inline-flex min-h-[44px] items-center py-2 pl-12 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
+                  className="mt-2 inline-flex min-h-[44px] items-center py-2 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
                 >
                   {detailsOpen ? labels.hideDetails : labels.details}
                 </button>
