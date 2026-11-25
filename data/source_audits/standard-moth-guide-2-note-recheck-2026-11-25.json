@@ -1,0 +1,34 @@
+{
+  "reviewed_on": "2026-11-25",
+  "source": "日本産蛾類標準図鑑2",
+  "pdf": {
+    "file": "日本産蛾類標準図鑑2.pdf",
+    "sha256": "2d24a2870a7f890cb4af8d79b55dfc7fe6215607f6d70bbdcd41ca02db8eb5f9"
+  },
+  "corrected_records": [
+    {
+      "record_id": "note-1004375",
+      "insect_id": "species-5359",
+      "name": "サビモンエグリバ",
+      "type": "出現時期",
+      "page": "240",
+      "pdf_page": 63,
+      "decision": "include",
+      "method": "原PDF画像を目視し、NeonとOpusの独立判読と照合",
+      "before": "7月",
+      "after": "飼育状況から、7月に出現するとされる。"
+    },
+    {
+      "record_id": "note-1002921",
+      "insect_id": "species-5359",
+      "name": "サビモンエグリバ",
+      "type": "生態情報",
+      "page": "240",
+      "pdf_page": 63,
+      "decision": "include",
+      "method": "原PDF画像を目視し、NeonとOpusの独立判読と照合",
+      "before": "幼虫は、黒色に無線に丸い白数が点するセミルーパーで、キンモンエグリパの幼虫とは異なる",
+      "after": "幼虫は黒色のセミルーパーで、体側に丸い白斑が点々と並ぶ。キンモンエグリバの幼虫とは異なる。"
+    }
+  ]
+}
