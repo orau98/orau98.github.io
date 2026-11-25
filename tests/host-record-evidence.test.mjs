@@ -55,11 +55,17 @@ test('all retained normalized host records preserve source metadata instead of f
     if (!source.observation_type) blanks += 1;
   }
   assert.ok(blanks > 3000, `expected full source coverage, got ${blanks}`);
-  for (const id of ['hostplant-004439', 'hostplant-004440']) {
-    assert.equal(records.get(id)?.observationType, '');
-    assert.equal(records.get(id)?.plantPart, '');
-    assert.equal(records.get(id)?.lifeStage, '');
-  }
+  const adeku = records.get('hostplant-004439');
+  assert.equal(adeku?.observationType, '');
+  assert.equal(adeku?.plantPart, '');
+  assert.equal(adeku?.lifeStage, '');
+  assert.equal(isFlowerVisitRecord(adeku), false);
+
+  const hamabou = records.get('hostplant-004440');
+  assert.equal(hamabou?.observationType, '野外（国内）');
+  assert.equal(hamabou?.plantPart, '花弁');
+  assert.equal(hamabou?.lifeStage, '成虫');
+  assert.equal(isFlowerVisitRecord(hamabou), true);
 });
 
 test('legacy format fallbacks preserve uncertainty too', () => {
