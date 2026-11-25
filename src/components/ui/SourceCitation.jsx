@@ -22,6 +22,7 @@ export function SourceReferenceList({ items, label, isEnglish = false, renderDet
               )}
               {item.publication && item.publication !== title && <span>{item.publication}</span>}
               {item.pages && <span>{isEnglish ? `pp. ${item.pages}` : `${item.pages}頁`}</span>}
+              {item.location && <span>{item.location}</span>}
               {details?.badges}
             </div>
             {details?.notes}

@@ -18,6 +18,7 @@ export const bibliography = [
   },
   {
     key: 'hamushi-notes-1',
+    references: ['神奈川虫報 (156): 日本産ハムシ科生態覚書 (1)'],
     type: 'article',
     title: '日本産ハムシ科生態覚書 (1)',
     authors: ['滝沢 春雄'],
@@ -28,6 +29,7 @@ export const bibliography = [
   },
   {
     key: 'hamushi-notes-2',
+    references: ['神奈川虫報 (157): 日本産ハムシ科生態覚書 (2)'],
     type: 'article',
     title: '日本産ハムシ科生態覚書 (2)',
     authors: ['滝沢 春雄'],
@@ -108,7 +110,11 @@ export const bibliography = [
   {
     key: 'hana-wo-otozureru-gatachi',
     title: '花を訪れる蛾たち',
-    note: '知られざる姿を求めて',
+    subtitle: '知られざる姿を求めて',
+    references: [
+      '花を訪れる蛾たち　知られざる姿を求めて',
+      '花を訪れる蛾たち―知られざる姿を求めて',
+    ],
     authors: ['池ノ上 利幸'],
     year: '2008',
     publisher: '昆虫文献六本脚',
@@ -117,6 +123,26 @@ export const bibliography = [
     isbn10: '490264908X',
     isbn13: '978-4-902649-08-6',
     url: buildAmazonBookUrl('490264908X')
+  },
+  {
+    key: 'nihon-no-yasei-shokubutsu-field-1',
+    title: '日本の野生植物 第1巻',
+    subtitle: '改訂新版 フィールド版',
+    editors: ['大橋広好', '門田裕一', '邑田仁', '米倉浩司', '木原浩'],
+    year: '2021',
+    publisher: '平凡社',
+    isbn13: '978-4-582-53538-9',
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I031508900',
+  },
+  {
+    key: 'nihon-no-yasei-shokubutsu-field-2',
+    title: '日本の野生植物 第2巻',
+    subtitle: '改訂新版 フィールド版',
+    editors: ['大橋広好', '門田裕一', '邑田仁', '米倉浩司', '木原浩'],
+    year: '2021',
+    publisher: '平凡社',
+    isbn13: '978-4-582-53539-6',
+    url: 'https://ndlsearch.ndl.go.jp/books/R100000002-I031508901',
   },
   {
     key: 'nihon-no-fuyushaku',
@@ -130,6 +156,7 @@ export const bibliography = [
   {
     key: 'nihon-no-fuyuyaga',
     title: '日本の冬夜蛾 (キリガ)',
+    references: ['日本の冬夜蛾', '日本のキリガ'],
     authors: ['小林 秀紀', '四方 圭一郎', '枝 恵太郎'],
     year: '2016',
     publisher: 'むし社',
@@ -181,6 +208,7 @@ export const bibliography = [
   },
   {
     key: 'hamushi-handbook',
+    references: ['ハムシハンドブック / ハムシハンドブック'],
     title: 'ハムシハンドブック',
     authors: ['尾園 暁'],
     year: '2014',
@@ -585,7 +613,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-23-4-arita-2016',
-    references: ["Arita & Yata (2016)"],
+    references: ["Arita & Yata (2016)", "Arita et al. (2016)"],
     type: 'article',
     title: 'Vicariance in the Macroscelesia japona species-group (Lepidoptera, Sesiidae) in the Ryukyus, Japan',
     authors: ['Arita, Y.', 'Kimura, M.', 'Yata, N.', 'Nagase, M.'],
@@ -644,6 +672,7 @@ export const bibliography = [
   },
   {
     key: 'tinea-26-4-yata-2023',
+    references: ['Yata et al. (2023)'],
     type: 'article',
     title: 'Discovery of Tinthia cuprealis (Moore, 1877) (Lepidoptera, Sesiidae) in Shikoku, Japan',
     authors: ['Yata, N.', 'Yoshitomi, H.', 'Arita, Y.'],
@@ -2167,11 +2196,16 @@ export const formatCitationContributors = (entry) => {
   return editors ? `${editors}（編）` : '';
 };
 
+export const formatCitationAuthorYear = (entry) => [
+  formatCitationContributors(entry),
+  entry.year ? `(${entry.year})` : '',
+].filter(Boolean).join(' ');
+
+export const formatCitationTitle = (entry) => [entry.title, entry.subtitle].filter(Boolean).join(' — ');
+
 export const formatBibliographyCitation = (entry) => {
-  const authorYear = [formatCitationContributors(entry), entry.year ? `(${entry.year})` : '']
-    .filter(Boolean)
-    .join(' ');
-  const title = [entry.title, entry.note].filter(Boolean).join(' — ');
+  const authorYear = formatCitationAuthorYear(entry);
+  const title = [formatCitationTitle(entry), entry.note].filter(Boolean).join(' — ');
   let journalNumber = entry.issue || '';
   if (entry.volume) {
     journalNumber = entry.issue ? `${entry.volume}(${entry.issue})` : entry.volume;

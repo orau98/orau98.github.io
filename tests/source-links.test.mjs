@@ -8,6 +8,7 @@ import {
   isAmazonAssociateUrl,
 } from '../src/utils/amazonAssociates.js';
 import {
+  getCompactReferenceMeta,
   getReferenceMeta,
   getReferenceMetaList,
   getSourceLink,
@@ -27,15 +28,50 @@ test('getSourceLink resolves aliases to the canonical bibliography URL', () => {
 
 test('getReferenceMeta returns the canonical display label for aliases', () => {
   const meta = getReferenceMeta('日本のキリガ');
-  assert.equal(meta.displayLabel, '日本の冬夜蛾');
+  assert.match(meta.displayLabel, /^小林 秀紀・四方 圭一郎・枝 恵太郎 \(2016\)。日本の冬夜蛾/);
   assert.match(meta.link || '', /000000000506/);
 });
 
 test('getReferenceMetaList merges 日本のキリガ into a single 日本の冬夜蛾 entry', () => {
   const metas = getReferenceMetaList(['日本の冬夜蛾', '日本のキリガ']);
   assert.equal(metas.length, 1);
-  assert.equal(metas[0].displayLabel, '日本の冬夜蛾');
+  assert.equal(metas[0].displayLabel, getReferenceMeta('日本の冬夜蛾').displayLabel);
   assert.match(metas[0].link || '', /000000000506/);
+});
+
+test('flower-visit citations resolve the subtitle variants to the same author and year', () => {
+  const references = [
+    '花を訪れる蛾たち',
+    '花を訪れる蛾たち　知られざる姿を求めて',
+    '花を訪れる蛾たち―知られざる姿を求めて',
+  ];
+  const [citation] = getReferenceMetaList(references, { compact: true });
+  assert.equal(getReferenceMetaList(references, { compact: true }).length, 1);
+  assert.equal(citation.label, '池ノ上 利幸 (2008)');
+  assert.match(citation.publication, /花を訪れる蛾たち.*知られざる姿を求めて/);
+  assert.equal(citation.link, buildAmazonBookUrl('490264908X'));
+});
+
+test('plant profile citations keep the volume and printed or PDF page locators', () => {
+  const first = getCompactReferenceMeta('日本の野生植物 第1巻 p.300 / PDF p.150');
+  const second = getCompactReferenceMeta('日本の野生植物 第2巻 PDF p.46');
+  assert.equal(first.label, '大橋広好・門田裕一・邑田仁・米倉浩司・木原浩（編） (2021)');
+  assert.equal(second.label, first.label);
+  assert.equal(first.location, 'p.300 / PDF p.150');
+  assert.equal(second.location, 'PDF p.46');
+  assert.match(first.publication, /第1巻/);
+  assert.match(second.publication, /第2巻/);
+  assert.notEqual(first.link, second.link);
+});
+
+test('unresolved sources retain their complete labels and issue numbers', () => {
+  const shortSeries = '日本産ハムシ科生態覚書';
+  const seriesIssue = 'さやばね ニューシリーズ (さやばね ニューシリーズ No.17)';
+  assert.equal(getCompactReferenceMeta(shortSeries).label, shortSeries);
+  assert.equal(getCompactReferenceMeta(seriesIssue).label, seriesIssue);
+  const citedIssue = getCompactReferenceMeta('越野誠一郎 (1999) 蛾類通信202号');
+  assert.equal(citedIssue.label, '越野誠一郎 (1999)');
+  assert.equal(citedIssue.publication, '蛾類通信202号');
 });
 
 test('getSourceLink resolves the Schizaphis taxonomy references', () => {

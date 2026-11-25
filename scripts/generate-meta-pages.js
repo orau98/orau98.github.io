@@ -29,13 +29,12 @@ import {
   PLANT_IMAGE_SUFFIXES,
 } from '../src/utils/filename.js';
 import {
-  bibliography,
   formatBibliographyCitation,
-  formatCitationContributors,
+  formatCitationAuthorYear,
   getBibliographyEntry,
   normalizeCitationMatchKey,
 } from '../src/utils/bibliography.js';
-import { getSourceLink, normalizeReference } from '../src/utils/sourceLinks.js';
+import { getCompactReferenceMeta, getSourceLink } from '../src/utils/sourceLinks.js';
 import {
   isAmazonAssociateUrl,
 } from '../src/utils/amazonAssociates.js';
@@ -253,40 +252,12 @@ function splitReferenceTokens(value = '') {
     .filter(Boolean);
 }
 
-function findBibliographyEntry(rawReference = '') {
-  const raw = String(rawReference || '').trim();
-  if (!raw) return null;
-  const exact = getBibliographyEntry(raw);
-  if (exact) return exact;
-  const candidates = [
-    raw,
-    normalizeReference(raw),
-  ].map(normalizeCitationMatchKey).filter(Boolean);
-
-  return bibliography.find((entry) => {
-    const titleKey = normalizeCitationMatchKey(entry.title);
-    if (!titleKey) return false;
-    return candidates.some((candidate) => candidate === titleKey || candidate.includes(titleKey));
-  }) || null;
-}
-
-function extractAuthorYearLabel(rawReference = '') {
-  const raw = String(rawReference || '').trim();
-  const match = raw.match(/^(.+?)\s*[（(]\s*((?:18|19|20)\d{2})\s*[）)]/);
-  if (match) return `${match[1].trim()} (${match[2]})`;
-  return normalizeReference(raw) || raw;
-}
-
 function formatCitationShortPlain(entry, rawReference = '') {
-  if (!entry) return extractAuthorYearLabel(rawReference);
-
-  const contributors = formatCitationContributors(entry);
-  if (contributors && entry.year) return `${contributors} (${entry.year})`;
-  return contributors || entry.year || entry.title || extractAuthorYearLabel(rawReference);
+  return entry ? formatCitationAuthorYear(entry) || entry.title : getCompactReferenceMeta(rawReference).label;
 }
 
 function formatCitationPlain(entry, rawReference = '') {
-  return entry ? formatBibliographyCitation(entry) : extractAuthorYearLabel(rawReference);
+  return entry ? formatBibliographyCitation(entry) : rawReference;
 }
 
 function formatCitationHtml(entry, rawReference = '') {
@@ -320,7 +291,7 @@ function buildCitationEntriesFromReferences(rawReferences = []) {
     .flatMap(splitReferenceTokens)
     .filter((reference) => reference && !isInternalSourceLabel(reference))
     .forEach((rawReference) => {
-      const entry = findBibliographyEntry(rawReference);
+      const entry = getBibliographyEntry(rawReference);
       const plain = formatCitationPlain(entry, rawReference);
       const key = `citation:${normalizeCitationMatchKey(plain)}`;
       if (!key || seen.has(key)) return;
@@ -1865,7 +1836,9 @@ function renderSinglePlantProfileSection(
 
   const source = String(profile.source || '').trim();
   const sourceLabel = buildPlantProfileSourceLabel(profile);
-  const sourceText = source ? `出典：${sourceLabel}` : '';
+  const entry = getBibliographyEntry(source);
+  const authorYear = entry ? formatCitationAuthorYear(entry) : '';
+  const sourceText = source ? `出典：${[authorYear, sourceLabel].filter(Boolean).join(' ')}` : '';
 
   const dlItems = facts
     .map(([label, value]) => `

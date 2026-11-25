@@ -1,5 +1,10 @@
 import { buildAmazonBookUrl } from './amazonAssociates.js';
-import { formatBibliographyCitation, formatCitationContributors, getBibliographyEntry } from './bibliography.js';
+import {
+  formatBibliographyCitation,
+  formatCitationAuthorYear,
+  formatCitationTitle,
+  getBibliographyEntry,
+} from './bibliography.js';
 
 // 文献名とリンクのマッピング（書籍はAmazonアソシエイト、非売品・論文等は一次情報）
 export const sourceLinks = {
@@ -117,34 +122,48 @@ export const normalizeReference = (source) => {
   return canonicalizeReferenceKey(s);
 };
 
-export const getReferenceMeta = (source) => {
+const resolveReference = (source) => {
   const raw = typeof source === 'string' ? source.trim() : '';
-  const entry = getBibliographyEntry(raw);
-  const showBibliography = entry && (entry.type === 'article' || entry.journal || raw === entry.key);
-  const displayLabel = showBibliography ? formatBibliographyCitation(entry) : normalizeReference(raw);
+  const exact = getBibliographyEntry(raw);
+  if (exact) return { raw, entry: exact, location: '' };
+
+  const pageSuffix = raw.match(/^(.*?)\s+((?:PDF\s+)?pp?\.\s*[0-9０-９].*)$/i);
+  const entry = pageSuffix && getBibliographyEntry(pageSuffix[1]);
+  return { raw, entry, location: entry ? pageSuffix[2] : '' };
+};
+
+const formatReferenceMeta = ({ raw, entry, location }) => {
+  const citation = entry ? formatBibliographyCitation(entry) : raw;
 
   return {
-    displayLabel,
-    link: getSourceLink(raw),
-    key: showBibliography ? entry.key : displayLabel,
+    displayLabel: [citation, location].filter(Boolean).join(' '),
+    link: entry?.url || getSourceLink(raw),
+    key: entry ? [entry.key, location].filter(Boolean).join(' ') : raw,
   };
 };
 
+export const getReferenceMeta = (source) => formatReferenceMeta(resolveReference(source));
+
 export const getCompactReferenceMeta = (source) => {
-  const meta = getReferenceMeta(source);
-  const entry = getBibliographyEntry(source);
-  const authors = entry ? formatCitationContributors(entry) : '';
-  const label = authors
-    ? [authors, entry.year && `(${entry.year})`].filter(Boolean).join(' ')
-    : entry?.title || meta.displayLabel || source;
-  const issue = entry?.volume && entry.issue ? `${entry.volume}(${entry.issue})` : entry?.volume || entry?.issue;
-  const publication = entry?.journal ? [entry.journal, issue].filter(Boolean).join(' ') : entry?.title;
+  const reference = resolveReference(source);
+  const { raw, entry, location } = reference;
+  const meta = formatReferenceMeta(reference);
+  if (!entry) {
+    const authorYear = raw.match(/^(.+?)\s*[（(]\s*((?:18|19|20)\d{2})\s*[）)](?:\s+(.*))?$/);
+    return {
+      ...meta,
+      label: authorYear ? `${authorYear[1].trim()} (${authorYear[2]})` : raw,
+      publication: authorYear?.[3] || '',
+    };
+  }
+
+  const issue = entry.volume && entry.issue ? `${entry.volume}(${entry.issue})` : entry.volume || entry.issue;
   return {
     ...meta,
-    key: entry?.key || meta.key || source,
-    label,
-    publication,
-    pages: entry?.journal ? entry.pages : '',
+    label: formatCitationAuthorYear(entry) || entry.title,
+    publication: entry.journal ? [entry.journal, issue].filter(Boolean).join(' ') : formatCitationTitle(entry),
+    pages: entry.journal && !location ? entry.pages : '',
+    location,
   };
 };
 

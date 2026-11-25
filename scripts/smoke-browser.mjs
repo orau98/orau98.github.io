@@ -23,6 +23,7 @@ export const PAGES = [
   { name: '昆虫一覧ページ（/moth/）', path: '/moth/', waitFor: '件が見つかりました', seo: true },
   { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
   { name: '植物ごとの出典（ウスイロオナガシジミ）', path: `/butterfly/${E('ウスイロオナガシジミ')}/`, waitFor: 'ウラジロガシ', plantSources: true },
+  { name: '訪花の書誌（アオスジアオリンガ）', path: `/moth/${E('アオスジアオリンガ')}/`, waitFor: 'リョウブ', flowerCitation: true },
   { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true },
   { name: '観察ガイド（コナラ）', path: `/plant/${E('コナラ')}/`, waitFor: '見つけた場所から虫を調べる', seo: true, observationGuide: true },
   { name: '検索（アゲハ）', path: `/?q=${E('アゲハ')}`, waitFor: '件が見つかりました' },
@@ -171,6 +172,19 @@ async function checkPage(browser, origin, page, viewport) {
       }
     }
   }
+  if (page.flowerCitation) {
+    try {
+      await tab.getByRole('button', { name: /^リョウブの出典/ }).click({ timeout: 10000 });
+      const citation = tab.getByRole('link', { name: '池ノ上 利幸 (2008)', exact: true });
+      await citation.waitFor({ timeout: 10000 });
+      if (!(await citation.getAttribute('href'))?.includes('490264908X')) {
+        problems.push('訪花の出典が文献のリンクを表示していない');
+      }
+    } catch (error) {
+      problems.push(`訪花の出典に著者と刊行年が表示されない: ${error.message.split('\n')[0]}`);
+    }
+  }
+
   if (page.plantSources) {
     const toggle = tab.getByRole('button', { name: 'ウラジロガシの出典 2件', exact: true });
     try {

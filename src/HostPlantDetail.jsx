@@ -2199,10 +2199,9 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                 </div>
               ))}
             </dl>
-            <SourceCitation
-              sources={buildSourceLabel(plantProfile)}
-              isEnglish={isEnglish}
-                  resolveLinks={false}
+                <SourceCitation
+                  sources={buildSourceLabel(plantProfile)}
+                  isEnglish={isEnglish}
                   collapsible
                   className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
                 />
@@ -2244,7 +2243,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                 <SourceCitation
                   sources={buildSourceLabel(entry.profile)}
                   isEnglish={isEnglish}
-                      resolveLinks={false}
                   collapsible
                   className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
                 />
