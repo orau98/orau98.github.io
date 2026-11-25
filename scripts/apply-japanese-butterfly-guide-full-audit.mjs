@@ -39,9 +39,7 @@ const EXPECTED_COUNTS = Object.freeze({
   newTaxonActions: 4,
   hostActions: 49,
   noteActions: 38,
-  // The later canonical-ID addendum removes eight legacy host rows and one
-  // duplicate note from species-20436 after the original guide audit.
-  hostRowsAfter: 1711,
+  // The canonical-ID addendum removes one duplicate note from species-20436.
   noteRowsAfter: 249,
 });
 const ALLOWED_ACTIONS = Object.freeze({
@@ -270,7 +268,7 @@ function tablesFromOutputs(outputs) {
   return tables;
 }
 
-function validateResult(outputs, actionGroups) {
+function validateResult(outputs, actionGroups, expectedSourceHostCount) {
   const tables = tablesFromOutputs(outputs);
   const remaining = classifyAll(actionGroups, tables).find(({ state }) => state !== 'applied');
   if (remaining) throw new Error(`${remaining.action.action_id}: prospective output is not fully applied`);
@@ -294,7 +292,7 @@ function validateResult(outputs, actionGroups) {
   ) throw new Error('butterfly canonical-ID addendum is not fully applied');
   const sourceHosts = tables.hosts.rows.filter((row) => row.reference === SOURCE);
   const sourceNotes = tables.notes.rows.filter((row) => row.reference === SOURCE);
-  if (sourceHosts.length !== EXPECTED_COUNTS.hostRowsAfter) {
+  if (sourceHosts.length !== expectedSourceHostCount) {
     throw new Error(`unexpected approved host count: ${sourceHosts.length}`);
   }
   if (sourceNotes.length !== EXPECTED_COUNTS.noteRowsAfter) {
@@ -363,7 +361,13 @@ const outputs = Object.fromEntries(Object.entries(tables).map(([tableName, table
   tableName,
   transformTable(table, pending.filter((state) => state.tableName === tableName)),
 ]));
-validateResult(outputs, actionGroups);
+// Later source audits can add or remove hosts independently of this audit.
+const sourceHostsBefore = tables.hosts.rows.filter((row) => row.reference === SOURCE).length;
+const hostCountDelta = pending.filter(({ tableName }) => tableName === 'hosts')
+  .reduce((delta, { action }) => (
+    delta + Number(action.after?.reference === SOURCE) - Number(action.before?.reference === SOURCE)
+  ), 0);
+validateResult(outputs, actionGroups, sourceHostsBefore + hostCountDelta);
 
 if (!CHECK_ONLY) writeAllAtomically(outputs);
 console.log(JSON.stringify({

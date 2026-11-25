@@ -162,9 +162,10 @@ test('112 exact actions apply across three tables and become byte-idempotent', (
       noteRows.filter((row) => row.reference === SOURCE).length,
       249,
     );
+    const currentHosts = readRows(path.join(ROOT, 'normalized_data/hostplants.csv')).rows;
     assert.equal(
       hostRows.filter((row) => row.reference === SOURCE).length,
-      1711,
+      currentHosts.filter((row) => row.reference === SOURCE).length,
     );
     assert.equal(insects.has('species-20436'), false);
     assert.equal(hostRows.some((row) => row.insect_id === 'species-20436'), false);

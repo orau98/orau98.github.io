@@ -8,13 +8,15 @@ import { getPlantUsage, getPlantInsectUsage, uniqueInsects } from '../scripts/li
 const normalizeName = (value) => String(value || '').replace(/[（(][^）)]*[）)]/g, '').trim();
 const record = (plant_name, life_stage, plant_part) => normalizeHostRecord({ plant_name, life_stage, plant_part });
 
-test('real Graphium records retain 15 host entries and 8 adult flower entries', () => {
+test('real Graphium records retain 18 host entries and 8 adult flower entries', () => {
   const rows = Papa.parse(fs.readFileSync(new URL('../normalized_data/hostplants.csv', import.meta.url), 'utf8'), { header: true, skipEmptyLines: true }).data;
   const insect = { hostPlantsDetailed: rows.filter((row) => row.insect_id === 'species-20176').map(normalizeHostRecord) };
   const usage = getPlantUsage(insect);
-  assert.equal(usage.hostPlants.length, 15);
+  assert.equal(usage.hostPlants.length, 18);
   assert.equal(usage.flowerPlants.length, 8);
-  assert.ok(usage.hostPlants.includes('クスノキ'));
+  for (const name of ['クスノキ', 'ホソバタブ', 'シロモジ', 'ポーポー']) {
+    assert.ok(usage.hostPlants.includes(name));
+  }
   assert.ok(!usage.hostPlants.includes('ヤブガラシ'));
   assert.ok(usage.flowerPlants.includes('ヤブガラシ'));
 });

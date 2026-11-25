@@ -102,10 +102,9 @@ test('日本産蛾類標準図鑑1のチャオビコバネナミシャク寄主�
 test('日本産蝶類標準図鑑の欠落食草とCapparis綴りを保持する', () => {
   const expected = {
     'species-20196': ['ツゲモドキ'],
-    'species-20287': ['クロヨナ'],
     'species-20340': ['シダレヤナギ'],
-    'species-20391': ['キジョラン', 'フルモウリンカ', 'ホウライアオカズラ'],
-    'species-20402': ['コウシュンカズラ', 'アセロラ', 'モモタマナ'],
+    'species-20389': ['キジョラン', 'ツルモウリンカ', 'ホウライアオカズラ'],
+    'species-20401': ['コウシュンカズラ', 'アセロラ', 'モモタマナ'],
     'species-20435': ['ムニンススキ', 'サトウキビ', 'ススキ'],
   };
 
@@ -121,6 +120,11 @@ test('日本産蝶類標準図鑑の欠落食草とCapparis綴りを保持する
         assert.equal(names.has(plantName), true, `${csvPath} should include ${plantName} for ${insectId}`);
       }
     }
+
+    const guide = '日本産蝶類標準図鑑';
+    assert.equal(hostNames(rows, 'species-20287', guide).has('クロヨナ'), false);
+    assert.equal(hostNames(rows, 'species-20391', guide).has('キジョラン'), false);
+    assert.equal(hostNames(rows, 'species-20402', guide).has('モモタマナ'), false);
 
     const kawakami = rows.filter((row) => row.insect_id === 'species-20197');
     const kawakamiNames = new Set(kawakami.map((row) => row.plant_name));
