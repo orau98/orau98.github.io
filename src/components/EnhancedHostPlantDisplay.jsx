@@ -177,13 +177,15 @@ const getPlantPartLabel = (plantPart, isEnglish = false) => {
 // 食草欄の備考から、植物の利用に関係する文だけを取り出す（出現時期など生活史の重複は除く）
 const isLifecycleNote = (s) => /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(s);
 const isPlantRelevantNote = (s) => /葉|花|蕾|若葉|茎|根|枝|幹|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
+// 羽化時期のメモは除外し、寄主からの羽化や出典標本を根拠とする備考は表示する。
+const isHostEmergenceEvidence = (s) => /から(?:の)?羽化|羽化(?:個体|標本)/.test(s);
 const getPlantRelevantNotes = (records = []) => {
   const notes = new Set();
   records.forEach((record) => {
     if (!record.notes) return;
     getPublicHostPlantNoteSegments(record.notes).forEach((segment) => {
       if (!segment) return;
-      if (isLifecycleNote(segment) && !isPlantRelevantNote(segment)) return;
+      if (isLifecycleNote(segment) && !isPlantRelevantNote(segment) && !isHostEmergenceEvidence(segment)) return;
       notes.add(segment);
     });
   });
