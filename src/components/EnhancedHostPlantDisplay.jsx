@@ -1,7 +1,10 @@
 import { isFlowerVisitRecord } from '../utils/flowerVisitPlants.js';
-import React, { useMemo, useState } from 'react';
+import React, { useId, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SourceCitation from './ui/SourceCitation';
+import { getReferenceMeta } from '../utils/sourceLinks';
+import { formatCitationContributors, getBibliographyEntry } from '../utils/bibliography';
+import { isAmazonAssociateUrl } from '../utils/amazonAssociates';
 import { makeDetailLinkState } from '../utils/navState';
 import { buildPlantPath } from '../utils/siteTaxonomy';
 import { isEnglishLocale } from '../utils/locale';
@@ -208,15 +211,139 @@ const getUsageLabel = (record, isEnglish) => {
 
 const INITIAL_PLANT_LIMIT = 30;
 
-/**
- * 食草・訪花の植物を科ごとに短い行で並べる。
- * 全件に共通する利用（幼虫・葉など）・記録の種類・出典は上に1回だけ出し、植物ごとには違う所だけを添える。
- */
-const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} }) => {
+const getPlantSources = (records) => {
+  const sources = new Map();
+  for (const record of records) {
+    const references = String(record.reference || '').split(/[;；]/).map((value) => value.trim()).filter(Boolean);
+    for (const reference of references.length ? references : ['']) {
+      const entry = getBibliographyEntry(reference);
+      const meta = getReferenceMeta(reference);
+      const key = entry?.key || meta.key || reference;
+      if (!sources.has(key)) {
+        const author = entry && formatCitationContributors(entry);
+        const label = author && entry.year ? `${author} (${entry.year})` : author || meta.displayLabel || reference;
+        const publication = entry?.journal
+          ? [entry.journal, entry.volume && entry.issue ? `${entry.volume}(${entry.issue})` : entry.volume || entry.issue].filter(Boolean).join(' ')
+          : entry?.title;
+        sources.set(key, { key, label, link: meta.link, publication, publicationPages: entry?.journal ? entry.pages : '', records: [] });
+      }
+      const source = sources.get(key);
+      if (!source.records.includes(record)) source.records.push(record);
+    }
+  }
+  return [...sources.values()];
+};
+
+const observationBadges = (evidence, isEnglish) => (
+  <span className="inline-flex min-w-0 flex-wrap items-center gap-1" role="group" aria-label={isEnglish ? 'Observation setting' : '観察条件'}>
+    {evidence.map(({ key, presentation }) => (
+      <span key={key} className={`inline-flex min-h-5 items-center rounded border px-1.5 text-xs font-medium leading-5 ${presentation.borderColor} ${presentation.textColor} ${presentation.bgColor}`}>
+        {getObservationLabel(presentation, isEnglish)}
+      </span>
+    ))}
+  </span>
+);
+
+const sourcePagePattern = /該当頁\s*([0-9０-９]+(?:\s*[、,–〜-]\s*[0-9０-９]+)*)/g;
+
+const PlantUseRow = ({ item, label, familyLabel, locale, sharedUsage }) => {
+  const isEnglish = isEnglishLocale(locale);
   const location = useLocation();
+  const sourcePanelId = useId();
+  const [isOpen, setIsOpen] = useState(false);
+  const sources = getPlantSources(item.group.records);
+  const sourceCount = sources.filter(({ key }) => key).length;
+  const hasDetails = sourceCount > 0 || item.notes.length > 0;
+  const sourceLabel = sourceCount
+    ? (isEnglish ? `Sources (${sourceCount})` : `出典 ${sourceCount}件`)
+    : (isEnglish ? 'Record details' : '記録の詳細');
+  const linkState = makeDetailLinkState(location);
+  const linkStyle = 'min-w-0 break-words underline-offset-2 hover:underline';
+
+  return (
+    <li className="min-w-0">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 sm:gap-x-4">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 py-2.5">
+          {item.name === '不明' ? (
+            <span className="text-sm font-semibold text-ink">{isEnglish ? 'Unknown plant' : '不明'}</span>
+          ) : (
+            <Link to={buildPlantPath(item.name, locale)} state={linkState} className={`${linkStyle} text-sm font-semibold text-emerald-800 dark:text-emerald-300`}>
+              {label}
+            </Link>
+          )}
+          {observationBadges(item.observation.evidence, isEnglish)}
+          {item.familyKey && !item.isFamilyRecord && (
+            <Link to={buildPlantPath(item.familyKey, locale)} state={linkState} className={`${linkStyle} text-xs text-ink-muted`}>
+              {familyLabel}
+            </Link>
+          )}
+          {!sharedUsage && item.usage && (
+            <span className="text-xs text-ink-muted">{item.usage}</span>
+          )}
+        </div>
+        {hasDetails && (
+          <button
+            type="button"
+            aria-expanded={isOpen}
+            aria-controls={sourcePanelId}
+            aria-label={`${item.name}${isEnglish ? ': ' : 'の'}${sourceLabel}`}
+            onClick={() => setIsOpen(!isOpen)}
+            className="col-start-2 inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap px-1 text-xs font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500"
+          >
+            {sourceLabel}
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className={`h-3.5 w-3.5 ${isOpen ? 'rotate-180' : ''}`}>
+              <path d="m5 8 5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        )}
+      </div>
+      {hasDetails && (
+        <div id={sourcePanelId} hidden={!isOpen}>
+          {isOpen && (
+            <ul aria-label={sourceLabel} className="mb-2 divide-y divide-line rounded-lg border border-line bg-slate-50/70 px-3 dark:bg-slate-900/40">
+              {sources.map((source) => {
+                const notes = getPlantRelevantNotes(source.records)
+                  .map((note) => note.replace(sourcePagePattern, '').replace(/（\s*）|\(\s*\)/g, '').trim())
+                  .filter(Boolean);
+                if (!source.key && notes.length === 0) return null;
+                const recordPages = [...new Set(source.records.flatMap((record) =>
+                  Array.from(String(record.notes || '').matchAll(sourcePagePattern), (match) => match[1])
+                ))].join('、');
+                const pages = recordPages || source.publicationPages;
+                return (
+                  <li key={source.key} className="min-w-0 space-y-1 py-2 text-xs">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 break-words text-ink-muted">
+                      {source.link ? (
+                        <a href={source.link} target="_blank" rel={isAmazonAssociateUrl(source.link) ? 'sponsored noopener noreferrer' : 'noopener noreferrer'} className="font-semibold text-ink underline underline-offset-2">
+                          {source.label}
+                        </a>
+                      ) : (
+                        <span className="font-medium text-ink">{source.label || (isEnglish ? 'Source unspecified' : '出典の記載なし')}</span>
+                      )}
+                      {source.publication && source.publication !== source.label && <span>{source.publication}</span>}
+                      {pages && <span>{isEnglish ? `pp. ${pages}` : `${pages}頁`}</span>}
+                      {observationBadges(groupObservationEvidence(source.records, isEnglish), isEnglish)}
+                    </div>
+                    {notes.map((note) => <p className="break-words text-ink-muted" key={note}>{note}</p>)}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      )}
+    </li>
+  );
+};
+
+const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} }) => {
   const isEnglish = isEnglishLocale(locale);
   const [showAll, setShowAll] = useState(false);
+  const headingId = useId();
   const style = kind === 'flower' ? FLOWER_STYLE : HOST_STYLE;
+  const title = kind === 'flower'
+    ? (isEnglish ? 'Adult flower visits' : '成虫の訪花')
+    : (isEnglish ? 'Host plants' : '食草・食樹');
 
   const summary = useMemo(() => buildPlantUseSummary(groups, {
     usageLabelOf: (record) => getUsageLabel(record, isEnglish),
@@ -224,7 +351,6 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
       const evidence = groupObservationEvidence(group.records, isEnglish);
       return {
         key: evidence.map((entry) => entry.key).sort().join('|'),
-        label: evidence.map((entry) => getObservationLabel(entry.presentation, isEnglish)).join(' / '),
         priority: evidence[0].priority,
         evidence,
       };
@@ -241,178 +367,43 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
     return detail.scientificName ? formatScientificNameReact(primary) : primary;
   };
 
-  // 表示件数の上限（「他N種を表示」で全件）。科の見出しだけの記録も1件と数える
-  let remaining = showAll ? Infinity : INITIAL_PLANT_LIMIT;
-  const visibleFamilies = [];
-  summary.families.forEach((family) => {
-    if (remaining <= 0) return;
-    const items = family.items.slice(0, Math.max(0, remaining - (family.hasFamilyRecord ? 1 : 0)));
-    remaining -= items.length + (family.hasFamilyRecord ? 1 : 0);
-    visibleFamilies.push({ ...family, items });
-  });
-  const shownCount = visibleFamilies.reduce((total, family) => total + family.items.length + (family.hasFamilyRecord ? 1 : 0), 0);
-  const hiddenCount = summary.plantCount - shownCount;
-
-  const renderExtras = (item) => (
-    <>
-      {summary.commonUsage === null && item.usage && (
-        <span className="text-[11px] font-normal text-slate-600 dark:text-slate-300">{item.usage}</span>
-      )}
-      {summary.commonObservation === null && item.observation.evidence.map(({ key, presentation }) => (
-        <span key={key} className={`rounded border px-1 text-[11px] font-normal leading-4 ${presentation.borderColor} ${presentation.textColor}`}>
-          {getObservationLabel(presentation, isEnglish)}
-        </span>
-      ))}
-      {item.referenceNumbers.length > 0 && (
-        <sup
-          className="text-[10px] font-normal text-slate-600 dark:text-slate-300"
-          aria-label={isEnglish ? `Sources ${item.referenceNumbers.join(', ')}` : `出典${item.referenceNumbers.join('・')}`}
-        >
-          {item.referenceNumbers.join(',')}
-        </sup>
-      )}
-    </>
-  );
-
-  const familyCount = summary.familyCount;
-  const notes = summary.items.filter((item) => item.observation.evidence.length === 1 && item.notes.length > 0);
-  const mixedEvidence = summary.items.filter((item) => item.observation.evidence.length > 1);
+  const items = summary.families.flatMap((family) => family.hasFamilyRecord
+    ? [summary.items.find((item) => item.isFamilyRecord && item.familyKey === family.key), ...family.items]
+    : family.items);
+  const visibleItems = showAll ? items : items.slice(0, INITIAL_PLANT_LIMIT);
 
   return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <div className={`text-xs font-semibold uppercase tracking-wide ${style.labelText}`}>
-          {kind === 'flower'
-            ? (isEnglish ? 'Adult flower visits' : '成虫の訪花')
-            : (isEnglish ? 'Host plants' : '食草・寄主植物')}
-        </div>
-        <div className="text-xs text-slate-600 dark:text-slate-300">
-          {isEnglish
-            ? `${summary.plantCount} plants${familyCount > 1 ? ` in ${familyCount} families` : ''}`
-            : `${summary.plantCount}件${familyCount > 1 ? `（${familyCount}科）` : ''}`}
-        </div>
+    <section aria-labelledby={headingId} className="min-w-0">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-line pb-2">
+        <h3 id={headingId} className={`text-sm font-semibold ${style.headingText}`}>{title}</h3>
+        <span className="text-xs tabular-nums text-ink-muted">
+          {isEnglish ? `${summary.plantCount} plants` : `${summary.plantCount}件`}
+        </span>
       </div>
-
-      {(summary.commonUsage || summary.commonObservation) && (
-        <p className="text-xs text-slate-600 dark:text-slate-300">
-          {summary.commonUsage && (
-            <span className="mr-3">{isEnglish ? 'Use: ' : '利用: '}{summary.commonUsage}</span>
-          )}
-          {summary.commonObservation && (
-            <span>{isEnglish ? 'Observation setting: ' : '観察条件: '}{summary.commonObservation.label}</span>
-          )}
-        </p>
-      )}
-
-      <ul className="divide-y divide-slate-200/70 dark:divide-slate-700/60">
-        {visibleFamilies.map((family) => {
-          const familyRecord = family.hasFamilyRecord ? summary.items.find((item) => item.isFamilyRecord && item.familyKey === family.key) : null;
-          return (
-            <li key={family.key || '__unknown'} className="py-2 first:pt-0 last:pb-0">
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                {family.key ? (
-                  <Link
-                    to={buildPlantPath(family.key, locale)}
-                    state={makeDetailLinkState(location)}
-                    className="inline-flex min-h-[28px] items-center text-sm font-semibold text-slate-800 underline-offset-2 hover:text-emerald-700 hover:underline dark:text-slate-100 dark:hover:text-emerald-300"
-                  >
-                    {plantLabel(family.key)}
-                  </Link>
-                ) : (
-                  <span className="inline-flex min-h-[28px] items-center text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {isEnglish ? 'Family unknown' : '科の記載なし'}
-                  </span>
-                )}
-                {familyRecord ? (
-                  <span className="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
-                    {isEnglish ? '(recorded at family level)' : '（科として記録）'}
-                    {renderExtras(familyRecord)}
-                  </span>
-                ) : (
-                  <span className="text-xs text-slate-600 dark:text-slate-300">{family.count}</span>
-                )}
-              </div>
-              {family.items.length > 0 && (
-                <ul className="mt-1 flex flex-wrap gap-1.5">
-                  {family.items.map((item) => {
-                    const isUnknownPlant = item.name === '不明';
-                    const className = 'inline-flex min-h-[32px] items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm font-medium text-emerald-800 dark:border-slate-700 dark:bg-slate-900/50 dark:text-emerald-300';
-                    return (
-                      <li key={item.name}>
-                        {isUnknownPlant ? (
-                          <span className={className}>{plantLabel(item.name)}{renderExtras(item)}</span>
-                        ) : (
-                          <Link
-                            to={buildPlantPath(item.name, locale)}
-                            state={makeDetailLinkState(location)}
-                            className={`${className} transition-colors hover:border-emerald-300 hover:bg-emerald-50 dark:hover:border-emerald-600 dark:hover:bg-emerald-950/40`}
-                          >
-                            {plantLabel(item.name)}
-                            {renderExtras(item)}
-                          </Link>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </li>
-          );
-        })}
+      {summary.commonUsage && <p className="mt-1.5 text-xs text-ink-muted">{summary.commonUsage}</p>}
+      <ul className="divide-y divide-line">
+        {visibleItems.map((item) => (
+          <PlantUseRow
+            key={item.name}
+            item={item}
+            label={plantLabel(item.name)}
+            familyLabel={plantLabel(item.familyKey)}
+            sharedUsage={summary.commonUsage}
+            locale={locale}
+          />
+        ))}
       </ul>
-
-      {hiddenCount > 0 || showAll ? (
-        summary.plantCount > INITIAL_PLANT_LIMIT && (
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setShowAll(!showAll)}
-              aria-expanded={showAll}
-              className={`inline-flex min-h-[40px] items-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 ${style.labelText}`}
-            >
-              {showAll ? (isEnglish ? 'Show less' : '簡略表示') : buildShowMoreLabel(hiddenCount, isEnglish)}
-            </button>
-          </div>
-        )
-      ) : null}
-
-      {mixedEvidence.map((item) => (
-        <dl key={item.name} className="space-y-1 text-xs text-slate-600 dark:text-slate-300">
-          <dt className="font-medium">{plantLabel(item.name)}</dt>
-          {item.observation.evidence.map(({ key, presentation, records }) => (
-            <dd key={key} className="ml-3">
-              <span className={presentation.textColor}>{getObservationLabel(presentation, isEnglish)}</span>
-              {getPlantRelevantNotes(records).map((note) => <p key={note}>{note}</p>)}
-              <SourceCitation sources={records.map((record) => record.reference)} isEnglish={isEnglish} />
-            </dd>
-          ))}
-        </dl>
-      ))}
-
-      {notes.length > 0 && (
-        <div className="text-xs text-slate-600 dark:text-slate-300">
-          <div className="font-medium">{isEnglish ? 'Notes' : '備考'}</div>
-          <ul className="mt-0.5 list-disc space-y-0.5 pl-5">
-            {notes.flatMap((item) => item.notes.map((note) => (
-              <li key={`${item.name}-${note}`}>{item.isFamilyRecord || item.name === '不明' ? '' : `${item.name}: `}{note}</li>
-            )))}
-          </ul>
-        </div>
+      {items.length > INITIAL_PLANT_LIMIT && (
+        <button
+          type="button"
+          onClick={() => setShowAll(!showAll)}
+          aria-expanded={showAll}
+          className={`inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 ${style.labelText}`}
+        >
+          {showAll ? (isEnglish ? 'Show less' : '簡略表示') : buildShowMoreLabel(items.length - visibleItems.length, isEnglish)}
+        </button>
       )}
-
-      {summary.commonReferences && summary.commonReferences.length > 0 && (
-        <SourceCitation sources={summary.commonReferences} isEnglish={isEnglish} />
-      )}
-      {summary.referenceOrder.length > 0 && (
-        <ol className="space-y-0.5">
-          {summary.referenceOrder.map((ref, index) => (
-            <li key={ref}>
-              <SourceCitation sources={[ref]} isEnglish={isEnglish} label={`${isEnglish ? 'Source' : '出典'} ${index + 1}`} />
-            </li>
-          ))}
-        </ol>
-      )}
-    </div>
+    </section>
   );
 };
 

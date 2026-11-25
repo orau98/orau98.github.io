@@ -22,6 +22,7 @@ export const PAGES = [
   { name: '植物一覧', path: '/?tab=plants', waitFor: '件が見つかりました' },
   { name: '昆虫一覧ページ（/moth/）', path: '/moth/', waitFor: '件が見つかりました', seo: true },
   { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
+  { name: '植物ごとの出典（ウスイロオナガシジミ）', path: `/butterfly/${E('ウスイロオナガシジミ')}/`, waitFor: 'ウラジロガシ', plantSources: true },
   { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true },
   { name: '観察ガイド（コナラ）', path: `/plant/${E('コナラ')}/`, waitFor: '見つけた場所から虫を調べる', seo: true, observationGuide: true },
   { name: '検索（アゲハ）', path: `/?q=${E('アゲハ')}`, waitFor: '件が見つかりました' },
@@ -168,6 +169,26 @@ async function checkPage(browser, origin, page, viewport) {
       } catch {
         problems.push('虫の記録へのリンクで関連昆虫の一覧に移動できない');
       }
+    }
+  }
+  if (page.plantSources) {
+    const toggle = tab.getByRole('button', { name: 'ウラジロガシの出典 2件', exact: true });
+    try {
+      await toggle.waitFor({ timeout: 5000 });
+      const row = toggle.locator('xpath=../..');
+      const settings = await row.getByRole('group', { name: '観察条件' }).first().innerText();
+      if (!settings.includes('野外') || !settings.includes('飼育') || await toggle.getAttribute('aria-expanded') !== 'false') {
+        problems.push('植物の行に観察条件が並んでいない、または出典が初期表示で開いている');
+      }
+      await toggle.press('Enter');
+      const sources = await row.getByRole('list', { name: '出典 2件' }).innerText();
+      if (await toggle.getAttribute('aria-expanded') !== 'true' || !sources.includes('IRATSUME') || !sources.includes('日本産蝶類標準図鑑')) {
+        problems.push('植物の出典を開くと2文献が表示されない');
+      }
+      await toggle.press('Enter');
+      if (await toggle.getAttribute('aria-expanded') !== 'false') problems.push('植物の出典を閉じられない');
+    } catch (error) {
+      problems.push(`植物ごとの出典を確認できない: ${error.message.split('\n')[0]}`);
     }
   }
   await context.close();
