@@ -120,6 +120,8 @@ let notes = noteFile.rows;
 let hostplantsChanged = 0;
 let insectsChanged = 0;
 let notesChanged = 0;
+const expectedAfter = countExactReferences(hostplants);
+const appliedHostActions = [];
 
 const hostById = () => new Map(hostplants.map(row => [row.record_id, row]));
 for (const action of audit.actions) {
@@ -132,6 +134,7 @@ for (const action of audit.actions) {
     }
     hostplants = hostplants.filter(row => row.record_id !== action.record_id);
     hostplantsChanged += 1;
+    appliedHostActions.push(action);
     continue;
   }
   if (action.action === 'update_hostplant') {
@@ -142,6 +145,7 @@ for (const action of audit.actions) {
     }
     Object.assign(existing, action.after);
     hostplantsChanged += 1;
+    appliedHostActions.push(action);
     continue;
   }
   if (existing) {
@@ -150,6 +154,7 @@ for (const action of audit.actions) {
   }
   hostplants.push({ ...action.after });
   hostplantsChanged += 1;
+  appliedHostActions.push(action);
 }
 
 for (const identity of audit.identity_actions) {
@@ -217,8 +222,12 @@ for (const identity of audit.identity_actions) {
 }
 
 const resultingCounts = countExactReferences(hostplants);
-const expectedAfter = audit.scan_scope.exact_reference_rows_after_expected_by_reference;
-for (const [reference, expectedCount] of Object.entries(expectedAfter)) {
+// Validate the changes in this ledger without imposing the 2026-07 snapshot
+// count on later source audits.
+const removedByReference = countExactReferences(appliedHostActions.flatMap(({ before }) => before ? [before] : []));
+const addedByReference = countExactReferences(appliedHostActions.flatMap(({ after }) => after ? [after] : []));
+for (const [reference, countBefore] of Object.entries(expectedAfter)) {
+  const expectedCount = countBefore - removedByReference[reference] + addedByReference[reference];
   if (resultingCounts[reference] !== expectedCount) {
     throw new Error(`Unexpected resulting row count for ${reference}: ${resultingCounts[reference]} != ${expectedCount}`);
   }
