@@ -242,3 +242,19 @@ test('日本産蛾類標準図鑑3のホタルガ類とモモブトスカシバ�
     assert.equal(oo.has('キカラスウリ'), true, `${csvPath} should keep キカラスウリ for オオモモブトスカシバ`);
   }
 });
+
+test('冬尺蛾の生態・出現時期は原本照合した訂正とページ番号を保持する', () => {
+  const auditPath = 'data/source_audits/standard-moth-guide-1-note-recheck-2026-11-25.json';
+  const audit = JSON.parse(fs.readFileSync(path.join(ROOT, auditPath), 'utf-8'));
+  const notes = new Map(parseCsv('normalized_data/general_notes.csv').map((row) => [row.record_id, row]));
+
+  for (const entry of audit.corrected_records) {
+    const row = notes.get(entry.record_id);
+    assert.ok(row, entry.record_id);
+    assert.equal(row.insect_id, entry.insect_id, entry.record_id);
+    assert.equal(row.note_type, entry.type, entry.record_id);
+    assert.equal(row.reference, audit.source, entry.record_id);
+    assert.equal(row.content, entry.after, entry.record_id);
+    assert.equal(row.page, entry.page, entry.record_id);
+  }
+});
