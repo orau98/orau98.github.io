@@ -552,7 +552,7 @@ const observationCatalog = INSECT_SECTION_CONFIGS.flatMap(({ collectionKey }) =>
 for (const [plant, part, insect] of [
   ['コナラ', 'ドングリ', 'ヒロバクロサンカクモンヒメハマキ'],
   ['ケヤキ', '虫こぶ', 'ケヤキフシアブラムシ'],
-  ['サクラ', '葉で見つけた幼虫', 'モンクロシャチホコ'],
+  ['サクラ', '葉で見つけた幼虫', 'クロマダラシロヒメハマキ'],
 ]) {
   const html = readDistText(`plant/${plant}/index.html`);
   const guide = html.match(/<section[^>]*data-plant-observation-guide[\s\S]*?<\/section>/)?.[0] || '';
