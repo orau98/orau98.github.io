@@ -552,16 +552,13 @@ const PlantInsectList = ({
     (section) => section.withPhoto.length > (isFiltered ? PHOTO_LIMIT_FILTERED : PHOTO_LIMIT_PER_GROUP)
       || section.withoutPhoto.length > (isFiltered ? CHIP_LIMIT_FILTERED : CHIP_LIMIT_PER_GROUP),
   );
-  const photoCount = groups.withPhoto.length;
-  const countText = (count, withPhotoCount) => (withPhotoCount > 0 && withPhotoCount < count
-    ? (isEnglish ? `${count}, ${withPhotoCount} with photos` : `${count}種・写真あり${withPhotoCount}種`)
-    : (isEnglish ? `${count}` : `${count}種`));
+  const countText = (count) => (isEnglish ? `${count}` : `${count}種`);
 
   return (
     <div>
       <h3 className={`text-lg font-semibold mb-3 ${titleClassName}`}>
         {title}{' '}
-        <span className="text-base font-medium">({countText(total, photoCount)})</span>
+        <span className="text-base font-medium">({countText(total)})</span>
       </h3>
       {showGroupHeadings && (
         <div className="mb-4 flex flex-wrap gap-2" role="group" aria-label={isEnglish ? 'Filter by insect group' : '昆虫のグループで絞り込む'}>
@@ -589,7 +586,7 @@ const PlantInsectList = ({
               {showGroupHeadings && (
                 <h4 className="mb-3 flex flex-wrap items-baseline gap-x-2 border-b border-slate-200 pb-1 text-base font-bold text-slate-800 dark:border-slate-700 dark:text-slate-100">
                   {section.label}
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{countText(section.count, section.withPhoto.length)}</span>
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{countText(section.count)}</span>
                 </h4>
               )}
               {section.withPhoto.length > 0 && (
@@ -601,11 +598,6 @@ const PlantInsectList = ({
               )}
               {section.withoutPhoto.length > 0 && (
                 <div className={section.withPhoto.length > 0 ? 'mt-4' : ''}>
-                  {section.withPhoto.length > 0 && (
-                    <p className="mb-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
-                      {isEnglish ? 'No photo yet:' : '写真未登録:'}
-                    </p>
-                  )}
                   <div className="flex flex-wrap gap-1.5">
                     {section.withoutPhoto.slice(0, chipLimit).map((insect, idx) => (
                       <InsectNameChip key={`${cardKeyPrefix}-chip-${insect.id || idx}`} insect={insect} locale={locale} />
@@ -2210,7 +2202,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
             <SourceCitation
               sources={buildSourceLabel(plantProfile)}
               isEnglish={isEnglish}
-              resolveLinks={false}
+                  resolveLinks={false}
+                  collapsible
                   className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
                 />
               </div>
@@ -2251,7 +2244,8 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
                 <SourceCitation
                   sources={buildSourceLabel(entry.profile)}
                   isEnglish={isEnglish}
-                  resolveLinks={false}
+                      resolveLinks={false}
+                  collapsible
                   className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
                 />
               </div>

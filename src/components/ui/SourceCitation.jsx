@@ -1,7 +1,36 @@
-import { Fragment } from 'react';
+import { Fragment, useId, useState } from 'react';
 import { getReferenceMetaList } from '../../utils/sourceLinks';
 import { isAmazonAssociateUrl } from '../../utils/amazonAssociates';
 import { cx } from './cx';
+import { RecordToggle } from './RecordRow';
+
+export function SourceReferenceList({ items, label, isEnglish = false, renderDetails }) {
+  return (
+    <ul aria-label={label} className="mb-2 divide-y divide-line rounded-lg border border-line bg-slate-50/70 px-3 dark:bg-slate-900/40">
+      {items.map((item) => {
+        const title = item.label || item.displayLabel || (isEnglish ? 'Source unspecified' : '出典の記載なし');
+        const details = renderDetails?.(item);
+        return (
+          <li key={item.key || title} className="min-w-0 space-y-1 py-2 text-xs">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 break-words text-ink-muted">
+              {item.link ? (
+                <a href={item.link} target="_blank" rel={isAmazonAssociateUrl(item.link) ? 'sponsored noopener noreferrer' : 'noopener noreferrer'} className="font-semibold text-ink underline underline-offset-2">
+                  {title}
+                </a>
+              ) : (
+                <span className="font-medium text-ink">{title}</span>
+              )}
+              {item.publication && item.publication !== title && <span>{item.publication}</span>}
+              {item.pages && <span>{isEnglish ? `pp. ${item.pages}` : `${item.pages}頁`}</span>}
+              {details?.badges}
+            </div>
+            {details?.notes}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 const splitPlain = (sources) =>
   (Array.isArray(sources) ? sources : [sources])
@@ -11,9 +40,8 @@ const splitPlain = (sources) =>
 
 /**
  * 出典の統一表示（サイト全体で配置・トーンを単一化）。
- * - 常に「本文の下・独立した1行」に、控えめ（text-xs / ink-muted）で表示する。
- *   ＝ インライン（文の右）と混在させない。出典の多いデータベースでは、本文を汚さず
- *   内容の長さに依存せず一貫して読める「下配置」を採用。
+ * - 詳細ページでは collapsible を指定し、出典件数から書誌を展開する。
+ * - 一覧などの既存呼び出しでは控えめな書誌の行を表示する。
  * - resolveLinks=true（既定）: getReferenceMetaList で正規化・重複除去・URL 解決（昆虫文献キー向き）。
  * - resolveLinks=false: 与えられた文字列をそのまま表示（ページ番号付きの植物プロフィール等、
  *   正規化でページが消える用途）。
@@ -24,15 +52,35 @@ export default function SourceCitation({
   isEnglish = false,
   resolveLinks = true,
   label,
+  collapsible = false,
   className = '',
 }) {
+  const panelId = useId();
+  const [expanded, setExpanded] = useState(false);
   if (!sources || (Array.isArray(sources) && sources.length === 0)) return null;
 
   const items = resolveLinks
-    ? getReferenceMetaList(sources)
-    : splitPlain(sources).map((displayLabel) => ({ displayLabel, link: null }));
+    ? getReferenceMetaList(sources, { compact: collapsible })
+    : (collapsible ? [...new Set(splitPlain(sources))] : splitPlain(sources))
+      .map((displayLabel) => ({ displayLabel, link: null }));
 
   if (!items.length) return null;
+
+  if (collapsible) {
+    const countLabel = isEnglish ? `Sources (${items.length})` : `出典 ${items.length}件`;
+    return (
+      <div className={className}>
+        <div className="flex justify-end">
+          <RecordToggle expanded={expanded} controls={panelId} onToggle={() => setExpanded(!expanded)}>
+            {countLabel}
+          </RecordToggle>
+        </div>
+        <div id={panelId} hidden={!expanded}>
+          {expanded && <SourceReferenceList items={items} label={countLabel} isEnglish={isEnglish} />}
+        </div>
+      </div>
+    );
+  }
 
   const resolvedLabel = label ?? (isEnglish ? 'Source' : '出典');
 

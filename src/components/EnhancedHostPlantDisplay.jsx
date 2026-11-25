@@ -1,10 +1,9 @@
 import { isFlowerVisitRecord } from '../utils/flowerVisitPlants.js';
 import React, { useId, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import SourceCitation from './ui/SourceCitation';
-import { getReferenceMeta } from '../utils/sourceLinks';
-import { formatCitationContributors, getBibliographyEntry } from '../utils/bibliography';
-import { isAmazonAssociateUrl } from '../utils/amazonAssociates';
+import SourceCitation, { SourceReferenceList } from './ui/SourceCitation';
+import { RecordPlantLink, RecordRow, RecordToggle } from './ui/RecordRow';
+import { getCompactReferenceMeta } from '../utils/sourceLinks';
 import { makeDetailLinkState } from '../utils/navState';
 import { buildPlantPath } from '../utils/siteTaxonomy';
 import { isEnglishLocale } from '../utils/locale';
@@ -216,18 +215,9 @@ const getPlantSources = (records) => {
   for (const record of records) {
     const references = String(record.reference || '').split(/[;；]/).map((value) => value.trim()).filter(Boolean);
     for (const reference of references.length ? references : ['']) {
-      const entry = getBibliographyEntry(reference);
-      const meta = getReferenceMeta(reference);
-      const key = entry?.key || meta.key || reference;
-      if (!sources.has(key)) {
-        const author = entry && formatCitationContributors(entry);
-        const label = author && entry.year ? `${author} (${entry.year})` : author || meta.displayLabel || reference;
-        const publication = entry?.journal
-          ? [entry.journal, entry.volume && entry.issue ? `${entry.volume}(${entry.issue})` : entry.volume || entry.issue].filter(Boolean).join(' ')
-          : entry?.title;
-        sources.set(key, { key, label, link: meta.link, publication, publicationPages: entry?.journal ? entry.pages : '', records: [] });
-      }
-      const source = sources.get(key);
+      const meta = getCompactReferenceMeta(reference);
+      if (!sources.has(meta.key)) sources.set(meta.key, { ...meta, records: [] });
+      const source = sources.get(meta.key);
       if (!source.records.includes(record)) source.records.push(record);
     }
   }
@@ -248,7 +238,6 @@ const sourcePagePattern = /該当頁\s*([0-9０-９]+(?:\s*[、,–〜-]\s*[0-9�
 
 const PlantUseRow = ({ item, label, familyLabel, locale, sharedUsage }) => {
   const isEnglish = isEnglishLocale(locale);
-  const location = useLocation();
   const sourcePanelId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const sources = getPlantSources(item.group.records);
@@ -257,78 +246,50 @@ const PlantUseRow = ({ item, label, familyLabel, locale, sharedUsage }) => {
   const sourceLabel = sourceCount
     ? (isEnglish ? `Sources (${sourceCount})` : `出典 ${sourceCount}件`)
     : (isEnglish ? 'Record details' : '記録の詳細');
-  const linkState = makeDetailLinkState(location);
-  const linkStyle = 'min-w-0 break-words underline-offset-2 hover:underline';
-
   return (
     <li className="min-w-0">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 sm:gap-x-4">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 py-2.5">
-          {item.name === '不明' ? (
-            <span className="text-sm font-semibold text-ink">{isEnglish ? 'Unknown plant' : '不明'}</span>
-          ) : (
-            <Link to={buildPlantPath(item.name, locale)} state={linkState} className={`${linkStyle} text-sm font-semibold text-emerald-800 dark:text-emerald-300`}>
-              {label}
-            </Link>
-          )}
-          {observationBadges(item.observation.evidence, isEnglish)}
-          {item.familyKey && !item.isFamilyRecord && (
-            <Link to={buildPlantPath(item.familyKey, locale)} state={linkState} className={`${linkStyle} text-xs text-ink-muted`}>
-              {familyLabel}
-            </Link>
-          )}
-          {!sharedUsage && item.usage && (
-            <span className="text-xs text-ink-muted">{item.usage}</span>
-          )}
-        </div>
-        {hasDetails && (
-          <button
-            type="button"
-            aria-expanded={isOpen}
-            aria-controls={sourcePanelId}
-            aria-label={`${item.name}${isEnglish ? ': ' : 'の'}${sourceLabel}`}
-            onClick={() => setIsOpen(!isOpen)}
-            className="col-start-2 inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap px-1 text-xs font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500"
-          >
-            {sourceLabel}
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className={`h-3.5 w-3.5 ${isOpen ? 'rotate-180' : ''}`}>
-              <path d="m5 8 5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+      <RecordRow action={hasDetails && (
+        <RecordToggle
+          expanded={isOpen}
+          controls={sourcePanelId}
+          label={`${item.name}${isEnglish ? ': ' : 'の'}${sourceLabel}`}
+          onToggle={() => setIsOpen(!isOpen)}
+        >
+          {sourceLabel}
+        </RecordToggle>
+      )}>
+        {item.name === '不明' ? (
+          <span className="text-sm font-semibold text-ink">{isEnglish ? 'Unknown plant' : '不明'}</span>
+        ) : (
+          <RecordPlantLink name={item.name} locale={locale}>{label}</RecordPlantLink>
         )}
-      </div>
+        {observationBadges(item.observation.evidence, isEnglish)}
+        {item.familyKey && !item.isFamilyRecord && (
+          <RecordPlantLink name={item.familyKey} locale={locale} family>{familyLabel}</RecordPlantLink>
+        )}
+        {!sharedUsage && item.usage && <span className="text-xs text-ink-muted">{item.usage}</span>}
+      </RecordRow>
       {hasDetails && (
         <div id={sourcePanelId} hidden={!isOpen}>
           {isOpen && (
-            <ul aria-label={sourceLabel} className="mb-2 divide-y divide-line rounded-lg border border-line bg-slate-50/70 px-3 dark:bg-slate-900/40">
-              {sources.map((source) => {
+            <SourceReferenceList
+              label={sourceLabel}
+              isEnglish={isEnglish}
+              items={sources.flatMap((source) => {
                 const notes = getPlantRelevantNotes(source.records)
                   .map((note) => note.replace(sourcePagePattern, '').replace(/（\s*）|\(\s*\)/g, '').trim())
                   .filter(Boolean);
-                if (!source.key && notes.length === 0) return null;
+                if (!source.key && notes.length === 0) return [];
                 const recordPages = [...new Set(source.records.flatMap((record) =>
                   Array.from(String(record.notes || '').matchAll(sourcePagePattern), (match) => match[1])
                 ))].join('、');
-                const pages = recordPages || source.publicationPages;
-                return (
-                  <li key={source.key} className="min-w-0 space-y-1 py-2 text-xs">
-                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 break-words text-ink-muted">
-                      {source.link ? (
-                        <a href={source.link} target="_blank" rel={isAmazonAssociateUrl(source.link) ? 'sponsored noopener noreferrer' : 'noopener noreferrer'} className="font-semibold text-ink underline underline-offset-2">
-                          {source.label}
-                        </a>
-                      ) : (
-                        <span className="font-medium text-ink">{source.label || (isEnglish ? 'Source unspecified' : '出典の記載なし')}</span>
-                      )}
-                      {source.publication && source.publication !== source.label && <span>{source.publication}</span>}
-                      {pages && <span>{isEnglish ? `pp. ${pages}` : `${pages}頁`}</span>}
-                      {observationBadges(groupObservationEvidence(source.records, isEnglish), isEnglish)}
-                    </div>
-                    {notes.map((note) => <p className="break-words text-ink-muted" key={note}>{note}</p>)}
-                  </li>
-                );
+                return [{ ...source, pages: recordPages || source.pages, notes }];
               })}
-            </ul>
+              renderDetails={(source) => ({
+                badges: observationBadges(groupObservationEvidence(source.records, isEnglish), isEnglish),
+                notes: source.notes.map((note) => <p className="break-words text-ink-muted" key={note}>{note}</p>),
+              })}
+            />
           )}
         </div>
       )}
@@ -551,7 +512,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
         return (
           <div key={key} className="mt-2 pt-2 border-t border-emerald-200/30 dark:border-emerald-700/30 space-y-1.5">
             {evidence.length > 1 && <p className={`text-xs font-medium ${presentation.textColor}`}>{getObservationLabel(presentation, isEnglish)}</p>}
-            <SourceCitation sources={references} isEnglish={isEnglish} />
+            <SourceCitation sources={references} isEnglish={isEnglish} collapsible />
             {notes.length > 0 && (
               <div className="flex items-start space-x-2">
                 <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

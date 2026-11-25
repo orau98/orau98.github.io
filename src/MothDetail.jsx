@@ -1956,7 +1956,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 {/* 出典情報（サイト共通の控えめ表記） */}
                 {moth.source && (
                   <div className="mt-4 pt-4 border-t border-emerald-200/30 dark:border-emerald-700/30">
-                    <SourceCitation sources={moth.source} isEnglish={isEnglish} />
+                    <SourceCitation sources={moth.source} isEnglish={isEnglish} collapsible />
                   </div>
                 )}
               </div>
@@ -2158,6 +2158,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                         {note.reference && (
                           <SourceCitation
                             sources={note.reference}
+                            collapsible
                             isEnglish={isEnglish}
                             className="mt-1"
                           />

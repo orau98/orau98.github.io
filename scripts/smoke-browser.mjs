@@ -187,6 +187,21 @@ async function checkPage(browser, origin, page, viewport) {
       }
       await toggle.press('Enter');
       if (await toggle.getAttribute('aria-expanded') !== 'false') problems.push('植物の出典を閉じられない');
+
+      const related = tab.locator('#related-insects');
+      const relatedToggle = related.getByRole('button', { name: /ウラジロガシを利用する昆虫 [0-9]+種/ });
+      await relatedToggle.waitFor({ timeout: 10000 });
+      if (/写真あり[0-9]+種/.test(await related.innerText())) problems.push('関連昆虫に写真付きの種数が重複表示されている');
+      const wasOpen = await relatedToggle.getAttribute('aria-expanded');
+      await relatedToggle.click();
+      if (await relatedToggle.getAttribute('aria-expanded') === wasOpen) problems.push('関連昆虫の行を開閉できない');
+
+      const season = tab.locator('#adult-season');
+      const seasonToggle = season.getByRole('button', { name: /^出典 [0-9]+件$/ });
+      await seasonToggle.click();
+      if (await season.getByRole('list', { name: /^出典 [0-9]+件$/ }).count() !== 1) {
+        problems.push('発生時期の出典を同じ形式で開けない');
+      }
     } catch (error) {
       problems.push(`植物ごとの出典を確認できない: ${error.message.split('\n')[0]}`);
     }

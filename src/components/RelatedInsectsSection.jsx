@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { buildInsectPath } from '../utils/insectSlug';
 import { isEnglishLocale } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
-import { buildPlantPath } from '../utils/siteTaxonomy';
+import { RecordPlantLink, RecordRow, RecordToggle } from './ui/RecordRow';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import ImageWithFallback from './ImageWithFallback';
@@ -65,7 +65,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
   }
 
   return (
-    <div className="related-insects-section bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/70 dark:border-slate-700/50 overflow-hidden">
+    <div className="related-insects-section overflow-hidden rounded-card border border-line bg-surface shadow-e1">
       <div className="p-4 bg-blue-500/10 dark:bg-blue-500/20 border-b border-blue-200/30 dark:border-blue-700/30">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-blue-500 rounded-lg">
@@ -79,7 +79,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
         </div>
       </div>
       
-      <div className="divide-y divide-slate-200/80 px-4 py-1 dark:divide-slate-700/60">
+      <div className="divide-y divide-line px-4 py-1">
         {plantEntries.slice(0, showAllGroups ? plantEntries.length : GROUP_LIMIT).map(([plant, relatedMothNames]) => {
           // 写真あり種はカード、写真なし種はコンパクトなチップに分ける
           // （写真なしの大きな空カードが並ぶのを避ける）
@@ -115,45 +115,28 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
           const isOpen = openPlants.has(plant);
           const panelId = `related-${encodeURIComponent(plant)}`;
           const hiddenChipCount = isExpanded ? 0 : Math.max(0, withoutPhoto.length - COLLAPSED_CHIP_COUNT);
-          const countLabel = withPhoto.length > 0 && withoutPhoto.length > 0
-            ? (isEnglish
-              ? `${relatedMothNames.length} species, ${withPhoto.length} with photos`
-              : `全${relatedMothNames.length}種・写真あり${withPhoto.length}種`)
-            : (isEnglish ? `${relatedMothNames.length} species` : `${relatedMothNames.length}種`);
+          const countLabel = isEnglish ? `${relatedMothNames.length} species` : `${relatedMothNames.length}種`;
 
           return (
-            <div key={plant} className="space-y-4 py-2.5">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                  <Link
-                    to={buildPlantPath(plant, locale)}
-                    state={makeDetailLinkState(location)}
-                    className="inline-flex min-h-[32px] items-center px-3 py-1 rounded-lg text-sm font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all duration-200 border border-emerald-200/50 dark:border-emerald-700/50 hover:border-emerald-300 dark:hover:border-emerald-600"
-                  >
-                    {isEnglish && plantScientificName
-                      ? formatScientificNameReact(plantLabel)
-                      : plantLabel}
-                  </Link>
-                  {/* 「20種」なのにカードが数枚だと混乱するため、写真あり件数を分けて明示する */}
-                  <span className="text-sm text-slate-600 dark:text-slate-300">({countLabel})</span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => toggleOpen(plant)}
-                  aria-expanded={isOpen}
-                  aria-controls={panelId}
-                  className="inline-flex min-h-[40px] shrink-0 items-center gap-1 rounded-lg px-3 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-blue-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-blue-300"
+            <div key={plant}>
+              <RecordRow action={(
+                <RecordToggle
+                  expanded={isOpen}
+                  controls={panelId}
+                  label={isEnglish ? `${plantLabel}: ${countLabel}` : `${plant}を利用する昆虫 ${countLabel}`}
+                  onToggle={() => toggleOpen(plant)}
                 >
-                  {isOpen ? (isEnglish ? 'Hide' : '閉じる') : (isEnglish ? 'Show' : '表示')}
-                  <svg className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </div>
+                  {countLabel}
+                </RecordToggle>
+              )}>
+                <RecordPlantLink name={plant} locale={locale}>
+                  {isEnglish && plantScientificName ? formatScientificNameReact(plantLabel) : plantLabel}
+                </RecordPlantLink>
+              </RecordRow>
 
+            <div id={panelId} hidden={!isOpen} className="space-y-4 pb-3">
             {isOpen && (
-            <div id={panelId} className="space-y-4">
+              <>
             {/* 写真あり種: コンテナ幅に自動追従する折り返しグリッド。
                 この列は写真パネル有無で幅が大きく変わる（狭いサイド列⇔全幅）ため、
                 ビューポート基準のbreakpointではなくauto-fillでカード幅を一定に保つ。
@@ -227,11 +210,6 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                 見た目（角丸・枠・種別カラーのドット・ホバー挙動）で統一感を持たせる */}
             {withoutPhoto.length > 0 && (
               <div>
-                {withPhoto.length > 0 && (
-                  <p className="mb-2 text-xs font-medium text-slate-400 dark:text-slate-500">
-                    {isEnglish ? 'No photo yet:' : '写真未登録:'}
-                  </p>
-                )}
                 <div className="flex flex-wrap gap-2">
                   {withoutPhoto.slice(0, isExpanded ? withoutPhoto.length : COLLAPSED_CHIP_COUNT).map(({ name: relatedMothName, insect: relatedMoth }) => {
                     const chipName = isEnglish
@@ -278,8 +256,9 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                 </button>
               </div>
             )}
-            </div>
+              </>
             )}
+            </div>
           </div>
           );
         })}

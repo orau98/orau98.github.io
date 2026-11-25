@@ -1,5 +1,5 @@
 import { buildAmazonBookUrl } from './amazonAssociates.js';
-import { formatBibliographyCitation, getBibliographyEntry } from './bibliography.js';
+import { formatBibliographyCitation, formatCitationContributors, getBibliographyEntry } from './bibliography.js';
 
 // 文献名とリンクのマッピング（書籍はAmazonアソシエイト、非売品・論文等は一次情報）
 export const sourceLinks = {
@@ -130,7 +130,25 @@ export const getReferenceMeta = (source) => {
   };
 };
 
-export const getReferenceMetaList = (sources) => {
+export const getCompactReferenceMeta = (source) => {
+  const meta = getReferenceMeta(source);
+  const entry = getBibliographyEntry(source);
+  const authors = entry ? formatCitationContributors(entry) : '';
+  const label = authors
+    ? [authors, entry.year && `(${entry.year})`].filter(Boolean).join(' ')
+    : entry?.title || meta.displayLabel || source;
+  const issue = entry?.volume && entry.issue ? `${entry.volume}(${entry.issue})` : entry?.volume || entry?.issue;
+  const publication = entry?.journal ? [entry.journal, issue].filter(Boolean).join(' ') : entry?.title;
+  return {
+    ...meta,
+    key: entry?.key || meta.key || source,
+    label,
+    publication,
+    pages: entry?.journal ? entry.pages : '',
+  };
+};
+
+export const getReferenceMetaList = (sources, { compact = false } = {}) => {
   const values = Array.isArray(sources) ? sources : [sources];
   const entries = [];
   const seen = new Map();
@@ -140,12 +158,13 @@ export const getReferenceMetaList = (sources) => {
     .map((value) => value.trim())
     .filter(Boolean)
     .forEach((raw) => {
-      const meta = getReferenceMeta(raw);
+      const meta = compact ? getCompactReferenceMeta(raw) : getReferenceMeta(raw);
       const key = meta.key || raw;
       if (!key) return;
 
       if (!seen.has(key)) {
         const entry = {
+          ...(compact ? meta : {}),
           displayLabel: meta.displayLabel || raw,
           link: meta.link,
         };

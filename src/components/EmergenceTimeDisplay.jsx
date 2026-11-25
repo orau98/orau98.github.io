@@ -223,7 +223,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
         </div>
         {source && (
           <div className="mt-4 pt-4 border-t border-line">
-            <SourceCitation sources={source} isEnglish={isEnglish} />
+            <SourceCitation sources={source} isEnglish={isEnglish} collapsible />
           </div>
         )}
       </div>
