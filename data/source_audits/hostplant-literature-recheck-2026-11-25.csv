@@ -1,0 +1,22 @@
+判定,record_id,insect_id,昆虫名,対象,文献,印刷頁,資料URL,根拠
+除外,hostplant-911403,1-4,ウスバカミキリ 八重山亜種,ハリギリ,日本産カミキリムシ,341–342,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,基亜種から転記。八重山亜種の寄主欄は各種広葉樹。
+除外,hostplant-911417,13-2,ノコギリカミキリ 屋久島亜種,ハリギリ,日本産カミキリムシ,342–343,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,基亜種から転記。屋久島亜種の寄主欄は未知。
+除外,hostplant-911418,13-2,ノコギリカミキリ 屋久島亜種,オリーブ,日本産カミキリムシ,342–343,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,基亜種から転記。屋久島亜種の寄主欄は未知。
+除外,hostplant-911419,13-2,ノコギリカミキリ 屋久島亜種,タケ類,日本産カミキリムシ,342–343,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,基亜種から転記。屋久島亜種の寄主欄は未知。
+訂正,host-kamikiri-host-index-p178-l16226-14,14,ニセノコギリカミキリ,アカマツの部位を根茎に補足,日本産カミキリムシ,343,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,種解説の寄主欄にアカマツ・クロマツの根茎と記載。部位は原文表記。
+訂正,note-1005481,1-4,ウスバカミキリ 八重山亜種,成虫出現期 5〜9月 → 4〜6月,日本産カミキリムシ,342,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,該当亜種の成虫出現期を原画像で確認。
+訂正,note-1005484,13-2,ノコギリカミキリ 屋久島亜種,成虫出現期 5〜9月 → 7月,日本産カミキリムシ,343,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,該当亜種の成虫出現期を原画像で確認。
+追加,host-literature-recheck-20261125-001,1-4,ウスバカミキリ 八重山亜種,各種広葉樹,日本産カミキリムシ,342,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,八重山亜種の寄主欄に記載（p. 342）
+追加,host-literature-recheck-20261125-002,14,ニセノコギリカミキリ,クロマツ,日本産カミキリムシ,343,https://ndlsearch.ndl.go.jp/books/R100000002-I000008480283,種解説の寄主欄に記載（p. 343）
+追加,host-literature-recheck-20261125-003,species-20392,アサギマダラ,ガガイモ,新家 勝 (2001),50,https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_50.pdf,兵庫県武田尾で産卵。ふ化は未確認
+追加,host-literature-recheck-20261125-004,species-20280,ウラナミシジミ,セイヨウミヤコグサ,浅田 卓 (2001),51,https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_51.pdf,淡路島で葉の表側の縁に産卵。近くの食痕の加害種は不明
+追加,host-literature-recheck-20261125-005,species-20307,ヒメアカタテハ,オオオナモミ,近藤 伸一 (2001),51,https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_51.pdf,兵庫県の淡路島と加古川河川敷で葉上に幼虫を確認
+追加,host-literature-recheck-20261125-006,species-20307,ヒメアカタテハ,オオオナモミ,近藤 伸一 (2001),51,https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_51.pdf,同じ植物で飼育し2頭が蛹化、うち1頭が羽化
+追加,host-literature-recheck-20261125-007,species-20180,キアゲハ,マツバボウフウ,広畑 政巳 (2017),35,https://www.konchukan.net/pdf/kiberihamushi/Vol40_1/kiberihamushi_40_1_35.pdf,兵庫県高砂市の加古川河口で産卵。植物名は原報表記
+追加,host-literature-recheck-20261125-008,species-2310,ハリギリミドリヒメハマキ,リュウキュウハリギリ,那須 義次・富永 智 (2005),267、271–272,https://doi.org/10.18984/lepid.56.4_267,沖縄島の葉裏で摂食する幼虫を確認し、羽化成虫を同定
+追加,host-literature-recheck-20261125-009,species-1764,テングハマキ,アマ,奥 俊夫 (1967),45,https://www.hro.or.jp/agricultural/center/publication/syuhou/60/16_5.html,北海道空知地方で多発
+追加,host-literature-recheck-20261125-010,species-1764,テングハマキ,イチゴ,奥 俊夫 (1967),45,https://www.hro.or.jp/agricultural/center/publication/syuhou/60/16_5.html,北海道後志地方で発生
+追加,host-literature-recheck-20261125-011,species-1697,ニレハマキ,リンゴ,奥 俊夫 (1967),46,https://www.hro.or.jp/agricultural/center/publication/syuhou/60/16_5.html,著者の北海道の記述。英国の既報は別の文で言及。
+保留,hostplant-hamakiga1-foreign-20260712-005-01,species-2156,オオナガバヒメハマキ,ヨーロッパヤマナラシの種同定,日本のハマキガ1,17,https://odokon.org/1919,原本画像で和名ヨーロッパヤマナラシと学名 Populus nigra が併記。採った植物名がどちらかは引用元が特定できず保留。岩手の記録はヤマナラシのある地点で成虫が多いという記述。
+保留,,,,宮古島産3種と枯葉3種の対応,船越 進太郎 (2024),15–17,https://doi.org/10.18984/lepid.75.1_15,抄録は3種・3植物と羽化を報告するが個別対応を明示しない。本文PDFの内容取得ができず保留。
+保留,,species-1764,テングハマキ,空知のシダ寄主,奥 俊夫 (1967),45、表2,https://www.hro.or.jp/agricultural/center/publication/syuhou/60/16_5.html,本文抽出の和名と表2の学名から同一種と断定できないため、原図で未解決。
