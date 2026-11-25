@@ -196,3 +196,67 @@ add,282,host-shirouzu-audit-20261125-053,species-20390,,ガガイモ,,飼育,,�
 add,282,host-shirouzu-audit-20261125-054,species-20390,,ホウライカモメヅル,,国外,,幼虫,台湾での食草記録
 add,282,host-shirouzu-audit-20261125-055,species-20390,,コウトウイケマ,,国外,,幼虫,台湾での食草記録
 add,283,host-shirouzu-audit-20261125-056,species-20392,,マダガスカルジャスミン,,飼育,,幼虫,飼育時の代用餌
+add,239,host-shirouzu-audit-20261125-057,species-20355,,エゾエノキ,,,,幼虫,幼虫食樹の列挙に含まれる
+set,240,hostplant-006150,species-20356,エノキ,エノキ,,野外（国内）,幼虫,幼虫,埼玉県・神奈川県での食樹
+rename,240,hostplant-006152,species-20356,リュウキュウエノキ,クワノハエノキ,,野外（国内）,幼虫,幼虫,奄美諸島での食樹。旧登録名は同書の別名
+remove,240,hostplant-006151,species-20356,エゾエノキ,,,,幼虫,,隣のゴマダラチョウに記載。同書のアカボシゴマダラの食樹欄に記載なし
+remove,241,hostplant-006153,species-20357,ヤナギ,,,,幼虫,,本文の総称を個別の食草名として登録していたため、列挙された具体名に置換
+add,240,host-shirouzu-audit-20261125-058,species-20357,,シダレヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,240,host-shirouzu-audit-20261125-059,species-20357,,エゾノカワヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,240,host-shirouzu-audit-20261125-060,species-20357,,コゴメヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-061,species-20357,,アメリカヤマナラシ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-062,species-20357,,オノエヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-063,species-20357,,ドロヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-064,species-20357,,ヤマナラシ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-065,species-20357,,アカメヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-066,species-20357,,バッコヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-067,species-20357,,ウンリュウヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-068,species-20357,,オオバヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-069,species-20357,,カワヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-070,species-20357,,サイコクキツネヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-071,species-20357,,エゾノバッコヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-072,species-20357,,タチヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-073,species-20357,,マルバヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-074,species-20357,,ジャヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-075,species-20357,,イヌコリヤナギ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-076,species-20358,,コバノチョウセンエノキ,,,,幼虫,幼虫食樹の列挙に含まれる
+add,241,host-shirouzu-audit-20261125-077,species-20358,,クワノハエノキ,,飼育,,幼虫,代用餌として利用可能
+remove,297,hostplant-006270,species-20401,サツマイモ,,,,幼虫,,図鑑の食草欄に該当なし
+remove,297,hostplant-006271,species-20401,アサガオ,,,,幼虫,,図鑑の食草欄に該当なし
+remove,297,hostplant-006272,species-20401,ノアサガオ,,,,幼虫,,図鑑の食草欄に該当なし
+remove,297,hostplant-butterfly-audit-20260704-0011,species-20402,コウシュンカズラ,,野外（国内）,,幼虫,,白水図鑑の対象は Badamia exclamationis
+remove,297,hostplant-butterfly-audit-20260704-0012,species-20402,アセロラ,,野外（国内）,,幼虫,,白水図鑑の対象は Badamia exclamationis
+remove,297,hostplant-butterfly-audit-20260704-0013,species-20402,モモタマナ,,野外（国内）,,幼虫,,白水図鑑の対象は Badamia exclamationis
+remove,297,hostplant-butterfly-audit-20260704-0014,species-20402,ホザキサルノオ,,国外,,幼虫,,白水図鑑の対象は Badamia exclamationis
+add,297,host-shirouzu-audit-20261125-078,species-20401,,コウシュンカズラ,,野外（国内）,,幼虫,八重山の食草
+add,297,host-shirouzu-audit-20261125-079,species-20401,,アセロラ,,野外（国内）,,幼虫,八重山の食草
+add,297,host-shirouzu-audit-20261125-080,species-20401,,モモタマナ,,野外（国内）,,幼虫,八重山と小笠原の食樹
+add,297,host-shirouzu-audit-20261125-081,species-20401,,ホザキサルノオ,,国外,,幼虫,台湾での食草
+remove,297,hostplant-006274,species-20403,ハカマカズラ,,,,幼虫,,食草欄に記載なし
+add,297,host-shirouzu-audit-20261125-082,species-20403,,クロヨナ,,,,幼虫,Hasora chromus の幼虫食樹として記載
+add,297,host-shirouzu-audit-20261125-083,species-20403,,デリス属の一種,,,,幼虫,Hasora chromus の幼虫食樹として記載
+remove,298,hostplant-006275,species-20404,ハカマカズラ,,,,幼虫,,食草欄に記載なし
+add,298,host-shirouzu-audit-20261125-084,species-20404,,デリス属の一種,,野外（国内）,,幼虫,Hasora badra が西表島で幼虫食草として利用
+remove,298,hostplant-006276,species-20405,タラノキ,,,,幼虫,,図鑑のキバネセセリの食草欄はハリギリのみ
+remove,298,hostplant-006277,species-20405,ウド,,,,幼虫,,図鑑のキバネセセリの食草欄はハリギリのみ
+remove,298,hostplant-006279,species-20405,コシアブラ,,,,幼虫,,図鑑のキバネセセリの食草欄はハリギリのみ
+remove,307,hostplant-006307,species-20417,ノガリヤス,,,,幼虫,,白水図鑑の Thymelicus lineola の食草欄に記載なし
+remove,307,hostplant-006308,species-20417,シロツメクサ,,,,幼虫,,白水図鑑の Thymelicus lineola の食草欄に記載なし
+remove,307,hostplant-006309,species-20417,エゾノガリヤス,,,,幼虫,,白水図鑑の Thymelicus lineola の食草欄に記載なし
+remove,307,hostplant-006310,species-20417,ミヤコグサ,,,,幼虫,,白水図鑑の Thymelicus lineola の食草欄に記載なし
+add,307,host-shirouzu-audit-20261125-085,species-20417,,オオアワガエリ,,,,幼虫,Thymelicus lineola の食草として記載
+remove,311,hostplant-006311,species-20418,ススキ,,,,幼虫,,隣接するヘリグロチャバネセセリにある記載
+add,311,host-shirouzu-audit-20261125-086,species-20418,,カモジグサ,,,,幼虫,Thymelicus leoninus の食草として列挙
+add,311,host-shirouzu-audit-20261125-087,species-20418,,ヤマカモジグサ,,,,幼虫,Thymelicus leoninus の食草として列挙
+add,311,host-shirouzu-audit-20261125-088,species-20418,,ヒメノガリヤス,,,,幼虫,Thymelicus leoninus の食草として列挙
+add,311,host-shirouzu-audit-20261125-089,species-20418,,クサヨシ,,,,幼虫,Thymelicus leoninus の食草として列挙
+add,311,host-shirouzu-audit-20261125-090,species-20418,,キツネガヤ,,,,幼虫,Thymelicus leoninus の食草として列挙
+add,311,host-shirouzu-audit-20261125-091,species-20418,,オオアワガエリ,,,,幼虫,Thymelicus leoninus の食草として列挙
+add,311,host-shirouzu-audit-20261125-092,species-20418,,アズマガヤ,,,,幼虫,Thymelicus leoninus の食草として列挙
+set,323,hostplant-006362,species-20433,メヒシバ,メヒシバ,,野外（国内）,幼虫,幼虫,八重山の食草
+set,323,hostplant-006363,species-20433,ススキ,ススキ,,野外（国内）,幼虫,幼虫,八重山の食草
+set,323,hostplant-006361,species-20433,サトウキビ,サトウキビ,,野外（国内）,幼虫,幼虫,八重山の食草
+remove,323,hostplant-006364,species-20433,トウモロコシ,,,,幼虫,,図鑑のユウレイセセリの食草欄に記載なし
+set,94,hostplant-091054,species-20228,ブナ科,ブナ科,,飼育,幼虫,幼虫,葉だけでも羽化したが成育不良。主な餌はアブラムシやカイガラムシ
+set,95,hostplant-005314,species-20230,シオジ,シオジ,,野外（国内）,幼虫,幼虫,九州の野外で葉の利用が確認されている
+add,156,host-shirouzu-audit-20261125-093,species-20284,,インゲンマメ,,飼育,,幼虫,飼育下で良好に成育
