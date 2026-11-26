@@ -183,6 +183,13 @@ async function checkPage(browser, origin, page, viewport) {
       await options.getByRole('button', { name: /\s正解$/ }).waitFor({ timeout: 5000 });
       const redundant = tab.getByText(/^(正しいつながり|選んだ答え)[:：]/);
       if (await redundant.count() > 0) problems.push('回答済みの選択肢と同じ情報を繰り返し表示している');
+      const detailsToggle = tab.getByRole('button', { name: /^(詳しい記録を見る|詳細を閉じる)$/ });
+      if (await detailsToggle.count() !== 0) problems.push('クイズの回答欄に重複する詳細ボタンが表示される');
+      for (const name of ['昆虫ページへ', '植物ページへ']) {
+        if (await tab.getByRole('link', { name, exact: true }).count() !== 1) {
+          problems.push(`クイズの回答欄に「${name}」が1件だけ表示されない`);
+        }
+      }
       await tab.getByRole('button', { name: '次の問題' }).click();
       await tab.getByRole('heading', { name: '2/10', exact: true }).waitFor({ timeout: 5000 });
     } catch (error) {

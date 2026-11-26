@@ -203,8 +203,6 @@ const labelsFor = (isEnglish) => ({
   noWeakPoints: isEnglish ? 'No weak point stood out in this round.' : 'この回で目立った弱点はありません。',
   reviewTop: isEnglish ? 'Review these first' : 'まず復習する3問',
   source: isEnglish ? 'Source' : '出典',
-  details: isEnglish ? 'Show details' : '詳しい記録を見る',
-  hideDetails: isEnglish ? 'Hide details' : '詳細を閉じる',
   correct: isEnglish ? 'Correct' : '正解',
   incorrect: isEnglish ? 'Incorrect' : '不正解',
   options: isEnglish ? 'Answer choices' : '選択肢',
@@ -549,7 +547,6 @@ const QuizPage = ({
       nextButtonRef.current.focus({ preventScroll: true });
     }
   }, [selectedOptionId]);
-  const [detailsOpen, setDetailsOpen] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
   const [startStage, setStartStage] = useState('');
   // 出題を作れなかった時に「押しても何も起きない」状態にせず理由を表示する
@@ -720,7 +717,6 @@ const QuizPage = ({
     setCurrentIndex(0);
     setAnswers([]);
     setSelectedOptionId('');
-    setDetailsOpen(false);
     setStartStage('questions');
 
     const prepareSession = async () => {
@@ -825,7 +821,6 @@ const QuizPage = ({
       question: currentQuestion,
     };
     setSelectedOptionId(optionId);
-    setDetailsOpen(false);
     setAnswers((prev) => {
       const next = [...prev];
       next[currentIndex] = answer;
@@ -840,12 +835,10 @@ const QuizPage = ({
       persistSession(nextAnswers);
       setCurrentIndex(questions.length);
       setSelectedOptionId('');
-      setDetailsOpen(false);
       return;
     }
     setCurrentIndex((index) => index + 1);
     setSelectedOptionId('');
-    setDetailsOpen(false);
   }, [answers, currentIndex, currentQuestion, persistSession, questions.length, selectedOptionId]);
 
   useEffect(() => {
@@ -1147,7 +1140,7 @@ const QuizPage = ({
                     {midpointMessage && (
                       <p className="mt-2 text-sm font-semibold text-amber-700 dark:text-amber-300">{midpointMessage}</p>
                     )}
-                    {!currentAnswer?.isCorrect && renderDetailLinks(currentQuestion)}
+                    {renderDetailLinks(currentQuestion)}
                   </div>
                   <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-4px_16px_rgba(15,23,42,0.08)] backdrop-blur dark:border-slate-800 dark:bg-slate-950/95 lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none dark:lg:bg-transparent">
                     <button
@@ -1161,32 +1154,6 @@ const QuizPage = ({
                     </button>
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setDetailsOpen((value) => !value)}
-                  className="mt-2 inline-flex min-h-[44px] items-center py-2 text-sm font-bold text-blue-700 underline decoration-blue-300 underline-offset-4 dark:text-blue-300"
-                >
-                  {detailsOpen ? labels.hideDetails : labels.details}
-                </button>
-                {detailsOpen && (
-                  <div className="mt-3 border-t border-slate-200 pt-3 text-sm leading-6 text-slate-700 dark:border-slate-700 dark:text-slate-200">
-                    {currentQuestion.explanation.sourceRecords?.length > 0 ? (
-                      <ul className="space-y-1">
-                        {currentQuestion.explanation.sourceRecords.map((record, index) => (
-                          <li key={`${record.name}-${index}`}>
-                            {record.displayName || record.name}
-                            {record.reference ? ` / ${record.reference}` : ''}
-                            {record.notes ? ` / ${record.notes}` : ''}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{currentQuestion.explanation.sourceLabel || currentQuestion.explanation.correctLabel}</p>
-                    )}
-                    {renderDetailLinks(currentQuestion)}
-                  </div>
-                )}
                 {isPhotoStyle && (
                   <FeedbackPhotoPair
                     question={currentQuestion}
