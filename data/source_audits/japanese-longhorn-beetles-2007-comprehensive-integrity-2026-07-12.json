@@ -19877,8 +19877,8 @@
         {
           "insect_id": "species-22976",
           "japanese_name": "",
-          "scientific_name": "Cagosima sanguinolenta oshimensis Kano",
-          "subspecies": "oshimensis",
+          "scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
+          "subspecies": "oshimaensis",
           "baseline_notes": [],
           "baseline_hosts": []
         }
@@ -30323,7 +30323,7 @@
       "op": "add_note",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "note-kamikiri-comprehensive-8554e56c85f38b",
@@ -30349,7 +30349,7 @@
       "op": "add_note",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "note-kamikiri-comprehensive-47921a8d814c08",
@@ -30375,7 +30375,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-654ff01909a609",
@@ -30403,7 +30403,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-df4334706cb39a",
@@ -30431,7 +30431,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-17546117791a1d",
@@ -30459,7 +30459,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-161f060d6b40c4",
@@ -30487,7 +30487,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-d3279116c68447",
@@ -30515,7 +30515,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-022733fbcb9d73",
@@ -30543,7 +30543,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-24ddc57197c8d1",
@@ -30571,7 +30571,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-29302e3e9f675a",
@@ -30599,7 +30599,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-de3967de0f57cf",
@@ -30627,7 +30627,7 @@
       "op": "add_host",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-b6dc43181f1ecf",
@@ -34591,7 +34591,7 @@
       "op": "update_insect",
       "insect_id": "species-22976",
       "current_japanese_name": "",
-      "current_scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+      "current_scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
       "before": {
         "insect_id": "species-22976",
         "family": "Cerambycidae",
@@ -34603,14 +34603,14 @@
         "genus": "Cagosima",
         "subgenus": "",
         "species": "sanguinolenta",
-        "subspecies": "oshimensis",
+        "subspecies": "oshimaensis",
         "author": "Kano",
-        "year": "",
+        "year": "1933",
         "japanese_name": "",
         "old_japanese_name": "",
         "alternative_name": "",
         "other_names": "",
-        "scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+        "scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
         "synonyms": "",
         "changes_since_standard": "",
         "notes": "日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。"
@@ -34626,14 +34626,14 @@
         "genus": "Cagosima",
         "subgenus": "",
         "species": "sanguinolenta",
-        "subspecies": "oshimensis",
+        "subspecies": "oshimaensis",
         "author": "Kano",
-        "year": "",
+        "year": "1933",
         "japanese_name": "",
         "old_japanese_name": "",
         "alternative_name": "",
         "other_names": "",
-        "scientific_name": "Cagosima sanguinolenta oshimensis Kano",
+        "scientific_name": "Cagosima sanguinolenta oshimaensis Kano, 1933",
         "synonyms": "",
         "changes_since_standard": "",
         "notes": "日本列島の甲虫全種目録(2026)参照。"
