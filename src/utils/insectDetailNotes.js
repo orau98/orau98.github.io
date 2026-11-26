@@ -1,4 +1,4 @@
-import { parseEmergenceTime } from './emergenceTime.js';
+import { hasCalendarMonth, hasContinuousEmergenceRange, parseEmergenceTime } from './emergenceTime.js';
 import { extractEmergenceTime, normalizeEmergenceTime } from './emergenceTimeUtils.js';
 
 const ECOLOGY_TYPE = /^(生態情報|生態)$/;
@@ -24,12 +24,13 @@ function splitSentences(text) {
   return text.match(/[^。！？\r\n]+[。！？]?/g)?.map(cleanText).filter(Boolean) || [];
 }
 
-const hasSeason = (text) => MONTH.test(text) || SEASON.test(text);
+const hasSeason = (text) => hasCalendarMonth(text) || SEASON.test(text);
 const ADULT_SEASON_LABEL = /成虫(?:の)?(?:活動|発生|出現|羽化)(?:時期|期)/;
 const OCR_RANGE = /[0-9０-９]\s*[一ー]\s*[0-9０-９]\s*月/;
 
 function splitAdultTimingClause(sentence) {
   if (!hasSeason(sentence)) return [sentence];
+  if (hasContinuousEmergenceRange(sentence)) return [sentence];
   // つなぎを終止形に戻し、同じ文の後食・訪花などを生態欄へ残す。
   const match = /^(.*?)(出現して?|発生して?|羽化(?:脱出)?して?|あらわれて?|現れて?|見られて?|確認されて?|得られて?|観察されて?|採集されて?)[、,，]\s*(.+)$/.exec(sentence);
   if (!match) return [sentence];
@@ -198,7 +199,8 @@ export function buildInsectDetailNotes(insect) {
 export function parseInsectDetailSeason(seasonTexts) {
   // 表示文の国外・飼育・個別採集記録は残し、野外の国内成虫期の図には加えない。
   const overseas = /(?:外国|国外|海外|ヨーロッパ|欧州|台湾|中国|韓国|朝鮮半島|ロシア|北米|オーストラリア)(?:では|での|において|の記録)/;
-  const records = seasonTexts.flatMap((text) => splitSentences(text).flatMap((sentence) => {
+  const stages = /[、,，;；]\s*(?=(?:(?:成虫|幼虫|蛹|卵)(?:は|が|では)|(?:飼育下|室内)で))/;
+  const records = seasonTexts.flatMap((text) => splitSentences(text).flatMap((sentence) => sentence.split(stages)).flatMap((sentence) => {
     const overseasAt = sentence.search(overseas);
     const domestic = overseasAt < 0 ? sentence : sentence.slice(0, overseasAt);
     const plotText = domestic.replace(/[。、，]$/, '').replace(DETAILED_RANGE, '$1$2〜$3');

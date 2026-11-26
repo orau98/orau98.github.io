@@ -23,6 +23,7 @@ export const PAGES = [
   { name: '昆虫一覧ページ（/moth/）', path: '/moth/', waitFor: '件が見つかりました', seo: true },
   { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
   { name: '発生時期の記録と出典（ウスバフユシャク）', path: `/moth/${E('ウスバフユシャク')}/`, waitFor: '発生時期', seasonSources: true },
+  { name: '年をまたぐ発生時期（チャマダラキリガ）', path: `/moth/${E('チャマダラキリガ')}/`, waitFor: '発生時期', seasonMonths: [11, 12, 1, 2, 3] },
   { name: '植物ごとの出典（ウスイロオナガシジミ）', path: `/butterfly/${E('ウスイロオナガシジミ')}/`, waitFor: 'ウラジロガシ', plantSources: true },
   { name: '訪花の書誌（アオスジアオリンガ）', path: `/moth/${E('アオスジアオリンガ')}/`, waitFor: 'リョウブ', flowerCitation: true },
   { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true, plantTaxonomy: true },
@@ -267,6 +268,22 @@ async function checkPage(browser, origin, page, viewport) {
       }
     } catch (error) {
       problems.push(`発生時期と出典の対応を確認できない: ${error.message.split('\n')[0]}`);
+    }
+  }
+
+  if (page.seasonMonths) {
+    const panel = tab.locator('#adult-season');
+    const periods = panel.locator('[title$=" (発生期)"]');
+    try {
+      await panel.getByText(/11月頃に羽化し、翌年3月頃まで見られる/).waitFor({ timeout: 10000 });
+      await periods.first().waitFor({ timeout: 10000 });
+      const painted = await periods.evaluateAll((cells) => cells.map((cell) => Number.parseInt(cell.title, 10)));
+      if (painted.length !== 3 * page.seasonMonths.length
+        || page.seasonMonths.some((month) => painted.filter((value) => value === month).length !== 3)) {
+        problems.push(`本文と発生時期の着色が不一致（${painted.join(', ')}）`);
+      }
+    } catch (error) {
+      problems.push(`年をまたぐ発生時期を確認できない: ${error.message.split('\n')[0]}`);
     }
   }
 

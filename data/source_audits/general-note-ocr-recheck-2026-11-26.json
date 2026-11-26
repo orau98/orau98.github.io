@@ -5060,6 +5060,21 @@
       "approved_content": "年1化。主に7〜8月に得られ、地域によっては6月中旬から見られる。",
       "related_record_or_reason": "note-1001714",
       "evidence": "原PDFで対象種の見出しと該当欄を照合"
+    },
+    {
+      "record_id": "note-1003259",
+      "insect_id": "species-6041",
+      "note_type": "生態情報",
+      "reference": "日本産蛾類標準図鑑2",
+      "source_pdf": "日本産蛾類標準図鑑2.pdf（143ページ版）",
+      "pdf_page": "120",
+      "printed_page": "355",
+      "decision": "include",
+      "previous_content": "灯火にも飛来するが、勉で得られることが多い",
+      "previous_page": "",
+      "approved_content": "照葉樹林を主な生息地とし、灯火にも飛来する。糖蜜で得られることが多い。",
+      "related_record_or_reason": "",
+      "evidence": "原PDFでチャマダラキリガの生態欄と糖蜜の表記を照合"
     }
   ]
 }

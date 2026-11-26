@@ -123,3 +123,33 @@ test('only shared statements get both works and correct page numbers', () => {
     { content: regional, sources: ['日本の冬尺蛾 p. 64'] },
   ]);
 });
+
+
+test('the plotted periods come from the complete, citation-linked season notes', () => {
+  const standard = '日本産蛾類標準図鑑2';
+  const winter = '日本の冬夜蛾';
+  const result = buildInsectDetailNotes({
+    type: 'moth',
+    generalNotes: [
+      { ...season('年1化。11月頃に羽化し、翌年3月頃まで見られる。', standard), page: '355' },
+      { ...season('11月羽化〜翌年3月', winter), page: '72' },
+    ],
+  });
+  assert.deepEqual(result.seasonRecords.map(({ sources }) => sources), [[standard + ' p. 355'], [winter + ' p. 72']]);
+  const chart = parseInsectDetailSeason(result.seasonRecords.map(({ content }) => content));
+  assert.deepEqual(chart.months.toSorted((a, b) => a - b), [1, 2, 3, 11, 12]);
+  assert.equal(chart.periods.length, 15);
+});
+
+test('a continuous adult overwintering record stays intact beside juvenile and captive notes', () => {
+  const record = '10〜11月に羽化し、成虫で越冬して翌年4〜5月頃まで生存する。';
+  const result = buildInsectDetailNotes({
+    type: 'moth',
+    generalNotes: [
+      season(record + '幼虫は7月、飼育下で8月に羽化した。', '図鑑'),
+    ],
+  });
+  assert.deepEqual(result.seasonRecords.map(({ content }) => content), [record]);
+  assert.deepEqual(parseInsectDetailSeason([record, '幼虫は7月、成虫は9月に見られる。']).months.toSorted((a, b) => a - b),
+    [1, 2, 3, 4, 5, 9, 10, 11, 12]);
+});
