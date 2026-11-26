@@ -64,10 +64,6 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
           type: 'plant',
           name: isEnglish ? (scientificPlantName || displayName) : displayName,
           scientificName: scientificPlantName,
-          family: isEnglish
-            ? (plantDetail.familyLatin || plantDetail.family || '')
-            : plantDetail.family,
-          genus: plantDetail.genus
         };
       }
       return null;
@@ -175,22 +171,6 @@ const Header = ({ locale = 'ja', theme, setTheme, moths, butterflies = [], beetl
                           ? formatScientificNameReact(speciesInfo.name)
                           : speciesInfo.name}
                       </span>
-                      {speciesInfo.family && (
-                        <>
-                          {' '}
-                          <Link
-                            to={localizePath(`/?tab=plants&pfamily=${encodeURIComponent(speciesInfo.family)}`, locale)}
-                            className="text-slate-300 ml-2 underline decoration-emerald-300/60 hover:decoration-emerald-400"
-                            aria-label={
-                              isEnglish
-                                ? `Search plants in ${speciesInfo.family}`
-                                : `${speciesInfo.family} の植物を検索`
-                            }
-                          >
-                            ({speciesInfo.family})
-                          </Link>
-                        </>
-                      )}
                     </div>
                   </div>
                 ) : (
