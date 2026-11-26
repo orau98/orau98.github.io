@@ -10,8 +10,8 @@
     "source_pdf_sha256": "910e84199b94a18ab81071d5c7019655b20c03589eb1e8fbd7d668414eba0c5c"
   },
   "counts": {
-    "mappings": 1,
-    "duplicate_taxon_deletions": 1,
+    "mappings": 3,
+    "duplicate_taxon_deletions": 3,
     "duplicate_hostplant_deletions": 8,
     "duplicate_note_deletions": 1
   },
@@ -24,6 +24,24 @@
       "taxon_group": "butterfly",
       "decision": "merge_duplicate_taxon",
       "evidence": "原PDFの同一見出しBTG-0274へ両IDが対応していた。species-20432には原本再監査済みの食草・出現時期が集約済みで、species-20436の7食草と出現時期は重複、マコモ1件は原本欄にないため削除する。"
+    },
+    {
+      "duplicate_id": "species-20391",
+      "canonical_id": "species-20389",
+      "japanese_name": "タイワンアサギマダラ",
+      "scientific_name": "Parantica melaneus",
+      "taxon_group": "butterfly",
+      "decision": "correct_misassigned_taxon",
+      "evidence": "『日本産蝶類標準図鑑』p.282–283の見出しは Parantica swinhoei。寄主7件は正準IDに収録済み。旧IDの旬区分には根拠がなく、本文で確認できる飛来個体の観察を生態情報に記録した。"
+    },
+    {
+      "duplicate_id": "species-20402",
+      "canonical_id": "species-20401",
+      "japanese_name": "タイワンアオバセセリ",
+      "scientific_name": "Ismene compunis",
+      "taxon_group": "butterfly",
+      "decision": "correct_misassigned_taxon",
+      "evidence": "『日本産蝶類標準図鑑』p.296–297の見出しは Badamia exclamationis。寄主4件は正準IDに収録済み。旧IDの成虫出現月には根拠がなく、八重山の多化性と栽培アセロラでの発生を生態情報に記録した。"
     }
   ]
 }

@@ -94,11 +94,10 @@ export function loadButterflyMergedTaxonRedirects(filePath) {
   if (
     audit.schema_version !== 1
     || audit.audit_name !== '蝶類重複分類群の正準ID統合追補'
-    || audit.counts?.mappings !== 1
-    || audit.counts?.duplicate_taxon_deletions !== 1
-    || audit.counts?.duplicate_hostplant_deletions !== 8
-    || audit.counts?.duplicate_note_deletions !== 1
-    || audit.mappings?.length !== 1
+    || !Array.isArray(audit.mappings)
+    || audit.mappings.length === 0
+    || audit.counts?.mappings !== audit.mappings.length
+    || audit.counts?.duplicate_taxon_deletions !== audit.mappings.length
   ) throw new Error(`${filePath}: unexpected butterfly canonical-merge ledger`);
 
   return audit.mappings.map((mapping) => {
@@ -106,6 +105,7 @@ export function loadButterflyMergedTaxonRedirects(filePath) {
     const canonicalId = clean(mapping.canonical_id);
     const japaneseName = clean(mapping.japanese_name);
     const scientificName = clean(mapping.scientific_name);
+    const isMisassigned = mapping.decision === 'correct_misassigned_taxon';
     if (
       !duplicateId
       || !canonicalId
@@ -113,7 +113,7 @@ export function loadButterflyMergedTaxonRedirects(filePath) {
       || !japaneseName
       || !scientificName
       || clean(mapping.taxon_group) !== 'butterfly'
-      || clean(mapping.decision) !== 'merge_duplicate_taxon'
+      || (!isMisassigned && clean(mapping.decision) !== 'merge_duplicate_taxon')
       || !clean(mapping.evidence)
     ) throw new Error(`${filePath}: invalid butterfly redirect ${duplicateId} -> ${canonicalId}`);
     return {
@@ -125,12 +125,11 @@ export function loadButterflyMergedTaxonRedirects(filePath) {
       sourceTaxon: scientificName,
       legacyJapaneseName: japaneseName,
       legacyScientificName: scientificName,
-      legacyRouteName: japaneseName,
+      legacyRouteName: isMisassigned ? duplicateId : japaneseName,
       legacyDisplayName: japaneseName,
       taxonGroup: 'butterfly',
       englishTypeLabel: 'Butterfly',
-      // The duplicate and canonical rows had the same scientific name, so
-      // there is no distinct legacy English slug to generate.
+      // Preserve old record URLs without treating misassigned names as synonyms.
       skipEnglishScientificRedirect: true,
     };
   });
