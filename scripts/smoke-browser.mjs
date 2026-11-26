@@ -247,10 +247,15 @@ async function checkPage(browser, origin, page, viewport) {
         const row = panel.getByRole('listitem').filter({ hasText: description });
         const toggle = row.getByRole('button', { name: '出典 1件', exact: true });
         await toggle.waitFor({ timeout: 10000 });
-        const descriptionId = await row.locator('p').getAttribute('id');
-        if (!descriptionId || await toggle.getAttribute('aria-describedby') !== descriptionId) {
-          problems.push('発生時期の出典ボタンが対応する本文を参照していない');
-        }
+        const inline = await row.evaluate((node) => {
+          const text = node.querySelector(':scope > span[id]');
+          const button = text?.nextElementSibling;
+          return button?.tagName === 'BUTTON' &&
+            button.getAttribute('aria-describedby') === text.id &&
+            getComputedStyle(text).display === 'inline' &&
+            getComputedStyle(button).display === 'inline-flex';
+        });
+        if (!inline) problems.push('発生時期の出典ボタンが対応する本文の末尾に並んでいない');
         await toggle.click();
         const citations = await row.getByRole('list', { name: '出典 1件', exact: true }).innerText();
         if (!expected.test(citations) || unrelated.test(citations)) {

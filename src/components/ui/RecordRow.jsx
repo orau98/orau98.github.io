@@ -26,7 +26,7 @@ export function RecordPlantLink({ name, locale, children, family = false }) {
   );
 }
 
-export function RecordToggle({ expanded, controls, describedBy, label, onToggle, children }) {
+export function RecordToggle({ expanded, controls, describedBy, label, onToggle, children, compact = false }) {
   return (
     <button
       type="button"
@@ -35,7 +35,7 @@ export function RecordToggle({ expanded, controls, describedBy, label, onToggle,
       aria-describedby={describedBy}
       aria-label={label}
       onClick={onToggle}
-      className="inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap px-1 text-xs font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500"
+      className={`inline-flex ${compact ? 'min-h-6 align-baseline' : 'min-h-[44px]'} items-center gap-1.5 whitespace-nowrap px-1 text-xs font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500`}
     >
       {children}
       <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className={`h-3.5 w-3.5 ${expanded ? 'rotate-180' : ''}`}>

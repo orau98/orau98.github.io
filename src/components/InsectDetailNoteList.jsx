@@ -10,12 +10,13 @@ export default function InsectDetailNoteList({ notes, isEnglish }) {
         const textId = `${listId}-${index}`;
         return (
           <li key={note.content} className="list-disc py-2 first:pt-0 last:pb-0">
-            <p id={textId}>{note.content}</p>
+            <span id={textId}>{note.content}</span>
             {note.sources?.length > 0 && (
               <SourceCitation
                 sources={note.sources}
                 isEnglish={isEnglish}
                 collapsible
+                inlineToggle
                 describedBy={textId}
               />
             )}

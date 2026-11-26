@@ -54,6 +54,7 @@ export default function SourceCitation({
   resolveLinks = true,
   label,
   collapsible = false,
+  inlineToggle = false,
   describedBy,
   className = '',
 }) {
@@ -70,16 +71,30 @@ export default function SourceCitation({
 
   if (collapsible) {
     const countLabel = isEnglish ? `Sources (${items.length})` : `出典 ${items.length}件`;
+    const toggle = (
+      <RecordToggle
+        expanded={expanded}
+        controls={panelId}
+        describedBy={describedBy}
+        onToggle={() => setExpanded(!expanded)}
+        compact={inlineToggle}
+      >
+        {countLabel}
+      </RecordToggle>
+    );
+    const panel = (
+      <div id={panelId} hidden={!expanded} className={inlineToggle ? 'mt-1' : undefined}>
+        {expanded && <SourceReferenceList items={items} label={countLabel} isEnglish={isEnglish} />}
+      </div>
+    );
+
+    // 本文末尾と出典ボタンの間で折り返さない。
+    if (inlineToggle) return <>{'\u00a0\u2060'}{toggle}{panel}</>;
+
     return (
       <div className={className}>
-        <div className="flex justify-end">
-          <RecordToggle expanded={expanded} controls={panelId} describedBy={describedBy} onToggle={() => setExpanded(!expanded)}>
-            {countLabel}
-          </RecordToggle>
-        </div>
-        <div id={panelId} hidden={!expanded}>
-          {expanded && <SourceReferenceList items={items} label={countLabel} isEnglish={isEnglish} />}
-        </div>
+        <div className="flex justify-end">{toggle}</div>
+        {panel}
       </div>
     );
   }
