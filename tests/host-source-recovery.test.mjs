@@ -68,6 +68,16 @@ test('ウスイロアツバの削除された食樹を植物名として復元�
   assert.equal(getCompactReferenceMeta(record.reference).location, 'p. 229');
 });
 
+test('図鑑の隣り合う欄の寄主を別種へ移さない', () => {
+  const hosts = (insectId) => parsed.data
+    .filter((row) => row.insect_id === insectId)
+    .map(normalizeHostRecord)
+    .filter((row) => !row.isFlowerVisit);
+  assert.ok(!hosts('species-3868').some((record) => record.name === 'コメツガ'));
+  assert.deepEqual(hosts('species-3869').map((record) => record.name), ['コメツガ']);
+  assert.match(read('../normalized_data/general_notes.csv'), /note-1001649[^\r\n]+針葉樹を含む幅広い植物/);
+});
+
 test('カラマツイトヒキハマキの正しい学名に原典の寄主を結び付ける', () => {
   const insectCsv = read('../normalized_data/insects.csv');
   assert.equal(read('../public/insects.csv'), insectCsv);

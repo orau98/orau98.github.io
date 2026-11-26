@@ -21,7 +21,7 @@
       "printedPage": "40",
       "evidence": "種番号28のアカウントに掲載。隣接する種番号29の幼虫採集記録とは別。標準図鑑2 p.355 と日本の冬夜蛾 p.72 は本種の寄主を未知とする。 Sohnほか (2005) p. 151 も寄主植物を不明と記載。",
       "before": null,
-      "after": "host-nov26-source-6041a,species-6041,アラカシ,ブナ科,文献,,,高島 昭 (2001) p. 40,摂食植物として記載 / 発育段階・摂食部位・観察条件は未記載。Sohnほか（2005）は寄主植物を不明と記載。"
+      "after": "host-nov26-source-6041a,species-6041,アラカシ,ブナ科,文献,,,高島 昭 (2001) p. 40,摂食植物として記載 / 発育段階・摂食部位・観察条件は未記載 / Sohnほか（2005）は寄主植物を不明と記載"
     },
     {
       "recordId": "host-nov26-source-6041b",
@@ -30,7 +30,7 @@
       "printedPage": "40",
       "evidence": "種番号28のアカウントに掲載。隣接する種番号29の幼虫採集記録とは別。標準図鑑2 p.355 と日本の冬夜蛾 p.72 は本種の寄主を未知とする。 Sohnほか (2005) p. 151 も寄主植物を不明と記載。",
       "before": null,
-      "after": "host-nov26-source-6041b,species-6041,アカガシ,ブナ科,文献,,,高島 昭 (2001) p. 40,摂食植物として記載 / 発育段階・摂食部位・観察条件は未記載。Sohnほか（2005）は寄主植物を不明と記載。"
+      "after": "host-nov26-source-6041b,species-6041,アカガシ,ブナ科,文献,,,高島 昭 (2001) p. 40,摂食植物として記載 / 発育段階・摂食部位・観察条件は未記載 / Sohnほか（2005）は寄主植物を不明と記載"
     },
     {
       "recordId": "host-nov26-source-4238-1",
@@ -307,9 +307,9 @@
       "insectId": "species-3868",
       "source": "日本産蛾類標準図鑑1",
       "printedPage": "199",
-      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "evidence": "原本のウスキツバメエダシャク欄は針葉樹を含む広食性と記載。コマユミは記載されず、隣のコメツガはノムラツバメエダシャクの寄主欄。",
       "before": "hostplant-B1B6-0797,species-3868,コマユミ,ニシキギ科,文献,,,日本産蛾類標準図鑑1,",
-      "after": "hostplant-B1B6-0797,species-3868,コメツガ,マツ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+      "after": null
     },
     {
       "recordId": "hostplant-B1B6-0806",
@@ -388,7 +388,7 @@
       "insectId": "species-3868",
       "source": "日本産蛾類標準図鑑1",
       "printedPage": "199",
-      "evidence": "原本の寄主欄はコメツガ。ツガは推定で、マサキは同欄にない。",
+      "evidence": "原本のウスキツバメエダシャク欄は針葉樹を含む広食性と記載し、マサキの記述はない。",
       "before": "hostplant-B1B6-0798,species-3868,マサキ,ニシキギ科,文献,,,日本産蛾類標準図鑑1,",
       "after": null
     },
@@ -397,18 +397,9 @@
       "insectId": "species-3869",
       "source": "日本産蛾類標準図鑑1",
       "printedPage": "199",
-      "evidence": "原本は針葉樹を含む広食性とのみ記述。コマユミは対象種欄の外。",
+      "evidence": "原本の右段でノムラツバメエダシャクの見出しから寄主欄までを目視照合。コメツガを記載。",
       "before": "hostplant-B1B6-0799,species-3869,コマユミ,ニシキギ科,文献,,,日本産蛾類標準図鑑1,",
-      "after": null
-    },
-    {
-      "recordId": "hostplant-912685",
-      "insectId": "species-0832",
-      "source": "日本産蛾類標準図鑑3",
-      "printedPage": "195",
-      "evidence": "原本の種欄でオオヨモギと地域を照合。",
-      "before": "hostplant-912685,species-0832,ヨモギ,キク科,文献,,幼虫,日本産蛾類標準図鑑3,",
-      "after": "hostplant-912685,species-0832,オオヨモギ,キク科,国外,,幼虫,日本産蛾類標準図鑑3,ヨーロッパの寄主記録"
+      "after": "hostplant-B1B6-0799,species-3869,コメツガ,マツ科,文献,,幼虫,日本産蛾類標準図鑑1 p. 199,九州でのツガ利用は推定とされ未確認"
     },
     {
       "recordId": "hostplant-912686",
@@ -463,15 +454,6 @@
       "evidence": "原本の食餌は腐朽木。キノコとの関係は推測として記載。",
       "before": null,
       "after": "host-nov26-source-0264-rotten-wood,species-0264,朽ち木,,文献,,幼虫,日本産蛾類標準図鑑3,腐朽木を食べる / 幼虫は樹皮の裏や枝の中で見られる"
-    },
-    {
-      "recordId": "host-nov26-source-0265-dead-cycas",
-      "insectId": "species-0265",
-      "source": "日本産蛾類標準図鑑3",
-      "printedPage": "124",
-      "evidence": "原本は沖縄での枯死幹の利用を記載。旧行のシケシダに根拠なし。",
-      "before": null,
-      "after": "host-nov26-source-0265-dead-cycas,species-0265,ソテツの枯れ木,ソテツ科,野外（国内）,幹,幼虫,日本産蛾類標準図鑑3,沖縄で立ち枯れの幹から幼虫が得られた"
     },
     {
       "recordId": "host-nov26-source-1534-kunugi",
@@ -867,7 +849,7 @@
       "printedPage": "38",
       "evidence": "種番号15の解説にハンノキでの幼虫飼育を明記。既存の野外記録とは別の出典。",
       "before": null,
-      "after": "host-nov26-source-6025-hannoki-reared,species-6025,ハンノキ,カバノキ科,飼育,,幼虫,高島 昭 (2001) p. 38,幼虫をハンノキで飼育。植物部位と飼育の詳細は未記載。"
+      "after": "host-nov26-source-6025-hannoki-reared,species-6025,ハンノキ,カバノキ科,飼育,,幼虫,高島 昭 (2001) p. 38,幼虫をハンノキで飼育 / 植物部位と飼育の詳細は未記載"
     },
     {
       "recordId": "host-nov26-source-6040-alnus",
@@ -876,7 +858,7 @@
       "printedPage": "40",
       "evidence": "種番号27の解説にハンノキ属の摂食を明記。属レベルの記載を保持。",
       "before": null,
-      "after": "host-nov26-source-6040-alnus,species-6040,ハンノキ属,カバノキ科,文献,,幼虫,高島 昭 (2001) p. 40,幼虫の食餌はハンノキ属と記載。植物種と観察条件は未記載。"
+      "after": "host-nov26-source-6040-alnus,species-6040,ハンノキ属,カバノキ科,文献,,幼虫,高島 昭 (2001) p. 40,幼虫の食餌はハンノキ属と記載 / 植物種と観察条件は未記載"
     },
     {
       "recordId": "host-nov26-source-6046-tsubaki-oshima",
@@ -885,7 +867,7 @@
       "printedPage": "1",
       "evidence": "東京都の定点調査報告（平成28年度、32-3、PDF p. 1）に花内幼虫と花弁・子房の食害を記載。",
       "before": null,
-      "after": "host-nov26-source-6046-tsubaki-oshima,species-6046,ツバキ,ツバキ科,野外（国内）,花,幼虫,大根田順子ほか (2016年度) PDF p. 1,伊豆大島で花内の幼虫と花弁・子房の食害を調査。"
+      "after": "host-nov26-source-6046-tsubaki-oshima,species-6046,ツバキ,ツバキ科,野外（国内）,花,幼虫,大根田順子ほか (2016年度) PDF p. 1,伊豆大島で花内の幼虫と花弁・子房の食害を調査"
     },
     {
       "recordId": "host-nov26-source-5293-momi",
@@ -893,8 +875,17 @@
       "source": "日本産蛾類標準図鑑2",
       "printedPage": "229",
       "before": null,
-      "after": "host-nov26-source-5293-momi,species-5293,モミ,マツ科,文献,葉,幼虫,日本産蛾類標準図鑑2 p. 229,幼虫がモミの生葉を摂食すると記載。観察条件は未記載。",
+      "after": "host-nov26-source-5293-momi,species-5293,モミ,マツ科,文献,葉,幼虫,日本産蛾類標準図鑑2 p. 229,幼虫がモミの生葉を摂食すると記載 / 観察条件は未記載",
       "evidence": "冊子p.228右段のウスイロアツバの見出しからp.229左段の寄主欄へ続く。モミの生葉の摂食を記載。旧行hostplant-901337は植物名欄に文章が入っており、コミットd451965e36で削除されていた。"
+    },
+    {
+      "recordId": "host-nov26-source-0832-ooyomogi",
+      "insectId": "species-0832",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "195",
+      "before": null,
+      "after": "host-nov26-source-0832-ooyomogi,species-0832,オオヨモギ,キク科,文献,,幼虫,日本産蛾類標準図鑑3 p. 195,",
+      "evidence": "坂巻（2013）の記載を引く鈴木ほか（2024）p.90にヨモギとオオヨモギを明記。地域や観察条件は特定できないため補わない。旧ヨモギ行も保持。"
     }
   ],
   "identity_changes": [
@@ -915,6 +906,24 @@
       "before": "ハルニレで卵越冬し、春に葉裏へ偽虫癭をつくる。次世代の有翅形は夏寄主へ移住するが夏寄主は不明で、秋にハルニレへ戻る。 葉裏に寄生する。",
       "after": "ハルニレで卵越冬し、春に葉裏へ偽虫癭をつくる。次世代の有翅形は夏寄主へ移住し、秋にハルニレへ戻る。同図鑑では夏寄主を不明としている。",
       "evidence": "旧図鑑の見解と、秋元 (1983) p.52 のキンミズヒキ根からの採集記録が区別できるようにした。"
+    },
+    {
+      "recordId": "note-1001649",
+      "insectId": "species-3868",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "199",
+      "before": "幼虫で越冬する。成虫は灯火に飛来し、昼間にも花を訪れて吸蜜する。",
+      "after": "幼虫は針葉樹を含む幅広い植物を食べ、幼虫で越冬する。成虫は灯火に飛来し、昼間にも花を訪れて吸蜜する。",
+      "evidence": "第1巻p.199のウスキツバメエダシャクの種見出しと寄主記載を照合。"
+    },
+    {
+      "recordId": "note-nov26-source-0265-dead-cycas",
+      "insectId": "species-0265",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "124",
+      "before": null,
+      "after": "沖縄で立ち枯れのソテツの幹から幼虫が得られている。",
+      "evidence": "種解説に発見基質を記載。沖縄の記録について摂食は未記載。"
     }
   ],
   "followup": {
@@ -925,7 +934,8 @@
       "ヒメクルマコヤガのイネコウジは菌類で、類似種との混同が指摘された記録。種の確認まで保留。",
       "標準図鑑4 pp.86–155の旧抽出445件は現行に対応する寄主関係あり。",
       "標本や文献で属まで不明な植物は近縁種から補完しない。",
-      "ハネナガモクメキリガのサクラ類は、文献にヒロバモクメキリガとの同定の混同が指摘されているため、原報の分類と食草記録を確認するまで保留。"
+      "ハネナガモクメキリガのサクラ類は、文献にヒロバモクメキリガとの同定の混同が指摘されているため、原報の分類と食草記録を確認するまで保留。",
+      "コブヒロズコガは沖縄で立ち枯れのソテツ幹から幼虫が得られた記述。摂食は未記載のため生態欄に記録。"
     ],
     "sources": {
       "秋元信一 (1983)": "https://eprints.lib.hokudai.ac.jp/repo/huscap/all/9821/27_p37-106.pdf",
@@ -937,7 +947,8 @@
       "イモムシ・ケムシ図鑑（芋活.com）": "https://www.imokatsu.com/imo-taiwaniraga.htm",
       "高島 昭 (2001)": "https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_34-49.pdf",
       "大根田順子ほか (2016年度)": "https://www.tokyo-aff.or.jp/uploaded/attachment/5830.pdf",
-      "Sohn et al. (2005)": "https://doi.org/10.1016/S1226-8615(08)60085-0"
+      "Sohn et al. (2005)": "https://doi.org/10.1016/S1226-8615(08)60085-0",
+      "鈴木信也ほか (2024)": "https://doi.org/10.18984/lepid.74.4_85"
     }
   }
 }
