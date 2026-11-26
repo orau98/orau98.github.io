@@ -54,20 +54,20 @@ export default function SourceCitation({
   resolveLinks = true,
   label,
   collapsible = false,
-  inlineToggle = false,
+  renderInlineToggle,
   describedBy,
   className = '',
 }) {
   const panelId = useId();
   const [expanded, setExpanded] = useState(false);
-  if (!sources || (Array.isArray(sources) && sources.length === 0)) return null;
+  if (!sources || (Array.isArray(sources) && sources.length === 0)) return renderInlineToggle?.(null) ?? null;
 
   const items = resolveLinks
     ? getReferenceMetaList(sources, { compact: collapsible })
     : (collapsible ? [...new Set(splitPlain(sources))] : splitPlain(sources))
       .map((displayLabel) => ({ displayLabel, link: null }));
 
-  if (!items.length) return null;
+  if (!items.length) return renderInlineToggle?.(null) ?? null;
 
   if (collapsible) {
     const countLabel = isEnglish ? `Sources (${items.length})` : `出典 ${items.length}件`;
@@ -77,19 +77,18 @@ export default function SourceCitation({
         controls={panelId}
         describedBy={describedBy}
         onToggle={() => setExpanded(!expanded)}
-        compact={inlineToggle}
+        compact={Boolean(renderInlineToggle)}
       >
         {countLabel}
       </RecordToggle>
     );
     const panel = (
-      <div id={panelId} hidden={!expanded} className={inlineToggle ? 'mt-1' : undefined}>
+      <div id={panelId} hidden={!expanded} className={renderInlineToggle ? 'mt-1' : undefined}>
         {expanded && <SourceReferenceList items={items} label={countLabel} isEnglish={isEnglish} />}
       </div>
     );
 
-    // 本文末尾と出典ボタンの間で折り返さない。
-    if (inlineToggle) return <>{'\u00a0\u2060'}{toggle}{panel}</>;
+    if (renderInlineToggle) return <>{renderInlineToggle(toggle)}{panel}</>;
 
     return (
       <div className={className}>

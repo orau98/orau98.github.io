@@ -248,12 +248,13 @@ async function checkPage(browser, origin, page, viewport) {
         const toggle = row.getByRole('button', { name: '出典 1件', exact: true });
         await toggle.waitFor({ timeout: 10000 });
         const inline = await row.evaluate((node) => {
-          const text = node.querySelector(':scope > span[id]');
-          const button = text?.nextElementSibling;
-          return button?.tagName === 'BUTTON' &&
-            button.getAttribute('aria-describedby') === text.id &&
-            getComputedStyle(text).display === 'inline' &&
-            getComputedStyle(button).display === 'inline-flex';
+          const button = node.querySelector(':scope > span > button');
+          const ending = button?.previousElementSibling;
+          const beginning = node.querySelector(':scope > span[id]');
+          return Boolean(beginning && ending && button &&
+            button.getAttribute('aria-describedby') === `${beginning.id} ${ending.id}` &&
+            getComputedStyle(button.parentElement).whiteSpace === 'nowrap' &&
+            getComputedStyle(button).display === 'inline-flex');
         });
         if (!inline) problems.push('発生時期の出典ボタンが対応する本文の末尾に並んでいない');
         await toggle.click();
