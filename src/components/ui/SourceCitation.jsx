@@ -54,6 +54,7 @@ export default function SourceCitation({
   resolveLinks = true,
   label,
   collapsible = false,
+  describedBy,
   className = '',
 }) {
   const panelId = useId();
@@ -72,7 +73,7 @@ export default function SourceCitation({
     return (
       <div className={className}>
         <div className="flex justify-end">
-          <RecordToggle expanded={expanded} controls={panelId} onToggle={() => setExpanded(!expanded)}>
+          <RecordToggle expanded={expanded} controls={panelId} describedBy={describedBy} onToggle={() => setExpanded(!expanded)}>
             {countLabel}
           </RecordToggle>
         </div>

@@ -69,27 +69,44 @@ function hasEcologyInsteadOfTiming(sentence) {
 
 function addSentence(records, sentence, source, group) {
   const key = seasonKey(sentence);
+  const page = cleanText(group?.page);
+  const citation = source && /^[0-9０-９]/.test(page) && !/[;；]/.test(source)
+    ? `${source} p. ${page.replace(/[;；]/g, '・')}`
+    : source;
   const existing = records.get(key);
   if (existing) {
     if (source) existing.sources.add(source);
+    if (citation) existing.citations.add(citation);
     return;
   }
-  records.set(key, { text: sentence, sources: new Set(source ? [source] : []), group });
+  records.set(key, {
+    text: sentence,
+    sources: new Set(source ? [source] : []),
+    citations: new Set(citation ? [citation] : []),
+    group,
+  });
 }
 
 function groupSentences(records) {
   const groups = new Map();
-  for (const { text, sources, group } of records.values()) {
+  for (const { text, citations, group } of records.values()) {
     const notes = groups.get(group) || [];
-    notes.push({ text, sources });
+    notes.push({ text, citations });
     groups.set(group, notes);
   }
-  return Array.from(groups.values(), (notes) => ({
-    content: notes.map(({ text }, index) =>
-      index < notes.length - 1 && !/[。！？]$/.test(text) ? `${text}。` : text
-    ).join(''),
-    sources: [...new Set(notes.flatMap((note) => [...note.sources]))],
-  }));
+  const rows = [];
+  for (const notes of groups.values()) {
+    let row;
+    for (const { text, citations } of notes) {
+      if (row && row.sources.length === citations.size && row.sources.every((source) => citations.has(source))) {
+        row.content += /[。！？]$/.test(row.content) ? text : `。${text}`;
+      } else {
+        row = { content: text, sources: [...citations] };
+        rows.push(row);
+      }
+    }
+  }
+  return rows;
 }
 
 export function buildInsectDetailNotes(insect) {
@@ -159,7 +176,11 @@ export function buildInsectDetailNotes(insect) {
     const simpleKey = `${locality}${start}-${end}`;
     const simple = period.get(simpleKey);
     if (simple && [...simple.sources].every((source) => record.sources.has(source))) {
-      period.set(simpleKey, { ...record, group: simple.group });
+      period.set(simpleKey, {
+        ...record,
+        citations: new Set([...simple.citations, ...record.citations]),
+        group: simple.group,
+      });
       period.delete(seasonKey(record.text));
     }
   }
@@ -167,8 +188,7 @@ export function buildInsectDetailNotes(insect) {
   const seasonRecords = groupSentences(period);
   return {
     showSeason: seasonRecords.length > 0 || (showLegacySeason && seasonNotes.length > 0),
-    seasonTexts: seasonRecords.map((record) => record.content),
-    seasonSources: [...new Set(seasonRecords.flatMap((record) => record.sources))],
+    seasonRecords,
     ecologyNotes: groupSentences(ecology),
   };
 }

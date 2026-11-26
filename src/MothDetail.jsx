@@ -9,6 +9,7 @@ import { resolvePlaceholderSubject } from './utils/placeholderSubject';
 import ImageModal from './components/ImageModal';
 import RouteLoadingFallback from './components/RouteLoadingFallback';
 import SourceCitation from './components/ui/SourceCitation';
+import InsectDetailNoteList from './components/InsectDetailNoteList';
 import { formatInsectScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { insectHeadingName, splitInsectScientificName } from './utils/insectScientificName.js';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, BarkBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
@@ -806,7 +807,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
       狭食性: 'Oligophagous',
     })[value] || value;
   };
-  const { showSeason, seasonTexts, seasonSources, ecologyNotes } = React.useMemo(
+  const { showSeason, seasonRecords, ecologyNotes } = React.useMemo(
     () => buildInsectDetailNotes(moth),
     [moth]
   );
@@ -1964,8 +1965,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                 
                 <div className="p-4">
                   <EmergenceTimeDisplay
-                    seasonTexts={seasonTexts}
-                    source={seasonSources}
+                    seasonRecords={seasonRecords}
                     locale={locale}
                   />
                 </div>
@@ -1988,21 +1988,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                   </div>
                 </div>
                 <div className="p-4">
-                  <ul className="space-y-2">
-                    {ecologyNotes.map((note, index) => (
-                      <li key={index} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                        • {note.content}
-                        {note.sources.length > 0 && (
-                          <SourceCitation
-                            sources={note.sources}
-                            collapsible
-                            isEnglish={isEnglish}
-                            className="mt-1"
-                          />
-                        )}
-                      </li>
-                    ))}
-                  </ul>
+                  <InsectDetailNoteList notes={ecologyNotes} isEnglish={isEnglish} />
                 </div>
               </div>
             )}

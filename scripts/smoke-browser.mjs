@@ -22,6 +22,7 @@ export const PAGES = [
   { name: '植物一覧', path: '/?tab=plants', waitFor: '件が見つかりました' },
   { name: '昆虫一覧ページ（/moth/）', path: '/moth/', waitFor: '件が見つかりました', seo: true },
   { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
+  { name: '発生時期の記録と出典（ウスバフユシャク）', path: `/moth/${E('ウスバフユシャク')}/`, waitFor: '発生時期', seasonSources: true },
   { name: '植物ごとの出典（ウスイロオナガシジミ）', path: `/butterfly/${E('ウスイロオナガシジミ')}/`, waitFor: 'ウラジロガシ', plantSources: true },
   { name: '訪花の書誌（アオスジアオリンガ）', path: `/moth/${E('アオスジアオリンガ')}/`, waitFor: 'リョウブ', flowerCitation: true },
   { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true, plantTaxonomy: true },
@@ -235,6 +236,32 @@ async function checkPage(browser, origin, page, viewport) {
     }
   }
 
+  if (page.seasonSources) {
+    try {
+      const panel = tab.locator('#adult-season');
+      const cases = [
+        ['関東周辺の平地・丘陵地', /日本の冬尺蛾[\s\S]*p\.\s*64/, /日本産蛾類標準図鑑/],
+        ['関東地方周辺では12月中・下旬', /日本産蛾類標準図鑑\s*1[\s\S]*p\.\s*201/, /日本の冬尺蛾/],
+      ];
+      for (const [description, expected, unrelated] of cases) {
+        const row = panel.getByRole('listitem').filter({ hasText: description });
+        const toggle = row.getByRole('button', { name: '出典 1件', exact: true });
+        await toggle.waitFor({ timeout: 10000 });
+        const descriptionId = await row.locator('p').getAttribute('id');
+        if (!descriptionId || await toggle.getAttribute('aria-describedby') !== descriptionId) {
+          problems.push('発生時期の出典ボタンが対応する本文を参照していない');
+        }
+        await toggle.click();
+        const citations = await row.getByRole('list', { name: '出典 1件', exact: true }).innerText();
+        if (!expected.test(citations) || unrelated.test(citations)) {
+          problems.push(`発生時期「${description}」に別の出典が表示されるか、ページが欠けている`);
+        }
+      }
+    } catch (error) {
+      problems.push(`発生時期と出典の対応を確認できない: ${error.message.split('\n')[0]}`);
+    }
+  }
+
   if (page.plantSources) {
     const toggle = tab.getByRole('button', { name: 'ウラジロガシの出典 2件', exact: true });
     try {
@@ -261,9 +288,11 @@ async function checkPage(browser, origin, page, viewport) {
       if (await relatedToggle.getAttribute('aria-expanded') === wasOpen) problems.push('関連昆虫の行を開閉できない');
 
       const season = tab.locator('#adult-season');
-      const seasonToggle = season.getByRole('button', { name: /^出典 [0-9]+件$/ });
-      await seasonToggle.click();
-      if (await season.getByRole('list', { name: /^出典 [0-9]+件$/ }).count() !== 1) {
+      const seasonRow = season.getByRole('listitem').filter({
+        has: tab.getByRole('button', { name: /^出典 [0-9]+件$/ }),
+      }).first();
+      await seasonRow.getByRole('button', { name: /^出典 [0-9]+件$/ }).click();
+      if (await seasonRow.getByRole('list', { name: /^出典 [0-9]+件$/ }).count() !== 1) {
         problems.push('発生時期の出典を同じ形式で開けない');
       }
     } catch (error) {

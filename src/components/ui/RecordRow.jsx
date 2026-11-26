@@ -26,12 +26,13 @@ export function RecordPlantLink({ name, locale, children, family = false }) {
   );
 }
 
-export function RecordToggle({ expanded, controls, label, onToggle, children }) {
+export function RecordToggle({ expanded, controls, describedBy, label, onToggle, children }) {
   return (
     <button
       type="button"
       aria-expanded={expanded}
       aria-controls={controls}
+      aria-describedby={describedBy}
       aria-label={label}
       onClick={onToggle}
       className="inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap px-1 text-xs font-medium text-ink-muted underline-offset-2 hover:text-ink hover:underline focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500"

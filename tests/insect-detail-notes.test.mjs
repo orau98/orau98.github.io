@@ -21,13 +21,13 @@ test('regional adult records retain both sources and omit dates from ecology', (
       ecology('典型的な早春の昼飛性種で、晴天でなければ飛翔しない。クズの樹皮の割れ目に産卵する。', winter),
     ],
   });
-  assert.deepEqual(result.seasonTexts, [kanto, `${detailed}${regional}。`]);
-  assert.deepEqual(result.seasonSources, [winter, standard]);
+  assert.deepEqual(result.seasonRecords.map((record) => record.content), [kanto, `${detailed}${regional}。`]);
+  assert.deepEqual(result.seasonRecords.map((record) => record.sources), [[winter], [standard]]);
   assert.deepEqual(result.ecologyNotes, [
     { content: '昼飛性の蛾。', sources: [standard] },
     { content: '昼飛性種で、晴天でなければ飛翔しない。クズの樹皮の割れ目に産卵する。', sources: [winter] },
   ]);
-  const plot = parseInsectDetailSeason(result.seasonTexts);
+  const plot = parseInsectDetailSeason(result.seasonRecords.map((record) => record.content));
   assert.ok(plot.periods.includes(2.3) && plot.periods.includes(5.1));
   assert.ok(!plot.periods.includes(2.2) && !plot.periods.includes(5.2));
 });
@@ -41,12 +41,12 @@ test('shared adult dates are merged even when a different source reports behavio
       ecology('山地の成虫は8月に出現する。', '図鑑B'),
     ],
   });
-  assert.deepEqual(result.seasonTexts, ['5〜6月', '山地の成虫は8月に出現する。']);
-  assert.deepEqual(result.seasonSources, ['図鑑A', '図鑑B']);
+  assert.deepEqual(result.seasonRecords.map((record) => record.content), ['5〜6月', '山地の成虫は8月に出現する。']);
+  assert.deepEqual(result.seasonRecords.map((record) => record.sources), [['図鑑A', '図鑑B'], ['図鑑B']]);
   assert.deepEqual(result.ecologyNotes, [
     { content: 'モモなどを後食する。幼虫は8月に見られる。蛹で越冬する。', sources: ['図鑑B'] },
   ]);
-  assert.ok(!parseInsectDetailSeason(result.seasonTexts).months.includes(7));
+  assert.ok(!parseInsectDetailSeason(result.seasonRecords.map((record) => record.content)).months.includes(7));
 });
 
 test('matching dates in editions with distinct locality or conditions are preserved', () => {
@@ -56,7 +56,7 @@ test('matching dates in editions with distinct locality or conditions are preser
     type: 'butterfly',
     generalNotes: qualifiers.map((text) => season(text, '図鑑A')),
   });
-  assert.deepEqual(result.seasonTexts, qualifiers);
+  assert.deepEqual(result.seasonRecords.map((record) => record.content), qualifiers);
 });
 
 test('field season excludes captivity, juvenile seasons and isolated dated specimens', () => {
@@ -67,7 +67,7 @@ test('field season excludes captivity, juvenile seasons and isolated dated speci
       ecology('2012年8月に成虫が1頭採集された。', '原著'),
     ],
   });
-  assert.deepEqual(result.seasonTexts, ['成虫は3〜10月に出現する。']);
+  assert.deepEqual(result.seasonRecords.map((record) => record.content), ['成虫は3〜10月に出現する。']);
   assert.deepEqual(result.ecologyNotes.map(note => note.content), [
     '幼虫は5月に得られる。飼育すると11月に羽化する。',
     '2012年8月に成虫が1頭採集された。',
@@ -103,6 +103,22 @@ test('source revisions preserve the original row and project independent ecology
 test('occasional visitors retain their record months without depicting an established adult season', () => {
   const statement = '成虫は3〜9月に記録されているが、偶産と考えられる。';
   const result = buildInsectDetailNotes({ type: 'moth', generalNotes: [season(statement, '日本産蛾類標準図鑑2')] });
-  assert.deepEqual(result.seasonTexts, [statement]);
-  assert.deepEqual(parseInsectDetailSeason(result.seasonTexts).months, []);
+  assert.deepEqual(result.seasonRecords.map((record) => record.content), [statement]);
+  assert.deepEqual(parseInsectDetailSeason(result.seasonRecords.map((record) => record.content)).months, []);
+});
+
+test('only shared statements get both works and correct page numbers', () => {
+  const shared = '6〜7月に出現する。';
+  const regional = '山地では8月に見られる。';
+  const result = buildInsectDetailNotes({
+    type: 'moth',
+    generalNotes: [
+      { ...season(shared + regional, '日本の冬尺蛾'), page: '64' },
+      { ...season(shared, '日本産蛾類標準図鑑1'), page: '188' },
+    ],
+  });
+  assert.deepEqual(result.seasonRecords, [
+    { content: shared, sources: ['日本の冬尺蛾 p. 64', '日本産蛾類標準図鑑1 p. 188'] },
+    { content: regional, sources: ['日本の冬尺蛾 p. 64'] },
+  ]);
 });

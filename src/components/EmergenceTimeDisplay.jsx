@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { parseEmergenceTime, shouldAnalyzeEmergenceHint } from '../utils/emergenceTime.js';
 import { parseInsectDetailSeason } from '../utils/insectDetailNotes.js';
 import SourceCitation from './ui/SourceCitation';
+import InsectDetailNoteList from './InsectDetailNoteList';
 import { isEnglishLocale } from '../utils/locale';
 
 // 月名と色のマッピング - 薄い色で統一
@@ -22,7 +23,7 @@ const MONTHS = [
 
 // Date parsing is shared with list cards and independently tested.
 
-const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = false, supplementalTexts = [], seasonTexts, locale = 'ja' }) => {
+const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = false, supplementalTexts = [], seasonRecords, locale = 'ja' }) => {
   const isEnglish = isEnglishLocale(locale);
   const getPeriodLabel = (periodNum) => {
     if (!isEnglish) return periodNum === 1 ? '上旬' : periodNum === 2 ? '中旬' : '下旬';
@@ -36,6 +37,7 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
     }
     return mode === 'header' ? month.short : month.short;
   };
+  const seasonTexts = useMemo(() => seasonRecords?.map((record) => record.content), [seasonRecords]);
   const emergenceData = useMemo(
     () => seasonTexts?.length
       ? parseInsectDetailSeason(seasonTexts)
@@ -196,7 +198,9 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
           <span className="inline-flex items-center gap-1.5">
             <span className="h-3 w-5 rounded-sm bg-orange-300" aria-hidden="true" />
-            {isEnglish ? 'Adult season' : '発生期'}
+            {seasonRecords
+              ? (isEnglish ? 'Adult season across records' : '掲載記録をまとめた発生期')
+              : (isEnglish ? 'Adult season' : '発生期')}
           </span>
           {fuzzyPeriods.length > 0 && (
             <span className="inline-flex items-center gap-1.5">
@@ -206,18 +210,10 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
           )}
         </div>
       </div>}
-      <div>
-        <div className="space-y-2 bg-surface-raised rounded-card p-3 border border-line">
-          {(seasonTexts?.length ? seasonTexts : [displayText]).map((text) => (
-            <p key={text} className="font-medium leading-relaxed text-ink">{text}</p>
-          ))}
-        </div>
-        {source && (
-          <div className="mt-4 pt-4 border-t border-line">
-            <SourceCitation sources={source} isEnglish={isEnglish} collapsible />
-          </div>
-        )}
-      </div>
+      <InsectDetailNoteList
+        notes={seasonRecords ?? [{ content: displayText, sources: source }]}
+        isEnglish={isEnglish}
+      />
     </div>
   );
 };
