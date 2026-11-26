@@ -247,16 +247,18 @@ async function checkPage(browser, origin, page, viewport) {
         const row = panel.getByRole('listitem').filter({ hasText: description });
         const toggle = row.getByRole('button', { name: '出典 1件', exact: true });
         await toggle.waitFor({ timeout: 10000 });
-        const inline = await row.evaluate((node) => {
-          const button = node.querySelector(':scope > span > button');
-          const ending = button?.previousElementSibling;
-          const beginning = node.querySelector(':scope > span[id]');
-          return Boolean(beginning && ending && button &&
-            button.getAttribute('aria-describedby') === `${beginning.id} ${ending.id}` &&
-            getComputedStyle(button.parentElement).whiteSpace === 'nowrap' &&
-            getComputedStyle(button).display === 'inline-flex');
+        const rightAligned = await row.evaluate((node) => {
+          const layout = node.querySelector(':scope > div');
+          const text = layout?.querySelector('p[id]');
+          const button = layout?.querySelector(':scope > button');
+          if (!text || !button || button.getAttribute('aria-describedby') !== text.id) return false;
+          const rowRect = layout.getBoundingClientRect();
+          const buttonRect = button.getBoundingClientRect();
+          return getComputedStyle(layout).display === 'grid' &&
+            Math.abs(rowRect.right - buttonRect.right) < 1 &&
+            Math.abs(rowRect.top - buttonRect.top) < 1;
         });
-        if (!inline) problems.push('発生時期の出典ボタンが対応する本文の末尾に並んでいない');
+        if (!rightAligned) problems.push('発生時期の出典ボタンが対応する本文の右端にない');
         await toggle.click();
         const citations = await row.getByRole('list', { name: '出典 1件', exact: true }).innerText();
         if (!expected.test(citations) || unrelated.test(citations)) {
