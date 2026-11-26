@@ -377,7 +377,7 @@ export function formatInsectScientificNameReact(value) {
   return (
     <>
       {subgenus
-        ? <><em>{genus}</em> (<em>{subgenus}</em>) <em>{species}</em></>
+        ? <><em>{genus}</em> ({subgenus === '?' ? subgenus : <em>{subgenus}</em>}) <em>{species}</em></>
         : <em className="whitespace-nowrap">{genus}{'\u00a0'}{species}</em>}
       {subspecies && <> <em>{subspecies}</em></>}
       {authority && <> <span className="sci-author">{authority}</span></>}

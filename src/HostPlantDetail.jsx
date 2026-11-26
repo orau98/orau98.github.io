@@ -2,7 +2,7 @@ import { isFlowerVisitRecord } from './utils/flowerVisitPlants.js';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import Papa from 'papaparse';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
+import { formatInsectScientificNameReact, formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
 import { PlantStructuredData } from './components/StructuredData';
 import ImageModal from './components/ImageModal';
 import logger from './utils/logger';
@@ -433,7 +433,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
       <div className="p-3 sm:p-4 flex flex-col flex-grow">
         <h3 className="text-slate-800 dark:text-slate-100 font-bold text-[15px] sm:text-lg mb-1 leading-tight">
           {isEnglish && insect.scientificName
-            ? formatScientificNameReact(primaryName)
+            ? formatInsectScientificNameReact(primaryName)
             : primaryName}
         </h3>
         {isEnglish ? (
@@ -441,7 +441,7 @@ const InsectCard = React.memo(({ insect, imageFilenames = new Set(), imageExtens
             <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">{secondaryName}</p>
           )
         ) : insect.scientificName && (
-          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">{formatScientificNameReact(insect.scientificName)}</p>
+          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">{formatInsectScientificNameReact(insect.scientificName)}</p>
         )}
         
         {(() => {
@@ -496,7 +496,7 @@ const InsectNameChip = React.memo(({ insect, locale = 'ja' }) => {
       className="inline-flex items-center rounded-lg border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
     >
       {isEnglish && insect.scientificName
-        ? formatScientificNameReact(primaryName)
+        ? formatInsectScientificNameReact(primaryName)
         : primaryName}
     </Link>
   );

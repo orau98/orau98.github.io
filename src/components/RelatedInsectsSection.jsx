@@ -5,7 +5,7 @@ import { isEnglishLocale } from '../utils/locale';
 import { makeDetailLinkState } from '../utils/navState';
 import { RecordPlantLink, RecordRow, RecordToggle } from './ui/RecordRow';
 import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/englishNaming';
-import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
+import { formatInsectScientificNameReact, formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import ImageWithFallback from './ImageWithFallback';
 import { resolvePlaceholderSubject } from '../utils/placeholderSubject';
 import useInsectImageCandidates from '../hooks/useInsectImageCandidates';
@@ -189,7 +189,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent px-2.5 pb-2 pt-4">
                             <p className="text-white font-semibold text-xs leading-snug line-clamp-2 drop-shadow-lg">
                               {isEnglish && relatedMoth.scientificName
-                                ? formatScientificNameReact(primaryName)
+                                ? formatInsectScientificNameReact(primaryName)
                                 : primaryName}
                             </p>
                             {secondaryName && (
@@ -231,7 +231,7 @@ const RelatedInsectsSection = ({ relatedMothsByPlant, allInsects, locale = 'ja',
                           aria-hidden="true"
                         />
                         {isEnglish && relatedMoth.scientificName
-                          ? formatScientificNameReact(chipName)
+                          ? formatInsectScientificNameReact(chipName)
                           : chipName}
                       </Link>
                     );

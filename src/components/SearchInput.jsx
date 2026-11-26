@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState, useCallback } from 'react';
 import { getSearchTypeLabel } from '../utils/siteTaxonomy';
 import { isEnglishLocale } from '../utils/locale';
-import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
+import { formatInsectScientificNameReact, formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 
 const assignRef = (ref, value) => {
   if (!ref) return;
@@ -127,9 +127,10 @@ const getSuggestionBadgeClass = (type) => {
   }
 };
 
-const renderSuggestionScientificText = (text, isScientific = false) => {
+const renderSuggestionScientificText = (text, isScientific, type) => {
   if (!text) return null;
-  return isScientific ? formatScientificNameReact(text) : text;
+  if (!isScientific) return text;
+  return type && type !== 'plant' ? formatInsectScientificNameReact(text) : formatScientificNameReact(text);
 };
 
 const useSearchHistory = (scope = 'default') => {
@@ -594,11 +595,11 @@ const SearchInput = React.forwardRef(({
                         {/* テキスト部分 */}
                         <div className="flex-1 min-w-0">
                           <div className="truncate text-sm font-medium">
-                            {renderSuggestionScientificText(name, nameIsScientific)}
+                            {renderSuggestionScientificText(name, nameIsScientific, type)}
                           </div>
                           {subText && (
                             <div className="truncate text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                              {renderSuggestionScientificText(subText, subTextIsScientific)}
+                              {renderSuggestionScientificText(subText, subTextIsScientific, type)}
                             </div>
                           )}
                         </div>

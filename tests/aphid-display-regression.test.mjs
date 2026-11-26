@@ -66,3 +66,31 @@ test('subgenera and subspecies stay italicised while author particles stay with 
   assert.match(formatInsectScientificNameHTML(input), /<em>insularis<\/em> <span class="sci-author">/);
   assert.equal(formatInsectScientificNameHTML('Aphis sp. 1'), 'Aphis sp. 1');
 });
+
+test('an unplaced subgenus marker stays upright and does not absorb the author', () => {
+  const name = 'Chrysolina (?) seriepunctata (Weise, 1887)';
+  assert.equal(splitInsectScientificName(name).authority, '(Weise, 1887)');
+  assert.equal(
+    formatInsectScientificNameHTML(name),
+    '<em>Chrysolina</em> (?) <em>seriepunctata</em> <span class="sci-author">(Weise, 1887)</span>',
+  );
+});
+
+test('a year fragment in a Japanese name is repaired without changing the published address', () => {
+  const csv = fs.readFileSync(new URL('../normalized_data/insects.csv', import.meta.url), 'utf8');
+  assert.doesNotMatch(csv, /^species-[^,]+,(?:[^,]*,){12}\d{4}\),/m);
+  assert.match(csv, /^species-21325,.*?,kerriae,,\(Shinji\),1930,ヤマブキヒゲナガアブラムシ,,,,"Aulacorthum kerriae \(Shinji, 1930\)",/m);
+  assert.match(csv, /^species-5600,.*?,cheiranthi,abrostoloides,Butler,1879,ムラサキウワバ,,,,"Plusidia cheiranthi abrostoloides Butler, 1879",/m);
+  const { aphids } = convertNormalizedDataToStandardFormat([{
+    insect_id: 'species-21325',
+    family: 'Aphididae',
+    japanese_name: 'ヤマブキヒゲナガアブラムシ',
+    scientific_name: 'Aulacorthum kerriae (Shinji, 1930)',
+    genus: 'Aulacorthum',
+    species: 'kerriae',
+    author: '(Shinji)',
+    year: '1930',
+  }], [], []);
+  assert.equal(aphids[0].name, 'ヤマブキヒゲナガアブラムシ');
+  assert.equal(buildInsectPath(aphids[0], 'ja'), '/aphid/Aulacorthum%20kerriae/');
+});
