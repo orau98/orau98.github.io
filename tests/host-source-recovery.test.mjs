@@ -11,6 +11,7 @@ const csv = read('../normalized_data/hostplants.csv');
 const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
 const records = new Map(parsed.data.map((row) => [row.record_id, row]));
 const verification = JSON.parse(read('../data/source_audits/host-record-recovery-2026-11-26.json'));
+const followup = JSON.parse(read('../data/source_audits/host-record-followup.json'));
 
 test('原典で再確認した食草データと公開CSVが一致する', () => {
   assert.deepEqual(parsed.errors, []);
@@ -45,6 +46,32 @@ test('チャマダラキリガの文献上の食樹と成虫の訪花を区別�
     assert.equal(citation.location, 'p. 40');
     assert.match(citation.link, /Vol29_1\/kiberihamushi_29_1_34-49\.pdf#page=7$/);
   }
+});
+
+test('再確認した寄主記録と掲載頁を保持する', () => {
+  for (const { recordId, reference } of followup.additions) {
+    assert.equal(records.get(recordId)?.reference, reference, recordId);
+    const citation = getCompactReferenceMeta(reference);
+    assert.ok(citation.link, reference);
+    if (/\bpp?\.\s+\d/.test(reference)) assert.match(citation.location, /\d/);
+  }
+});
+
+test('宮古島の枯れ葉食とリュウキュウハマキの同定根拠を区別する', () => {
+  const reared = normalizeHostRecord(records.get('host-recheck-1837-shimaguwa'));
+  const pupalId = normalizeHostRecord(records.get('host-recheck-1837-adan'));
+  assert.equal(reared.resourceType, 'substrate');
+  assert.equal(pupalId.resourceType, 'substrate');
+  assert.match(reared.notes, /1頭が羽化/);
+  assert.match(pupalId.notes, /羽化せず、蛹の形態/);
+});
+
+test('分類改訂で別種や別亜種とされた寄主を移さない', () => {
+  const spruce = normalizeHostRecord(records.get('host-recheck-0985-picea'));
+  assert.equal(spruce.name, 'ドイツトウヒ');
+  assert.equal(spruce.observationType, '国外');
+  assert.equal(records.get('host-recheck-21943-tabunoki')?.insect_id, 'species-21943');
+  assert.equal(records.get('host-recheck-21943-sharinbai')?.insect_id, 'species-21943');
 });
 
 test('文献に記載された飼育と野外での食害を元の観察条件で保存する', () => {

@@ -1,0 +1,129 @@
+{
+  "baseCommit": "05f696d4859c89c9933d9851790fba8e1a17c1ef",
+  "additions": [
+    {
+      "recordId": "host-recheck-1837-shimaguwa",
+      "reference": "船越進太郎 (2024) p. 15"
+    },
+    {
+      "recordId": "host-recheck-1837-adan",
+      "reference": "船越進太郎 (2024) p. 15"
+    },
+    {
+      "recordId": "host-recheck-5287-shimaguwa",
+      "reference": "船越進太郎 (2024) p. 15"
+    },
+    {
+      "recordId": "host-recheck-5331-shimaguwa",
+      "reference": "船越進太郎 (2024) pp. 15-16"
+    },
+    {
+      "recordId": "host-recheck-5331-adan",
+      "reference": "船越進太郎 (2024) pp. 15-16"
+    },
+    {
+      "recordId": "host-recheck-5331-tabunoki",
+      "reference": "船越進太郎 (2024) pp. 15-16"
+    },
+    {
+      "recordId": "host-recheck-0983-pinus",
+      "reference": "Sohn et al. (2009) p. 104"
+    },
+    {
+      "recordId": "host-recheck-0983-cedrus",
+      "reference": "Sohn et al. (2009) p. 104"
+    },
+    {
+      "recordId": "host-recheck-0985-picea",
+      "reference": "Berggren et al. (2022) p. 177"
+    },
+    {
+      "recordId": "host-recheck-21979-adeku",
+      "reference": "日本産カミキリムシ p. 506"
+    },
+    {
+      "recordId": "host-recheck-21979-shimatoneriko",
+      "reference": "日本産カミキリムシ p. 506"
+    },
+    {
+      "recordId": "host-recheck-22706-ichijiku",
+      "reference": "日本産カミキリムシ p. 610"
+    },
+    {
+      "recordId": "host-recheck-22706-inubiwa",
+      "reference": "日本産カミキリムシ p. 610"
+    },
+    {
+      "recordId": "host-recheck-22706-gajumaru",
+      "reference": "日本産カミキリムシ p. 610"
+    },
+    {
+      "recordId": "host-recheck-22706-akou",
+      "reference": "日本産カミキリムシ p. 610"
+    },
+    {
+      "recordId": "host-recheck-21943-tabunoki",
+      "reference": "Niisato & Han (2011) p. 31"
+    },
+    {
+      "recordId": "host-recheck-21943-sharinbai",
+      "reference": "Niisato & Han (2011) p. 31"
+    },
+    {
+      "recordId": "host-recheck-22082-tabunoki",
+      "reference": "日本産カミキリムシ p. 461"
+    },
+    {
+      "recordId": "host-recheck-22284-yamazakura",
+      "reference": "日本産カミキリムシ p. 417"
+    },
+    {
+      "recordId": "host-recheck-22036-kuwa",
+      "reference": "岐阜県（トラフカミキリ）"
+    },
+    {
+      "recordId": "host-recheck-3760-akebi",
+      "reference": "東浦町 (2025)"
+    },
+    {
+      "recordId": "host-recheck-3760-mitsubaakebi",
+      "reference": "大熊・間野 (2018) p. 57"
+    },
+    {
+      "recordId": "host-recheck-3760-maguwa",
+      "reference": "船越・宮野 (2010) p. 100"
+    }
+  ],
+  "unresolved": [
+    {
+      "insectId": "species-6018",
+      "reason": "西原（1995）の両種を扱う本文が未取得。ソメイヨシノなどの種別帰属は未確認。"
+    },
+    {
+      "insectId": "species-21944",
+      "reason": "Niisato & Han (2011) p. 31の寄主は基亜種の記述。トカラ亜種に適用しない。"
+    },
+    {
+      "insectId": "species-22036",
+      "reason": "日本産カミキリムシ p. 482のヤマグワは亜種別の帰属が未確認。"
+    },
+    {
+      "insectId": "species-3760",
+      "reason": "東浦町（2025）はミヤマイボタの摂食にも言及するが、当日の記録は樹上での発見のみ。"
+    }
+  ],
+  "duplicateNamePages": [
+    {
+      "duplicateId": "species-20391",
+      "canonicalId": "species-20389",
+      "source": "日本産蝶類標準図鑑 p. 283",
+      "existingHostCount": 7
+    },
+    {
+      "duplicateId": "species-20402",
+      "canonicalId": "species-20401",
+      "source": "日本産蝶類標準図鑑 p. 297",
+      "existingHostCount": 4
+    }
+  ]
+}
