@@ -189,6 +189,7 @@ export const additionalBibliography = [
     pages: "34-49",
     url: "https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_34-49.pdf#page=7",
     pageLinks: {
+      "p. 36": "https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_34-49.pdf#page=3",
       "p. 38": "https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_34-49.pdf#page=5",
     },
     references: ["高島 昭 (2001)"],
@@ -1018,7 +1019,10 @@ export const additionalBibliography = [
     journal: "蛾類通信",
     issue: "183",
     pages: "117-125",
-    url: "https://www.moth.jp/pubs/jhj",
+    url: "https://publ.moth.jp/tsushin/151-200/jhj183.pdf#page=3",
+    pageLinks: {
+      "p. 120": "https://publ.moth.jp/tsushin/151-200/jhj183.pdf#page=6",
+    },
     references: ["西原かよ子 (1995)"],
   },
   {
