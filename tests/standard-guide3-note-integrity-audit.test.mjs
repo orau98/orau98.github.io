@@ -28,6 +28,10 @@ const ALL_ROWS_PATH = path.join(
 );
 const rawAudit = fs.readFileSync(AUDIT_PATH, 'utf8');
 const audit = JSON.parse(rawAudit);
+const followUp = JSON.parse(fs.readFileSync(new URL(
+  '../data/source_audits/general-note-ocr-recheck-2026-11-26.json',
+  import.meta.url,
+), 'utf8'));
 const reviewedRows = Papa.parse(
   fs.readFileSync(ALL_ROWS_PATH, 'utf8').replace(/^\ufeff/, ''),
   { header: true, skipEmptyLines: true },
@@ -42,6 +46,14 @@ const makeFixture = () => {
     { header: true, skipEmptyLines: true },
   ).data;
   const byId = new Map(rows.map(row => [row.record_id, row]));
+  // Recover the rows as reviewed in July before applying the original audit.
+  for (const entry of followUp.rows) {
+    if (entry.reference !== '日本産蛾類標準図鑑3' || entry.decision !== 'include') continue;
+    const row = byId.get(entry.record_id);
+    assert.equal(row?.insect_id, entry.insect_id, entry.record_id);
+    row.content = entry.previous_content;
+    row.page = entry.previous_page;
+  }
   for (const entry of audit.rows) {
     let row = byId.get(entry.record_id);
     if (!row) {
