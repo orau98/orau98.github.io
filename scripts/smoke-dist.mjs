@@ -1331,10 +1331,6 @@ for (const redirect of mergedLeafBeetleRedirects) {
 const mergedButterflyRedirects = loadButterflyMergedTaxonRedirects(
   BUTTERFLY_CANONICAL_AUDIT_PATH,
 );
-assert(
-  mergedButterflyRedirects.length === 1,
-  `expected 1 merged butterfly redirect, found ${mergedButterflyRedirects.length}`,
-);
 const butterflyRuntimeIds = new Set(
   readDistJson('assets/data-lite/butterflies.json').map((insect) => insect.id),
 );
@@ -1358,6 +1354,14 @@ for (const redirect of mergedButterflyRedirects) {
     `${jaRelativePath} migration URL must not be submitted in the sitemap`,
   );
   assert(!englishInsectRoutes[redirect.duplicateId], `duplicate butterfly must not have an English canonical route: ${redirect.duplicateId}`);
+  if (redirect.legacyRouteName === redirect.duplicateId) {
+    const cleanRelativePath = path.join('butterfly', redirect.duplicateId, 'index.html');
+    const cleanHtml = readDistText(cleanRelativePath);
+    assert(/http-equiv=["']refresh["']/i.test(cleanHtml), `${cleanRelativePath} must refresh immediately`);
+    assert(cleanHtml.includes('name="x-redirect-kind" content="taxonomy-merge"'), `${cleanRelativePath} migration marker missing`);
+    const canonicalHtml = readDistText(path.join('meta', 'butterfly', `${redirect.canonicalId}.html`));
+    assert(!canonicalHtml.includes('成虫出現時期</dt>'), `${jaTarget} must not inherit the former record's emergence period`);
+  }
   // The English route map intentionally contains indexable pages only. The exhaustive
   // app-route loop above separately verifies unmapped noindex canonical profiles.
 }

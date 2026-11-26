@@ -42,7 +42,7 @@ test('イチモンジセセリは正準IDだけをデータ表に保持する', 
 
 test('旧IDは正準IDへのtaxonomy mergeとして保持する', () => {
   const redirects = loadButterflyMergedTaxonRedirects(AUDIT_PATH);
-  assert.equal(redirects.length, 1);
+  assert.equal(redirects.length, 3);
   assert.deepEqual(
     {
       duplicateId: redirects[0].duplicateId,
@@ -74,5 +74,27 @@ test('正規化昆虫表に同一和名・同一学名の重複IDを残さない
     const key = `${japaneseName}__${scientificName}`;
     assert.equal(seen.has(key), false, `${key}: ${seen.get(key)} / ${row.insect_id}`);
     seen.set(key, row.insect_id);
+  }
+});
+
+test('誤った学名で作られた旧ページを転送し、未確認の出現時期を引き継がない', () => {
+  const redirects = loadButterflyMergedTaxonRedirects(AUDIT_PATH);
+  for (const [duplicateId, canonicalId, noteId, sourcePage] of [
+    ['species-20391', 'species-20389', 'note-1005120', '282-283'],
+    ['species-20402', 'species-20401', 'note-1005124', '296-297'],
+  ]) {
+    const redirect = redirects.find((item) => item.duplicateId === duplicateId);
+    assert.equal(redirect?.canonicalId, canonicalId);
+    assert.equal(redirect.legacyRouteName, duplicateId);
+    assert.equal(redirect.skipEnglishScientificRedirect, true);
+    for (const folder of ['normalized_data', 'public']) {
+      assert.ok(!readCsv(`${folder}/insects.csv`).some((row) => row.insect_id === duplicateId));
+      const notes = readCsv(`${folder}/general_notes.csv`);
+      assert.ok(!notes.some((row) => row.insect_id === duplicateId));
+      const note = notes.find((row) => row.record_id === noteId);
+      assert.equal(note?.insect_id, canonicalId);
+      assert.equal(note.note_type, '生態情報');
+      assert.equal(note.page, sourcePage);
+    }
   }
 });

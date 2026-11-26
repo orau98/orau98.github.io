@@ -2605,37 +2605,19 @@ async function generateMetaPages() {
       }
     });
     
-    // 成虫出現時期データは general_notes のみ使用
-    const emergenceTimeMap = new Map();
-    const addEmergenceFromRow = (nameJP, nameSci, time) => {
-      const j = (nameJP || '').trim();
-      const s = (nameSci || '').trim();
-      const t = (time || '').trim();
-      if (!t || t === '不明') return;
-      if (j) emergenceTimeMap.set(j, t);
-      if (s) {
-        emergenceTimeMap.set(s, t);
-        const cleaned = s.replace(/\s*\([^)]*\)\s*$/, '').trim();
-        if (cleaned && cleaned !== s) emergenceTimeMap.set(cleaned, t);
-      }
-    };
-    // general_notesから出現時期タイプのレコードをemergenceTimeMapに投入
+    // 和名や学名が同じ別レコードに出現時期を流用しない。
+    const emergenceByInsectId = new Map();
     const emergenceTypes = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期'];
     generalNotesData.forEach(row => {
+      const insectId = (row.insect_id || '').trim();
       const noteType = (row.note_type || '').trim();
       const content = (row.content || '').trim();
-      if (!content || content === '不明') return;
+      if (!insectId || !content || content === '不明') return;
       const isEmergence = emergenceTypes.some(k => noteType.includes(k))
         || (!noteType && /\d+\s*月|春|夏|秋|冬|上旬|中旬|下旬|頃/.test(content));
-      if (!isEmergence) return;
-      const insectId = (row.insect_id || '').trim();
-      const insect = insectsData.find(r => r.insect_id === insectId);
-      if (insect) {
-        addEmergenceFromRow(insect.japanese_name, insect.scientific_name, content);
-      }
+      if (isEmergence) emergenceByInsectId.set(insectId, content);
     });
-    console.log(`成虫出現時期データを${emergenceTimeMap.size}件読み込みました（general_notesのみ）`);
-    
+
     // 昆虫データの処理（正規化データを使用）
     let mothCount = 0;
     let butterflyCountFromInsects = 0;
@@ -2713,26 +2695,8 @@ async function generateMetaPages() {
               ? 'beetle'
               : (isAphid ? 'aphid' : 'moth')))));
       
-      // 成虫出現時期の検索（外部CSV→general_notesの順にフォールバック）
-      let emergenceTime = emergenceTimeMap.get(japaneseName) || 
-                           emergenceTimeMap.get(scientificName) ||
-                           emergenceTimeMap.get(scientificName.replace(/\s*\([^)]*\)\s*$/, '').trim()) ||
-                           null;
-      if (!emergenceTime) {
-        // general_notes から抽出
-        const isEmergenceNote = (note) => {
-          const t = (note?.type || '').trim();
-          const c = (note?.content || '').trim();
-          if (!c || c === '不明') return false;
-          const typeHit = ['出現時期', '発生時期', '成虫発生時期', '成虫の発生時期', '出現', '時期']
-            .some(k => t.includes(k));
-          const contentHit = /\d+\s*月|春|夏|秋|冬|上旬|中旬|下旬|頃/.test(c);
-          return typeHit || (!t && contentHit);
-        };
-        const gn = (generalNotes || []).find(isEmergenceNote);
-        if (gn) emergenceTime = gn.content;
-      }
-      
+      const emergenceTime = emergenceByInsectId.get(insectId) || null;
+
       const insect = {
         id: insectId,
         name: displayName,
