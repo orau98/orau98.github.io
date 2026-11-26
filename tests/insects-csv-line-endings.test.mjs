@@ -28,7 +28,8 @@ test('insects CSV parses every mixed-source row independently', () => {
     assert.deepEqual(parsed.errors, [], `${csvPath} should parse without joined rows`);
     const ids = parsed.data.map((row) => row.insect_id);
     assert.equal(new Set(ids).size, ids.length, `${csvPath} should keep unique insect rows`);
-    assert.equal(ids.length, 9957, `${csvPath} should retain every canonical insect row`);
+    // Two misassigned butterfly records were replaced with redirects.
+    assert.equal(ids.length, 9955, `${csvPath} should retain every canonical insect row`);
     assert.equal(
       parsed.data.filter((row) => row.family === 'Cerambycidae').length,
       1166,
