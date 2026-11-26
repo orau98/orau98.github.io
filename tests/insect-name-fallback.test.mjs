@@ -26,7 +26,9 @@ test('missing Japanese names fall back to scientific names without a status labe
     (insect) => insect.id === 'species-scientific-only',
   );
   assert.ok(target);
-  assert.equal(target.name, 'Testus scientificus Author, 2026');
+  assert.equal(target.name, 'Testus scientificus');
+  assert.equal(target.scientificName, 'Testus scientificus Author, 2026');
+  assert.equal(target.routeName, 'Testus scientificus Author, 2026');
   assert.equal(target.name.includes('和名未記載'), false);
 });
 
