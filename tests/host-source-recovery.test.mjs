@@ -59,6 +59,15 @@ test('文献に記載された飼育と野外での食害を元の観察条件�
   assert.match(getCompactReferenceMeta(flowerFeeder.reference).link, /5830\.pdf#page=1$/);
 });
 
+test('ウスイロアツバの削除された食樹を植物名として復元する', () => {
+  const record = normalizeHostRecord(records.get('host-nov26-source-5293-momi'));
+  assert.equal(record.name, 'モミ');
+  assert.equal(record.lifeStage, '幼虫');
+  assert.equal(record.plantPart, '葉');
+  assert.equal(record.observationType, '文献');
+  assert.equal(getCompactReferenceMeta(record.reference).location, 'p. 229');
+});
+
 test('カラマツイトヒキハマキの正しい学名に原典の寄主を結び付ける', () => {
   const insectCsv = read('../normalized_data/insects.csv');
   assert.equal(read('../public/insects.csv'), insectCsv);

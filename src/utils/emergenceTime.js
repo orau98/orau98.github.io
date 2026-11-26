@@ -103,7 +103,7 @@ const MONTH_NUMBER = String.raw`\d{1,2}`;
 const RANGE_MARK = '[〜~－–—−-]';
 const MONTH_LIST_ITEM = String.raw`${MONTH_NUMBER}(?:\s*${RANGE_MARK}\s*${MONTH_NUMBER})?`;
 const ELIDED_MONTH_LIST = new RegExp(
-  String.raw`(?<![\d.])(?:${MONTH_LIST_ITEM}\s*[、,・]\s*)+${MONTH_LIST_ITEM}\s*月`,
+  String.raw`(?<![\d.年])(?:${MONTH_LIST_ITEM}\s*[、,・]\s*)+${MONTH_LIST_ITEM}\s*月`,
   'g',
 );
 const PART = `(?:[上中下](?:[・、]?[上中下])?旬|初旬|初め|初|末|前半|後半|[上中下](?=\\s*(?:${RANGE_MARK}|[、,。]|$)))`;

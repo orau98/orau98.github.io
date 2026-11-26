@@ -80,6 +80,7 @@ test('lists with a shared month unit retain every month in the chart and filter'
     ['石垣島で4、5月に、西表島では12月', [4, 5, 12]],
     ['沖縄島で7-8、10、12月', [7, 8, 10, 12]],
     ['5・7〜9月', [5, 7, 8, 9]],
+    ['年2、5月及び7～8月に出現する。', [5, 7, 8]],
     ['6、7月には見られない', []],
   ];
   for (const [text, months] of cases) {

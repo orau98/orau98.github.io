@@ -886,6 +886,15 @@
       "evidence": "東京都の定点調査報告（平成28年度、32-3、PDF p. 1）に花内幼虫と花弁・子房の食害を記載。",
       "before": null,
       "after": "host-nov26-source-6046-tsubaki-oshima,species-6046,ツバキ,ツバキ科,野外（国内）,花,幼虫,大根田順子ほか (2016年度) PDF p. 1,伊豆大島で花内の幼虫と花弁・子房の食害を調査。"
+    },
+    {
+      "recordId": "host-nov26-source-5293-momi",
+      "insectId": "species-5293",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "229",
+      "before": null,
+      "after": "host-nov26-source-5293-momi,species-5293,モミ,マツ科,文献,葉,幼虫,日本産蛾類標準図鑑2 p. 229,幼虫がモミの生葉を摂食すると記載。観察条件は未記載。",
+      "evidence": "冊子p.228右段のウスイロアツバの見出しからp.229左段の寄主欄へ続く。モミの生葉の摂食を記載。旧行hostplant-901337は植物名欄に文章が入っており、コミットd451965e36で削除されていた。"
     }
   ],
   "identity_changes": [
