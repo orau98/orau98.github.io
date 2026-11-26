@@ -57,3 +57,23 @@ test('matching dates in editions with distinct locality or conditions are preser
   });
   assert.deepEqual(result.seasonTexts, qualifiers);
 });
+
+test('field season excludes captivity, juvenile seasons and isolated dated specimens', () => {
+  const result = buildInsectDetailNotes({
+    type: 'moth',
+    generalNotes: [
+      ecology('成虫は3〜10月に出現する。幼虫は5月に得られる。飼育すると11月に羽化する。', '図鑑'),
+      ecology('2012年8月に成虫が1頭採集された。', '原著'),
+    ],
+  });
+  assert.deepEqual(result.seasonTexts, ['成虫は3〜10月に出現する。']);
+  assert.deepEqual(result.ecologyNotes.map(note => note.content), [
+    '幼虫は5月に得られる。飼育すると11月に羽化する。',
+    '2012年8月に成虫が1頭採集された。',
+  ]);
+});
+
+test('foreign dates and single records appear in the text without extending the domestic season chart', () => {
+  const text = ['日本では7月に成虫が出現する。ヨーロッパでは5〜7月に出現する。', '2012年11月に1頭を採集。'];
+  assert.deepEqual(parseInsectDetailSeason(text).months, [7]);
+});

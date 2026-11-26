@@ -94,3 +94,18 @@ test('a year fragment in a Japanese name is repaired without changing the publis
   assert.equal(aphids[0].name, 'ヤマブキヒゲナガアブラムシ');
   assert.equal(buildInsectPath(aphids[0], 'ja'), '/aphid/Aulacorthum%20kerriae/');
 });
+
+test('provisional identification citations never become publication years', () => {
+  const csv = fs.readFileSync(new URL('../normalized_data/insects.csv', import.meta.url), 'utf8');
+  const en = csv.split(/\r?\n/).find(line => line.startsWith('species-0042,'));
+  assert.match(en, /,Enteucha,,sp\.,,,,ミズヒキモグリチビガ,/);
+  assert.match(en, /,Enteucha sp\.,/);
+  assert.match(en, /Owada et al\. 2006/);
+  const { moths } = convertNormalizedDataToStandardFormat([{
+    insect_id: 'species-20467',
+    family: 'Nepticulidae',
+    scientific_name: 'Stigmella sp. 1',
+    old_japanese_name: 'ソトグロヒメハマキ',
+  }], [], []);
+  assert.equal(decodeURIComponent(buildInsectPath(moths[0], 'ja')), '/moth/ソトグロヒメハマキ/');
+});

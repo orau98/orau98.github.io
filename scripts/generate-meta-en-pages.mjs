@@ -593,7 +593,8 @@ function buildEnglishInsectPage({
     japaneseName,
     fallback: insect.id || 'Unknown species',
   });
-  const japaneseReference = japaneseName === scientificHeading ? '' : buildJapaneseReferenceLabel(japaneseName);
+  const hasJapaneseName = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(japaneseName);
+  const japaneseReference = hasJapaneseName ? buildJapaneseReferenceLabel(japaneseName) : '';
   const familyLabels = normalizeInsectFamilyLabels(insect);
   const imageUrl = resolveInsectImageUrl(insect);
   const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
@@ -765,7 +766,7 @@ function buildEnglishInsectPage({
         <h3>Overview</h3>
         <dl>
           ${scientificName ? `<dt>Scientific name</dt><dd>${formatInsectScientificNameHTML(scientificName)}</dd>` : ''}
-          ${japaneseName ? `<dt>Japanese name</dt><dd>${escapeHtml(japaneseName)}</dd>` : ''}
+          ${hasJapaneseName ? `<dt>Japanese name</dt><dd>${escapeHtml(japaneseName)}</dd>` : ''}
           <dt>Group</dt>
           <dd>${escapeHtml(section.singularLabel)}</dd>
           ${(familyLabels.familyLatin || familyLabels.familyJapanese)

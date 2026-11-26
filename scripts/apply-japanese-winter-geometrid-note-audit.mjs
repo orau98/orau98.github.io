@@ -204,14 +204,29 @@ for (const row of csvRows) {
   ids.add(id);
 }
 
+// 2026-11-26 の原ページ再照合による出現期と生態の分離（p.60, 62–63）。
+const sourceFollowUp = new Map([
+  ["species-3757/出現時期", ["note-000580","関東地方周辺では3月上旬～下旬。年によっては4月上旬まで見られる。東京都日野市では2月中・下旬。採集例は北海道函館4月19日、礼文島5月4日、鹿児島県では2016年1月。","60"]],
+  ["species-3757/生態情報", ["note-1004729","多食性で草本類の多くの植物につく。採卵飼育ではマメ科の植物をよく食べる。昼飛性で、晴天でなければ飛翔しない。産卵はクズの樹皮の割れ目に産卵管をさし入れて行う。","60"]],
+  ["species-3875/出現時期", ["note-000583","関東地方の山地や東北地方では11月下旬～12月上旬。埼玉県さいたま市の秋ヶ瀬公園では12月中・下旬。出現期間は短い。","62"]],
+  ["species-3875/生態情報", ["note-1004732","食草はハンノキ科に固有で、成虫の産地もハンノキ類に強い相関が見られる。","62"]],
+  ["species-3878/出現時期", ["note-000586","関東周辺の低山帯では2月下旬～3月中旬。ピークは3月上旬で、2～3日と短い。山地では5月上～中旬。","63"]],
+  ["species-3878/生態情報", ["note-1004735","食性はモミの単食性。成虫の分布も食樹のモミに制限され、地域によってはモミ林に珍しくない。配偶行動は日没後すぐに生じ、♀がコーリング行動を行う。♂は日没とともに薄明期から飛翔を始め、モミの幹の周辺を飛び交う。","63"]],
+]);
+
 const states = [];
 for (const auditRow of audit.rows) {
+  const followUp = sourceFollowUp.get(auditRow.insect_id + '/' + auditRow.note_type);
+  const isFollowUp = ({ values }) => Boolean(followUp)
+    && values[indexes.record_id] === followUp[0]
+    && values[indexes.content] === followUp[1]
+    && values[indexes.page] === followUp[2];
   const targetRows = csvRows.filter(row => (
     row.values[indexes.insect_id] === auditRow.insect_id
     && row.values[indexes.note_type] === auditRow.note_type
     && row.values[indexes.reference] === SOURCE
     && (
-      (
+      isFollowUp(row) || (
         row.values[indexes.content] === auditRow.old_content
         && (row.values[indexes.page] || '') === auditRow.old_page
       )
@@ -225,8 +240,10 @@ for (const auditRow of audit.rows) {
     throw new Error(`Expected one target for ${auditRow.audit_id}; found ${targetRows.length}`);
   }
   const row = targetRows[0];
-  const state = row.values[indexes.page] === auditRow.approved_page
+  const state = isFollowUp(row) || (
+    row.values[indexes.page] === auditRow.approved_page
     && row.values[indexes.content] === auditRow.approved_content
+  )
     ? 'applied'
     : 'pending';
   states.push({ auditRow, row, state });

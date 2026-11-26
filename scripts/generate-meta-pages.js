@@ -17,7 +17,7 @@ import {
   META_PAGE_SECTIONS,
 } from '../src/utils/siteTaxonomy.js';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
-import { formatInsectScientificNameHTML as formatScientificNameHTML, insectHeadingName } from '../src/utils/insectScientificName.js';
+import { formatInsectScientificNameHTML as formatScientificNameHTML, insectHeadingName, splitInsectScientificName } from '../src/utils/insectScientificName.js';
 import {
   getPlantObservationGuide,
   PLANT_OBSERVATION_HEADING,
@@ -1264,6 +1264,8 @@ function generateInsectHTML(
   const hostPlants = plantUsage.hostPlants.join('; ') || '不明';
   const flowerPlantsArray = plantUsage.flowerPlants.map(normalizePlantName).filter(isValidPlantName);
   const scientificName = insect.scientificName || '';
+  const { name: scientificHeading, authority } = splitInsectScientificName(scientificName);
+  const hasJapaneseName = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(insect.japaneseName);
   const citationEntries = buildInsectCitationEntries(insect);
   const citationSummaryHtml = renderCitationSummaryHtml(citationEntries);
   const citationListHtml = renderCitationListHtml(citationEntries);
@@ -1639,16 +1641,16 @@ function generateInsectHTML(
     </nav>
 
     <header class="meta-header">
-      <h1>${insect.japaneseName}</h1>
-      <h2>${formatScientificNameHTML(scientificName)}</h2>
+      <h1>${hasJapaneseName ? insect.japaneseName : formatScientificNameHTML(scientificHeading || insect.japaneseName)}</h1>
+      ${hasJapaneseName ? `<h2>${formatScientificNameHTML(scientificName)}</h2>`
+        : authority ? `<p class="sci-author">${escapeRedirectHtml(authority)}</p>` : ''}
     </header>
     
     <main class="meta-content">
       <section class="basic-info">
         <h3>基本情報</h3>
         <dl>
-          <dt>和名</dt>
-          <dd>${insect.japaneseName}</dd>
+          ${hasJapaneseName ? `<dt>和名</dt><dd>${insect.japaneseName}</dd>` : ''}
           ${insect.alternativeNames && insect.alternativeNames.trim() ? `
           <dt>別名</dt>
           <dd>${insect.alternativeNames}</dd>` : ''}
