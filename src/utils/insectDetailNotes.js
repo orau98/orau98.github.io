@@ -75,8 +75,12 @@ function addSentence(records, sentence, source, group) {
     : source;
   const existing = records.get(key);
   if (existing) {
-    if (source) existing.sources.add(source);
-    if (citation) existing.citations.add(citation);
+    if (!source) return;
+    if (citation !== source || !existing.sources.has(source)) {
+      existing.citations.delete(source);
+      existing.citations.add(citation);
+    }
+    existing.sources.add(source);
     return;
   }
   records.set(key, {
@@ -175,12 +179,10 @@ export function buildInsectDetailNotes(insect) {
     const [, locality, start, end] = detailedRange;
     const simpleKey = `${locality}${start}-${end}`;
     const simple = period.get(simpleKey);
-    if (simple && [...simple.sources].every((source) => record.sources.has(source))) {
-      period.set(simpleKey, {
-        ...record,
-        citations: new Set([...simple.citations, ...record.citations]),
-        group: simple.group,
-      });
+    if (simple && [...simple.citations].every((citation) =>
+      record.citations.has(citation) || record.sources.has(citation)
+    )) {
+      period.set(simpleKey, { ...record, group: simple.group });
       period.delete(seasonKey(record.text));
     }
   }

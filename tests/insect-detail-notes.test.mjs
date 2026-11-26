@@ -115,6 +115,7 @@ test('only shared statements get both works and correct page numbers', () => {
     generalNotes: [
       { ...season(shared + regional, '日本の冬尺蛾'), page: '64' },
       { ...season(shared, '日本産蛾類標準図鑑1'), page: '188' },
+      season(shared, '日本の冬尺蛾'),
     ],
   });
   assert.deepEqual(result.seasonRecords, [
