@@ -794,6 +794,16 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     } catch {}
   };
   const familyLabel = taxonomy.familyJp || details.family || details.familyName || '';
+  const orderChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: taxonomy.orderJp,
+    scientificName: taxonomy.orderEn,
+  });
+  const familyChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: familyLabel === '不明' ? '' : familyLabel,
+    scientificName: taxonomy.familyEn || details.familyLatin,
+  });
 
   const displayLatin = resolvedPlantDetail ? (resolvedCanonicalName || decodedPlantName) : repairLatinBinomial(decodedPlantName);
 
@@ -847,12 +857,28 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
     : (loadedProfile.key === profileRequestKey && profileRequestKey
       ? loadedProfile.profile
       : (profileRequestKey ? getCachedPlantProfile(profileOwnerName, profileRef) || null : null));
+  const genusJapanese = normalizePlantProfileText(plantProfile?.genusJp || details.genusJp);
+  const genusLatin = normalizePlantProfileText(taxonomy.genus || details.genus || plantProfile?.genus);
+  const genusChip = buildLocalizedTaxonomyChip({
+    locale,
+    japaneseName: genusJapanese,
+    scientificName: genusLatin,
+  });
+  const plantTaxonomyLinks = [
+    !isOrder && { ...orderChip, filter: 'porder' },
+    !isOrder && !isFamily && { ...familyChip, filter: 'pfamily' },
+    !isOrder && !isFamily && !isGenus && {
+      ...genusChip,
+      filter: 'q',
+      queryValue: genusLatin || genusChip.queryValue,
+      referenceLabel: isEnglish ? genusChip.referenceLabel : (genusJapanese && genusJapanese !== genusLatin ? genusLatin : ''),
+    },
+  ].filter((item) => item?.label && item.queryValue);
+
   const plantProfileFacts = useMemo(() => {
+    if (!plantProfile) return [];
     const labels = isEnglish
       ? {
-          order: 'Order',
-          family: 'Family',
-          genus: 'Genus',
           habit: 'Habit',
           height: 'Size',
           flowerPeriod: 'Flowering',
@@ -863,9 +889,6 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           source: 'Source',
         }
       : {
-          order: '目',
-          family: '科',
-          genus: '属',
           habit: '生活型',
           height: '大きさ',
           flowerPeriod: '花期',
@@ -875,41 +898,20 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           distinguishingFeatures: '類似種との見分け方',
           source: '出典',
         };
-    const order = buildLocalizedTaxonomyChip({
-      locale,
-      japaneseName: taxonomy.orderJp,
-      scientificName: taxonomy.orderEn,
-    });
-    const family = buildLocalizedTaxonomyChip({
-      locale,
-      japaneseName: familyLabel === '不明' ? '' : familyLabel,
-      scientificName: taxonomy.familyEn || details.familyLatin,
-    });
-    const genusLatin = taxonomy.genus || details.genus || plantProfile?.genus;
-    const genusJapanese = plantProfile?.genusJp || details.genusJp;
-    const genusNames = isEnglish ? [genusLatin, genusJapanese] : [genusJapanese, genusLatin];
-    const genusValue = [...new Set(genusNames.filter(Boolean))].join(' / ');
     const rows = [
-      ['order', !isOrder && [order.label, order.referenceLabel].filter(Boolean).join(' / '), 'porder', order.queryValue],
-      ['family', !isOrder && !isFamily && [family.label, family.referenceLabel].filter(Boolean).join(' / '), 'pfamily', family.queryValue],
-      ['genus', !isOrder && !isFamily && !isGenus && genusValue, 'q', genusLatin || genusJapanese],
-      ['habit', plantProfile?.habit],
-      ['height', plantProfile?.height],
-      ['flowerPeriod', plantProfile?.flowerPeriod],
-      ['distribution', plantProfile?.distribution],
-      ['habitat', plantProfile?.habitat],
-      ['similarTaxa', plantProfile?.similarTaxa],
-      ['distinguishingFeatures', plantProfile?.distinguishingFeatures],
-    ];
-    return rows
-      .map(([key, value, filter, query]) => ({
-        key,
-        label: labels[key],
-        value: normalizePlantProfileText(value),
-        href: query ? localizePath(`/?tab=plants&${filter}=${encodeURIComponent(query)}`, locale) : null,
-      }))
+      ['habit', plantProfile.habit],
+      ['height', plantProfile.height],
+      ['flowerPeriod', plantProfile.flowerPeriod],
+      ['distribution', plantProfile.distribution],
+      ['habitat', plantProfile.habitat],
+      ['similarTaxa', plantProfile.similarTaxa],
+      ['distinguishingFeatures', plantProfile.distinguishingFeatures],
+    ]
+      .map(([key, value]) => ({ key, label: labels[key], value: normalizePlantProfileText(value) }))
       .filter((row) => row.value);
-  }, [plantProfile, details, isEnglish, familyLabel, isOrder, isFamily, isGenus, locale, taxonomy]);
+    // 出典は facts グリッドに混ぜず、プロフィール末尾の SourceCitation に集約（サイト共通の控えめ表記）
+    return rows;
+  }, [plantProfile, isEnglish]);
 
   const additionalPlantProfileEntries = useMemo(() => {
     if (isFamily || isOrder || isGenus || !Array.isArray(details?.additionalProfiles)) {
@@ -2057,14 +2059,39 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
         <Link
           to={getBackTarget(location, localizePath('/?tab=plants', locale))}
           state={makeDetailLinkState(location)}
-          className="ui-btn ui-btn-secondary whitespace-nowrap px-3 py-2 text-xs shadow-sm transition-transform hover:shadow-md active:scale-95 sm:text-sm"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-md px-1 text-sm font-semibold text-slate-700 hover:text-blue-800 dark:text-slate-200 dark:hover:text-blue-300"
         >
-          <svg className="mr-1.5 h-4 w-4 sm:mr-2 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           <span className="sm:hidden">{isEnglish ? 'Back' : '一覧へ'}</span>
           <span className="hidden sm:inline">{isEnglish ? 'Back to list' : '一覧に戻る'}</span>
         </Link>
+        {plantTaxonomyLinks.length > 0 && (
+          <nav aria-label={isEnglish ? 'Plant taxonomy' : '植物の分類'}>
+            <ol className="flex flex-wrap items-center gap-x-2">
+              {plantTaxonomyLinks.map((item, index) => (
+                <li key={item.filter} className="flex max-w-full items-center gap-2">
+                  <Link
+                    to={localizePath(`/?tab=plants&${item.filter}=${encodeURIComponent(item.queryValue)}`, locale)}
+                    aria-label={isEnglish ? `Search plants in ${item.label}` : `${item.label} の植物を検索`}
+                    className="inline-flex min-h-11 min-w-0 flex-wrap items-center gap-x-1.5 rounded-md px-1 py-1 text-sm font-semibold text-blue-800 underline underline-offset-4 hover:text-blue-950 dark:text-blue-300 dark:hover:text-blue-200"
+                  >
+                    <span className="break-words">{item.label}</span>
+                    {item.referenceLabel && (
+                      <span className={`break-words text-xs font-normal text-slate-600 dark:text-slate-300 ${!isEnglish && item.filter === 'q' ? 'italic' : ''}`}>
+                        {item.referenceLabel}
+                      </span>
+                    )}
+                  </Link>
+                  {index < plantTaxonomyLinks.length - 1 && (
+                    <span aria-hidden="true" className="text-sm text-slate-500 dark:text-slate-400">›</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
       </div>
       {/* 構造化データ（静的HTMLにあるページでは静的なものを使い、二重にしない） */}
       {!isPrerenderedHeadFor(canonicalHref) && (
@@ -2138,43 +2165,37 @@ const HostPlantDetail = ({ moths, butterflies = [], beetles = [], longhornbeetle
           )}
           </div>
 
+          {/* 要約だけ存在する植物（構造化factsが0件）でも解説を出す。
+              facts件数にセクション全体の表示を連動させない */}
           {plantProfileFacts.length > 0 && (
             <section id="plant-profile" className="scroll-mt-24" aria-labelledby="plant-profile-heading">
               <div className="rounded-card border border-line bg-surface p-5 shadow-e1">
                 <h2 id="plant-profile-heading" className="mb-4 text-xl font-bold text-slate-800 dark:text-slate-100">
-                  {isEnglish ? 'Plant Profile' : '解説・植物情報'}
-                </h2>
-                <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
-                  {plantProfileFacts.map((item) => (
-                    <div
-                      key={item.key}
-                      className={`border-b border-slate-200/70 pb-3 dark:border-slate-800 ${item.key === 'distinguishingFeatures' ? 'sm:col-span-2' : ''}`}
-                    >
-                      <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                        {item.label}
-                      </dt>
-                      <dd className="mt-1 text-sm leading-6 text-slate-800 dark:text-slate-100">
-                        {item.href ? (
-                          <Link
-                            to={item.href}
-                            aria-label={isEnglish ? `Search plants in ${item.value}` : `${item.value} の植物を検索`}
-                            className="rounded-sm font-medium text-blue-700 underline underline-offset-4 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-200"
-                          >
-                            {item.value}
-                          </Link>
-                        ) : item.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                {plantProfile && (
-                  <SourceCitation
-                    sources={buildSourceLabel(plantProfile)}
-                    isEnglish={isEnglish}
-                    collapsible
-                    className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
-                  />
-                )}
+              {isEnglish ? 'Plant Profile' : '解説・植物情報'}
+            </h2>
+            {/* 解説文（テンプレート生成の要約）は下の項目一覧と同一情報の再掲で
+                冗長だったため表示しない。項目のdlと出典のみを出す */}
+            <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+              {plantProfileFacts.map((item) => (
+                <div
+                  key={item.key}
+                  className={`border-b border-slate-200/70 pb-3 dark:border-slate-800 ${item.key === 'distinguishingFeatures' ? 'sm:col-span-2' : ''}`}
+                >
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                    {item.label}
+                  </dt>
+                  <dd className="mt-1 text-sm leading-6 text-slate-800 dark:text-slate-100">
+                    {item.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+                <SourceCitation
+                  sources={buildSourceLabel(plantProfile)}
+                  isEnglish={isEnglish}
+                  collapsible
+                  className="mt-5 border-t border-slate-200/70 pt-4 dark:border-slate-800"
+                />
               </div>
             </section>
           )}

@@ -157,17 +157,21 @@ async function checkPage(browser, origin, page, viewport) {
   }
   if (page.plantTaxonomy) {
     try {
-      const profile = tab.getByRole('region', { name: '解説・植物情報', exact: true });
+      const taxonomy = tab.getByRole('navigation', { name: '植物の分類', exact: true });
       const familyLink = { name: 'ブナ科 の植物を検索', exact: true };
-      const family = profile.getByRole('link', familyLink);
+      const family = taxonomy.getByRole('link', familyLink);
       await family.waitFor({ timeout: 10000 });
+      const profile = tab.getByRole('region', { name: '解説・植物情報', exact: true });
+      await profile.waitFor({ timeout: 10000 });
+      const profileLabels = await profile.locator('dt').allTextContents();
       if (await family.getAttribute('href') !== `/?tab=plants&pfamily=${E('ブナ科')}` ||
           await tab.getByRole('link', familyLink).count() !== 1 ||
-          await tab.getByRole('link', { name: 'ブナ科', exact: true }).count() !== 0) {
-        problems.push('科名と科での絞り込みが植物情報欄に集約されていない');
+          await tab.getByRole('link', { name: 'ブナ科', exact: true }).count() !== 0 ||
+          profileLabels.some((label) => /^(目|科|属)$/.test(label.trim()))) {
+        problems.push('植物の分類リンクが上部に集約されていない');
       }
     } catch (error) {
-      problems.push(`植物情報欄の分類を確認できない: ${error.message.split('\n')[0]}`);
+      problems.push(`植物詳細上部の分類を確認できない: ${error.message.split('\n')[0]}`);
     }
   }
   if (page.observationGuide) {

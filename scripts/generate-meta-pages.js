@@ -1793,9 +1793,8 @@ function renderSinglePlantProfileSection(
     profile.family || (!isAdditional ? (plantFamily || detail.familyName || detail.family) : '') || '',
   ).trim();
   const habit = String(profile.habit || '').trim();
-  // 先頭の要約文は名詞（生活形・科名）のみで構成し、文法破綻を避ける。
   const leadSentence = habit
-    ? `${sourcePlantName}は${habit}${familyLabel ? `（${familyLabel}）` : ''}の植物です。`
+    ? `${sourcePlantName}は${habit}です。`
     : `${sourcePlantName}の形態・分布に関する基本情報です。`;
 
   const source = String(profile.source || '').trim();
