@@ -2498,29 +2498,29 @@ species-20432,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ�
 species-20433,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Borbo,,cinnara,,Wallace,1866,ユウレイセセリ,,,,"Borbo cinnara Wallace, 1866",,,
 species-20434,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Pelopidas,,jansonis,,Butler,1878,ミヤマチャバネセセリ,,,,"Pelopidas jansonis Butler, 1878",,,
 species-20435,Hesperiidae,セセリチョウ科,Hesperiinae,セセリチョウ亜科,,,Parnara,,ogasawarensis,,Matsumura,1906,オガサワラセセリ,,,,"Parnara ogasawarensis Matsumura, 1906",,,
-species-20438,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Cerastis,,pallescens,,,1878,カギモンヤガ,,,,"Cerastis pallescens (Butler, 1878)",,,
-species-20439,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Cerastis,,leucographa,,,1775,ムラサキウスモンヤガ,,,,"Cerastis leucographa (Denis & Schiffermüller, 1775)",,,
+species-20438,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Cerastis,,pallescens,,Butler,1878,カギモンヤガ,,,,"Cerastis pallescens (Butler, 1878)",,,
+species-20439,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Cerastis,,leucographa,,Denis & Schiffermüller,1775,ムラサキウスモンヤガ,,,,"Cerastis leucographa (Denis & Schiffermüller, 1775)",,,
 species-2044,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Orthotaenia,,secunda,,Falkovitsh,1962,ミヤマツヤスジウンモンヒメハマキ,,,,"Orthotaenia secunda Falkovitsh, 1962",,,
 species-20440,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Xylenini,キリガ族,Cerastis,,rubricosa,,(Denis & Schiffermüller),1775,ネムロウスモンヤガ,,,,"Cerastis rubricosa (Denis & Schiffermüller, 1775)",,,
-species-20442,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Stigmella,,alikurokoi,,Nepticulidae,,キンミズヒキホソモグリチビガ,,,,Stigmella alikurokoi Nepticulidae,,,
-species-20443,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Stigmella,,fumida,,Nepticulidae,,クヌギギンモグリチビガ，クリモグリチビガ,,,,Stigmella fumida Nepticulidae,,,
-species-20444,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Etainia,,trifasciata,,Nepticulidae,,"トラフモグリチビガ, ミスジチビガ",,,,Etainia trifasciata Nepticulidae,,,
-species-20445,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Ectoedemia,,ortiva,,Nepticulidae,,新記録・再分類等,,,,Ectoedemia ortiva Nepticulidae,,,
-species-20446,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Ectoedemia,,picturata,,Nepticulidae,,掲載漏れ,,,,Ectoedemia picturata Nepticulidae,,,
-species-20447,Incurvariidae,マガリガ科,,,,,Vespina,,nielseni,,Incurvariidae,,ヒメホソバネマガリガ,,,,Vespina nielseni Incurvariidae,,,
-species-20448,Tischeriidae,ムモンハモグリガ科,,,,,Tischeria,,decidua,,Tischeriidae,,ニセクヌギキハモグリガ，チャイロハモグリガ,,,,Tischeria decidua Tischeriidae,,,
-species-20449,Tischeriidae,ムモンハモグリガ科,,,,,Manitischeria,,kumatai,,Tischeriidae,,学名決定,,,,Manitischeria kumatai Tischeriidae,,,
+species-20442,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Stigmella,,alikurokoi,,Kemperman & Wilkinson,1985,キンミズヒキホソモグリチビガ,,,,"Stigmella alikurokoi Kemperman & Wilkinson, 1985",,,
+species-20443,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Stigmella,,fumida,,Kemperman & Wilkinson,1985,クヌギギンモグリチビガ，クリモグリチビガ,,,,"Stigmella fumida Kemperman & Wilkinson, 1985",,,
+species-20444,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Etainia,,trifasciata,,,,"トラフモグリチビガ, ミスジチビガ",,,,Etainia trifasciata,,,
+species-20445,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Ectoedemia,,ortiva,,,,新記録・再分類等,,,,Ectoedemia ortiva,,,
+species-20446,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Ectoedemia,,picturata,,,,掲載漏れ,,,,Ectoedemia picturata,,,
+species-20447,Incurvariidae,マガリガ科,,,,,Vespina,,nielseni,,Kozlov,1987,ヒメホソバネマガリガ,,,,"Vespina nielseni Kozlov, 1987",,,
+species-20448,Tischeriidae,ムモンハモグリガ科,,,,,Tischeria,,decidua,,Wocke,1876,ニセクヌギキハモグリガ，チャイロハモグリガ,,,,"Tischeria decidua Wocke, 1876",,,
+species-20449,Tischeriidae,ムモンハモグリガ科,,,,,Manitischeria,,kumatai,,,,学名決定,,,,Manitischeria kumatai,,,
 species-2045,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Demeijerella,,catharota,,(Meyrick),1928,ミナミキオビヒメハマキ,,,,"Demeijerella catharota (Meyrick, 1928)",,,
-species-20450,Tineidae,ヒロズコガ科,Scardiinae,オオヒロズコガ亜科,,,Morophaga,,choragella,,Tineidae,,非掲載,,,,Morophaga choragella Tineidae,,,
-species-20451,Tineidae,ヒロズコガ科,Nemapogoninae,コクガ亜科,,,Triaxomera,,kurilensis,,Tineidae,,非掲載：南千島,,,,Triaxomera kurilensis Tineidae,,,
-species-20452,Tineidae,ヒロズコガ科,Tineinae,ヒロズコガ亜科,,,Monopis,,zagulajevi,,Tineidae,,南千島,,,,Monopis zagulajevi Tineidae,,,
-species-20453,Psychidae,ミノガ科,,,,,Diplodoma,,herminata,,Psychidae,675,,,,,"Diplodoma herminata Psychidae, 675",,,
-species-20454,Psychidae,ミノガ科,,,,,Proutia,,nigra,,Psychidae,,名前変更,,,,Proutia nigra Psychidae,,,
-species-20455,Psychidae,ミノガ科,,,,,Striglocyrbasia,,meguae,,Psychidae,,トミナガクロミノガ,,,,Striglocyrbasia meguae Psychidae,,,
+species-20450,Tineidae,ヒロズコガ科,Scardiinae,オオヒロズコガ亜科,,,Morophaga,,choragella,,,,非掲載,,,,Morophaga choragella,,,
+species-20451,Tineidae,ヒロズコガ科,Nemapogoninae,コクガ亜科,,,Triaxomera,,kurilensis,,,,非掲載：南千島,,,,Triaxomera kurilensis,,,
+species-20452,Tineidae,ヒロズコガ科,Tineinae,ヒロズコガ亜科,,,Monopis,,zagulajevi,,,,南千島,,,,Monopis zagulajevi,,,
+species-20453,Psychidae,ミノガ科,,,,,Diplodoma,,herminata,,,,,,,,Diplodoma herminata,,,
+species-20454,Psychidae,ミノガ科,,,,,Proutia,,nigra,,,,名前変更,,,,Proutia nigra,,,
+species-20455,Psychidae,ミノガ科,,,,,Striglocyrbasia,,meguae,,Sugimoto & Saigusa,2001,トミナガクロミノガ,,,,"Striglocyrbasia meguae Sugimoto & Saigusa, 2001",,,
 species-20456,Roeslerstammiidae,ヒカリバコガ科,,,,,Agriothera,,elaeocarpophaga,,Roeslerstammiidae,1013,ホルトノキナガヒゲコガ,,,,"Agriothera elaeocarpophaga Roeslerstammiidae, 1013",,,
-species-20457,Gracillariidae,ホソガ科,Gracillariinae,ホソガ亜科,,,Caloptilia,,ulmi,,Gracillariidae,,ハルニレハマキホソガ,,,,Caloptilia ulmi Gracillariidae,,,
-species-20458,Gracillariidae,ホソガ科,Gracillariinae,ホソガ亜科,,,Caloptilia,,issikii,,Gracillariidae,,"ハンノナガホソガ, マエモンハンノハマキホソガ",,,,Caloptilia issikii Gracillariidae,,,
-species-20459,Gracillariidae,ホソガ科,,,,,Rhadinoptilia,,camphorae,,Gracillariidae,,クスノハマキホソガ,,,,Rhadinoptilia camphorae Gracillariidae,,,
+species-20457,Gracillariidae,ホソガ科,Gracillariinae,ホソガ亜科,,,Caloptilia,,ulmi,,Kumata,1982,ハルニレハマキホソガ,,,,"Caloptilia ulmi Kumata, 1982",,,
+species-20458,Gracillariidae,ホソガ科,Gracillariinae,ホソガ亜科,,,Caloptilia,,issikii,,Kumata,1982,"ハンノナガホソガ, マエモンハンノハマキホソガ",,,,"Caloptilia issikii Kumata, 1982",,,
+species-20459,Gracillariidae,ホソガ科,,,,,Rhadinoptilia,,camphorae,,,,クスノハマキホソガ,,,,Rhadinoptilia camphorae,,,
 species-2046,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lomaschiza,candida,,Diakonoff,1973,ミナミホソバヒメハマキ,,,,"Lobesia candida Diakonoff, 1973",,,
 species-20460,Depressariidae,ヒラタマルハキバガ科,,,,,Depressaria,,nomia,,Depressariidae,1123,"ゴマダラマルハキバガ, ゴマダラカマガ",,,,"Depressaria nomia Depressariidae, 1123",,,
 species-20461,Geometridae,シャクガ科,Desmobathrinae,ホソシャク亜科,,,Eumelea,,biflavata,,Warren,1896,オビベニホソシャク,オビベニホソシャク; オビベニホソシャク (改称),オビベニホシシャク,,"Eumelea biflavata Warren, 1896",,,
@@ -2532,19 +2532,19 @@ species-20466,Noctuidae,ヤガ科,Eustrotiinae,スジコヤガ亜科,,,Maliattha
 species-20467,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Stigmella,,"sp. 1 of Oku, 2003",,,2003,,ソトグロヒメハマキ,,,"Stigmella sp. 1 of Oku, 2003",,,
 species-20468,Noctuidae,ヤガ科,Xyleninae,キリガ亜科,Dypterygiini,クロモクメヨトウ族,Dipterygina,,cupreotincta,,Sugi,1954,ウスクロモクメヨトウ,,,,"Dipterygina cupreotincta Sugi, 1954",,,
 species-2047,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,reliquana,,(Hübner),[1776],ホソバヒメハマキ,,,,"Lobesia reliquana (Hübner, [1776])",,,
-species-20471,Sphingidae,スズメガ科,Smerinthinae,コスズメガ亜科,Ambulycini,,Ambulyx,,sericeipennis,,,1875,アジアホソバスズメ,,,,"Ambulyx sericeipennis Butler, 1875",,,
+species-20471,Sphingidae,スズメガ科,Smerinthinae,コスズメガ亜科,Ambulycini,,Ambulyx,,sericeipennis,,Butler,1875,アジアホソバスズメ,,,,"Ambulyx sericeipennis Butler, 1875",,,
 species-2048,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,incystata,,Liu & Yang,1987,トドマツチビヒメハマキ,,,,"Lobesia incystata Liu & Yang, 1987",,,
 species-2049,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,virulenta,,Bae & Komai,1991,カラマツホソバヒメハマキ,,,,"Lobesia virulenta Bae & Komai, 1991",,,
 species-2050,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,yasudai,,Bae & Komai,1991,ヤスダホソバヒメハマキ,,ハマナスホソバヒメハマキ,,"Lobesia yasudai Bae & Komai, 1991",,,
 species-2051,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,aeolopa,,Meyrick,1907,ホソバチビヒメハマキ,,,ホソバチビハマキ,"Lobesia aeolopa Meyrick, 1907",,,
-species-20515,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Stigmella,,oa,,,1985,ギンスジモグリチビガ,,,,"Stigmella oa Kemperman & Wilkinson, 1985",,,
+species-20515,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Stigmella,,oa,,Kemperman & Wilkinson,1985,ギンスジモグリチビガ,,,,"Stigmella oa Kemperman & Wilkinson, 1985",,,
 species-2052,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,mieae,,Kawabe,1980,ミエヒメハマキ,,,,"Lobesia mieae Kawabe, 1980",,,
 species-2053,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,bicinctana,,(Duponchel),1842,ネギホソバヒメハマキ,,,,"Lobesia bicinctana (Duponchel, 1842)",,,
 species-2054,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,crimea,,Falkovitsh,1970,アザミホソバヒメハマキ,,,,"Lobesia crimea Falkovitsh, 1970",,,
 species-20545,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Ectropis,,,,,,スギノキエダシャク(新称),,,,Ectropis sp.,,,
 species-2055,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,macroptera,,Liu & Bae,1994,オオホソバヒメハマキ,,,,"Lobesia macroptera Liu & Bae, 1994",,,
 species-2056,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,pyriformis,,Bae & Park,1992,マルモンホソバヒメハマキ,,,,"Lobesia pyriformis Bae & Park, 1992",,,
-species-20566,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Ectoedemia,,tigrinella,,,1985,トラフモグリチビガ,,,,"Ectoedemia tigrinella (Puplesis, 1985)",,,
+species-20566,Nepticulidae,モグリチビガ科,Nepticulinae,モグリチビガ亜科,,,Ectoedemia,,tigrinella,,Puplesis,1985,トラフモグリチビガ,,,,"Ectoedemia tigrinella (Puplesis, 1985)",,,
 species-2057,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Lobesia,takahiroi,,Bae,1996,マノホソバヒメハマキ,,,,"Lobesia takahiroi Bae, 1996",,,
 species-2058,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Lobesia,Neolobesia,coccophaga,,Falkovitsh,1970,スイカズラホソバヒメハマキ,,,,"Lobesia coccophaga Falkovitsh, 1970",,,
 species-2059,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Enarmoniini,カギバヒメハマキガ族,Tokuana,,imbrica,,Kawabe,1978,ヤクサザナミキヒメハマキ,,,,"Tokuana imbrica Kawabe, 1978",,,
@@ -2733,15 +2733,15 @@ species-20962,Sesiidae,スカシバガ科,Sesiinae,スカシバガ亜科,,,Synan
 species-2097,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Enarmoniini,カギバヒメハマキガ族,Enarmonia,,major,,(Walsingham),1900,ギンボシキヒメハマキ,,,ギンボシキハマキ,"Enarmonia major (Walsingham, 1900)",,,
 species-20976,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Astegopteryx,,bambucifoliae,,Takahashi,1921,タケノヒメソアブラムシ (エゴノホソアシアブラムシ),,,,"Astegopteryx bambucifoliae (Takahashi, 1921)",,,
 species-20977,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Cerataphis,,brasiliensis,,Hempel,1901,ヤシヒラタツノアブラムシ,,,,"Cerataphis brasiliensis (Hempel, 1901)","Cerataphis palmae Ghesquiere, 1934",,
-species-20978,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Cerataphis,,freycinetiae,,Goot,1917,ツルアダンヒラタツノアブラムシ,,,,"Cerataphis freycinetiae Van der Goot, 1917",,,
-species-20979,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,cerbera,,Choe,1999,オニツノアブラムシ,,,,"Ceratovacuna cerbera Aoki, Kurosu, Shin et Choe, 1999",,,
+species-20978,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Cerataphis,,freycinetiae,,Van der Goot,1917,ツルアダンヒラタツノアブラムシ,,,,"Cerataphis freycinetiae Van der Goot, 1917",,,
+species-20979,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,cerbera,,"Aoki, Kurosu, Shin et Choe",1999,オニツノアブラムシ,,,,"Ceratovacuna cerbera Aoki, Kurosu, Shin et Choe, 1999",,,
 species-2098,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Enarmoniini,カギバヒメハマキガ族,Enarmonia,,decor,,Kawabe,1978,コギンボシキヒメハマキ,,,,"Enarmonia decor Kawabe, 1978",,,
 species-20980,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,japonica,,Takahashi,1924,"ササコナフキツノアブラムシ (ササコフキアブラムシ, ニセネコアシエゴアブラ, タケツノアブラムシ)",,,,"Ceratovacuna japonica (Takahashi, 1924)","Ceratovacuna qanici Uye, 1924; Ceratovacuna sasae Monzen, 1927; Ceratovacuna pseudostyracophila Shinji, 1936",,
 species-20981,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,lanigera,,Zehntner,1897,"カンシャワタムシ (カンショウタムシ, カンシャノワタアブラムシ)",,,,"Ceratovacuna lanigera Zehntner, 1897",,,
 species-20982,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,nekoashi,,Sasaki,1911,エゴノネコアシアブラムシ,,,,"Ceratovacuna nekoashi (Sasaki, 1911)",,,
 species-20983,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,oplismeni,,Takahashi,1924,クロネコアシアブラムシ (新称),,,,"Ceratovacuna oplismeni (Takahashi, 1924)",,,
 species-20984,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,sp. B,,Takahashi,1958,ササガヤコナフキツノアブラムシ,,,,"Ceratovacuna sp. B, Takahashi, 1958",,,
-species-20985,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Glyphinaphis,,bambusae,,Goot,1917,ササマルアブラムシ,,,,"Glyphinaphis bambusae Van der Goot, 1917","Glyphinaphis japonica Suenaga, 1933",,
+species-20985,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Glyphinaphis,,bambusae,,Van der Goot,1917,ササマルアブラムシ,,,,"Glyphinaphis bambusae Van der Goot, 1917","Glyphinaphis japonica Suenaga, 1933",,
 species-20986,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Pseudoregma,,bambucicola,,Takahashi,1921,タケツノアブラムシ (タケノオオツノアブラムシ),,,,"Pseudoregma bambucicola (Takahashi, 1921)",,,
 species-20987,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Pseudoregma,,koshunensis,,Takahashi,1924,"コウシュンツノアブラムシ (エゴノフトシアシアブラムシ, オキナワタケアブラムシ)",,,,"Pseudoregma koshunensis (Takahashi, 1924)","Pseudoregma uscare Tao, 1964",,
 species-20988,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Pseudoregma,,panicola,,Takahashi,1921,ヒエツノアブラムシ,,,,"Pseudoregma panicola (Takahashi, 1921)","Pseudoregma oplismeni Shinji, 1922",,
@@ -2788,7 +2788,7 @@ species-21024,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemp
 species-21025,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemphigini,タマワタムシ族,Prociphilus,,kuwanai,,Monzen,1927,"ナシワタムシ (ナシノオオワタムシ, ナシノハベリフシワタムシ)",,,,"Prociphilus kuwanai Monzen, 1927","Prociphilus sasakii Monzen, 1927; Prociphilus ionicerae Shinji, 1943; Prociphilus takahashii Maxson et Knowlton, 1937; Prociphilus lambersi Aoki, 1976; Prociphilus pourthiacae Monzen, 1927",,
 species-21026,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemphigini,タマワタムシ族,Prociphilus,,ligustrifoliae,,Tsen et Tao,1938,トウネズミモチハマキワタムシ,,,,"Prociphilus ligustrifoliae (Tsen et Tao, 1938)",,,
 species-21027,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemphigini,タマワタムシ族,Prociphilus,,oriens,,Mordvilko,1935,トドノネオオワタムシ,,,,"Prociphilus oriens Mordvilko, 1935",,,
-species-21028,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemphigini,タマワタムシ族,Prociphilus,,osmanthae,,Kuwana,1918,ヒイラギオオワタムシ (新称) (ヒイラギハマキワタムシ),,,,"Prociphilus osmanthae Essig et Kuwana, 1918",,,
+species-21028,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemphigini,タマワタムシ族,Prociphilus,,osmanthae,,Essig et Kuwana,1918,ヒイラギオオワタムシ (新称) (ヒイラギハマキワタムシ),,,,"Prociphilus osmanthae Essig et Kuwana, 1918",,,
 species-21029,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemphigini,タマワタムシ族,Prociphilus,,piniradius,,Tao,1986,マツネワタムシ (新称),,,,"Prociphilus piniradius Tao, 1986","Prociphilus pini Tao, 1970",,
 species-2103,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Enarmoniini,カギバヒメハマキガ族,Semnostola,,magnifica,,(Kuznetzov),1964,ニセハギカギバヒメハマキ,,,,"Semnostola magnifica (Kuznetzov, 1964)",,,
 species-21030,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Pemphigini,タマワタムシ族,Prociphilus,,ushikoroshi,,Shinji,1924,ウシコロシハマキワタムシ (カマツカハマキワタムシ),,,,"Prociphilus ushikoroshi Shinji, 1924",,,
@@ -2798,7 +2798,7 @@ species-21033,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Ford
 species-21034,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Nurudea,,ibofushi,,Matsumura,1917,スルデイボフシアブラムシ,,,,"Nurudea ibofushi Matsumura, 1917",,,
 species-21035,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Nurudea,,shiraii,,Matsumura,1917,ハナフシアブラムシ,,,,"Nurudea shiraii (Matsumura, 1917)",,,
 species-21036,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Nurudea,,yanoniella,,Matsumura,1917,ヤノハナフシアブラムシ,,,,"Nurudea yanoniella (Matsumura, 1917)",,,
-species-21037,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Paracletus,,cimiciformis,,Heyden,1837,ハルカワネアブラムシ,,,,"Paracletus cimiciformis von Heyden, 1837","Paracletus harukawai Tanaka, 1957",,
+species-21037,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Paracletus,,cimiciformis,,von Heyden,1837,ハルカワネアブラムシ,,,,"Paracletus cimiciformis von Heyden, 1837","Paracletus harukawai Tanaka, 1957",,
 species-21038,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Schlechtendalia,,chinensis,,Bell,1848,ヌルデシロアブラムシ (ヌルデオオミミフシアブラムシ),,,,"Schlechtendalia chinensis (Bell, 1848)",,,
 species-21039,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Smynthurodes,,betae,,Westwood,1849,ダイズネアブラムシ (新称),,,,"Smynthurodes betae Westwood, 1849",,,
 species-2104,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Enarmoniini,カギバヒメハマキガ族,Semnostola,,triangulata,,Nasu & Kogi,1997,セサンカクモンヒメハマキ,,,コモンニセカギバハマキ,"Semnostola triangulata Nasu & Kogi, 1997",,,
@@ -2826,10 +2826,10 @@ species-21059,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Erio
 species-2106,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Enarmoniini,カギバヒメハマキガ族,Eucosmomorpha,,multicolor,,Kuznetzov,1964,ムルティヒメハマキ,,,,"Eucosmomorpha multicolor Kuznetzov, 1964",,,
 species-21060,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Paracolopha,,takahashii,,Akimoto,1985,タカハシスゲワタムシ (新称),,,,"Paracolopha takahashii Akimoto, 1985",,,
 species-21061,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,fusiformis,,Matsumura,1917,ゾルムガタヨスジワタムシ (新称) (ニレナガフシ),,,,"Tetraneura fusiformis Matsumura, 1917",,,
-species-21062,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,javensis,,Goot,1917,ジャワヨスジワタムシ (新称),,,,"Tetraneura javensis Van der Goot, 1917",,,
+species-21062,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,javensis,,Van der Goot,1917,ジャワヨスジワタムシ (新称),,,,"Tetraneura javensis Van der Goot, 1917",,,
 species-21063,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,nigriabdominalis,,Sasaki,1899,"ニレヨスジワタムシ (新称) (オカボノクロアブラムシ, アキニレヨスジワタムシ)",,,,"Tetraneura nigriabdominalis (Sasaki, 1899)","Tetraneura akinire Sasaki, 1904",,
 species-21064,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,radicicola,,Strand,1929,ケブカヨスジワタムシ,,,,"Tetraneura radicicola Strand, 1929",,,
-species-21065,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,sorini,,Lambers,1970,ソウリンヨスジワタムシ,,,,"Tetraneura sorini Hille Ris Lambers, 1970",,,
+species-21065,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,sorini,,Hille Ris Lambers,1970,ソウリンヨスジワタムシ,,,,"Tetraneura sorini Hille Ris Lambers, 1970",,,
 species-21066,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,yezoensis,,Matsumura,1917,エゾヨスジワタムシ (ニレエゾフシ),,,,"Tetraneura yezoensis Matsumura, 1917",,,
 species-21067,Aphididae,アブラムシ科,Mandarinae,トワタムシ亜科,,,Mindarus,,japonicus,,Takahashi,1931,トドワタムシ,,,,"Mindarus japonicus Takahashi, 1931",,,
 species-21068,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Drepanosiphini,カマガタアブラムシ族,Yamatocallis,,acericola,,Higuchi,1974,チドリノキカマガタアブラムシ (新称),,,,"Yamatocallis acericola Higuchi, 1974",,,
@@ -2923,70 +2923,70 @@ species-21147,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラム
 species-21148,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Orientuberculoides,paranaracola,,Lambers,1974,ニセカシワブチアブラムシ (新称),,,,"Tuberculatus paranaracola Lambers, 1974",,,
 species-21149,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Orientuberculoides,querciformosanus,,Takahashi,1921,カシワトゲムネアブラムシ (新称),,,,"Tuberculatus (Orientuberculoides) querciformosanus (Takahashi, 1921)",,,
 species-2115,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopalovalva,,chidorinoki,,Nasu,2021,モトグロギンヅマヒメハマキ,,,,"Rhopalovalva chidorinoki Nasu, 2021",,新記録・再分類等,
-species-21150,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Orientuberculoides,yokoyamai,,,,1923),,,,Tuberculatus yokoyamai,,,
+species-21150,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Orientuberculoides,yokoyamai,,(Takahashi),1923,カシワトゲマダラアブラムシ,,,,"Tuberculatus yokoyamai (Takahashi, 1923)",,,
 species-21151,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Phyllaphidini,マダラアブラムシ族,Tuberculatus,Tuberculoides,fulviabdominalis,,,,1941),,,,Tuberculatus fulviabdominalis,,,
-species-21153,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Subsaltusaphis,,kamijiensis,,,,Subsaltusaphis kamijiensis Sorin,,,,Subsaltusaphis kamijiensis Sorin,,,
-species-21154,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Subsaltusaphis,,pulchra,,,,Subsaltusaphis pulchra Quednau et Shaposhnikov,,,,Subsaltusaphis pulchra Quednau et Shaposhnikov,,,
+species-21153,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Subsaltusaphis,,kamijiensis,,Sorin,2005,Subsaltusaphis kamijiensis Sorin,,,,"Subsaltusaphis kamijiensis Sorin, 2005",,,
+species-21154,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Subsaltusaphis,,pulchra,,Quednau & Shaposhnikov,1988,Subsaltusaphis pulchra Quednau et Shaposhnikov,,,,"Subsaltusaphis pulchra Quednau & Shaposhnikov, 1988",,,
 species-21156,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Thripsaphis,Thripsaphis,caespitosae,,,,Thripsaphis caespitosae,,,,Thripsaphis caespitosae,,,
 species-21157,Aphididae,アブラムシ科,Drepanosiphinae,マダラアブラムシ亜科,Saltusaphidini,カサゲアブラムシ族,Thripsaphis,Trichocallis,ossiannilssoni,,,,Thripsaphis ossiannilssoni,,,,Thripsaphis ossiannilssoni,,,
-species-21158,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,abdominalis,,,,Chaitophorus abdominalis Shinji,,,,Chaitophorus abdominalis Shinji,,,
-species-21159,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,dorocolus,,,,Chaitophorus dorocolus Matsumura,,,,Chaitophorus dorocolus Matsumura,Chaitophorus inouyei Hille Ris Lambers,,
+species-21158,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,abdominalis,,Shinji,,Chaitophorus abdominalis Shinji,,,,Chaitophorus abdominalis Shinji,,,
+species-21159,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,dorocolus,,Matsumura,,Chaitophorus dorocolus Matsumura,,,,Chaitophorus dorocolus Matsumura,Chaitophorus inouyei Hille Ris Lambers,,
 species-2116,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopalovalva,,amabilis,,Oku,1974,ブナヒメハマキ,,コナミスジヒメハマキ,,"Rhopalovalva amabilis Oku, 1974",,,
-species-21160,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,fraxinicolus,,,,Chaitophorus fraxinicolus Matsumura,,,,Chaitophorus fraxinicolus Matsumura,,,
-species-21161,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,hokkaidensis,,,,Chaitophorus hokkaidensis Higuchi,,,,Chaitophorus hokkaidensis Higuchi,,,
-species-21162,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,horii,,,,Chaitophorus horii Takahashi,,,,Chaitophorus horii Takahashi,,,
-species-21163,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,matsumurai,,,,Chaitophorus matsumurai Hille Ris Lambers,,,,Chaitophorus matsumurai Hille Ris Lambers,,,
-species-21164,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,miyazakii,,,,Chaitophorus miyazakii Pintera,,,,Chaitophorus miyazakii Pintera,,,
-species-21165,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,narae,,,,Chaitophorus narae Shinji,,,,Chaitophorus narae Shinji,,,
+species-21160,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,fraxinicolus,,Matsumura,,Chaitophorus fraxinicolus Matsumura,,,,Chaitophorus fraxinicolus Matsumura,,,
+species-21161,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,hokkaidensis,,Higuchi,,Chaitophorus hokkaidensis Higuchi,,,,Chaitophorus hokkaidensis Higuchi,,,
+species-21162,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,horii,,Takahashi,,Chaitophorus horii Takahashi,,,,Chaitophorus horii Takahashi,,,
+species-21163,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,matsumurai,,Hille Ris Lambers,,Chaitophorus matsumurai Hille Ris Lambers,,,,Chaitophorus matsumurai Hille Ris Lambers,,,
+species-21164,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,miyazakii,,Pintera,,Chaitophorus miyazakii Pintera,,,,Chaitophorus miyazakii Pintera,,,
+species-21165,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,narae,,Shinji,,Chaitophorus narae Shinji,,,,Chaitophorus narae Shinji,,,
 species-21166,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,populeti,,,,1805),,,,Chaitophorus populeti,Chaitophorus coreanus Okamoto et Takahashi; Chaitophorus yamanarashi Shinji,,
-species-21168,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,populialbae,yomefuri,,,Chaitophorus populialbae yomefuri Shinji,,,,Chaitophorus populialbae yomefuri Shinji,,,
-species-21169,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,saliapterus,,,,Chaitophorus saliapterus Shinji,,,,Chaitophorus saliapterus Shinji,,,
+species-21168,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,populialbae,yomefuri,Shinji,,Chaitophorus populialbae yomefuri Shinji,,,,Chaitophorus populialbae yomefuri Shinji,,,
+species-21169,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,saliapterus,,Shinji,,Chaitophorus saliapterus Shinji,,,,Chaitophorus saliapterus Shinji,,,
 species-2117,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopalovalva,,pulchra,,(Butler),1879,キカギヒメハマキ,,,キカギハマキ、タテスジヒメハマキ,"Rhopalovalva pulchra (Butler, 1879)",,,
-species-21170,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,salijaponicus,,,,Chaitophorus salijaponicus Essig et Kuwana,,,,Chaitophorus salijaponicus Essig et Kuwana,,,
-species-21171,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,saliniger,,,,Chaitophorus saliniger Shinji,,,,Chaitophorus saliniger Shinji,,,
-species-21173,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,tremulae,,,,Chaitophorus tremulae Koch,,,,Chaitophorus tremulae Koch,,,
-species-21174,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,tremulae,shantungensis,,,Chaitophorus tremulae shantungensis Tseng et Tao,,,,Chaitophorus tremulae shantungensis Tseng et Tao,,,
-species-21175,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Trichaitophorus,,japonicus,,,,Trichaitophorus japonicus Sorin,,,,Trichaitophorus japonicus Sorin,Trichaitophorus montanus Sorin,,
-species-21176,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Trichaitophorus,,koyaensis,,,,Trichaitophorus koyaensis Takahashi,,,,Trichaitophorus koyaensis Takahashi,Trichaitophorus takahashii Sorin,,
+species-21170,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,salijaponicus,,Essig et Kuwana,,Chaitophorus salijaponicus Essig et Kuwana,,,,Chaitophorus salijaponicus Essig et Kuwana,,,
+species-21171,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,saliniger,,Shinji,,ヤナギクロケアブラムシ,,,,Chaitophorus saliniger Shinji,,,
+species-21173,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,tremulae,,Koch,,Chaitophorus tremulae Koch,,,,Chaitophorus tremulae Koch,,,
+species-21174,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Chaitophorus,,tremulae,shantungensis,Tseng et Tao,,Chaitophorus tremulae shantungensis Tseng et Tao,,,,Chaitophorus tremulae shantungensis Tseng et Tao,,,
+species-21175,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Trichaitophorus,,japonicus,,Sorin,,Trichaitophorus japonicus Sorin,,,,Trichaitophorus japonicus Sorin,Trichaitophorus montanus Sorin,,
+species-21176,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Trichaitophorus,,koyaensis,,Takahashi,,Trichaitophorus koyaensis Takahashi,,,,Trichaitophorus koyaensis Takahashi,Trichaitophorus takahashii Sorin,,
 species-21177,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Chaitophorini,ケアブラムシ族,Yamatochaitophorus,,albus,,,,1961),,,,Yamatochaitophorus albus,,,
-species-21178,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,brevisetosus,,,,Periphyllus brevisetosus Sorin,,,,Periphyllus brevisetosus Sorin,,,
-species-21179,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,californiensis,,,,1917),,,,Periphyllus californiensis,,,
+species-21178,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,brevisetosus,,Sorin,,Periphyllus brevisetosus Sorin,,,,Periphyllus brevisetosus Sorin,,,
+species-21179,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,californiensis,,(Shinji),1917,モミジニタイケアブラムシ,,,,"Periphyllus californiensis (Shinji, 1917)",,,
 species-2118,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopalovalva,,moriutii,,Oku,2005,モリウチヒメハマキ,,,,"Rhopalovalva moriutii Oku, 2005",,,
-species-21180,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,hokkaidensis,,,,Periphyllus hokkaidensis Sorin,,,,Periphyllus hokkaidensis Sorin,Periphyllus takahashii Sorin,,
+species-21180,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,hokkaidensis,,Sorin,,Periphyllus hokkaidensis Sorin,,,,Periphyllus hokkaidensis Sorin,Periphyllus takahashii Sorin,,
 species-21181,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,koelreuteriae,,,,1919),,,,Periphyllus koelreuteriae,,,
 species-21182,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,kuwanaii,,,,1919),,,,Periphyllus kuwanaii,Periphyllus japonica Essig et Kuwana,,
-species-21183,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,loricatus,,,,Periphyllus loricatus Pashchenko,,,,Periphyllus loricatus Pashchenko,,,
-species-21184,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,tokyoensis,,,,Periphyllus tokyoensis Sorin,,,,Periphyllus tokyoensis Sorin,,,
+species-21183,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,loricatus,,Pashchenko,,Periphyllus loricatus Pashchenko,,,,Periphyllus loricatus Pashchenko,,,
+species-21184,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,tokyoensis,,Sorin,,Periphyllus tokyoensis Sorin,,,,Periphyllus tokyoensis Sorin,,,
 species-21185,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,viridis,,,,1919),,,,Periphyllus viridis,,,
-species-21186,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,viridis,osugicnsis,,,Periphyllus viridis osugicnsis Sorin,,,,Periphyllus viridis osugicnsis Sorin,,,
-species-21188,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Cervaphidini,エダケダアブラムシ族,Cervaphis,,quercus,,,,Cervaphis quercus Takahashi,,,,Cervaphis quercus Takahashi,Cervaphis kunugii Shinji,,
+species-21186,Aphididae,アブラムシ科,Chaitophorinae,ケアブラムシ亜科,Periphyllina,ニタイケアブラムシ亜族,Periphyllus,,viridis,osugicnsis,Sorin,,Periphyllus viridis osugicnsis Sorin,,,,Periphyllus viridis osugicnsis Sorin,,,
+species-21188,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Cervaphidini,エダケダアブラムシ族,Cervaphis,,quercus,,Takahashi,1918,クヌギトゲアブラムシ,,,,"Cervaphis quercus Takahashi, 1918",Cervaphis kunugii Shinji,,
 species-21189,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Allotrichosiphum,,kashicola,,,,1920),,,,Allotrichosiphum kashicola,Allotrichosiphum kyushuensis Tao,,
 species-2119,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopalovalva,,catharotorna,,(Meyrick),1935,トガリバシロヒメハマキ,,,,"Rhopalovalva catharotorna (Meyrick, 1935)",,新記録・再分類等,日本のハマキガ1に従い Rhopalovalva 属へ復帰
-species-21190,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,apicifuscum,,,,Eutrichosiphum apicifuscum Sugimoto,,,,Eutrichosiphum apicifuscum Sugimoto,,,
+species-21190,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,apicifuscum,,Sugimoto,,Eutrichosiphum apicifuscum Sugimoto,,,,Eutrichosiphum apicifuscum Sugimoto,,,
 species-21191,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,heterotrichum,,,,1956),,,,Eutrichosiphum heterotrichum,,,
-species-21192,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,nigrisiphon,,,,Eutrichosiphum nigrisiphon Sugimoto,,,,Eutrichosiphum nigrisiphon Sugimoto,,,
-species-21193,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,pasaniae,,,,1908),,,,Eutrichosiphum pasaniae,,,
-species-21194,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,shiicola,,,,Eutrichosiphum shiicola Takahashi,,,,Eutrichosiphum shiicola Takahashi,,,
-species-21195,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,sinense,,,,Eutrichosiphum sinense RayChaudhuri,,,,Eutrichosiphum sinense RayChaudhuri,,,
+species-21192,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,nigrisiphon,,Sugimoto,,Eutrichosiphum nigrisiphon Sugimoto,,,,Eutrichosiphum nigrisiphon Sugimoto,,,
+species-21193,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,pasaniae,,(Okajima),1908,コケブカアブラムシ,,,,"Eutrichosiphum pasaniae (Okajima, 1908)",,,
+species-21194,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,shiicola,,Takahashi,,Eutrichosiphum shiicola Takahashi,,,,Eutrichosiphum shiicola Takahashi,,,
+species-21195,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,sinense,,RayChaudhuri,,シイケクダアブラムシ,,,,Eutrichosiphum sinense RayChaudhuri,,,
 species-21196,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Eutrichosiphum,,tattakanum,,,,1925),,,,Eutrichosiphum tattakanum,,,
 species-21197,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Greenidea,ficicola,,,,Greenidea ficicola,,,,Greenidea ficicola,,,
 species-21198,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,carpini,,,,Greenidea carpini,,,,Greenidea carpini,,,
 species-21199,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,isensis,,,,Greenidea isensis,,,,Greenidea isensis,,,
 species-2120,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Acroclita,,elaeagnivora,,Oku,1979,グミハイジロヒメハマキ,,,,"Acroclita elaeagnivora Oku, 1979",,,
-species-21200,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,kuwanai,,,,1906),,,,Greenidea kuwanai,,,
+species-21200,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,kuwanai,,(Pergande),1906,クワナケブカアブラムシ,,,,"Greenidea kuwanai (Pergande, 1906)",,,
 species-21201,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,myricae,,,,Greenidea myricae,,,,Greenidea myricae,,,
-species-21203,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,nipponica,,,,Greenidea nipponica,,,,Greenidea nipponica,,,
-species-21204,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,okajimai,,,,Greenidea okajimai,,,,Greenidea okajimai,,,
+species-21203,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,nipponica,,Suenaga,,ニホンケブカアブラムシ,,,,Greenidea nipponica Suenaga,,,
+species-21204,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,okajimai,,Suenaga,,オカジマケブカアブラムシ,,,,Greenidea okajimai Suenaga,,,
 species-21205,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,prinicola,,,,Greenidea prinicola,,,,Greenidea prinicola,,,
 species-21206,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Greenidea,Trichosiphum,psidii,,van der Goot,1917,グアバアブラムシ,,,,"Greenidea psidii van der Goot, 1917",,,
 species-21207,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Mollitrichosiphum,Metatrichosiphon,glaucae,,,,Mollitrichosiphum glaucae,,,,Mollitrichosiphum glaucae,,,
-species-21209,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Mollitrichosiphum,Metatrichosiphon,nigrofasciatum,,,,1917),,,,Mollitrichosiphum nigrofasciatum,,,
+species-21209,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Mollitrichosiphum,Metatrichosiphon,nigrofasciatum,,(Maki),1917,クロオビケブカアブラムシ,,,,"Mollitrichosiphum nigrofasciatum (Maki, 1917)",,,
 species-2121,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Acroclita,,gumicola,,Oku,1979,グミシロテンヒメハマキ,,,,"Acroclita gumicola Oku, 1979",,,
 species-21210,Aphididae,アブラムシ科,Greenideinae,ケダアブラムシ亜科,Greenideini,ケダアブラムシ族,Mollitrichosiphum,Metatrichosiphon,yamabiwae,,,,Mollitrichosiphum yamabiwae,,,,Mollitrichosiphum yamabiwae,,,
-species-21212,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Pterocommatini,コフキアブラムシ族,Pterocomma,,pilosum,,,,Pterocomma pilosum Buckton,,,,Pterocomma pilosum Buckton,,,
-species-21213,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Pterocommatini,コフキアブラムシ族,Pterocomma,,pilosum,konoi,,,Pterocomma pilosum konoi Hori,,,,Pterocomma pilosum konoi Hori,,,
+species-21212,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Pterocommatini,コフキアブラムシ族,Pterocomma,,pilosum,,Buckton,,Pterocomma pilosum Buckton,,,,Pterocomma pilosum Buckton,,,
+species-21213,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Pterocommatini,コフキアブラムシ族,Pterocomma,,pilosum,konoi,Hori,,Pterocomma pilosum konoi Hori,,,,Pterocomma pilosum konoi Hori,,,
 species-21216,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Pterocommatini,コフキアブラムシ族,Pterocomma,,yezoense,,,,1929),,,,Pterocomma yezoense,,,
-species-21217,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Incertae sedis,族の所属不明,Abura,,momocola,,,,Abura momocola Matsumura,,,,Abura momocola Matsumura,,,
+species-21217,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Incertae sedis,族の所属不明,Abura,,momocola,,Matsumura,,Abura momocola Matsumura,,,,Abura momocola Matsumura,,,
 species-21219,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,acanthopanaci,,,,Aphis acanthopanaci,,,,Aphis acanthopanaci,Aphis (Aphis) ligustri Shinji; Aphis (Aphis) perillae Shinji; Aphis (Aphis) neosalicis Shinji; Aphis (Aphis) fukis Monzen; Aphis (Aphis) colocasiae Matsumura; Aphis (Aphis) bryophyllae Shinji; Aphis (Aphis) commelinae Shinji; Aphis (Aphis) vitifoliae Shinji; Aphis (Aphis) inugomae Shinji; Aphis (Aphis) hibiscifoliae Shinji,,
 species-2122,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Xenosocia,,komaii,,Nasu,2021,クマノミズキヒメハマキ,,,,"Xenosocia komaii Nasu, 2021",,学名決定,
 species-21221,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,cardaminae,,,,Aphis cardaminae,,,,Aphis cardaminae,,,
@@ -3002,7 +3002,7 @@ species-2123,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-21230,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,craccivora,pseudacaciae,,,Aphis craccivora pseudacaciae,,,,Aphis craccivora pseudacaciae,,,
 species-21231,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,crataegifoliae,,,,Aphis crataegifoliae,,,,Aphis crataegifoliae,,,
 species-21232,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,crinosa,,,,Aphis crinosa,,,,Aphis crinosa,,,
-species-21233,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,egomae,,,,Aphis egomae,,,,Aphis egomae,,,
+species-21233,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,egomae,,Shinji,,エゴマアブラムシ,,,,Aphis egomae Shinji,,,
 species-21234,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,fabae,,,,Aphis fabae,,,,Aphis fabae,,,
 species-21235,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,fabae,fabae,,,Aphis fabae fabae,,,,Aphis fabae fabae,,,
 species-21236,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,fabae,solanella,,,Aphis fabae solanella,,,,Aphis fabae solanella,,,
@@ -3010,16 +3010,16 @@ species-21237,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphid
 species-21238,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,farinosa,yanagicola,,,Aphis farinosa yanagicola,,,,Aphis farinosa yanagicola,,,
 species-21239,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,filipendulae,,,,Aphis filipendulae,,,,Aphis filipendulae,,,
 species-2124,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Fibuloides,,algosa,,(Meyrick),1912,マダラスキバヒメハマキ,,,,"Fibuloides algosa (Meyrick, 1912)",,新記録・再分類等,日本のハマキガ1に従い Fibuloides 属へ移動
-species-21240,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,forbesi,,,,Aphis forbesi,,,,Aphis forbesi,,,
-species-21241,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,fukii,,,,Aphis fukii,,,,Aphis fukii,,,
-species-21242,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,glycines,,,,Aphis glycines,,,,Aphis glycines,,,
+species-21240,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,forbesi,,Weed,,イチゴネアブラムシ,,,,Aphis forbesi Weed,,,
+species-21241,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,fukii,,Shinji,,フキアブラムシ,,,,Aphis fukii Shinji,,,
+species-21242,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,glycines,,Matsumura,,ダイズアブラムシ,,,,Aphis glycines Matsumura,,,
 species-21243,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,gnaphalii,,,,Aphis gnaphalii,,,,Aphis gnaphalii,,,
-species-21244,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,gossypii,,,,Aphis gossypii,,,,Aphis gossypii,,,
+species-21244,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,gossypii,,Glover,,ワタアブラムシ,,,,Aphis gossypii Glover,,,
 species-21245,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,hederae,,,,Aphis hederae,,,,Aphis hederae,,,
 species-21246,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,hederiphaga,,,,Aphis hederiphaga,,,,Aphis hederiphaga,,,
 species-21247,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,heraclicola,,,,Aphis heraclicola,,,,Aphis heraclicola,,,
 species-21248,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,horii,,,,Aphis horii,,,,Aphis horii,,,
-species-21249,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,ichigo,,,,Aphis ichigo,,,,Aphis ichigo,,,
+species-21249,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,ichigo,,Shinji,,カヂイチゴアブラムシ,,,,Aphis ichigo Shinji,,,
 species-2125,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Kennelia,,teliferana,,(Christoph),1882,キイロヒメハマキ,,,キイロコハマキ,"Kennelia teliferana (Christoph, 1882)",,新記録・再分類等,日本のハマキガ1に従い Kennelia 属へ移動
 species-21250,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,indigoferae,,,,Aphis indigoferae,,,,Aphis indigoferae,,,
 species-21251,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,justiciae,,,,Aphis justiciae,,,,Aphis justiciae,,,
@@ -3119,12 +3119,12 @@ species-21337,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macro
 species-21338,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Neomyzus,parthenocissi,,,,1965),,,,Aulacorthum parthenocissi,,,
 species-21339,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Aulacorthum,Perillaphis,perillae,,,,1924),,,,Aulacorthum perillae,,,
 species-2134,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,"sp. 1 of Nasu, 2013",,,2013,カンバシロヒメハマキ,,,,"Spilonota sp. 1 of Nasu, 2013",,,
-species-21341,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Brachycaudus,Brachycaudus,helichrysi,,,,1843),,,,Brachycaudus helichrysi,,,
-species-21344,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Brevicoryne,,brassicae,,,,1758),,,,Brevicoryne brassicae,,,
+species-21341,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Brachycaudus,Brachycaudus,helichrysi,,(Kaltenbach),1843,ムギワラギクオマルアブラムシ,,,,"Brachycaudus helichrysi (Kaltenbach, 1843)",,,
+species-21344,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Brevicoryne,,brassicae,,(Linné),1758,ダイコンアブラムシ,,,,"Brevicoryne brassicae (Linné, 1758)",,,
 species-21345,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,cirsiiphagus,,Capitophorus cirsiiphagus Takahashi,1961,アザミイボアブラムシ,,,,"Capitophorus cirsiiphagus Takahashi,1961",,,
-species-21346,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,elaeagni,,,,1894),,,,Capitophorus elaeagni,,,
+species-21346,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,elaeagni,,(Del Guercio),1894,ゴボウクギケアブラムシ,,,,"Capitophorus elaeagni (Del Guercio, 1894)",,,
 species-21347,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,eniwanus,,Capitophorus eniwanus Miyazaki,1971,エニワケクダアブラムシ,,,,"Capitophorus eniwanus Miyazaki,1971",,,
-species-21348,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,formosartemisiae,,,,1921),,,,Capitophorus formosartemisiae,,,
+species-21348,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,formosartemisiae,,(Takahashi),1921,ヨモギクギケアブラムシ,,,,"Capitophorus formosartemisiae (Takahashi, 1921)",,,
 species-21349,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,gnathaliifoliae,,Capitophorus gnathaliifoliae Shinji,1924,,,,,"Capitophorus gnathaliifoliae Shinji,1924",,,
 species-2135,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,"sp. 2 of Nasu, 2013",,,2013,ナツハゼシロヒメハマキ,,,,"Spilonota sp. 2 of Nasu, 2013",,,
 species-21350,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,hippophaes,,,,タデクギケアブラムシ,,,,Capitophorus hippophaes,,,
@@ -3141,11 +3141,11 @@ species-2136,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,
 species-21360,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,aegopodii,,,,1763),,,,Cavariella aegopodii,,,
 species-21362,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,araliae,,Cavariella (Cavariella) araliae Takahashi,1921,タラフタオアブラムシ (ウドフタオアブラムシ),,,,"Cavariella araliae Cavariella (Cavariella) araliae Takahashi, 1921",,,
 species-21363,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,gilibertiae,,Cavariella (Cavariella) gilibertiae Takahashi,1961,カクレミノフタオアブラムシ,,,,"Cavariella gilibertiae Cavariella (Cavariella) gilibertiae Takahashi, 1961",,,
-species-21364,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,japonica,,,,1918),,,,Cavariella japonica,,,
+species-21364,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,japonica,,(Essig et Kuwana),1918,シラネセンキュウフタオアブラムシ,,,,"Cavariella japonica (Essig et Kuwana, 1918)",,,
 species-21365,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,konoi,,Cavariella (Cavariella) konoi Takahashi,1939,コウノフタオアブラムシ,,,,"Cavariella konoi Cavariella (Cavariella) konoi Takahashi, 1939",,,
 species-21366,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,nigrocaudata,,Cavariella (Cavariella) nigrocaudata Takahashi,1965,カミカエデフタオアブラムシ (新称),,,,"Cavariella nigrocaudata Cavariella (Cavariella) nigrocaudata Takahashi, 1965",,,
 species-21367,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,nipponica,,Cavariella (Cavariella) nipponica Takahashi,1961,ニッポンフタオアブラムシ,,,,"Cavariella nipponica Cavariella (Cavariella) nipponica Takahashi, 1961",,,
-species-21368,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,salicicola,,,,1917),,,,Cavariella salicicola,,,
+species-21368,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,salicicola,,(Matsumura),1917,ヤナギフタオアブラムシ,,,,"Cavariella salicicola (Matsumura, 1917)",,,
 species-21369,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariella,takahashii,,Cavariella (Cavariella) takahashii Hille Ris Lambers,1965,タカハシフタオアブラムシ,,,,"Cavariella takahashii Cavariella (Cavariella) takahashii Hille Ris Lambers, 1965",,,
 species-2137,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,albicana,,(Motschulsky),1866,ニセシロヒメシンクイ,,,,"Spilonota albicana (Motschulsky, 1866)",,,
 species-21370,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cavariella,Cavariellinepicauda,heraclei,,Cavariella (Cavariellinepicauda) heraclei Takahashi,1961,ハナウドフタオアブラムシ (シシウドフタオアブラムシ,,,,"Cavariella heraclei Cavariella (Cavariellinepicauda) heraclei Takahashi, 1961",,,
@@ -3156,24 +3156,24 @@ species-21375,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲ�
 species-21376,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Chaetosiphon,Pentatrichopus,fragaefolii,,,,1901),,,,Chaetosiphon fragaefolii,,,
 species-21377,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Chaetosiphon,Pentatrichopus,minor,,,,1884),,,,Chaetosiphon minor,,,
 species-21378,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Coloradoa,,campestrella,,Coloradoa campestrella Ossiannilsson,1959,ヨモギクビレアブラムシ,,,,"Coloradoa campestrella Ossiannilsson,1959",,,
-species-21379,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Coloradoa,,rufomaculata,,,,1908),,,,Coloradoa rufomaculata,,,
+species-21379,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Coloradoa,,rufomaculata,,(Wilson),1908,キククビレアブラムシ,,,,"Coloradoa rufomaculata (Wilson, 1908)",,,
 species-2138,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,"sp. 3 of Nasu, 2013",,,2013,シロヒメシンクイ,,,リンゴシロシンクイ,"Spilonota sp. 3 of Nasu, 2013",,,
-species-21380,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cryptaphis,,geranicola,,,,1935),,,,Cryptaphis geranicola,,,
+species-21380,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cryptaphis,,geranicola,,(Shinji),1935,ゲンノショウココブアブラムシ,,,,"Cryptaphis geranicola (Shinji, 1935)",,,
 species-21381,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cryptaphis,,menthae,,Cryptaphis menthae Takahashi,1961,ヤマハッカハマフクレアブラムシ (新称) (ヤマハッカコブアブラムシ),,,,"Cryptaphis menthae Takahashi,1961",,,
 species-21383,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Cryptomyzus,,taoi,,Cryptomyzus taoi Hille Ris Lambers,1965,ホトケノザケクダアブラムシ (ハナトラノオコブアブラムシ),,,,"Cryptomyzus taoi Hille Ris Lambers,1965",,,
 species-21384,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Delphiniobium,,yezoense,,Delphiniobium yezoense Miyazaki,1971,トリカブトフクレアブラムシ,,,,"Delphiniobium yezoense Miyazaki,1971",,,
 species-21386,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,radicola,,,,1897),,,,Dysaphis radicola,,,
 species-21387,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,rumecicola,,,,1927),,,,Dysaphis rumecicola,,,
 species-21388,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,taisetsusana,,,,1971),,,,Dysaphis taisetsusana,,,
-species-21389,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,tulipae,,,,1841),,,,Dysaphis tulipae,,,
+species-21389,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Dysaphis,tulipae,,(Boyer de Fonscolombe),1841,キュウコンネアブラムシ,,,,"Dysaphis tulipae (Boyer de Fonscolombe, 1841)",,,
 species-2139,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,prognathana,,(Snellen),1883,ハシバミシロヒメハマキ,,,,"Spilonota prognathana (Snellen, 1883)",,,
-species-21390,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Pomaphis,plantaginea,,,,1860),,,,Dysaphis plantaginea,,,
+species-21390,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Dysaphis,Pomaphis,plantaginea,,(Passerini),1860,オオバコアブラムシ,,,,"Dysaphis plantaginea (Passerini, 1860)",,,
 species-21392,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Elatobium,,trochodendri,,Elatobium trochodendri Takahashi,1960,ヤマグルマアブラムシ,,,,"Elatobium trochodendri Takahashi,1960",,,
 species-21393,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Ericolophium,,itoe,,,,1925),,,,Ericolophium itoe,,,
 species-21394,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Eumacosiphum,,viciae,,Eumacosiphum viciae Shinji,1932,,,,,"Eumacosiphum viciae Shinji,1932",,,
 species-21395,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Eumyzus,,clinopodii,,Eumyzus clinopodii Takahashi,1965,トウバナコブアブラムシ,,,,"Eumyzus clinopodii Takahashi,1965",,,
 species-21396,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Eumyzus,,gallicola,,Eumyzus gallicola Takahashi,1963,キツリフネコブアブラムシ (ツリフネソウコブアブラムシ),,,,"Eumyzus gallicola Takahashi,1963",,,
-species-21397,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Eumyzus,,impatiensae,,,,1924),,,,Eumyzus impatiensae,,,
+species-21397,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Eumyzus,,impatiensae,,(Shinji),1924,ホウセンカコブアブラムシ,,,,"Eumyzus impatiensae (Shinji, 1924)",,,
 species-21398,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Hayhurstia,,atriplicis,,,,1761),,,,Hayhurstia atriplicis,,,
 species-21399,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Hyadaphis,,veratri,,Hyadaphis veratri Shinji,1942,,,,,"Hyadaphis veratri Shinji,1942",,,
 species-2140,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,"sp. 4 of Nasu, 2013",,,2013,ズグロシロヒメシンクイ,,,,"Spilonota sp. 4 of Nasu, 2013",,,
@@ -3181,101 +3181,101 @@ species-21400,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲ�
 species-21401,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Hydronaphis,,impatiens,,Hydronaphis impatiens Shinji,1922,ツリフネソウオナガアブラムシ (ツリフネソウアブラムシ),,,,"Hydronaphis impatiens Shinji,1922",,,
 species-21402,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Hydronaphis,,laporteae,,Hydronaphis laporteae Miyazaki,1971,ムカゴイラクサアブラムシ,,,,"Hydronaphis laporteae Miyazaki,1971",,,
 species-21403,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Hydronaphis,,liriopes,,Hydronaphis liriopes Aida,1979,ヤブラン スナヨヒゲアブラムシ (新称),,,,"Hydronaphis liriopes Aida,1979",,,
-species-21404,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Hyperomyzus,Hyperomyzus,carduellinus,,,,1915),,,,Hyperomyzus carduellinus,,,
+species-21404,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Hyperomyzus,Hyperomyzus,carduellinus,,(Theobald),1915,ノゲシフクレアブラムシ,,,,"Hyperomyzus carduellinus (Theobald, 1915)",,,
 species-21406,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Idiopterus,,nephrelepidis,,Idiopterus nephrelepidis Davis,1909,スジグロタマシダアブラムシ,,,,"Idiopterus nephrelepidis Davis,1909",,,
 species-21407,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Illinoia,Illinoia,liriodendri,,,,1879),,,,Illinoia liriodendri,,,
 species-21408,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Illinoia,Masonaphis,lambersi,,,,1960),,,,Illinoia lambersi,,,
 species-21409,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Impatientinum,,balsamines,,,,1862),,,,Impatientinum balsamines,,,
 species-2141,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,distyliana,,Moriuti,1958,イスノキヒメハマキ,,,,"Spilonota distyliana Moriuti, 1958",,,
-species-21410,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Impatientinum,,impatiens,,,,1922),,,,Impatientinum impatiens,,,
-species-21411,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Indomegoura,,indica,,,,1916),,,,Indomegoura indica,,,
+species-21410,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Impatientinum,,impatiens,,(Shinji),1922,ホウセンカヒゲナガアブラムシ,,,,"Impatientinum impatiens (Shinji, 1922)",,,
+species-21411,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Indomegoura,,indica,,(van der Goot),1916,ゴンズイノフクレアブラムシ,,,,"Indomegoura indica (van der Goot, 1916)",,,
 species-21412,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Indomegoura,,nigrotibiae,,,,1963),,,,Indomegoura nigrotibiae,,,
-species-21413,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Kaochiaoja,,arthraxonis,,,,1921),,,,Kaochiaoja arthraxonis,,,
+species-21413,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Kaochiaoja,,arthraxonis,,(Takahashi),1921,アシボソヒゲナガアブラムシ,,,,"Kaochiaoja arthraxonis (Takahashi, 1921)",,,
 species-21415,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Liosomaphis,,ornata,,Liosomaphis ornata Miyazaki,1971,メギソツアブラムシ,,,,"Liosomaphis ornata Miyazaki,1971",,,
-species-21416,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Lipaphis,,erysimi,,,,1843),,,,Lipaphis erysimi,,,
+species-21416,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Lipaphis,,erysimi,,(Kaltenbach),1843,ニセダイコンアブラムシ,,,,"Lipaphis erysimi (Kaltenbach, 1843)",,,
 species-21417,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Longicaudus,,corydalisicola,,,,1962),,,,Longicaudus corydalisicola,,,
-species-21418,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Longicaudus,,trirhodus,,,,1849),,,,Longicaudus trirhodus,,,
-species-21419,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macchiatiella,,itadori,,,,1924),,,,Macchiatiella itadori,,,
+species-21418,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Longicaudus,,trirhodus,,(Walker),1849,ハマナスオナガアブラムシ,,,,"Longicaudus trirhodus (Walker, 1849)",,,
+species-21419,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macchiatiella,,itadori,,(Shinji),1924,イタドリオマルアブラムシ,,,,"Macchiatiella itadori (Shinji, 1924)",,,
 species-2142,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,amamiana,,Nasu,2012,アマイロクロモンヒメハマキ,,,,"Spilonota amamiana Nasu, 2012",,,
 species-21420,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macchiatiella,,rhamni,,Boyer de Fonscolombe,1841,クロウメモドキオマルアブラムシ,,,,"Macchiatiella rhamni (Boyer de Fonscolombe, 1841)",,,
-species-21421,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macromyzella,,celticola,,,2005,エノキコブアブラムシ,,,,"Macromyzella celticola Sorin et Arakawa, 2005",,,
+species-21421,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macromyzella,,celticola,,Sorin et Arakawa,2005,エノキコブアブラムシ,,,,"Macromyzella celticola Sorin et Arakawa, 2005",,,
 species-21422,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macromyzella,,polypodicola,,Takahashi,1921,シダコブアブラムシ,,,,"Macromyzella polypodicola (Takahashi, 1921)",,,
 species-21423,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macromyzus,,woodwardiae,,Takahashi,1921,コモチシダコブアブラムシ (オシダコブアブラムシ),,,,"Macromyzus woodwardiae (Takahashi, 1921)",,,
 species-21424,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,yomenae,,Shinji,1922,ヨメナヒメヒゲナガアブラムシ,,,,"Macrosiphoniella (Asterobium) yomenae (Shinji, 1922)",,,
-species-21425,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,crassipes,,,1924,,,,,"Macrosiphoniella crassipes Shinji, 1924",,,
-species-21426,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,formosartemisiae,,,1921,オトコヨモギヒメヒゲナガアブラムシ,,,,"Macrosiphoniella formosartemisiae Takahashi, 1921",,,
-species-21427,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,hokkaidensis,,,1971,キタヒメヒゲナガアブラムシ (新称),,,,"Macrosiphoniella hokkaidensis Miyazaki, 1971",,,
-species-21428,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,physaliae,,,1924,,,,,"Macrosiphoniella physaliae Shinji, 1924",,,
-species-21429,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,pseudoartemisiae,,,1933,クソニンジンヒゲナガアブラムシ,,,,"Macrosiphoniella pseudoartemisiae Shinji, 1933",,,
+species-21425,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,crassipes,,Shinji,1924,,,,,"Macrosiphoniella crassipes Shinji, 1924",,,
+species-21426,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,formosartemisiae,,Takahashi,1921,オトコヨモギヒメヒゲナガアブラムシ,,,,"Macrosiphoniella formosartemisiae Takahashi, 1921",,,
+species-21427,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,hokkaidensis,,Miyazaki,1971,キタヒメヒゲナガアブラムシ (新称),,,,"Macrosiphoniella hokkaidensis Miyazaki, 1971",,,
+species-21428,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,physaliae,,Shinji,1924,,,,,"Macrosiphoniella physaliae Shinji, 1924",,,
+species-21429,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,pseudoartemisiae,,Shinji,1933,クソニンジンヒゲナガアブラムシ,,,,"Macrosiphoniella pseudoartemisiae Shinji, 1933",,,
 species-2143,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,semirufana,,(Christoph),1882,モトアカヒメハマキ,,,カシワチャイロハマキ、カシワアカシンムシ,"Spilonota semirufana (Christoph, 1882)",,,
 species-21430,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,sanborni,,Gillette,1908,キクヒメヒゲナガアブラムシ,,,,"Macrosiphoniella sanborni (Gillette, 1908)",,,
 species-21431,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,,yomogifoliae,,Shinji,1922,アオヒメヒゲナガアブラムシ,,,,"Macrosiphoniella yomogifoliae (Shinji, 1922)",,,
 species-21432,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,Macrosiphum,clematifoliae,,,1924,センニンソウヒゲナガアブラムシ (ハンショウヅルヒゲナガアブラムシ),,,,"Macrosiphum clematifoliae , 1924",,,
-species-21433,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,coriariae,,,1922,,,,,"Macrosiphum coriariae Shinji, 1922",,,
+species-21433,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,coriariae,,Shinji,1922,,,,,"Macrosiphum coriariae Shinji, 1922",,,
 species-21434,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,euphorbiae,,Thomas,1878,チューリップヒゲナガアブラムシ,,,,"Macrosiphum euphorbiae (Thomas, 1878)",,,
-species-21435,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,kuricola,,,1917,,,,,"Macrosiphum kuricola Matsumura, 1917",,,
-species-21436,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,malvicola,,,1917,,,,,"Macrosiphum malvicola Matsumura, 1917",,,
-species-21437,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,mordvilkoi,,,1968,ハマナスヒゲナガアブラムシ,,,,"Macrosiphum mordvilkoi Miyazaki, 1968",,,
-species-21438,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,naazamii,,,1935,,,,,"Macrosiphum naazamii Shinji, 1935",,,
-species-21439,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,petasitis,,,1917,,,,,"Macrosiphum petasitis Matsumura, 1917",,,
+species-21435,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,kuricola,,Matsumura,1917,,,,,"Macrosiphum kuricola Matsumura, 1917",,,
+species-21436,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,malvicola,,Matsumura,1917,,,,,"Macrosiphum malvicola Matsumura, 1917",,,
+species-21437,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,mordvilkoi,,Miyazaki,1968,ハマナスヒゲナガアブラムシ,,,,"Macrosiphum mordvilkoi Miyazaki, 1968",,,
+species-21438,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,naazamii,,Shinji,1935,,,,,"Macrosiphum naazamii Shinji, 1935",,,
+species-21439,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,petasitis,,Matsumura,1917,,,,,"Macrosiphum petasitis Matsumura, 1917",,,
 species-2144,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Spilonota,,melanocopa,,(Meyrick),1912,クロゲハイイロヒメハマキ,,,,"Spilonota melanocopa (Meyrick, 1912)",,,
-species-21440,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,rubifoliae,,,1922,,,,,"Macrosiphum rubifoliae Shinji, 1922",,,
-species-21441,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,suguri,,,1924,,,,,"Macrosiphum suguri Shinji, 1924",,,
-species-21442,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,tadecola,,,1935,,,,,"Macrosiphum tadecola Shinji, 1935",,,
-species-21443,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,tsutae,,,1922,,,,,"Macrosiphum tsutae Shinji, 1922",,,
-species-21444,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrotrichaphis,,yatsugatakensis,,,1971,ヤツガタケケナガヒゲナガアブラムシ (新称),,,,"Macrotrichaphis yatsugatakensis Miyazaki, 1971",,,
-species-21445,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,hirakurensis,,,1971,エビガライチゴマツムラアブラムシ,,,,"Matsumuraja hirakurensis Sorin, 1971",,,
-species-21446,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,nuditerga,,,1965,ニガイチゴトゲアブラムシ,,,,"Matsumuraja nuditerga Hille Ris Lambers, 1965",,,
-species-21447,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,rubea,,,1965,キイチゴシロトゲアブラムシ (新称),,,,"Matsumuraja rubea Sorin, 1965",,,
+species-21440,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,rubifoliae,,Shinji,1922,,,,,"Macrosiphum rubifoliae Shinji, 1922",,,
+species-21441,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,suguri,,Shinji,1924,,,,,"Macrosiphum suguri Shinji, 1924",,,
+species-21442,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,tadecola,,Shinji,1935,,,,,"Macrosiphum tadecola Shinji, 1935",,,
+species-21443,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphum,,tsutae,,Shinji,1922,,,,,"Macrosiphum tsutae Shinji, 1922",,,
+species-21444,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrotrichaphis,,yatsugatakensis,,Miyazaki,1971,ヤツガタケケナガヒゲナガアブラムシ (新称),,,,"Macrotrichaphis yatsugatakensis Miyazaki, 1971",,,
+species-21445,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,hirakurensis,,Sorin,1971,エビガライチゴマツムラアブラムシ,,,,"Matsumuraja hirakurensis Sorin, 1971",,,
+species-21446,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,nuditerga,,Hille Ris Lambers,1965,ニガイチゴトゲアブラムシ,,,,"Matsumuraja nuditerga Hille Ris Lambers, 1965",,,
+species-21447,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,rubea,,Sorin,1965,キイチゴシロトゲアブラムシ (新称),,,,"Matsumuraja rubea Sorin, 1965",,,
 species-21448,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,rubi,,Matsumura,1918,イチゴトゲアブラムシ (イチゴマツムラアブラムシ),,,,"Matsumuraja rubi (Matsumura, 1918)",,,
-species-21449,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,rubifoliae,,,1931,ホザキイチゴアブラムシ (イチゴハマツムラアブラムシ),,,,"Matsumuraja rubifoliae Takahashi, 1931",,,
+species-21449,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,rubifoliae,,Takahashi,1931,ホザキイチゴアブラムシ (イチゴハマツムラアブラムシ),,,,"Matsumuraja rubifoliae Takahashi, 1931",,,
 species-2145,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Strepsicrates,,coriariae,,Oku,1974,ドクウツギヒメハマキ,,ドクウツギツノエグリヒメハマキ,,"Strepsicrates coriariae Oku, 1974",,,
-species-21450,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,rubiphila,,,1965,ナガバキイチゴトゲアブラムシ,,,,"Matsumuraja rubiphila Takahashi, 1965",,,
-species-21451,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,sorini,,,1965,ハスノハイチゴマツムラアブラムシ,,,,"Matsumuraja sorini Takahashi, 1965",,,
-species-21452,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,taisetsusana,,,1971,タイセツトゲアブラムシ (新称),,,,"Matsumuraja taisetsusana Miyazaki, 1971",,,
-species-21453,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megoura,,brevipilosa,,,1971,ハギヒロヒゲナガアブラムシ,,,,"Megoura brevipilosa Miyazaki, 1971",,,
-species-21454,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megoura,,crassicauda,,,1919,ソラマメフクレアブラムシ (ソラマメヒゲナガアブラムシ),,,,"Megoura crassicauda Mordvilko, 1919",,,
-species-21455,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megoura,,lathyricola,,,2014,ハマエンドウフクレアブラムシ,,,,"Megoura lathyricola Lee et Akimoto, 2014",,,
+species-21450,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,rubiphila,,Takahashi,1965,ナガバキイチゴトゲアブラムシ,,,,"Matsumuraja rubiphila Takahashi, 1965",,,
+species-21451,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,sorini,,Takahashi,1965,ハスノハイチゴマツムラアブラムシ,,,,"Matsumuraja sorini Takahashi, 1965",,,
+species-21452,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Matsumuraja,,taisetsusana,,Miyazaki,1971,タイセツトゲアブラムシ (新称),,,,"Matsumuraja taisetsusana Miyazaki, 1971",,,
+species-21453,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megoura,,brevipilosa,,Miyazaki,1971,ハギヒロヒゲナガアブラムシ,,,,"Megoura brevipilosa Miyazaki, 1971",,,
+species-21454,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megoura,,crassicauda,,Mordvilko,1919,ソラマメフクレアブラムシ (ソラマメヒゲナガアブラムシ),,,,"Megoura crassicauda Mordvilko, 1919",,,
+species-21455,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megoura,,lathyricola,,Lee et Akimoto,2014,ハマエンドウフクレアブラムシ,,,,"Megoura lathyricola Lee et Akimoto, 2014",,,
 species-21456,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megoura,,lespedezae,,Essig et Kuwana,1918,ハギフクレアブラムシ (ハギオナガヒゲナガアブラムシ),,,,"Megoura lespedezae (Essig et Kuwana, 1918)",,,
-species-21457,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megouroleum,,codonopsicola,,,1971,ツルニンジンヒゲナガアブラムシ (新称),,,,"Megouroleum codonopsicola Miyazaki, 1971",,,
-species-21458,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megouroleum,,osmundae,,,1963,オニゼンマイコブアブラムシ (新称),,,,"Megouroleum osmundae Takahashi, 1963",,,
+species-21457,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megouroleum,,codonopsicola,,Miyazaki,1971,ツルニンジンヒゲナガアブラムシ (新称),,,,"Megouroleum codonopsicola Miyazaki, 1971",,,
+species-21458,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megouroleum,,osmundae,,Takahashi,1963,オニゼンマイコブアブラムシ (新称),,,,"Megouroleum osmundae Takahashi, 1963",,,
 species-21459,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Megouroleum,,plectranthi,,Shinji,1939,ヤマハッカコブアブラムシ,,,ヒキオコシハマキコブアブラムシ (新称) (ヒキオコシコブアブラムシ,"Megouroleum plectranthi (Shinji, 1939)",,,
 species-2146,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Strepsicrates,,semicanella,,(Walker),1866,バンジロウヒメハマキ,,バンジロウツノエグリヒメハマキ,,"Strepsicrates semicanella (Walker, 1866)",,,
 species-21460,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Miyazakiya,,ranunculi,,Miyazaki,1971,キンポウゲマルアブラムシ (新称),,,,"Miyazakiya ranunculi (Miyazaki, 1971)",,,
-species-21461,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Muscaphis,,japonica,,,2011,アズキナアブラムシ,,,,"Muscaphis japonica Sorin, 2011",,,
+species-21461,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Muscaphis,,japonica,,Sorin,2011,アズキナアブラムシ,,,,"Muscaphis japonica Sorin, 2011",,,
 species-21462,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzaphis,,rosarum,,Kaltenbach,1843,キンバイヒトコブアブラムシ (新称),,,,"Myzaphis rosarum (Kaltenbach, 1843)",,,
-species-21463,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzosiphum,,ryukyuense,,,1964,リュウキュウアブラムシ,,,,"Myzosiphum ryukyuense Tao, 1964",,,
+species-21463,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzosiphum,,ryukyuense,,Tao,1964,リュウキュウアブラムシ,,,,"Myzosiphum ryukyuense Tao, 1964",,,
 species-21464,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,antirrhinii,,Macchiati,1883,キンギョソウコブアブラムシ (新称),,,,"Myzus (Nectarosiphon) antirrhinii (Macchiati, 1883)",,,
 species-21465,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Nearctaphis,,bakeri,,Cowen,1895,ツメクサベニマルアブラムシ (ツメクサオオマルアブラムシ),,,,"Nearctaphis bakeri (Cowen, 1895)",,,
 species-21466,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Neorhcpalomyzus,,lonicericola,,Takahashi,1921,クヤマアブラムシ,,,,"Neorhcpalomyzus lonicericola (Takahashi, 1921)",,,
-species-21467,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Neotoxoptera,,abeliae,,,1965,ツクバネウツギアブラムシ,,,,"Neotoxoptera abeliae Takahashi, 1965",,,
+species-21467,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Neotoxoptera,,abeliae,,Takahashi,1965,ツクバネウツギアブラムシ,,,,"Neotoxoptera abeliae Takahashi, 1965",,,
 species-21468,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Neotoxoptera,,formosana,,Takahashi,1921,ネギアブラムシ,,,,"Neotoxoptera formosana (Takahashi, 1921)",,,
-species-21469,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Neotoxoptera,,yasumatsui,,,1971,,,,,"Neotoxoptera yasumatsui Sorin, 1971",,,
+species-21469,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Neotoxoptera,,yasumatsui,,Sorin,1971,,,,,"Neotoxoptera yasumatsui Sorin, 1971",,,
 species-2147,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Gibberifera,,simplana,,(Fischer von Röslerstamm),1836,ウスキシロヒメハマキ,,,,"Gibberifera simplana (Fischer von Röslerstamm, 1836)",,,
 species-21470,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Nippodysaphis,,deutziae,,Hille Ris Lambers,1965,ウツギチビクビレアブラムシ,,,,"Nippodysaphis deutziae (Hille Ris Lambers, 1965)",,,
 species-21471,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Ovatus,,crataegarius,,Walker,1850,カリンミドリアブラムシ,,,,"Ovatus crataegarius (Walker, 1850)",,,
 species-21472,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Ovatus,,malicolens,,Hori,1929,リンゴミドリアブラムシ,,,,"Ovatus malicolens (Hori, 1929)",,,
 species-21473,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Ovatus,,malisuctus,,Matsumura,1918,リンゴコブアブラムシ,,,,"Ovatus malisuctus (Matsumura, 1918)",,,
-species-21474,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Ovatus,,nipponicus,,,1965,ハッカコブアブラムシ,,,,"Ovatus nipponicus Takahashi, 1965",,,
-species-21475,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Paramyzus,,heraclei,,,1933,,,,,"Paramyzus heraclei Börner, 1933",,,
-species-21476,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Paramyzus,,heraclei,similis,,1963,ハナウドコブアブラムシ (新称),,,,"Paramyzus heraclei similis Takahashi, 1963",,,
-species-21477,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Paramyzus,,longirostris,,,1971,キジムシロコブアブラムシ (新称),,,,"Paramyzus longirostris Miyazaki, 1971",,,
-species-21478,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Pentalonia,,nigronervosa,,,1859,クロスジコバネアブラムシ,,,,"Pentalonia nigronervosa Coquerel, 1859",,,
+species-21474,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Ovatus,,nipponicus,,Takahashi,1965,ハッカコブアブラムシ,,,,"Ovatus nipponicus Takahashi, 1965",,,
+species-21475,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Paramyzus,,heraclei,,Börner,1933,,,,,"Paramyzus heraclei Börner, 1933",,,
+species-21476,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Paramyzus,,heraclei,similis,Takahashi,1963,ハナウドコブアブラムシ (新称),,,,"Paramyzus heraclei similis Takahashi, 1963",,,
+species-21477,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Paramyzus,,longirostris,,Miyazaki,1971,キジムシロコブアブラムシ (新称),,,,"Paramyzus longirostris Miyazaki, 1971",,,
+species-21478,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Pentalonia,,nigronervosa,,Coquerel,1859,クロスジコバネアブラムシ,,,,"Pentalonia nigronervosa Coquerel, 1859",,,
 species-21479,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Phorodon,Paraphorodon,cannabis,,,1860,アサコブアブラムシ,,,,"Phorodon cannabis , 1860",,,
 species-2148,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Gibberifera,,hepaticana,,Kawabe & Nasu,1994,ニセウスキシロヒメハマキ,,,,"Gibberifera hepaticana Kawabe & Nasu, 1994",,,
 species-21480,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Pleotrichophorus,,chrysanthemi,,Theobald,1920,キククギケアブラムシ,,,,"Pleotrichophorus chrysanthemi (Theobald, 1920)",,,
 species-21481,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Pleotrichophorus,,glandulosus,,Kaltenbach,1846,ヨモギミドリクギケアブラムシ,,,,"Pleotrichophorus glandulosus (Kaltenbach, 1846)",,,
-species-21482,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Polytrichaphis,,fragilis,,,1971,シキミナガアブラムシ (新称),,,,"Polytrichaphis fragilis Miyazaki, 1971",,,
+species-21482,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Polytrichaphis,,fragilis,,Miyazaki,1971,シキミナガアブラムシ (新称),,,,"Polytrichaphis fragilis Miyazaki, 1971",,,
 species-21483,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Pseudomegoura,,magnoliae,,Essig et Kuwana,1918,ニワトコヒゲナガアブラムシ (ニワトコフクレアブラムシ),,,,"Pseudomegoura magnoliae (Essig et Kuwana, 1918)",,,
 species-21484,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Pseudomegoura,,nipponica,,Essig et Kuwana,1918,ヘクソカズラヒゲナガアブラムシ,,,,"Pseudomegoura nipponica (Essig et Kuwana, 1918)",,,
 species-21485,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Pseudomegoura,,nishikigi,,Shinji,1928,ニシキギヒゲナガアブラムシ,,,,"Pseudomegoura nishikigi (Shinji, 1928)",,,
 species-21486,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Rhodobium,,porosum,,Sanderson,1901,バラミドリアブラムシ,,,,"Rhodobium porosum (Sanderson, 1901)",,,
 species-21487,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Rhopalomyzus,,smilacis,,Matsumura,1918,,,,,"Rhopalomyzus smilacis (Matsumura, 1918)",,,
 species-21488,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Rhopalosiphoninus,Rhopalosiphoninus,celtifoliae,,,1924,タニウツギトックリアブラムシ,,,,"Rhopalosiphoninus celtifoliae , 1924",,,
-species-21489,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sappaphis,,piri,,,1918,ナシマルアブラムシ,,,,"Sappaphis piri Matsumura, 1918",,,
+species-21489,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sappaphis,,piri,,Matsumura,1918,ナシマルアブラムシ,,,,"Sappaphis piri Matsumura, 1918",,,
 species-2149,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,bicolor,,(Walsingham),1900,ヒロオビヒメハマキ,,,,"Epinotia bicolor (Walsingham, 1900)",,,
 species-21490,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Semiaphis,,heraclei,,Takahashi,1921,ニンジンアブラムシ (ハナウドヒゲナガアブラムシ),,,,"Semiaphis heraclei (Takahashi, 1921)",,,
-species-21491,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Semiaphis,,moiwaensis,,,1965,キツリフネチビクダアブラムシ,,,,"Semiaphis moiwaensis Takahashi, 1965",,,
+species-21491,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Semiaphis,,moiwaensis,,Takahashi,1965,キツリフネチビクダアブラムシ,,,,"Semiaphis moiwaensis Takahashi, 1965",,,
 species-21492,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Shinjia,,orientalis,,Mordvilko,1929,ワラビツメナシアブラムシ,,,,"Shinjia orientalis (Mordvilko, 1929)",,,
 species-21493,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sinomegoura,,citricola,,van der Goot,1917,クスオナガアブラムシ,,,,"Sinomegoura citricola (van der Goot, 1917)",,,
 species-21494,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sinomegoura,,photiniae,,Takahashi,1936,カナメモチオナガアブラムシ,,,,"Sinomegoura photiniae (Takahashi, 1936)",,,
@@ -3287,10 +3287,10 @@ species-21499,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲ�
 species-2150,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,notoceliana,,Kuznetzov,1985,キタナカジロヒメハマキ,,[ナカジロヒメハマキ],,"Epinotia notoceliana Kuznetzov, 1985",,,
 species-21500,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sitobion,,smilacifoliae,,Takahashi,1921,サルトリイバラヒゲナガアブラムシ,,,,"Sitobion smilacifoliae (Takahashi, 1921)",,,
 species-21501,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sitobion,,yasumatsui,,Moritsu,1958,アブラススキヒゲナガアブラムシ,,,,"Sitobion yasumatsui (Moritsu, 1958)",,,
-species-21502,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sorbusaphis,,chaetosiphon,,,1950,ナナカマドハマキアブラムシ (新称),,,,"Sorbusaphis chaetosiphon Shaposhnikov, 1950",,,
+species-21502,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Sorbusaphis,,chaetosiphon,,Shaposhnikov,1950,ナナカマドハマキアブラムシ (新称),,,,"Sorbusaphis chaetosiphon Shaposhnikov, 1950",,,
 species-21503,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Staticobium,,loochooense,,Takahashi,1939,イソマツヒゲナガアブラムシ (新称),,,,"Staticobium loochooense (Takahashi, 1939)","Staticobium loochooense Sorin, 1967",,
-species-21504,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Taiwanomyzus,,babai,,,2005,ゼンマイアブラムシ,,,,"Taiwanomyzus babai Sorin et Arakawa, 2005",,,
-species-21505,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Taiwanomyzus,,chrysosplenii,,,1971,ツルネコノメソウヒゲナガアブラムシ,,,,"Taiwanomyzus chrysosplenii Miyazaki, 1971",,,
+species-21504,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Taiwanomyzus,,babai,,Sorin et Arakawa,2005,ゼンマイアブラムシ,,,,"Taiwanomyzus babai Sorin et Arakawa, 2005",,,
+species-21505,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Taiwanomyzus,,chrysosplenii,,Miyazaki,1971,ツルネコノメソウヒゲナガアブラムシ,,,,"Taiwanomyzus chrysosplenii Miyazaki, 1971",,,
 species-21506,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Taiwanomyzus,,filicis,,Miyazaki,1968,イワスラビコブアブラムシ (新称),,,,"Taiwanomyzus filicis (Miyazaki, 1968)",,,
 species-21507,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Taiwanomyzus,,montanus,,Takahashi,1925,チダケサシヒゲナガアブラムシ,,,,"Taiwanomyzus montanus (Takahashi, 1925)",,,
 species-21508,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Titanosiphon,,neoartemisiae,,Takahashi,1921,カワラヨモギヒゲナガアブラムシ,,,,"Titanosiphon neoartemisiae (Takahashi, 1921)",,,
@@ -3298,62 +3298,62 @@ species-21509,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲ�
 species-2151,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,ulmicola,,Kuznetzov,1966,ニレコヒメハマキ,,,,"Epinotia ulmicola Kuznetzov, 1966",,,
 species-21510,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tubaphis,,clematophila,,Takahashi,1965,ボタンヅルコブアブラムシ,,,,"Tubaphis clematophila (Takahashi, 1965)",,,
 species-21511,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tubaphis,,ranunculina,,Walker,1852,ウマノアシガタコブアブラムシ,,,,"Tubaphis ranunculina (Walker, 1852)",,,
-species-21512,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,artemisiae,,,1929,ヨモギオキボアブラムシ,,,,"Tuberocephalus artemisiae Shinji, 1929",,,
+species-21512,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,artemisiae,,Shinji,1929,ヨモギオキボアブラムシ,,,,"Tuberocephalus artemisiae Shinji, 1929",,,
 species-21513,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,higansakurae,,Monzen,1927,,,,,"Tuberocephalus higansakurae Monzen, 1927",,,
-species-21514,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,higansakurae,hainnevilleae,,1993,エドヒガンコブアブラムシ,,,,"Tuberocephalus higansakurae hainnevilleae Remaudiere et Sorin, 1993",,,
+species-21514,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,higansakurae,hainnevilleae,Remaudiere et Sorin,1993,エドヒガンコブアブラムシ,,,,"Tuberocephalus higansakurae hainnevilleae Remaudiere et Sorin, 1993",,,
 species-21515,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,higansakurae,higansakurae,Monzen,1927,ヒガンザクラコブアブラムシ,,,,"Tuberocephalus higansakurae higansakurae (Monzen, 1927)",,,
-species-21516,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,liaoningensis,,,1976,リヤオニンコブアブラムシ (新称),,,,"Tuberocephalus liaoningensis Chang et Zhong, 1976",,,
-species-21517,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,misakurae,,,1983,ミサクラコブアブラムシ,,,,"Tuberocephalus misakurae Moritsu et Hamasaki, 1983",,,
+species-21516,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,liaoningensis,,Chang et Zhong,1976,リヤオニンコブアブラムシ (新称),,,,"Tuberocephalus liaoningensis Chang et Zhong, 1976",,,
+species-21517,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,misakurae,,Moritsu et Hamasaki,1983,ミサクラコブアブラムシ,,,,"Tuberocephalus misakurae Moritsu et Hamasaki, 1983",,,
 species-21518,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,momonis,,Matsumura,1917,モモコブアブラムシ,,,,"Tuberocephalus momonis (Matsumura, 1917)",,,
 species-21519,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,sakurae,,Matsumura,1917,サクラコブアブラムシ,,,,"Tuberocephalus sakurae (Matsumura, 1917)",,,
 species-2152,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,majorana,,(Caradja),1916,ハナウドモグリガ,,,ニンジンノメムシ、クロモンシロハマキ、クロモンシロヒメハマキ、ハナウドムグリガ,"Epinotia majorana (Caradja, 1916)",,,
 species-21520,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,sasakii,,Matsumura,1917,ササキコブアブラムシ (サクラフシアブラムシ),,,,"Tuberocephalus sasakii (Matsumura, 1917)",,,
-species-21521,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,usubai,,,2011,ウスバコブアブラムシ,,,,"Tuberocephalus usubai Sorin, 2011",,,
-species-21522,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,uwamizusakurae,,,1998,ウワミズザクラコブアブラムシ,,,,"Tuberocephalus uwamizusakurae Sorin et Remaudiere, 1998",,,
+species-21521,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,usubai,,Sorin,2011,ウスバコブアブラムシ,,,,"Tuberocephalus usubai Sorin, 2011",,,
+species-21522,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Tuberocephalus,,uwamizusakurae,,Sorin et Remaudiere,1998,ウワミズザクラコブアブラムシ,,,,"Tuberocephalus uwamizusakurae Sorin et Remaudiere, 1998",,,
 species-21523,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Uroleucon,Lambersius,erigeronense,,Thomas,1878,ヒメムカシヨモギヒゲナガアブラムシ (ビンボウグサヒゲナガアブラムシ),,,,"Uroleucon (Lambersius) erigeronense (Thomas, 1878)",,,
-species-21524,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,angusticeps,,,1980,カンスゲコブアブラムシ,,,,"Vesiculaphis angusticeps Miyazaki, 1980",,,
-species-21525,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,caerulea,,,1980,アサギコブアブラムシ (新称),,,,"Vesiculaphis caerulea Miyazaki, 1980",,,
+species-21524,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,angusticeps,,Miyazaki,1980,カンスゲコブアブラムシ,,,,"Vesiculaphis angusticeps Miyazaki, 1980",,,
+species-21525,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,caerulea,,Miyazaki,1980,アサギコブアブラムシ (新称),,,,"Vesiculaphis caerulea Miyazaki, 1980",,,
 species-21526,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,caricis,,Fullaway,1910,ツツジコブアブラムシ,,,,"Vesiculaphis caricis (Fullaway, 1910)",,,
-species-21527,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,cephalata,,,1971,ミゾソバコブアブラムシ,,,,"Vesiculaphis cephalata Miyazaki, 1971",,,
-species-21528,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,kongoensis,,,1965,ミツバツツジアブラムシ,,,,"Vesiculaphis kongoensis Takahashi, 1965",,,
-species-21529,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,nubilimaculata,,,1980,マダラコブアブラムシ (新称),,,,"Vesiculaphis nubilimaculata Miyazaki, 1980",,,
-species-21530,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,rotunda,,,1980,マルコブアブラムシ (新称),,,,"Vesiculaphis rotunda Miyazaki, 1980",,,
+species-21527,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,cephalata,,Miyazaki,1971,ミゾソバコブアブラムシ,,,,"Vesiculaphis cephalata Miyazaki, 1971",,,
+species-21528,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,kongoensis,,Takahashi,1965,ミツバツツジアブラムシ,,,,"Vesiculaphis kongoensis Takahashi, 1965",,,
+species-21529,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,nubilimaculata,,Miyazaki,1980,マダラコブアブラムシ (新称),,,,"Vesiculaphis nubilimaculata Miyazaki, 1980",,,
+species-21530,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Vesiculaphis,,rotunda,,Miyazaki,1980,マルコブアブラムシ (新称),,,,"Vesiculaphis rotunda Miyazaki, 1980",,,
 species-21531,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Viburnaphis,,viburnicola,,Sorin,1983,ゴマギオマルアブラムシ,,,,"Viburnaphis viburnicola (Sorin, 1983)",,,
-species-21532,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Xenosiphonaphis,,conandri,,,1961,イワタバコアブラムシ,,,,"Xenosiphonaphis conandri Takahashi, 1961",,,
-species-21533,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Xenosiphonaphis,,japonica,,,1961,キブシアブラムシ,,,,"Xenosiphonaphis japonica Takahashi, 1961",,,
-species-21534,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,inflatus,,,1922,,,,,"Lachnus inflatus Shinji, 1922",,,
+species-21532,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Xenosiphonaphis,,conandri,,Takahashi,1961,イワタバコアブラムシ,,,,"Xenosiphonaphis conandri Takahashi, 1961",,,
+species-21533,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Xenosiphonaphis,,japonica,,Takahashi,1961,キブシアブラムシ,,,,"Xenosiphonaphis japonica Takahashi, 1961",,,
+species-21534,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,inflatus,,Shinji,1922,,,,,"Lachnus inflatus Shinji, 1922",,,
 species-21535,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,roboris,,Linnaeus,1758,カシオオアブラムシ,,,,"Lachnus roboris (Linnaeus, 1758)",,,
-species-21536,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,shiicola,,,1980,シイオオアブラムシ,,,,"Lachnus shiicola Sorin, 1980",,,
-species-21537,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,takahashii,,,1980,クヌギハオオアブラムシ,,,,"Lachnus takahashii Sorin, 1980",,,
+species-21536,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,shiicola,,Sorin,1980,シイオオアブラムシ,,,,"Lachnus shiicola Sorin, 1980",,,
+species-21537,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,takahashii,,Sorin,1980,クヌギハオオアブラムシ,,,,"Lachnus takahashii Sorin, 1980",,,
 species-21538,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Lachnus,,tropicalis,,van der Goot,1916,クリオオアブラムシ,,,,"Lachnus tropicalis (van der Goot, 1916)",,,
 species-21539,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Longistigma,,liquidambarus,,Takahashi,1925,フウナガマダラオオアブラムシ,,,,"Longistigma liquidambarus (Takahashi, 1925)",,,
-species-2154,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,trigonella,,,1758,フタシロモンヒメハマキ,,,,"Epinotia trigonella (Linnaeus, 1758)",,,
+species-2154,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,trigonella,,Linnaeus,1758,フタシロモンヒメハマキ,,,,"Epinotia trigonella (Linnaeus, 1758)",,,
 species-21540,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Maculolachnus,,submacula,,Walker,1848,バラオオアブラムシ,,,,"Maculolachnus submacula (Walker, 1848)",,,
-species-21541,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Nippolachnus,,piri,,,1917,ナシミドリオオアブラムシ,,,,"Nippolachnus piri Matsumura, 1917",,,
+species-21541,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Nippolachnus,,piri,,Matsumura,1917,ナシミドリオオアブラムシ,,,,"Nippolachnus piri Matsumura, 1917",,,
 species-21542,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Pyrolachnus,,imbricatus,,Buckton,1899,,,,,"Pyrolachnus imbricatus Buckton, 1899",,,
-species-21543,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,abieticola,,,2012,シコウモミクチナガオオアブラムシ,,,,"Stomaphis abieticola Sorin, 2012",,,
-species-21544,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,aceris,,,1960,カエデクチナガオオアブラムシ,,,,"Stomaphis aceris Takahashi, 1960",,,
-species-21545,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,alni,,,1965,ハンノキクチナガオオアブラムシ,,,,"Stomaphis alni Sorin, 1965",,,
-species-21546,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,aphananthae,,,1979,ムクノキクチナガオオアブラムシ,,,,"Stomaphis aphananthae Sorin, 1979",,,
-species-21547,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,asiphon,,,1975,,,,,"Stomaphis asiphon Szelegiewicz, 1975",,,
-species-21548,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,carpini,,,1965,シデクチナガオオアブラムシ,,,,"Stomaphis carpini Sorin, 1965",,,
-species-21549,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,fagi,,,1960,ブナクチナガオオアブラムシ,,,,"Stomaphis fagi Takahashi, 1960",,,
-species-21550,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,hirukawai,,,1995,ヒノキクチナガオオアブラムシ,,,,"Stomaphis hirukawai Sorin, 1995",,,
-species-21551,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,japonica,,,1960,クヌギクチナガオオアブラムシ,,,,"Stomaphis japonica Takahashi, 1960",,,
-species-21552,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,malloti,,,1979,アカメガシワクチナガオオアブラムシ,,,,"Stomaphis malloti Sorin, 1979",,,
-species-21553,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,matsumotoi,,,1995,オニグルミクチナガオオアブラムシ,,,,"Stomaphis matsumotoi Sorin, 1995",,,
-species-21554,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pini,,,1920,,,,,"Stomaphis pini Takahashi, 1920",,,
-species-21555,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pini,pini,,1920,マツノクチナガオオアブラムシ,,,,"Stomaphis pini pini Takahashi, 1920",,,
-species-21556,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pini,takaensis,,2012,タカオモミクチナガオオアブラムシ,,,,"Stomaphis pini takaensis Sorin, 2012",,,
-species-21557,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pterocaryae,,,2012,サワグルミクチナガオオアブラムシ,,,,"Stomaphis pterocaryae Sorin, 2012",,,
-species-21558,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,takahashii,,,1965,タカハシクチナガオオアブラムシ,,,,"Stomaphis takahashii Sorin, 1965",,,
-species-21559,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,ulmicola,,,1938,ニレクチナガオオアブラムシ,,,,"Stomaphis ulmicola Inouye, 1938",,,
-species-2156,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,maculana,,,1775,オオナガバヒメハマキ,,,,"Epinotia maculana (Fabricius, 1775)",,,
-species-21560,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,yanonis,,,1918,ヤノクチナガオオアブラムシ,,,,"Stomaphis yanonis Takahashi, 1918",,,
+species-21543,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,abieticola,,Sorin,2012,シコウモミクチナガオオアブラムシ,,,,"Stomaphis abieticola Sorin, 2012",,,
+species-21544,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,aceris,,Takahashi,1960,カエデクチナガオオアブラムシ,,,,"Stomaphis aceris Takahashi, 1960",,,
+species-21545,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,alni,,Sorin,1965,ハンノキクチナガオオアブラムシ,,,,"Stomaphis alni Sorin, 1965",,,
+species-21546,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,aphananthae,,Sorin,1979,ムクノキクチナガオオアブラムシ,,,,"Stomaphis aphananthae Sorin, 1979",,,
+species-21547,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,asiphon,,Szelegiewicz,1975,,,,,"Stomaphis asiphon Szelegiewicz, 1975",,,
+species-21548,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,carpini,,Sorin,1965,シデクチナガオオアブラムシ,,,,"Stomaphis carpini Sorin, 1965",,,
+species-21549,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,fagi,,Takahashi,1960,ブナクチナガオオアブラムシ,,,,"Stomaphis fagi Takahashi, 1960",,,
+species-21550,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,hirukawai,,Sorin,1995,ヒノキクチナガオオアブラムシ,,,,"Stomaphis hirukawai Sorin, 1995",,,
+species-21551,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,japonica,,Takahashi,1960,クヌギクチナガオオアブラムシ,,,,"Stomaphis japonica Takahashi, 1960",,,
+species-21552,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,malloti,,Sorin,1979,アカメガシワクチナガオオアブラムシ,,,,"Stomaphis malloti Sorin, 1979",,,
+species-21553,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,matsumotoi,,Sorin,1995,オニグルミクチナガオオアブラムシ,,,,"Stomaphis matsumotoi Sorin, 1995",,,
+species-21554,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pini,,Takahashi,1920,,,,,"Stomaphis pini Takahashi, 1920",,,
+species-21555,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pini,pini,Takahashi,1920,マツノクチナガオオアブラムシ,,,,"Stomaphis pini pini Takahashi, 1920",,,
+species-21556,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pini,takaensis,Sorin,2012,タカオモミクチナガオオアブラムシ,,,,"Stomaphis pini takaensis Sorin, 2012",,,
+species-21557,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,pterocaryae,,Sorin,2012,サワグルミクチナガオオアブラムシ,,,,"Stomaphis pterocaryae Sorin, 2012",,,
+species-21558,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,takahashii,,Sorin,1965,タカハシクチナガオオアブラムシ,,,,"Stomaphis takahashii Sorin, 1965",,,
+species-21559,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,ulmicola,,Inouye,1938,ニレクチナガオオアブラムシ,,,,"Stomaphis ulmicola Inouye, 1938",,,
+species-2156,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,maculana,,Fabricius,1775,オオナガバヒメハマキ,,,,"Epinotia maculana (Fabricius, 1775)",,,
+species-21560,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Stomaphis,,yanonis,,Takahashi,1918,ヤノクチナガオオアブラムシ,,,,"Stomaphis yanonis Takahashi, 1918",,,
 species-21561,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Lachnini,オオアブラムシ族,Tuberolachnus,,salignus,,Gmelin,1790,ヤナギコブオオアブラムシ,,,,"Tuberolachnus salignus (Gmelin, 1790)",,,
 species-21562,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,abietinus,,Matsumura,1917,トドマツオオアブラムシ,,,,"Cinara (Cinara) abietinus (Matsumura, 1917)",,,
-species-21563,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Eulachnus,,isensis,,,2012,マツノアカホソオオアブラムシ,,,,"Eulachnus isensis Sorin, 2012",,,
-species-21564,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Eulachnus,,pumilae,,,1939,ハイマツホソオオアブラムシ,,,,"Eulachnus pumilae Inouye, 1939",,,
+species-21563,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Eulachnus,,isensis,,Sorin,2012,マツノアカホソオオアブラムシ,,,,"Eulachnus isensis Sorin, 2012",,,
+species-21564,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Eulachnus,,pumilae,,Inouye,1939,ハイマツホソオオアブラムシ,,,,"Eulachnus pumilae Inouye, 1939",,,
 species-21565,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Eulachnus,,thunbergii,,Wilson,1919,マツホソオオアブラムシ (マツノホソオオアブラムシ),,,,"Eulachnus thunbergii (Wilson, 1919)",,,
 species-21566,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Schizolachnus,,orientalis,,Takahashi,1924,トウヨウハオオアブラムシ,,,,"Schizolachnus orientalis (Takahashi, 1924)",,,
 species-21567,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Tramini,スネナガオオアブラムシ族,Trama,Neotrama,taraxaci,,Shinji,1929,タンポポクダナシスネナガアブラムシ,,,,"Trama (Neotrama) taraxaci (Shinji, 1929)",,,
@@ -3365,7 +3365,7 @@ species-21573,Geometridae,シャクガ科,Larentiinae,ナミシャク亜科,,,Xe
 species-21574,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,limitatoidea,,,,スジハグルマエダシャク,,,,Synegia limitatoidea,,,文献記録
 species-21575,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,ichinosawana,,,,マルハグルマエダシャク,,,,Synegia ichinosawana,,,文献記録
 species-21578,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Apochima,,praecutaria,,,,キイロトゲエダシャク,,,,Apochima praecutaria,,,
-species-2158,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,brunnichana,,,1767,ダケカンバヒメハマキ,,,,"Epinotia brunnichana (Linnaeus, 1767)",,,
+species-2158,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,brunnichana,,Linnaeus,1767,ダケカンバヒメハマキ,,,,"Epinotia brunnichana (Linnaeus, 1767)",,,
 species-2159,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Epinotia,,solandriana,,(Linnaeus),1758,セウスモンヒメハマキ,,,セウスモンハマキ,"Epinotia solandriana (Linnaeus, 1758)",,,
 species-21591,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Nothomiza,,oxygenioides,,,,オオマエキトビエダシャク,,,,Nothomiza oxygenioides,,,
 species-21593,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Xerodes,,albonotarius,nesiotis,(Bremer),1894,モンシロツマキリエダシャク,,,,"Xerodes albonotaria (Bremer, 1894)",,,
@@ -3727,7 +3727,7 @@ species-22052,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科
 species-22053,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,lautus,,Matsushita,1933,ズマルトラカミキリ,,,,"Xylotrechus (Xylotrechus) lautus Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22054,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,ogasawarensis,,Matsushita,1933,オガサワライカリモントラカミキリ,,,,"Xylotrechus (Xylotrechus) ogasawarensis Matsushita, 1933",,,日本列島の甲虫全種目録(2026)参照。寄主植物情報は日本産カミキリムシにもとづく。
 species-22055,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,reductemaculatus,Hayashi,1968,アマミズマルトラカミキリ 基亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus reductemaculatus Hayashi, 1968",,,日本列島の甲虫全種目録(2026)参照。
-species-22056,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,,chujoi,reductemaculatus,Hayashi,,チュウジョウトラカミキリ奄美群島亜種,,,,Xylotrechus chujoi reductemaculatus Hayashi,,,日本列島の甲虫全種目録(2026)参照。
+species-22056,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,,chujoi,reductemaculatus,Hayashi,1962,チュウジョウトラカミキリ奄美群島亜種,,,,"Xylotrechus chujoi reductemaculatus Hayashi, 1962",,,日本列島の甲虫全種目録(2026)参照。
 species-22057,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,fujitai,Takakuwa,1984,アマミズマルトラカミキリ 吐噶喇列島亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus fujitai Takakuwa, 1984",,,日本列島の甲虫全種目録(2026)参照。
 species-22058,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,reductemaculatus,ohtsuboi,Fujita,2010,アマミズマルトラカミキリ 徳之島亜種,,,,"Xylotrechus (Xylotrechus) reductemaculatus ohtsuboi Fujita, 2010",,,日本列島の甲虫全種目録(2026)参照。
 species-22059,Cerambycidae,カミキリムシ科,Cerambycinae,カミキリ亜科,Clytini,,Xylotrechus,Xylotrechus,takakuwai,,Kusama,1977,ミイロトラカミキリ,,,,"Xylotrechus (Xylotrechus) takakuwai Kusama, 1977",,,日本列島の甲虫全種目録(2026)参照。
@@ -4789,74 +4789,74 @@ species-23088,Aphididae,アブラムシ科,,,,,Toxoptera,,sp. B,,,,,,,,Toxoptera
 species-23089,Aphididae,アブラムシ科,,,,,Aleurodaphis,,sp.,,,,,,,,Aleurodaphis sp.,,,日本原色アブラムシ図鑑の未解決記録（No.211）を一意IDで暫定追加。
 species-2309,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopobota,,araliphaga,,Nasu,2021,ウドヒメハマキ,,,,"Rhopobota araliphaga Nasu, 2021",,学名決定,
 species-23090,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Eriosoma,,sp.,,,,,,,,Eriosoma sp.,,,日本原色アブラムシ図鑑の未解決記録（No.232）を一意IDで暫定追加。
-species-23091,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,juniperi,,,,ネズミサシオオアブラムシ,,,,Cinara juniperi (de Geer),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.1）。
-species-23092,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,longipennis,,,,ハネナガオオアブラムシ,,,,Cinara longipennis (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.2）。
-species-23093,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,pini,,,,マツオオアブラムシ,,,,Cinara pini (Linné),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.3）。
-species-23094,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,grandicauda,,,,ヨモギオナガヒメヒゲナガアブラムシ,,,,Macrosiphoniella grandicauda Takahashi et Moritsu,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.45）。
-species-23095,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,hikosanensis,,,,ヒコサンヒメヒゲナガアブラムシ,,,,Macrosiphoniella hikosanensis Moritsu,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.46）。
-species-23096,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,kuwayamai,,,,クワヤマヒメヒゲナガアブラムシ,,,,Macrosiphoniella kuwayamai Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.47）。
-species-23097,Aphididae,アブラムシ科,,,,,Dactynotus,,adenophorae,,,,シャジンヒゲナガアブラムシ,,,,Dactynotus adenophorae (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.51）。
-species-23098,Aphididae,アブラムシ科,,,,,Dactynotus,,amamianus,,,,アマミヒゲナガアブラムシ,,,,Dactynotus amamianus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.52）。
-species-23099,Aphididae,アブラムシ科,,,,,Dactynotus,,cephalonopli,,,,ノゲシヒゲナガアブラムシ,,,,Dactynotus cephalonopli Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.53）。
+species-23091,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,juniperi,,de Geer,,ネズミサシオオアブラムシ,,,,Cinara juniperi (de Geer),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.1）。
+species-23092,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,longipennis,,Matsumura,,ハネナガオオアブラムシ,,,,Cinara longipennis (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.2）。
+species-23093,Aphididae,アブラムシ科,Lachninae,オオアブラムシ亜科,Cinarini,マツオオアブラムシ族,Cinara,Cinara,pini,,Linné,,マツオオアブラムシ,,,,Cinara pini (Linné),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.3）。
+species-23094,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,grandicauda,,Takahashi et Moritsu,,ヨモギオナガヒメヒゲナガアブラムシ,,,,Macrosiphoniella grandicauda Takahashi et Moritsu,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.45）。
+species-23095,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,hikosanensis,,Moritsu,,ヒコサンヒメヒゲナガアブラムシ,,,,Macrosiphoniella hikosanensis Moritsu,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.46）。
+species-23096,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Macrosiphini,ヒゲナガアブラムシ族,Macrosiphoniella,Asterobium,kuwayamai,,Takahashi,,クワヤマヒメヒゲナガアブラムシ,,,,Macrosiphoniella kuwayamai Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.47）。
+species-23097,Aphididae,アブラムシ科,,,,,Dactynotus,,adenophorae,,Matsumura,,シャジンヒゲナガアブラムシ,,,,Dactynotus adenophorae (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.51）。
+species-23098,Aphididae,アブラムシ科,,,,,Dactynotus,,amamianus,,Takahashi,,アマミヒゲナガアブラムシ,,,,Dactynotus amamianus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.52）。
+species-23099,Aphididae,アブラムシ科,,,,,Dactynotus,,cephalonopli,,Takahashi,,ノゲシヒゲナガアブラムシ,,,,Dactynotus cephalonopli Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.53）。
 species-2310,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopobota,,grypodes,,(Meyrick),1912,ハリギリミドリヒメハマキ,,,,"Rhopobota grypodes (Meyrick, 1912)",,,
-species-23100,Aphididae,アブラムシ科,,,,,Dactynotus,,formosanus,,,,タイワンヒゲナガアブラムシ,,,,Dactynotus formosanus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.54）。
-species-23101,Aphididae,アブラムシ科,,,,,Dactynotus,,giganteus,,,,アザミヒゲナガアブラムシ,,,,Dactynotus giganteus (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.55）。
-species-23102,Aphididae,アブラムシ科,,,,,Dactynotus,,gobonis,,,,ゴボウヒゲナガアブラムシ,,,,Dactynotus gobonis (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.56）。
-species-23103,Aphididae,アブラムシ科,,,,,Dactynotus,,kikioensis,,,,キキョウヒゲナガアブラムシ,,,,Dactynotus kikioensis (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.57）。
-species-23104,Aphididae,アブラムシ科,,,,,Dactynotus,,lactucicola,,,,アキノキリンソウクロヒゲナガアブラムシ,,,,Dactynotus lactucicola (Strand),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.58）。
-species-23105,Aphididae,アブラムシ科,,,,,Dactynotus,,monticola,,,,シロヤマギクヒゲナガアブラムシ,,,,Dactynotus monticola (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.59）。
-species-23106,Aphididae,アブラムシ科,,,,,Dactynotus,,picridis,,,,コウゾリナヒゲナガアブラムシ,,,,Dactynotus picridis (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.60）。
+species-23100,Aphididae,アブラムシ科,,,,,Dactynotus,,formosanus,,Takahashi,,タイワンヒゲナガアブラムシ,,,,Dactynotus formosanus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.54）。
+species-23101,Aphididae,アブラムシ科,,,,,Dactynotus,,giganteus,,Matsumura,,アザミヒゲナガアブラムシ,,,,Dactynotus giganteus (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.55）。
+species-23102,Aphididae,アブラムシ科,,,,,Dactynotus,,gobonis,,Matsumura,,ゴボウヒゲナガアブラムシ,,,,Dactynotus gobonis (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.56）。
+species-23103,Aphididae,アブラムシ科,,,,,Dactynotus,,kikioensis,,Shinji,,キキョウヒゲナガアブラムシ,,,,Dactynotus kikioensis (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.57）。
+species-23104,Aphididae,アブラムシ科,,,,,Dactynotus,,lactucicola,,Strand,,アキノキリンソウクロヒゲナガアブラムシ,,,,Dactynotus lactucicola (Strand),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.58）。
+species-23105,Aphididae,アブラムシ科,,,,,Dactynotus,,monticola,,Takahashi,,シロヤマギクヒゲナガアブラムシ,,,,Dactynotus monticola (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.59）。
+species-23106,Aphididae,アブラムシ科,,,,,Dactynotus,,picridis,,Fabricius,,コウゾリナヒゲナガアブラムシ,,,,Dactynotus picridis (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.60）。
 species-23107,Aphididae,アブラムシ科,,,,,Dactynotus,,solidaginis,,,,アキノキリンソウヒゲナガアブラムシ,,,,Dactynotus solidaginis (Fabricius)?,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.61）。
-species-23108,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,asteris,,,,ヨメナアミナシヒゲナガアブラムシ,,,,Acyrthosiphon asteris (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.67）。
-species-23109,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,cirsicola,,,,アザミアミナシヒゲナガアブラムシ,,,,Acyrthosiphon cirsicola (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.68）。
+species-23108,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,asteris,,Takahashi,,ヨメナアミナシヒゲナガアブラムシ,,,,Acyrthosiphon asteris (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.67）。
+species-23109,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,cirsicola,,Takahashi,,アザミアミナシヒゲナガアブラムシ,,,,Acyrthosiphon cirsicola (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.68）。
 species-2311,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopobota,,symbolias,,(Meyrick),1912,シロオビカマヒメハマキ,,,,"Rhopobota symbolias (Meyrick, 1912)",,,
-species-23110,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,glechomae,,,,カキドオシヒゲナガアブラムシ,,,,Acyrthosiphon glechomae (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.69）。
-species-23111,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,kondoi,,,,コンドウヒゲナガアブラムシ,,,,Acyrthosiphon kondoi Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.71）。
-species-23112,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,pisum,,,,エンドウヒゲナガアブラムシ,,,,Acyrthosiphon pisum (Harris),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.78）。
-species-23113,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Rhopalosiphoninus,Rhopalosiphoninus,deutzifoliae,,,,ウツギトックリアブラムシ,,,,Rhopalosiphoninus deutzifoliae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.90）。
-species-23114,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,asteriae,,,,ヨメナコブアブラムシ,,,,Myzus asteriae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.93）。
-species-23115,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,boehmeriae,,,,カラムシコブアブラムシ,,,,Myzus boehmeriae Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.94）。
-species-23116,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,cerasi,,,,ニワウメクロコブアブラムシ,,,,Myzus cerasi (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.95）。
-species-23117,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,hemerocallidis,,,,カンゾウコブアブラムシ,,,,Myzus hemerocallidis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.96）。
-species-23118,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,lactucicola,,,,ワダンコブアブラムシ,,,,Myzus lactucicola Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.97）。
-species-23119,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,mumecola,,,,ウメコブアブラムシ,,,,Myzus mumecola (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.99）。
+species-23110,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,glechomae,,Takahashi,,カキドオシヒゲナガアブラムシ,,,,Acyrthosiphon glechomae (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.69）。
+species-23111,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,kondoi,,Shinji,,コンドウヒゲナガアブラムシ,,,,Acyrthosiphon kondoi Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.71）。
+species-23112,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Acyrthosiphon,,pisum,,Harris,,エンドウヒゲナガアブラムシ,,,,Acyrthosiphon pisum (Harris),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.78）。
+species-23113,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Rhopalosiphoninus,Rhopalosiphoninus,deutzifoliae,,Shinji,,ウツギトックリアブラムシ,,,,Rhopalosiphoninus deutzifoliae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.90）。
+species-23114,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,asteriae,,Shinji,,ヨメナコブアブラムシ,,,,Myzus asteriae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.93）。
+species-23115,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,boehmeriae,,Takahashi,,カラムシコブアブラムシ,,,,Myzus boehmeriae Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.94）。
+species-23116,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,cerasi,,Fabricius,,ニワウメクロコブアブラムシ,,,,Myzus cerasi (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.95）。
+species-23117,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,hemerocallidis,,Takahashi,,カンゾウコブアブラムシ,,,,Myzus hemerocallidis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.96）。
+species-23118,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,lactucicola,,Takahashi,,ワダンコブアブラムシ,,,,Myzus lactucicola Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.97）。
+species-23119,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,mumecola,,Matsumura,,ウメコブアブラムシ,,,,Myzus mumecola (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.99）。
 species-2312,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopobota,,sp. 1,,,,コクテンヒメハマキ,,,,Rhopobota sp. 1,,新記録・再分類等,日本のハマキガ1では学名未定
-species-23120,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,mushaensis,,,,ムシャコブアブラムシ,,,,Myzus mushaensis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.100）。
-species-23121,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,persicae,,,,モモアカアブラムシ,,,,Myzus persicae (Sulzer),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.101）。
-species-23122,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,siegesbeckiae,,,,ヒキオコシコブアブラムシ,,,,Myzus siegesbeckiae Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.103）。
-species-23123,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,varians,,,,ハンショウヅルコブアブラムシ,,,,Myzus varians Davidson,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.104）。
-species-23124,Aphididae,アブラムシ科,,,,,Eomyzus,,kuwanusae,,,,クワクサヒゲナガアブラムシ,,,,Eomyzus kuwanusae (Uye),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.106）。
-species-23125,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,fragariaefolii,,,,イチゴケナガアブラムシ,,,,Capitophorus fragariaefolii (Cockerell),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.112）。
-species-23126,Aphididae,アブラムシ科,,,,,Chaetomyzus,,hirticornis,,,,アキノタムラソウコブアブラムシ,,,,Chaetomyzus hirticornis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.114）。
-species-23127,Aphididae,アブラムシ科,,,,,Neomyzus,,circumflexus,,,,シクラメンコブアブラムシ,,,,Neomyzus circumflexus (Buckton),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.115）。
-species-23128,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Phorodon,Paraphorodon,humuli,,,,ホップイボアブラムシ,,,,Phorodon humuli Schrank,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.116）。
-species-23129,Aphididae,アブラムシ科,,,,,Micromyzus,,diervillae,,,,ウツギアブラムシ,,,,Micromyzus diervillae (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.119）。
+species-23120,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,mushaensis,,Takahashi,,ムシャコブアブラムシ,,,,Myzus mushaensis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.100）。
+species-23121,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,persicae,,Sulzer,,モモアカアブラムシ,,,,Myzus persicae (Sulzer),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.101）。
+species-23122,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,siegesbeckiae,,Takahashi,,ヒキオコシコブアブラムシ,,,,Myzus siegesbeckiae Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.103）。
+species-23123,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Myzus,Nectarosiphon,varians,,Davidson,,ハンショウヅルコブアブラムシ,,,,Myzus varians Davidson,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.104）。
+species-23124,Aphididae,アブラムシ科,,,,,Eomyzus,,kuwanusae,,Uye,,クワクサヒゲナガアブラムシ,,,,Eomyzus kuwanusae (Uye),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.106）。
+species-23125,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Capitophorus,,fragariaefolii,,Cockerell,,イチゴケナガアブラムシ,,,,Capitophorus fragariaefolii (Cockerell),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.112）。
+species-23126,Aphididae,アブラムシ科,,,,,Chaetomyzus,,hirticornis,,Takahashi,,アキノタムラソウコブアブラムシ,,,,Chaetomyzus hirticornis Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.114）。
+species-23127,Aphididae,アブラムシ科,,,,,Neomyzus,,circumflexus,,Buckton,,シクラメンコブアブラムシ,,,,Neomyzus circumflexus (Buckton),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.115）。
+species-23128,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Phorodon,Paraphorodon,humuli,,Schrank,,ホップイボアブラムシ,,,,Phorodon humuli Schrank,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.116）。
+species-23129,Aphididae,アブラムシ科,,,,,Micromyzus,,diervillae,,Matsumura,,ウツギアブラムシ,,,,Micromyzus diervillae (Matsumura),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.119）。
 species-2313,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopobota,,bipunctata,,Nasu,2021,フタテンハイイロヒメハマキ,,,,"Rhopobota bipunctata Nasu, 2021",,学名決定,
-species-23130,Aphididae,アブラムシ科,,,,,Akkaia,,polygoni,,,,タデヨソオヒゲナガアブラムシ,,,,Akkaia polygoni Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.131）。
-species-23131,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,ishimikawae,,,,イシミカワイボアブラムシ,,,,Trichosiphonaphis ishimikawae (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.139）。
-species-23132,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,lonicerae,,,,スイカズラヒゲナガアブラムシ,,,,Trichosiphonaphis lonicerae (Uye),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.140）。
-species-23133,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,polygoniformosanus,,,,タデケクダヒゲナガアブラムシ,,,,Trichosiphonaphis polygoniformosanus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.142）。
-species-23134,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,tade,,,,タデヒゲナガアブラムシ,,,,Trichosiphonaphis tade (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.143）。
-species-23135,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Coloradoa,,artemisiae,,,,ヨモギクレアブラムシ,,,,Coloradoa artemisiae (Del Guercio),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.155）。
-species-23136,Aphididae,アブラムシ科,,,,,Micraphis,,artemisiae,,,,ヨモギコアブラムシ,,,,Micraphis artemisiae (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.157）。
-species-23137,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,justiceae,,,,キツネノマゴアブラムシ,,,,Aphis justiceae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.172）。
-species-23138,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,sambuci,,,,ニワトコアブラムシ,,,,Aphis sambuci Linné,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.179）。
-species-23139,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Rhopalosiphini,クビレアブラムシ族,Melanaphis,,formosana,,,,タイワンススキアブラムシ,,,,Melanaphis formosana (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.185）。
+species-23130,Aphididae,アブラムシ科,,,,,Akkaia,,polygoni,,Takahashi,,タデヨソオヒゲナガアブラムシ,,,,Akkaia polygoni Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.131）。
+species-23131,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,ishimikawae,,Shinji,,イシミカワイボアブラムシ,,,,Trichosiphonaphis ishimikawae (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.139）。
+species-23132,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,lonicerae,,Uye,,スイカズラヒゲナガアブラムシ,,,,Trichosiphonaphis lonicerae (Uye),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.140）。
+species-23133,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,polygoniformosanus,,Takahashi,,タデケクダヒゲナガアブラムシ,,,,Trichosiphonaphis polygoniformosanus (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.142）。
+species-23134,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Trichosiphonaphis,Trichosiphonaphis,tade,,Shinji,,タデヒゲナガアブラムシ,,,,Trichosiphonaphis tade (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.143）。
+species-23135,Aphididae,アブラムシ科,Aphidinae,亜科,Macrosiphini,ヒゲナガアブラムシ族,Coloradoa,,artemisiae,,Del Guercio,,ヨモギクレアブラムシ,,,,Coloradoa artemisiae (Del Guercio),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.155）。
+species-23136,Aphididae,アブラムシ科,,,,,Micraphis,,artemisiae,,Takahashi,,ヨモギコアブラムシ,,,,Micraphis artemisiae (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.157）。
+species-23137,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,justiceae,,Shinji,,キツネノマゴアブラムシ,,,,Aphis justiceae Shinji,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.172）。
+species-23138,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Aphidini,アブラムシ族,Aphis,Aphis,sambuci,,Linné,,ニワトコアブラムシ,,,,Aphis sambuci Linné,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.179）。
+species-23139,Aphididae,アブラムシ科,Aphidinae,アブラムシ亜科,Rhopalosiphini,クビレアブラムシ族,Melanaphis,,formosana,,Takahashi,,タイワンススキアブラムシ,,,,Melanaphis formosana (Takahashi),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.185）。
 species-2314,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Rhopobota,,mochinoki,,Nasu,2021,モチノキヒメハマキ,,,,"Rhopobota mochinoki Nasu, 2021",,学名決定,
-species-23140,Aphididae,アブラムシ科,,,,,Aleurodaphis,,blumeae,,,,ヤブタバココナジラミモドキ,,,,Aleurodaphis blumeae van der Goot,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.210）。
-species-23141,Aphididae,アブラムシ科,,,,,Anoecia,,corni,,,,ミズキヒラタアブラムシ,,,,Anoecia corni (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.212）。
-species-23142,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,autumnalis,,,,イスノフキアブラムシ,,,,Nipponaphis autumnalis Monzen,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.215）。
-species-23143,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,cuspidatae,,,,シイムネアブラムシ,,,,Nipponaphis cuspidatae Essig et Kuwana,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.216）。
-species-23144,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,globuli,,,,イスノタマフシアブラムシ,,,,Nipponaphis globuli (Monzen),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.219）。
-species-23145,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,monzeni,,,,モンゼンイスアブラムシ,,,,Nipponaphis monzeni Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.221）。
+species-23140,Aphididae,アブラムシ科,,,,,Aleurodaphis,,blumeae,,van der Goot,,ヤブタバココナジラミモドキ,,,,Aleurodaphis blumeae van der Goot,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.210）。
+species-23141,Aphididae,アブラムシ科,,,,,Anoecia,,corni,,Fabricius,,ミズキヒラタアブラムシ,,,,Anoecia corni (Fabricius),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.212）。
+species-23142,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,autumnalis,,Monzen,,イスノフキアブラムシ,,,,Nipponaphis autumnalis Monzen,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.215）。
+species-23143,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,cuspidatae,,Essig et Kuwana,,シイムネアブラムシ,,,,Nipponaphis cuspidatae Essig et Kuwana,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.216）。
+species-23144,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,globuli,,Monzen,,イスノタマフシアブラムシ,,,,Nipponaphis globuli (Monzen),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.219）。
+species-23145,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Nipponaphidini,ムネアブラムシ族,Nipponaphis,,monzeni,,Takahashi,,モンゼンイスアブラムシ,,,,Nipponaphis monzeni Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.221）。
 species-23146,Aphididae,アブラムシ科,,,,,Thoracaphis,,kashifoliae,,,,クスマルアブラムシ,,,,Thoracaphis kashifoliae Uye?,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.223）。
-species-23147,Aphididae,アブラムシ科,Mandarinae,トワタムシ亜科,,,Mindarus,,abietinus,japonicus,,,トドマツワタムシ,,,,Mindarus abietinus japonicus Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.224）。
-species-23148,Aphididae,アブラムシ科,,,,,Glyphina,,onigurumi,,,,サワグルミミツアブラムシ,,,,Glyphina onigurumi (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.225）。
-species-23149,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Eriosoma,,clematis,,,,ハンショウヅルノオオワタムシ,,,,Eriosoma clematis (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.230）。
+species-23147,Aphididae,アブラムシ科,Mandarinae,トワタムシ亜科,,,Mindarus,,abietinus,japonicus,Takahashi,,トドマツワタムシ,,,,Mindarus abietinus japonicus Takahashi,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.224）。
+species-23148,Aphididae,アブラムシ科,,,,,Glyphina,,onigurumi,,Shinji,,サワグルミミツアブラムシ,,,,Glyphina onigurumi (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.225）。
+species-23149,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Eriosoma,,clematis,,Shinji,,ハンショウヅルノオオワタムシ,,,,Eriosoma clematis (Shinji),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.230）。
 species-2315,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Crocidosema,,plebejana,,Zeller,1847,アオイヒメハマキ,,,,"Crocidosema plebejana Zeller, 1847",,,
-species-23150,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Schlechtendalia,,chinensis,,,,ヌルデノオオミミフシアブラムシ,,,,Schlechtendalia chinensis (Bell),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.236）。
-species-23151,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,sorini,,,,ニレナガフシヨスジメンチュウ,,,,Tetraneura sorini Hille Ris Lambers,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.238）。
-species-23152,Aphididae,アブラムシ科,,,,,Watabura,,nishiyae,,,,ニシヤワタアブラムシ,,,,Watabura nishiyae Matsumura,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.239）。
+species-23150,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Fordini,チチュウワタムシ族,Schlechtendalia,,chinensis,,Bell,,ヌルデノオオミミフシアブラムシ,,,,Schlechtendalia chinensis (Bell),,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.236）。
+species-23151,Aphididae,アブラムシ科,Eriosomatinae,ワタムシ亜科,Eriosomatini,ワタムシ族,Tetraneura,,sorini,,Hille Ris Lambers,,ニレナガフシヨスジメンチュウ,,,,Tetraneura sorini Hille Ris Lambers,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.238）。
+species-23152,Aphididae,アブラムシ科,,,,,Watabura,,nishiyae,,Matsumura,,ニシヤワタアブラムシ,,,,Watabura nishiyae Matsumura,,,日本原色アブラムシ図鑑由来 hostplants 復旧のため暫定追加（No.239）。
 species-23153,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Strepsicrates,,sp.,,,,アデクヒメハマキ,,,,Strepsicrates sp.,,未同定種の追加,日本のハマキガ1で新称が与えられた未同定種
 species-23154,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Tritopterna,,capyra,,(Meyrick),1911,カンコミモグリヒメハマキ,,,,"Tritopterna capyra (Meyrick, 1911)",,新記録・再分類等,日本のハマキガ1で日本新記録
 species-2316,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Eucosmini,モグリヒメハマキガ族,Makivora,,hagiyai,,Oku,1979,マキヒメハマキ,,,,"Makivora hagiyai Oku, 1979",,,
@@ -6093,11 +6093,11 @@ species-3546,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Abrax
 species-3547,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Abraxas,,latifasciata,,Warren,1894,ヒトスジマダラエダシャク,,,,"Abraxas latifasciata Warren, 1894",,,
 species-3548,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Abraxas,,miranda,,Butler,1878,ユウマダラエダシャク,,,,"Abraxas miranda Butler, 1878",,,
 species-3549,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Abraxas,,formosilluminata,,Inoue,1984,ミナミマダラエダシャク,,,,"Abraxas formosilluminata Inoue, 1984",,,
-species-3550,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Lomaspilis,,marginata,,,1758,シロオビヒメエダシャク,,,,"Lomaspilis marginata (Linnaeus, 1758)",,,
+species-3550,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Lomaspilis,,marginata,,Linnaeus,1758,シロオビヒメエダシャク,,,,"Lomaspilis marginata (Linnaeus, 1758)",,,
 species-3551,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Lomaspilis,,mitsuii,,Sato,2017,ヒゲブトシロオビヒメエダシャク,,,,"Lomaspilis mitsuii Sato, 2017",,新記録・再分類等,
 species-3552,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Ligdia,,japonaria,,Leech,1897,シロスジヒメエダシャク,,,,"Ligdia japonaria Leech, 1897",,,
 species-3553,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Ligdia,,ciliaria,,Leech,1897,キブサヒメエダシャク,,,,"Ligdia ciliaria Leech, 1897",,,
-species-3554,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Peratophyga,,hyalinata,,,1844,クロフヒメエダシャク,,,,"Peratophyga hyalinata (Kollar, 1844)",,,
+species-3554,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Peratophyga,,hyalinata,,Kollar,1844,クロフヒメエダシャク,,,,"Peratophyga hyalinata (Kollar, 1844)",,,
 species-3555,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Heterostegane,,hyriaria,,Warren,1894,サザナミオビエダシャク,,,,"Heterostegane hyriaria Warren, 1894",,,
 species-3556,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Peratostega,,deletaria,,(Moore),1888,ヤマトエダシャク,,,,"Peratostega deletaria (Moore, 1888)",,,
 species-3557,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Ninodes,,splendens,,(Butler),1878,ウチムラサキヒメエダシャク,,,,"Ninodes splendens (Butler, 1878)",,,
@@ -6135,7 +6135,7 @@ species-3588,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Pseud
 species-3589,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Euchristophia,,cumulata,,(Christoph),1881,ウスオビヒメエダシャク,,,,"Euchristophia cumulata (Christoph, 1881)",,,
 species-3590,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,hadassa,,(Butler),1878,ハグルマエダシャク,,,,"Synegia hadassa (Butler, 1878)",,,
 species-3591,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,pallens,,Inoue,1982,アベリアハグルマエダシャク,,,,"Synegia pallens Inoue, 1982",,,
-species-3592,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,ichinosawaiana,,,1925,マルハグルマエダシャク,,,,"Synegia ichinosawaiana (Matsumura, 1925)",,,
+species-3592,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,ichinosawaiana,,Matsumura,1925,マルハグルマエダシャク,,,,"Synegia ichinosawaiana (Matsumura, 1925)",,,
 species-3593,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,limitatoides,,Inoue,1982,スジハグルマエダシャク,,,,"Synegia limitatoides Inoue, 1982",,,
 species-3594,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,ohtsukai,,Sato,1990,オオツカハグルマエダシャク,,,,"Synegia ohtsukai Sato, 1990",,,
 species-3595,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Synegia,,daisenensis,,Sato & Masui,2012,ダイセンハグルマエダシャク,,,,"Synegia daisenensis Sato & Masui, 2012",,新記録・再分類等,
@@ -6273,8 +6273,8 @@ species-3726,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Hiras
 species-3727,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Ctenognophos,,grandinaria,,(Motschulsky),1861,ハガタキエダシャク,,,,"Ctenognophos grandinaria (Motschulsky, 1861)",,,
 species-3728,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Jankowskia,,fuscaria,,(Leech),1891,チャノウンモンエダシャク,,,,"Jankowskia fuscaria (Leech, 1891)",,,
 species-3729,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Jankowskia,,pseudathleta,,Sato,1980,キタウンモンエダシャク,,,,"Jankowskia pseudathleta Sato, 1980",,,
-species-3730,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Phthonosema,,tendinosaria,,,1864,リンゴツノエダシャク,,,,"Phthonosema tendinosaria (Bremer, 1864)",,,
-species-3731,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Phthonosema,,invenustaria,,,1891,トビネオオエダシャク,,,,"Phthonosema invenustaria (Leech, 1891)",,,
+species-3730,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Phthonosema,,tendinosaria,,Bremer,1864,リンゴツノエダシャク,,,,"Phthonosema tendinosaria (Bremer, 1864)",,,
+species-3731,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Phthonosema,,invenustaria,,Leech,1891,トビネオオエダシャク,,,,"Phthonosema invenustaria (Leech, 1891)",,,
 species-3732,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Xandrames,,latiferaria,,(Walker),1860,シロスジオオエダシャク,,,,"Xandrames latiferaria (Walker, 1860)",,,
 species-3733,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Xandrames,,dholaria,,Moore,1868,ヒロオビオオエダシャク,,,,"Xandrames dholaria Moore, 1868",,,
 species-3734,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Amblychia,,insueta,,(Butler),1878,チャマダラエダシャク,,,,"Amblychia insueta (Butler, 1878)",,,
@@ -6312,7 +6312,7 @@ species-3765,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Bisto
 species-3766,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,thoracicaria,,(Oberthür),1884,フタオレウスグロエダシャク,,,,"Biston thoracicaria (Oberthür, 1884)",,,
 species-3767,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,betularia,,(Linnaeus),1758,オオシモフリエダシャク,,,,"Biston betularia (Linnaeus, 1758)",,,
 species-3768,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,marginata,,Shiraki,1913,クロズエダシャク,,,,"Biston marginata Shiraki, 1913",,,
-species-3769,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,robustum,,,1879,トビモンオオエダシャク,,,,"Biston robustum Butler, 1879",,,
+species-3769,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,robustum,,Butler,1879,トビモンオオエダシャク,,,,"Biston robustum Butler, 1879",,,
 species-3770,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,takeuchii,,Matsumura,1931,タケウチエダシャク,,,,"Biston takeuchii Matsumura, 1931",,,
 species-3771,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,melacron,,Wehrli,1941,シロシモフリエダシャク,,,,"Biston melacron Wehrli, 1941",,,
 species-3772,Geometridae,シャクガ科,Ennominae,エダシャク亜科,,,Biston,,regalis,,(Moore),1888,ハイイロオオエダシャク,,,,"Biston regalis (Moore, 1888)",,,
@@ -6457,7 +6457,7 @@ species-3911,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Geo
 species-3912,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Geometra,,sponsaria,,(Bremer),1864,シロオビアオシャク,,,,"Geometra sponsaria (Bremer, 1864)",,,
 species-3913,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Geometra,,ussuriensis,,(Sauber),1915,マエモンシロスジアオシャク,,,,"Geometra ussuriensis (Sauber, 1915)",,,
 species-3914,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Geometra,,dieckmanni,,Graeser,1889,カギシロスジアオシャク,,,,"Geometra dieckmanni Graeser, 1889",,,
-species-3915,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Geometra,,valida,,Felder & Rogenhofer,1875,クロスジアオシャク,,,,"Geometra valida Felder & Rogenhofer, 1875)",,,
+species-3915,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Geometra,,valida,,Felder & Rogenhofer,1875,クロスジアオシャク,,,,"Geometra valida Felder & Rogenhofer, 1875",,,
 species-3916,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Geometra,,glaucaria,,Ménétriès,1859,コシロオビアオシャク,,,,"Geometra glaucaria Ménétriès, 1859",,,
 species-3917,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Neohipparchus,,vallata,,(Butler),1878,キマエアオシャク,,,,"Neohipparchus vallata (Butler, 1878)",,,
 species-3918,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Eucyclodes,,infracta,,(Wileman),1911,ヒメシロフアオシャク,,,,"Eucyclodes infracta (Wileman, 1911)",,,
@@ -6467,7 +6467,7 @@ species-3921,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Pel
 species-3922,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Pelagodes,,proquadraria,,(Inoue),1976,ヒメサザナミアオシャク,,,,"Pelagodes proquadraria (Inoue, 1976)",,,
 species-3923,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Pelagodes,,ogasawarensis,,(Inoue),1994,チビサザナミシロアオシャク,,,,"Pelagodes ogasawarensis (Inoue, 1994)",,,
 species-3924,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Thalassodes,,intaminata,,Inoue,1971,サザナミシロアオシャク,,,,"Thalassodes intaminata Inoue, 1971",,,
-species-3925,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Thalassodes,,supracutipennis,,Inoue,1994,トガリサザナミシロアオシャク,,,,"Thalassodes supracutipennis Inoue, 1994)",,,
+species-3925,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Thalassodes,,supracutipennis,,Inoue,1994,トガリサザナミシロアオシャク,,,,"Thalassodes supracutipennis Inoue, 1994",,,
 species-3926,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Jodis,,lactearia,,(Linnaeus),1758,ナミガタウスキアオシャク,,,,"Jodis lactearia (Linnaeus, 1758)",,,
 species-3927,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Jodis,,placida,,Inoue,1986,ヒメナミガタアオシャク,,,,"Jodis placida Inoue, 1986",,,
 species-3928,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Jodis,,putata,,(Linnaeus),1758,ヒメウスアオシャク,,,,"Jodis putata (Linnaeus, 1758)",,,
@@ -6487,7 +6487,7 @@ species-3941,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Max
 species-3942,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Aoshakuna,,lucia,,(Thierry-Mieg),1917,スジツバメアオシャク,,,,"Aoshakuna lucia (Thierry-Mieg, 1917)",,,
 species-3943,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Microloxia,,chlorissodes,,(Prout),1912,コガタアオシャク,,,,"Microloxia chlorissodes Prout, 1912",,,
 species-3944,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Hemithea,,aestivaria,,(Hübner),1799,キバラヒメアオシャク,,,,"Hemithea aestivaria (Hübner, 1799)",,,
-species-3945,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Hemithea,,beethoveni,,,1942,ハラアカヒメアオシャク,,,,"Hemithea beethoveni Inoue, 1942",,,
+species-3945,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Hemithea,,beethoveni,,Inoue,1942,ハラアカヒメアオシャク,,,,"Hemithea beethoveni Inoue, 1942",,,
 species-3946,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Hemithea,,tritonaria,,(Walker),1863,ヘリグロヒメアオシャク,,,,"Hemithea tritonaria (Walker, 1863)",,,
 species-3947,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Hemithea,,marina,,(Butler),1878,アオスジアオシャク,,,,"Hemithea marina (Butler, 1878)",,,
 species-3948,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Chlorissa,,obliterata,,(Walker),1863,コウスアオシャク,,,,"Chlorissa obliterata (Walker, 1863)",,,
@@ -6507,7 +6507,7 @@ species-3961,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Com
 species-3962,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Comibaena,,diluta,,(Warren),1895,ヨツテンアオシャク,,,,"Comibaena diluta (Warren, 1895)",,,
 species-3963,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Comibaena,,amoenaria,,(Oberthür),1880,ヘリジロヨツメアオシャク,,,,"Comibaena amoenaria (Oberthür, 1880)",,,
 species-3964,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Comibaena,,argentataria,,(Leech),1897,ギンスジアオシャク,,,,"Comibaena argentataria (Leech, 1897)",,,
-species-3965,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Comibaena,,delicatior,,,1897,クロモンアオシャク,,,,"Comibaena delicatior (Warren, 1897)",,,
+species-3965,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Comibaena,,delicatior,,Warren,1897,クロモンアオシャク,,,,"Comibaena delicatior (Warren, 1897)",,,
 species-3966,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Comibaena,,subdelicata,,Inoue,1986,ミナミクロモンアオシャク,,,,"Comibaena subdelicata Inoue, 1986",,,
 species-3967,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Comibaena,,ingrata,,(Wileman),1911,カラフトウスアオシャク,,,,"Comibaena ingrata (Wileman, 1911)",,,
 species-3968,Geometridae,シャクガ科,Geometrinae,アオシャク亜科,,,Thetidia,,smaragdaria,,(Fabricius),1787,ナミガタフタスジアオシャク,,,,"Thetidia smaragdaria (Fabricius, 1787)",,,
@@ -9386,7 +9386,7 @@ species-H715,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,
 species-H716,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,Lilioceris,,ruficollis,,(Baly),1865,旧称クロバネクビナガハムシ,,クロバネクビナガハムシ,,"Lilioceris ruficollis (Baly, 1865)",,旧学名,
 species-H717,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Lemini,,Oulema,,hayashii,,Ohno,1962,ハヤシクビボソハムシ,,,,"Oulema hayashii Ohno, 1962",,,
 species-H718,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,Lilioceris,Lilioceris,neptis,,(Weise),1922,アカホシクビナガハムシ,,,,"Lilioceris (Lilioceris) neptis (Weise, 1922)",,,
-species-H719,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,Lilioceris,,yuae,,Long,,ツマグロクビナガハムシ,,,,Lilioceris yuae Long,,,
+species-H719,Chrysomelidae,ハムシ科,Criocerinae,クビボソハムシ亜科,Criocerini,,Lilioceris,,yuae,,Long,2000,ツマグロクビナガハムシ,,,,"Lilioceris yuae Long, 2000",,,
 species-H721,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Donaciini,,Donacia,Donaciomima,splendens,splendens,Jacobson,1894,キタヒラタネクイハムシ　基亜種,,,,"Donacia (Donaciomima) splendens splendens Jacobson, 1894",,,
 species-H724,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Donaciini,,Donacia,,hiurai,,Kimoto,1983,ヒラタネクイハムシ,,,,"Donacia hiurai Kimoto, 1983",,,
 species-H725,Chrysomelidae,ハムシ科,Donaciinae,ネクイハムシ亜科,Plateumarini,,Plateumaris,,akiensis,,Tominaga & Katsura,1984,アキミズクサハムシ,,,,"Plateumaris akiensis Tominaga & Katsura, 1984",,,
@@ -9432,7 +9432,7 @@ species-H765,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomeli
 species-H766,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,katsuyai,,Takizawa,2007,キュウシュウトホシハムシ,,,,"Gonioctena (Gonioctena) katsuyai Takizawa, 2007",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H767,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,morimotoi,,Kimoto,1963,サクラムジハムシ,,,,"Gonioctena (Gonioctena) morimotoi Kimoto, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H768,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,rufa,,(Kraatz),1879,カンバムジハムシ,,,,"Gonioctena (Gonioctena) rufa (Kraatz, 1879)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H769,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,kamiyai,,"Kimoto, 1963",3769,,,,,"Gonioctena (Gonioctena) kamiyai Kimoto, 1963 3769",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H769,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,kamiyai,,Kimoto,1963,,,,,"Gonioctena (Gonioctena) kamiyai Kimoto, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H770,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,shibatai,,Takizawa,1982,シバタトホシハムシ,,,,"Gonioctena (Gonioctena) shibatai Takizawa, 1982",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H771,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,sibirica,,(Weise),1893,ヤナギムジハムシ,,,,"Gonioctena (Gonioctena) sibirica (Weise, 1893)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H772,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomelini,,Gonioctena,Gonioctena,simotuke,,Takizawa,2007,,,,,"Gonioctena (Gonioctena) simotuke Takizawa, 2007",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9464,7 +9464,7 @@ species-H797,Chrysomelidae,ハムシ科,Chrysomelinae,ハムシ亜科,Chrysomeli
 species-H799,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Haltica,,fragariae,,Nakane,1955,,,,,"Haltica fragariae Nakane, 1955",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H800,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Altica,,fukutai,,Nakane,1963,フクタカミナリハムシ,,,,"Altica fukutai Nakane, 1963",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H802,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,foudrasi,,Jacoby,1885,,,,,"Aphthona foudrasi Jacoby, 1885",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H804,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,yuasai,,"Ohno, 196",,,,,,"Aphthona yuasai Ohno, 196",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H804,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,yuasai,,Ohno,1962,,,,,"Aphthona yuasai Ohno, 1962",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H805,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,niisatoi,,Takizawa,2017,,,,,"Aphthona niisatoi Takizawa, 2017",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H806,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,okinawaensis,,Konstantinov & Lingafelter,2002,オキナワツブノミハムシ,,,,"Aphthona okinawaensis Konstantinov & Lingafelter, 2002",,,日本列島の甲虫全種目録(2026)参照。
 species-H807,Chrysomelidae,ハムシ科,Galerucinae,ヒゲナガハムシ亜科,Alticini,,Aphthona,,varipes,,Jacoby,1890,,,,,"Aphthona varipes Jacoby, 1890",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
@@ -9576,7 +9576,7 @@ species-H920,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,A
 species-H921,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Aspidimorphini,,Aspidomorpha,,transparipennis,,(Motschulsky),1860,,,,,"Aspidomorpha transparipennis (Motschulsky, 1860)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H922,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Aspidimorphini,,Laccoptera,,quadrimaculata,,(Thunberg),1789,,,,,"Laccoptera quadrimaculata (Thunberg, 1789)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H923,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Cassida,,versicolor,,(Boheman),1855,,,,,"Cassida versicolor (Boheman, 1855)","Coptocycla thais Boheman, 1862",神奈川県昆虫誌 2018 には和名の掲載なし,神奈川県昆虫誌 2018 には和名の掲載なし。日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
-species-H924,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Cassida,,viridis,japonica,Yasutomi,,,,,,Cassida viridis japonica Yasutomi,,CPC に記録なし,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
+species-H924,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Cassida,,viridis,japonica,Yasutomi,1952,,,,,"Cassida viridis japonica Yasutomi, 1952",,CPC に記録なし,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H925,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Cassida,,sauteri,,(Spaeth),1913,,,,,"Cassida sauteri (Spaeth, 1913)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H926,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Metriona,,sigillata,,(Gorham),1885,,,,,"Metriona sigillata (Gorham, 1885)",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。
 species-H927,Chrysomelidae,ハムシ科,Cassidinae,カメノコハムシ亜科,Cassidini,,Cassida,,subreticulata,,Suffrian,1844,,,,,"Cassida subreticulata Suffrian, 1844",,,日本列島の甲虫全種目録(2026)参照。食草・生態情報は未入力。

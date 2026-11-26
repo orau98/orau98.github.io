@@ -9,7 +9,8 @@ import { resolvePlaceholderSubject } from './utils/placeholderSubject';
 import ImageModal from './components/ImageModal';
 import RouteLoadingFallback from './components/RouteLoadingFallback';
 import SourceCitation from './components/ui/SourceCitation';
-import { formatScientificNameReact } from './utils/scientificNameFormatter.jsx';
+import { formatInsectScientificNameReact } from './utils/scientificNameFormatter.jsx';
+import { insectHeadingName, splitInsectScientificName } from './utils/insectScientificName.js';
 import { MothStructuredData, ButterflyStructuredData, LeafBeetleStructuredData, BeetleStructuredData, LonghornBeetleStructuredData, BarkBeetleStructuredData, AphidStructuredData } from './components/StructuredData';
 import useSeoMeta from './hooks/useSeoMeta';
 import useNearViewport from './hooks/useNearViewport';
@@ -617,7 +618,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
     return splitJapaneseNameAliases(moth?.name || '');
   }, [moth?.name]);
 
-  const displayName = nameAliasInfo?.name || moth?.name || '';
+  const scientific = splitInsectScientificName(moth?.scientificName);
+  const displayName = insectHeadingName(nameAliasInfo?.name || moth?.name, moth?.scientificName);
 
   // Filter alternative names to exclude duplicates of the primary name
   const alternativeNamesFiltered = React.useMemo(() => {
@@ -680,14 +682,15 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
   const primaryName = moth
     ? (isEnglish
       ? getPrimaryEnglishName({
-          scientificName: moth.scientificName,
+          scientificName: scientific.name,
           japaneseName: displayName || moth.name,
           fallback: moth.id,
         })
       : displayName || moth.name)
     : '';
-  const japaneseReference = isEnglish
-    ? buildJapaneseReferenceLabel(displayName || moth?.name || '')
+  const scientificHeading = Boolean(scientific.name && primaryName === scientific.name);
+  const japaneseReference = isEnglish && displayName !== scientific.name
+    ? buildJapaneseReferenceLabel(displayName)
     : '';
 
   // 写真ライトボックス用の画像リスト（植物詳細と同じImageModalを共用）
@@ -1164,8 +1167,8 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                   }]
                 : []),
               {
-                label: isEnglish && moth.scientificName
-                  ? <span className="whitespace-nowrap break-keep">{formatScientificNameReact(primaryName)}</span>
+                label: scientificHeading
+                  ? <span className="whitespace-nowrap break-keep">{formatInsectScientificNameReact(primaryName)}</span>
                   : (primaryName || moth.name),
               }
             ]}
@@ -1291,12 +1294,12 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                     {/* h1より前に出る画像オーバーレイのラベルは見出しにしない（h3だと見出し階層が逆転する） */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 pointer-events-none">
                       <p className="text-white font-bold text-lg drop-shadow-lg">
-                        {isEnglish ? primaryName : moth.name}
+                        {primaryName}
                       </p>
                       <p className="text-white/90 text-sm drop-shadow-md">
                         {isEnglish
                           ? (japaneseReference || moth.scientificName)
-                          : formatScientificNameReact(moth.scientificName)}
+                          : formatInsectScientificNameReact(moth.scientificName)}
                       </p>
                     </div>
 
@@ -1412,7 +1415,7 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
             {/* 種名情報 */}
             <div id="basic-info" className="rounded-card border border-line bg-surface shadow-e1 overflow-hidden p-6">
               <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
-                {isEnglish ? formatScientificNameReact(primaryName) : displayName || moth.name}
+                {scientificHeading ? formatInsectScientificNameReact(primaryName) : primaryName}
               </h1>
               {isEnglish && japaneseReference && (
                 <p className="text-base text-slate-600 dark:text-slate-400 mb-2">
@@ -1424,9 +1427,14 @@ const MothDetail = ({ moths, butterflies = [], beetles = [], longhornbeetles = [
                   別名: {alternativeNamesFiltered}
                 </p>
               )}
-              {!isEnglish && (
+              {scientificHeading && scientific.authority && (
+                <p className="text-xl text-slate-600 dark:text-slate-400">
+                  <span className="sci-author">{scientific.authority}</span>
+                </p>
+              )}
+              {!isEnglish && !scientificHeading && moth.scientificName && (
                 <p className="text-xl text-slate-600 dark:text-slate-400 font-medium">
-                  {formatScientificNameReact(moth.scientificName)}
+                  {formatInsectScientificNameReact(moth.scientificName)}
                 </p>
               )}
               {/* クイズ導線は種名カード内に1つだけ置く

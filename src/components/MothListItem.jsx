@@ -1,10 +1,9 @@
 import React, { useMemo, useCallback, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  formatScientificNameReact,
+  formatInsectScientificNameReact,
   renderLocalizedScientificNameListReact,
   repairScientificBinomial,
-  dropSubspeciesEpithet,
 } from '../utils/scientificNameFormatter.jsx';
 import EmergenceTimeDisplay from './EmergenceTimeDisplay';
 import { hasEmergencePeriods } from '../utils/emergenceTime.js';
@@ -142,12 +141,12 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
     return null;
   }
 
-  const titleText = isEnglish ? formatScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name;
+  const titleText = isEnglish ? formatInsectScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name;
   const titleAttr = isEnglish ? primaryName : moth.name;
-  const scientificTitle = isEnglish ? secondaryName : dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName));
+  const scientificTitle = isEnglish ? secondaryName : repairScientificBinomial(moth.scientificName);
   const scientificText = isEnglish
     ? secondaryName
-    : formatScientificNameReact(dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName)));
+    : formatInsectScientificNameReact(repairScientificBinomial(moth.scientificName));
   
   try {
     if (viewMode === 'compact') {
@@ -189,11 +188,11 @@ const MothListItem = React.memo(({ moth, baseRoute = "/moth", isPriority = false
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                   <h3 className={`line-clamp-1 font-bold ${lacksJapaneseName ? 'text-sm text-slate-500 dark:text-slate-400' : 'text-base text-slate-800 dark:text-slate-100'}`}>
-                    {isEnglish ? formatScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name}
+                    {isEnglish ? formatInsectScientificNameReact(primaryName) : lacksJapaneseName ? '和名なし' : moth.name}
                   </h3>
                   {secondaryName && (
                     <p className="line-clamp-1 text-sm text-slate-600 dark:text-slate-400">
-                      {isEnglish ? secondaryName : formatScientificNameReact(dropSubspeciesEpithet(repairScientificBinomial(moth.scientificName)))}
+                      {isEnglish ? secondaryName : formatInsectScientificNameReact(repairScientificBinomial(moth.scientificName))}
                     </p>
                   )}
                 </div>

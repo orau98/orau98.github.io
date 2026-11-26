@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { buildInsectPath } from '../src/utils/insectSlug.js';
+import { formatInsectScientificNameHTML, insectHeadingName, splitInsectScientificName } from '../src/utils/insectScientificName.js';
 
 import { convertNormalizedDataToStandardFormat } from '../src/utils/normalizedDataParser.js';
 
@@ -34,4 +37,32 @@ test('blank aphid stages stay unspecified and are not misclassified as adult flo
   assert.equal(aphid.hostPlantsDetailed.length, 1);
   assert.equal(aphid.hostPlantsDetailed[0].lifeStage, '');
   assert.equal(aphid.hostPlantsDetailed[0].isFlowerVisit, false);
+});
+
+test('repaired aphid authorship stays outside the name, without breaking its published address', () => {
+  const csv = fs.readFileSync(new URL('../normalized_data/insects.csv', import.meta.url), 'utf8');
+  assert.match(csv, /^species-21188,.*?,quercus,,Takahashi,1918,クヌギトゲアブラムシ,,,,"Cervaphis quercus Takahashi, 1918",/m);
+  const { aphids } = convertNormalizedDataToStandardFormat([{
+    insect_id: 'species-21188',
+    family: 'Aphididae',
+    japanese_name: 'クヌギトゲアブラムシ',
+    scientific_name: 'Cervaphis quercus Takahashi, 1918',
+    genus: 'Cervaphis',
+    species: 'quercus',
+    author: 'Takahashi',
+    year: '1918',
+  }], [], []);
+  assert.equal(aphids[0].name, 'クヌギトゲアブラムシ');
+  assert.equal(buildInsectPath(aphids[0], 'ja'), '/aphid/Cervaphis%20quercus%20Takahashi/');
+  assert.equal(insectHeadingName('Cervaphis quercus Takahashi', aphids[0].scientificName), 'Cervaphis quercus');
+  assert.equal(formatInsectScientificNameHTML(aphids[0].scientificName), '<em>Cervaphis</em> <em>quercus</em> <span class="sci-author">Takahashi, 1918</span>');
+});
+
+test('subgenera and subspecies stay italicised while author particles stay with authorship', () => {
+  assert.equal(splitInsectScientificName('Cerataphis freycinetiae van der Goot, 1917').authority, 'van der Goot, 1917');
+  const input = 'Acmaeodera (Cobosiella) luzonica insularis (F. Author, [1895])';
+  assert.equal(splitInsectScientificName(input).name, 'Acmaeodera (Cobosiella) luzonica insularis');
+  assert.equal(splitInsectScientificName(input).authority, '(F. Author, [1895])');
+  assert.match(formatInsectScientificNameHTML(input), /<em>insularis<\/em> <span class="sci-author">/);
+  assert.equal(formatInsectScientificNameHTML('Aphis sp. 1'), 'Aphis sp. 1');
 });

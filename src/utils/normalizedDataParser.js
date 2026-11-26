@@ -14,6 +14,7 @@ import {
   normalizeJapaneseInsectName,
   splitJapaneseNameAliases,
 } from './insectNameAliases.js';
+import { getLegacyInsectRoute, insectHeadingName } from './insectScientificName.js';
 import {
   INSECT_COLLECTION_KEYS,
   createEmptyInsectCollections,
@@ -39,7 +40,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
   };
 
   const buildDedupKey = (insectRow, insectData) => {
-    const name = (insectData?.name || '').trim();
+    const name = (insectData?.routeName || insectData?.name || '').trim();
     if (!name) return null;
     const genus = (insectRow?.genus || insectData?.genus || '').trim();
     const species = (insectRow?.species || insectData?.species || '').trim();
@@ -265,7 +266,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       const alternativeNames = altNames.join('、');
 
       // 和名が欠落/壊れている場合（例: "1758)" など年号だけが入っている）に、表示用の名称をフォールバック
-      const displayName = (() => {
+      const originalName = (() => {
         if (primaryName) return primaryName;
         const fallbackFromAlt = altNames.find((n) => n.length >= 2 && !looksLikeYearOnly(n));
         if (fallbackFromAlt) return fallbackFromAlt;
@@ -278,6 +279,9 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         if (binomial) return binomial;
         return '不明';
       })();
+
+      const displayName = insectHeadingName(originalName, insect.scientific_name);
+      const routeName = getLegacyInsectRoute(insectId) || (displayName !== originalName ? originalName : '');
 
       // 出現時期（general_notesからの詳細一覧も構築）
       const emergenceNotes = (generalNotes || []).filter(n => {
@@ -314,6 +318,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       const insectData = {
         id: insectId,
         name: displayName,
+        routeName,
         scientificName: insect.scientific_name?.trim() || '',
         family: insect.family_jp?.trim() || insect.family?.trim() || '',
         subfamily: insect.subfamily_jp?.trim() || insect.subfamily?.trim() || '',

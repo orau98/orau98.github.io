@@ -1,3 +1,4 @@
+import { formatInsectScientificNameHTML, insectHeadingName, splitInsectScientificName } from '../src/utils/insectScientificName.js';
 import fs from 'fs';
 import { getPlantUsage } from './lib/plantUsage.mjs';
 import path from 'path';
@@ -585,13 +586,14 @@ function buildEnglishInsectPage({
   aliasToCanonical,
 }) {
   const scientificName = cleanString(insect.scientificName);
-  const japaneseName = cleanString(insect.name || insect.japaneseName);
+  const { name: scientificHeading, authority } = splitInsectScientificName(scientificName);
+  const japaneseName = insectHeadingName(insect.name || insect.japaneseName, scientificName);
   const primaryName = getPrimaryEnglishName({
-    scientificName,
+    scientificName: scientificHeading,
     japaneseName,
     fallback: insect.id || 'Unknown species',
   });
-  const japaneseReference = buildJapaneseReferenceLabel(japaneseName);
+  const japaneseReference = japaneseName === scientificHeading ? '' : buildJapaneseReferenceLabel(japaneseName);
   const familyLabels = normalizeInsectFamilyLabels(insect);
   const imageUrl = resolveInsectImageUrl(insect);
   const socialImageUrl = `${BASE_ORIGIN}${imageUrl || DEFAULT_SOCIAL_IMAGE_PATH}`;
@@ -753,7 +755,7 @@ function buildEnglishInsectPage({
 
     <header class="meta-header">
       <h1>${escapeHtml(primaryName)}</h1>
-      ${scientificName && scientificName !== primaryName ? `<h2>${formatScientificNameHTML(scientificName)}</h2>` : ''}
+      ${authority ? `<p class="sci-author">${escapeHtml(authority)}</p>` : ''}
       ${japaneseReference ? `<p class="meta-note">${escapeHtml(japaneseReference)}</p>` : ''}
       <p class="meta-note">${escapeHtml(ENGLISH_NAMING_NOTICE)}</p>
     </header>
@@ -762,7 +764,7 @@ function buildEnglishInsectPage({
       <section class="basic-info">
         <h3>Overview</h3>
         <dl>
-          ${scientificName ? `<dt>Scientific name</dt><dd>${formatScientificNameHTML(scientificName)}</dd>` : ''}
+          ${scientificName ? `<dt>Scientific name</dt><dd>${formatInsectScientificNameHTML(scientificName)}</dd>` : ''}
           ${japaneseName ? `<dt>Japanese name</dt><dd>${escapeHtml(japaneseName)}</dd>` : ''}
           <dt>Group</dt>
           <dd>${escapeHtml(section.singularLabel)}</dd>
@@ -797,7 +799,7 @@ function buildEnglishInsectPage({
         <ul>
           ${hostPlantItems.map((item) => `<li>
             ${item.href ? `<a href="${escapeAttr(item.href)}">${escapeHtml(item.primaryName)}</a>` : escapeHtml(item.primaryName)}
-            ${item.scientificName && item.primaryName !== item.scientificName ? `<div class="insect-scientific">${formatScientificNameHTML(item.scientificName)}</div>` : ''}
+            ${item.scientificName && item.primaryName !== item.scientificName ? `<div class="insect-scientific">${formatInsectScientificNameHTML(item.scientificName)}</div>` : ''}
             ${item.japaneseReference ? `<div class="meta-note">${escapeHtml(item.japaneseReference)}</div>` : ''}
           </li>`).join('\n          ')}
         </ul>` : `
@@ -990,7 +992,7 @@ function buildEnglishPlantPage({
               const href = entry ? entry.cleanHref : null;
               return `<li>
                 <div class="insect-name">${href ? `<a href="${escapeAttr(href)}">${escapeHtml(primaryName)}</a>` : escapeHtml(primaryName)}</div>
-                ${insect.scientificName && insect.scientificName !== primaryName ? `<div class="insect-scientific">${formatScientificNameHTML(insect.scientificName)}</div>` : ''}
+                ${insect.scientificName && insect.scientificName !== primaryName ? `<div class="insect-scientific">${formatInsectScientificNameHTML(insect.scientificName)}</div>` : ''}
                 ${japaneseReference ? `<div class="meta-note">${escapeHtml(japaneseReference)}</div>` : ''}
               </li>`;
             }).join('\n            ')}
@@ -1090,7 +1092,7 @@ function buildEnglishSectionIndex(section, entries, pageNumber = 1) {
         <ul style="list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;padding:0;margin:1rem 0 0;">
           ${pageEntries.map((entry) => `<li style="border:1px solid var(--color-border);border-radius:var(--radius-md);padding:0.9rem 1rem;">
             <a href="${escapeAttr(entry.cleanHref || entry.href)}" style="font-weight:700;display:block;margin-bottom:0.25rem;">${escapeHtml(entry.primaryName)}</a>
-            ${entry.scientificName && entry.scientificName !== entry.primaryName ? `<div class="insect-scientific">${formatScientificNameHTML(entry.scientificName)}</div>` : ''}
+            ${entry.scientificName && entry.scientificName !== entry.primaryName ? `<div class="insect-scientific">${formatInsectScientificNameHTML(entry.scientificName)}</div>` : ''}
             ${entry.japaneseReference ? `<div class="meta-note">${escapeHtml(entry.japaneseReference)}</div>` : ''}
           </li>`).join('\n          ')}
         </ul>

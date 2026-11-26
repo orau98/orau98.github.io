@@ -292,9 +292,7 @@ async function build() {
     for (const insect of normalized[key] || []) {
       const name = String(insect?.name || '').trim();
       const countKey = `${insect?.type || key}:${name}`;
-      insect.routeName = name && insectRouteNameCounts.get(countKey) > 1
-        ? insect.id
-        : '';
+      insect.routeName ||= name && insectRouteNameCounts.get(countKey) > 1 ? insect.id : '';
     }
   }
 

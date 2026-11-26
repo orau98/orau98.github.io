@@ -1,4 +1,5 @@
 import React from 'react';
+import { splitInsectScientificName } from './insectScientificName.js';
 import { isEnglishLocale } from './locale.js';
 
 // 学名フォーマッティングユーティリティ
@@ -368,6 +369,22 @@ export const formatScientificNameReact = (scientificName) => {
   // それ以外の場合は全体をイタリック体にする
   return <em>{trimmed}</em>;
 };
+
+export function formatInsectScientificNameReact(value) {
+  const { parts, authority, remainder } = splitInsectScientificName(value);
+  if (!parts.length) return formatScientificNameReact(value);
+  const [genus, subgenus, species, subspecies] = parts;
+  return (
+    <>
+      {subgenus
+        ? <><em>{genus}</em> (<em>{subgenus}</em>) <em>{species}</em></>
+        : <em className="whitespace-nowrap">{genus}{'\u00a0'}{species}</em>}
+      {subspecies && <> <em>{subspecies}</em></>}
+      {authority && <> <span className="sci-author">{authority}</span></>}
+      {remainder && ' ' + remainder}
+    </>
+  );
+}
 
 export const renderLocalizedScientificNameListReact = (values = [], locale = 'ja') => {
   const items = Array.isArray(values)

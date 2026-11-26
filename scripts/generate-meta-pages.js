@@ -17,6 +17,7 @@ import {
   META_PAGE_SECTIONS,
 } from '../src/utils/siteTaxonomy.js';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
+import { formatInsectScientificNameHTML as formatScientificNameHTML, insectHeadingName } from '../src/utils/insectScientificName.js';
 import {
   getPlantObservationGuide,
   PLANT_OBSERVATION_HEADING,
@@ -691,46 +692,6 @@ function formatEnglishWordsInItalic(text) {
   });
   
   return text;
-}
-
-// 学名フォーマッティング関数 - 属名+種小名のみをイタリック体にし、著者名と年は通常体にする
-function formatScientificNameHTML(scientificName) {
-  if (!scientificName || scientificName.trim() === '') {
-    return '';
-  }
-
-  const trimmed = scientificName.trim();
-  
-  // 括弧で囲まれた著者名と年を特定
-  const authorMatch = trimmed.match(/^(.+?)\s*(\([^)]+\))?\s*$/);
-  
-  if (authorMatch) {
-    const nameWithoutAuthor = authorMatch[1].trim();
-    const authorInfo = authorMatch[2] || '';
-
-    // 亜属を含む形式: Genus (Subgenus) species [...]
-    const gss = nameWithoutAuthor.match(/^([A-Z][a-z]+)\s+\(([A-Z][a-z]+)\)\s+([a-z-]+)(\s+.*)?$/);
-    if (gss) {
-      const genus = gss[1];
-      const subgenus = gss[2];
-      const species = gss[3];
-      const extraInfo = (gss[4] || '').trim();
-      return `<em>${genus}</em> (<em>${subgenus}</em>) <em>${species}</em>${extraInfo ? ' ' + extraInfo : ''}${authorInfo ? ' ' + authorInfo : ''}`;
-    }
-
-    // 属名と種小名を分離（最初の2語のみを取得）
-    const nameParts = nameWithoutAuthor.split(/\s+/);
-    if (nameParts.length >= 2) {
-      const binomialName = `${nameParts[0]} ${nameParts[1]}`;
-      const extraInfo = nameParts.slice(2).join(' ');
-      
-      // イタリック体の学名 + 通常体の著者情報
-      return `<em>${binomialName}</em>${extraInfo ? ' ' + extraInfo : ''}${authorInfo ? ' ' + authorInfo : ''}`;
-    }
-  }
-  
-  // フォールバック: 全体をイタリック体にする
-  return `<em>${trimmed}</em>`;
 }
 
 // CSVファイルを読み込む関数
@@ -2712,7 +2673,7 @@ async function generateMetaPages() {
       if (looksLikeYearOnly(japaneseName) || japaneseName.length < 2) {
         japaneseName = '';
       }
-      const displayName = japaneseName || scientificName;
+      const displayName = insectHeadingName(japaneseName || scientificName, scientificName);
       if (!displayName) return;
       
       // プレースホルダーや無効な昆虫名を除外
