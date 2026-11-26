@@ -26,6 +26,7 @@ import {
   slugifyScientificLabel,
 } from './lib/englishNaming.mjs';
 import { loadMergedTaxonRedirects } from './lib/mergedTaxonRedirects.mjs';
+import previousInsectMetaSlugs from './lib/previousInsectMetaSlugs.json' with { type: 'json' };
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 import { buildAnalyticsHeadTags } from './lib/analyticsHeadTags.mjs';
 import { SITE_LOGO_SRC } from '../src/utils/siteBrand.js';
@@ -1272,7 +1273,8 @@ async function generateEnglishMetaPages() {
     const section = SECTION_CONFIGS.find((entry) => entry.type === type);
     insectEntriesByType.set(type, []);
     insects.forEach((insect) => {
-      const scientificSlug = slugifyScientificLabel(insect.scientificName);
+      // Keep existing English metadata URLs when a scientific name is corrected.
+      const scientificSlug = previousInsectMetaSlugs[insect.id] || slugifyScientificLabel(insect.scientificName);
       const slug = createUniqueSlug(
         scientificSlug || cleanString(insect.id),
         usedInsectSlugsByType.get(type),
