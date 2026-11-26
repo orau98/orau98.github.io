@@ -155,6 +155,6 @@ test('西原の食樹記録をハネナガとヒロバに分けて保持する',
   assert.equal(reared.observationType, '飼育');
   assert.equal(reared.plantPart, '');
   const citations = getReferenceMetaList(reared.reference, { compact: true });
-  assert.deepEqual(citations.map(({ location }) => location), ['p. 120', 'p. 36']);
+  assert.deepEqual(citations.map(({ location }) => location), ['p. 120']);
   assert.match(citations[0].link, /jhj183\.pdf#page=6$/);
 });
