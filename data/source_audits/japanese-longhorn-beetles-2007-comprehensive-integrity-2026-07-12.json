@@ -26737,7 +26737,7 @@
       "op": "add_note",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": null,
       "after": {
         "record_id": "note-kamikiri-comprehensive-399af99913e4b3",
@@ -26763,7 +26763,7 @@
       "op": "add_note",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": null,
       "after": {
         "record_id": "note-kamikiri-comprehensive-3e851868a9660e",
@@ -26789,7 +26789,7 @@
       "op": "add_host",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-eda6d2ce0315e3",
@@ -26817,7 +26817,7 @@
       "op": "add_host",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-ea41e67e4d7390",
@@ -26845,7 +26845,7 @@
       "op": "add_host",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-de8dab35b03b02",
@@ -26873,7 +26873,7 @@
       "op": "add_host",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-1de21f950b9485",
@@ -26901,7 +26901,7 @@
       "op": "add_host",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": null,
       "after": {
         "record_id": "host-kamikiri-comprehensive-717e2d2609a599",
@@ -33103,7 +33103,7 @@
       "op": "update_insect",
       "insect_id": "species-22056",
       "current_japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
-      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+      "current_scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
       "before": {
         "insect_id": "species-22056",
         "family": "Cerambycidae",
@@ -33140,12 +33140,12 @@
         "species": "chujoi",
         "subspecies": "reductemaculatus",
         "author": "Hayashi",
-        "year": "1962",
+        "year": "1968",
         "japanese_name": "チュウジョウトラカミキリ奄美群島亜種",
         "old_japanese_name": "",
         "alternative_name": "",
         "other_names": "",
-        "scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1962",
+        "scientific_name": "Xylotrechus chujoi reductemaculatus Hayashi, 1968",
         "synonyms": "",
         "changes_since_standard": "",
         "notes": "日本列島の甲虫全種目録(2026)参照。"
