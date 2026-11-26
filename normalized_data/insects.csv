@@ -2740,7 +2740,7 @@ species-20980,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラム�
 species-20981,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,lanigera,,Zehntner,1897,"カンシャワタムシ (カンショウタムシ, カンシャノワタアブラムシ)",,,,"Ceratovacuna lanigera Zehntner, 1897",,,
 species-20982,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,nekoashi,,Sasaki,1911,エゴノネコアシアブラムシ,,,,"Ceratovacuna nekoashi (Sasaki, 1911)",,,
 species-20983,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,oplismeni,,Takahashi,1924,クロネコアシアブラムシ (新称),,,,"Ceratovacuna oplismeni (Takahashi, 1924)",,,
-species-20984,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,sp. B,,Takahashi,1958,ササガヤコナフキツノアブラムシ,,,,"Ceratovacuna sp. B, Takahashi, 1958",,,
+species-20984,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Ceratovacuna,,sp. B,,,,ササガヤコナフキツノアブラムシ,,,,Ceratovacuna sp. B,,,高橋（1958）が Ceratovacuna sp. B として報告。
 species-20985,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Glyphinaphis,,bambusae,,Van der Goot,1917,ササマルアブラムシ,,,,"Glyphinaphis bambusae Van der Goot, 1917","Glyphinaphis japonica Suenaga, 1933",,
 species-20986,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Pseudoregma,,bambucicola,,Takahashi,1921,タケツノアブラムシ (タケノオオツノアブラムシ),,,,"Pseudoregma bambucicola (Takahashi, 1921)",,,
 species-20987,Aphididae,アブラムシ科,Hormaphidinae,ヒラタアブラムシ亜科,Cerataphidini,ツノアブラムシ族,Pseudoregma,,koshunensis,,Takahashi,1924,"コウシュンツノアブラムシ (エゴノフトシアシアブラムシ, オキナワタケアブラムシ)",,,,"Pseudoregma koshunensis (Takahashi, 1924)","Pseudoregma uscare Tao, 1964",,
@@ -5413,7 +5413,7 @@ species-2866,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitin
 species-2867,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitini,マダラメイガ族,Ephestia,,kuehniella,,Zeller,1879,スジコナマダラメイガ,,,,"Ephestia kuehniella Zeller, 1879",,,
 species-2868,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitini,マダラメイガ族,Rabiria,,rufimaculella,,(Yamanaka),1993,アカモンマダラメイガ,,,,"Rabiria rufimaculella (Yamanaka, 1993)",,,
 species-2869,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitini,マダラメイガ族,Gymnancyla,,barbatella,,Erschoff,1874,スナモンマダラメイガ,,,,"Gymnancyla barbatella Erschoff, 1874",,新記録・再分類等,
-species-2870,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitini,マダラメイガ族,Gymnancyla,,"sp. of Yoshiyasu, 2011",,Kirpichnikova & Yamanaka,2002,オカヒジキマダラメイガ,,,,"Gymnancyla sp. of Yoshiyasu, 2011 Kirpichnikova & Yamanaka, 2002",,,
+species-2870,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitini,マダラメイガ族,Gymnancyla,,sp.,,,,オカヒジキマダラメイガ,,,,Gymnancyla sp.,,,吉安（2011）が扱った Gymnancyla の未記載種。
 species-2871,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitini,マダラメイガ族,Ephestiopsis,,vishnu,,Roesler & Küppers,1981,アカウキクサマダラメイガ,,,,"Ephestiopsis vishnu Roesler & Küppers, 1981",,新記録・再分類等,
 species-2872,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Phycitini,マダラメイガ族,Phycita,,peliella,,Yamanaka,2016,ニブイロマダラメイガ,,,,"Phycita peliella Yamanaka, 2016",,新記録・再分類等,
 species-2873,Pyralidae,メイガ科,Phycitinae,マダラメイガ亜科,Anerastiini,ホソメイガ族,Anerastia,,lotella,,(Hübner),[1813],ハマベホソメイガ,,,,"Anerastia lotella (Hübner, [1813])",,,
