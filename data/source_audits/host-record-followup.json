@@ -92,13 +92,17 @@
     {
       "recordId": "host-recheck-3760-maguwa",
       "reference": "船越・宮野 (2010) p. 100"
+    },
+    {
+      "recordId": "host-recheck-6018-sakura",
+      "reference": "西原かよ子 (1995) p. 120; 高島 昭 (2001) p. 36"
+    },
+    {
+      "recordId": "host-recheck-6018-kashi",
+      "reference": "高島 昭 (2001) p. 36"
     }
   ],
   "unresolved": [
-    {
-      "insectId": "species-6018",
-      "reason": "西原（1995）の両種を扱う本文が未取得。ソメイヨシノなどの種別帰属は未確認。"
-    },
     {
       "insectId": "species-21944",
       "reason": "Niisato & Han (2011) p. 31の寄主は基亜種の記述。トカラ亜種に適用しない。"
@@ -124,6 +128,37 @@
       "canonicalId": "species-20401",
       "source": "日本産蝶類標準図鑑 p. 297",
       "existingHostCount": 4
+    }
+  ],
+  "resolved": [
+    {
+      "insectIds": [
+        "species-6018",
+        "species-6019"
+      ],
+      "reference": "西原かよ子 (1995) 蛾類通信 183: 117–125",
+      "sourceUrl": "https://publ.moth.jp/tsushin/151-200/jhj183.pdf",
+      "printedPages": [
+        117,
+        118,
+        120,
+        121,
+        124
+      ],
+      "pdfPages": [
+        3,
+        4,
+        6,
+        7,
+        10
+      ],
+      "enrichedRecordIds": [
+        "hostplant-004095",
+        "hostplant-004096",
+        "hostplant-004097",
+        "hostplant-004098"
+      ],
+      "note": "p. 117は羽化成虫の同定により山本型をハネナガ、岡田型をヒロバとする。ハネナガの野外食樹はp. 120のミミズバイ・サカキ・ツバキ・アラカシ。サクラは山本（1981）の飼育記録の引用で種・品種不詳。p. 121のソメイヨシノ採集例とp. 124の野外摂食はヒロバに属し、既存のhostplant-004101に対応する。Sohnほか（2005）p. 150は西原を引いて同じ5植物をハネナガの下に列挙したが、ソメイヨシノの種帰属が原報と一致しないため、ハネナガの根拠から除外した。"
     }
   ]
 }

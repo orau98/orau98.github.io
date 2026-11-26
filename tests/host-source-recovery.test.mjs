@@ -4,7 +4,7 @@ import test from 'node:test';
 import Papa from 'papaparse';
 import { normalizeHostRecord } from '../src/utils/hostRecord.js';
 import { projectInsectNotes } from '../src/utils/insectNoteRevisions.js';
-import { getCompactReferenceMeta } from '../src/utils/sourceLinks.js';
+import { getCompactReferenceMeta, getReferenceMetaList } from '../src/utils/sourceLinks.js';
 
 const read = (relative) => fs.readFileSync(new URL(relative, import.meta.url), 'utf8');
 const csv = read('../normalized_data/hostplants.csv');
@@ -137,4 +137,24 @@ test('ワタムシの寄主を標本の同定・部位に基づいて表示す�
   const notes = read('../normalized_data/general_notes.csv');
   assert.equal(read('../public/general_notes.csv'), notes);
   assert.match(notes, /note-aphid-guide-a231-species-21047-ecology[^\r\n]+同図鑑では夏寄主を不明としている/);
+});
+
+test('西原の食樹記録をハネナガとヒロバに分けて保持する', () => {
+  const hostRecords = (insectId) => parsed.data
+    .filter((row) => row.insect_id === insectId)
+    .map(normalizeHostRecord)
+    .filter((row) => !row.isFlowerVisit);
+  const hanenaga = hostRecords('species-6018');
+  const hiroba = hostRecords('species-6019');
+  assert.ok(!hanenaga.some((row) => row.name === 'ソメイヨシノ'));
+  assert.ok(hiroba.some((row) => row.name === 'ソメイヨシノ' && row.observationType === '野外（国内）'));
+  const fieldHosts = hanenaga.filter((row) =>
+    row.observationType === '野外（国内）' && row.reference.includes('西原かよ子 (1995) p. 120'));
+  assert.deepEqual(fieldHosts.map((row) => row.name).sort(), ['アラカシ', 'サカキ', 'ツバキ', 'ミミズバイ']);
+  const reared = hanenaga.find((row) => row.name === 'サクラ類');
+  assert.equal(reared.observationType, '飼育');
+  assert.equal(reared.plantPart, '');
+  const citations = getReferenceMetaList(reared.reference, { compact: true });
+  assert.deepEqual(citations.map(({ location }) => location), ['p. 120', 'p. 36']);
+  assert.match(citations[0].link, /jhj183\.pdf#page=6$/);
 });
