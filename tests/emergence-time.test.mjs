@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseEmergenceTime, hasEmergencePeriods, shouldAnalyzeEmergenceHint } from '../src/utils/emergenceTime.js';
 import { getEmergenceMonths } from '../src/utils/emergenceTimeUtils.js';
+import { parseInsectDetailSeason } from '../src/utils/insectDetailNotes.js';
 
 test('extracted emergence parser preserves empty, full-year and year-spanning periods', () => {
   assert.equal(hasEmergencePeriods('不明'), false);
@@ -69,5 +70,31 @@ test('periods remain separate across localities and independent observations', (
   ];
   for (const [text, months] of cases) {
     assert.deepEqual(parseEmergenceTime(text).months, months, text);
+  }
+});
+
+test('lists with a shared month unit retain every month in the chart and filter', () => {
+  const cases = [
+    ['6、7月', [6, 7]],
+    ['6，9，12月', [6, 9, 12]],
+    ['石垣島で4、5月に、西表島では12月', [4, 5, 12]],
+    ['沖縄島で7-8、10、12月', [7, 8, 10, 12]],
+    ['5・7〜9月', [5, 7, 8, 9]],
+    ['6、7月には見られない', []],
+  ];
+  for (const [text, months] of cases) {
+    assert.deepEqual(getEmergenceMonths(text), months, text);
+    assert.deepEqual(parseInsectDetailSeason([text]).months, months, text);
+  }
+});
+
+test('specific peak days do not extend the reported adult season', () => {
+  const cases = [
+    ['関東地方では11月中旬から12月上旬。ピークは11月20日前後。', [11.2, 11.3, 12.1]],
+    ['平地では12月中旬〜1月下旬。ピークは12月20日過ぎ。', [1.1, 1.2, 1.3, 12.2, 12.3]],
+    ['ピークは2月10日前後、山地では3月中旬〜4月上旬。', [3.2, 3.3, 4.1]],
+  ];
+  for (const [text, periods] of cases) {
+    assert.deepEqual(parseInsectDetailSeason([text]).periods, periods, text);
   }
 });

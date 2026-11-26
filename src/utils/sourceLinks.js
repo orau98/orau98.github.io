@@ -137,7 +137,7 @@ const formatReferenceMeta = ({ raw, entry, location }) => {
 
   return {
     displayLabel: [citation, location].filter(Boolean).join(' '),
-    link: entry?.url || getSourceLink(raw),
+    link: entry?.pageLinks?.[location] || entry?.url || getSourceLink(raw),
     key: entry ? [entry.key, location].filter(Boolean).join(' ') : raw,
   };
 };

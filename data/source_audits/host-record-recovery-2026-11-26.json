@@ -1,0 +1,934 @@
+{
+  "reviewed_on": "2026-11-26",
+  "method": "現行CSV・削除前の履歴と原典の種別記事を照合し、訪花・摂食・飼育・発見基質を区別した。",
+  "checks": {
+    "species": "Rhynchaglaea scitula (Butler, 1879)",
+    "removed_record": "hostplant-909517",
+    "removed_value": "未知",
+    "removed_in": "4e5b601f480bf3ae47edb0f0b4f19cbc9d52470d",
+    "contrasting_sources": [
+      "日本産蛾類標準図鑑2 p. 355",
+      "日本の冬夜蛾 p. 72",
+      "Sohn et al. (2005) p. 151, https://doi.org/10.1016/S1226-8615(08)60085-0"
+    ],
+    "adult_flower_visits_preserved": true
+  },
+  "records": [
+    {
+      "recordId": "host-nov26-source-6041a",
+      "insectId": "species-6041",
+      "source": "高島 昭 (2001) p. 40",
+      "printedPage": "40",
+      "evidence": "種番号28のアカウントに掲載。隣接する種番号29の幼虫採集記録とは別。標準図鑑2 p.355 と日本の冬夜蛾 p.72 は本種の寄主を未知とする。 Sohnほか (2005) p. 151 も寄主植物を不明と記載。",
+      "before": null,
+      "after": "host-nov26-source-6041a,species-6041,アラカシ,ブナ科,文献,,,高島 昭 (2001) p. 40,摂食植物として記載 / 発育段階・摂食部位・観察条件は未記載。Sohnほか（2005）は寄主植物を不明と記載。"
+    },
+    {
+      "recordId": "host-nov26-source-6041b",
+      "insectId": "species-6041",
+      "source": "高島 昭 (2001) p. 40",
+      "printedPage": "40",
+      "evidence": "種番号28のアカウントに掲載。隣接する種番号29の幼虫採集記録とは別。標準図鑑2 p.355 と日本の冬夜蛾 p.72 は本種の寄主を未知とする。 Sohnほか (2005) p. 151 も寄主植物を不明と記載。",
+      "before": null,
+      "after": "host-nov26-source-6041b,species-6041,アカガシ,ブナ科,文献,,,高島 昭 (2001) p. 40,摂食植物として記載 / 発育段階・摂食部位・観察条件は未記載。Sohnほか（2005）は寄主植物を不明と記載。"
+    },
+    {
+      "recordId": "host-nov26-source-4238-1",
+      "insectId": "species-4238",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "276",
+      "evidence": "寄主欄に4科18種を明記。",
+      "before": null,
+      "after": "host-nov26-source-4238-1,species-4238,タデ科,タデ科,文献,,幼虫,日本産蛾類標準図鑑1,寄主4科18種の記録 / 個別の植物名と摂食部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-4238-2",
+      "insectId": "species-4238",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "276",
+      "evidence": "寄主欄に4科18種を明記。",
+      "before": null,
+      "after": "host-nov26-source-4238-2,species-4238,バラ科,バラ科,文献,,幼虫,日本産蛾類標準図鑑1,寄主4科18種の記録 / 個別の植物名と摂食部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-4238-3",
+      "insectId": "species-4238",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "276",
+      "evidence": "寄主欄に4科18種を明記。",
+      "before": null,
+      "after": "host-nov26-source-4238-3,species-4238,ツツジ科,ツツジ科,文献,,幼虫,日本産蛾類標準図鑑1,寄主4科18種の記録 / 個別の植物名と摂食部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-4238-4",
+      "insectId": "species-4238",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "276",
+      "evidence": "寄主欄に4科18種を明記。",
+      "before": null,
+      "after": "host-nov26-source-4238-4,species-4238,キク科,キク科,文献,,幼虫,日本産蛾類標準図鑑1,寄主4科18種の記録 / 個別の植物名と摂食部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-3722",
+      "insectId": "species-3722",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "169",
+      "evidence": "寄主欄とタイプ標本に関する幼虫の記述を照合。",
+      "before": null,
+      "after": "host-nov26-source-3722,species-3722,蘚類,,野外（国内）,,幼虫,日本産蛾類標準図鑑1,福岡県英彦山で蘚類を食べる幼虫が採集された"
+    },
+    {
+      "recordId": "host-nov26-source-0314",
+      "insectId": "species-0314",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "138",
+      "evidence": "寄主欄・本文を確認。福岡県RDBも野外摂食を記載。",
+      "before": null,
+      "after": "host-nov26-source-0314,species-0314,蘚類,,野外（国内）,,幼虫,日本産蛾類標準図鑑3,野外で蘚類の上に幼虫が見つかり、飼育では新鮮な蘚類を食餌に使用"
+    },
+    {
+      "recordId": "host-nov26-source-4492",
+      "insectId": "species-4492",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "329",
+      "evidence": "寄主欄の国内外の条件を区別。",
+      "before": null,
+      "after": "host-nov26-source-4492,species-4492,モクセイ科,モクセイ科,国外,,幼虫,日本産蛾類標準図鑑1,国外の寄主記録 / 原典は日本の寄主を未知としている"
+    },
+    {
+      "recordId": "host-nov26-source-5474",
+      "insectId": "species-5474",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "257",
+      "evidence": "寄主欄にイネ科その他の単子葉植物と明記。",
+      "before": null,
+      "after": "host-nov26-source-5474,species-5474,イネ科,イネ科,文献,,幼虫,日本産蛾類標準図鑑2,イネ科のほか、科未特定の単子葉植物も記載"
+    },
+    {
+      "recordId": "host-nov26-source-5588",
+      "insectId": "species-5588",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "276",
+      "evidence": "寄主欄にフキと明記。",
+      "before": null,
+      "after": "host-nov26-source-5588,species-5588,フキ,キク科,文献,,幼虫,日本産蛾類標準図鑑2,"
+    },
+    {
+      "recordId": "host-nov26-source-5618",
+      "insectId": "species-5618",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "282",
+      "evidence": "寄主欄にカヤツリグサ科を食すと記載。",
+      "before": null,
+      "after": "host-nov26-source-5618,species-5618,カヤツリグサ科,カヤツリグサ科,文献,,幼虫,日本産蛾類標準図鑑2,"
+    },
+    {
+      "recordId": "host-B1B7-20251121002628-0092",
+      "insectId": "species-4113",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "252",
+      "evidence": "寄主欄は花・蕾。科名は現行の植物分類にそろえた。",
+      "before": "host-B1B7-20251121002628-0092,species-4113,ガマズミ,ガマズミ科,文献,花,,日本産蛾類標準図鑑1,",
+      "after": "host-B1B7-20251121002628-0092,species-4113,ガマズミ,ガマズミ科,文献,花・蕾,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "hostplant-004172",
+      "insectId": "species-6046",
+      "source": "日本産蛾類標準図鑑2; 日本の冬夜蛾",
+      "printedPage": "355;73",
+      "evidence": "両書の花食記載を確認。観察条件は未記載。",
+      "before": "hostplant-004172,species-6046,ツバキ,ツバキ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑2; 日本の冬夜蛾,",
+      "after": "hostplant-004172,species-6046,ツバキ,ツバキ科,文献,花,幼虫,日本産蛾類標準図鑑2; 日本の冬夜蛾,標準図鑑の記載はツバキ類"
+    },
+    {
+      "recordId": "hostplant-004174",
+      "insectId": "species-6048",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "356",
+      "evidence": "標準図鑑の寄主欄はツバキ類で葉の記載なし。",
+      "before": "hostplant-004174,species-6048,ツバキ,ツバキ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑2,",
+      "after": "hostplant-004174,species-6048,ツバキ,ツバキ科,文献,,幼虫,日本産蛾類標準図鑑2,原典はツバキ類と記載 / 摂食部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-6048",
+      "insectId": "species-6048",
+      "source": "日本の冬夜蛾",
+      "printedPage": "72",
+      "evidence": "冬夜蛾の寄主欄はツバキの花。",
+      "before": null,
+      "after": "host-nov26-source-6048,species-6048,ツバキ,ツバキ科,文献,花,幼虫,日本の冬夜蛾,"
+    },
+    {
+      "recordId": "host-nov26-source-6047",
+      "insectId": "species-6047",
+      "source": "日本の冬夜蛾",
+      "printedPage": "73",
+      "evidence": "冬夜蛾にサザンカの花。標準図鑑では別記述のため出典を分離。",
+      "before": null,
+      "after": "host-nov26-source-6047,species-6047,サザンカ,ツバキ科,文献,花,幼虫,日本の冬夜蛾,標準図鑑2 p.356 には花を食べないとの記述があり、文献間で異なる"
+    },
+    {
+      "recordId": "hostplant-004215",
+      "insectId": "species-6063",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "359",
+      "evidence": "標準図鑑はハルニレを記載し部位は未記載。",
+      "before": "hostplant-004215,species-6063,ハルニレ,ニレ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑2; 日本の冬夜蛾,",
+      "after": "hostplant-004215,species-6063,ハルニレ,ニレ科,文献,,幼虫,日本産蛾類標準図鑑2,摂食部位は未記載"
+    },
+    {
+      "recordId": "hostplant-909598",
+      "insectId": "species-6063",
+      "source": "日本の冬夜蛾",
+      "printedPage": "82",
+      "evidence": "冬夜蛾のコラムで種子への食害を確認。",
+      "before": "hostplant-909598,species-6063,ハルニレ,ニレ科,文献,,,日本のキリガ,",
+      "after": "hostplant-909598,species-6063,ハルニレ,ニレ科,文献,種子,幼虫,日本の冬夜蛾,北海道で種子への食害記録"
+    },
+    {
+      "recordId": "record-007877",
+      "insectId": "species-6063",
+      "source": "日本産蛾類標準図鑑2; 日本の冬夜蛾",
+      "printedPage": "359;82",
+      "evidence": "両書で飼育餌を確認。採集時のヤナギ類の枯葉から摂食は確定しない。",
+      "before": "record-007877,species-6063,ヤナギ,ヤナギ科,飼育,葉,幼虫,日本の冬夜蛾,北海道ではハルニレの種子を食害する / ヤナギ類の枯れ葉の中で得た幼虫にタンポポを与えて飼育した記録がある",
+      "after": "record-007877,species-6063,タンポポ類,キク科,飼育,,幼虫,日本産蛾類標準図鑑2; 日本の冬夜蛾,ヤナギ類の枯れ葉の中で得た幼虫に、飼育下でタンポポ類を与えた記録"
+    },
+    {
+      "recordId": "hostplant-004221",
+      "insectId": "species-6066",
+      "source": "日本産蛾類標準図鑑2; 日本の冬夜蛾",
+      "printedPage": "359;84",
+      "evidence": "両書の寄主欄でツバキの花を確認。",
+      "before": "hostplant-004221,species-6066,ツバキ,ツバキ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑2; 日本の冬夜蛾,",
+      "after": "hostplant-004221,species-6066,ツバキ,ツバキ科,文献,花,幼虫,日本産蛾類標準図鑑2; 日本の冬夜蛾,"
+    },
+    {
+      "recordId": "hostplant-004222",
+      "insectId": "species-6066",
+      "source": "日本産蛾類標準図鑑2; 日本の冬夜蛾",
+      "printedPage": "359;84",
+      "evidence": "冬夜蛾もサクラ類の飼育記録。野外食草とは区別。",
+      "before": "hostplant-004222,species-6066,サクラ,バラ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑2,集で飼育されている / 若齢時は花を好むと考えられている",
+      "after": "hostplant-004222,species-6066,サクラ類,バラ科,飼育,花・葉,幼虫,日本産蛾類標準図鑑2; 日本の冬夜蛾,花と葉での飼育は標準図鑑2に記載"
+    },
+    {
+      "recordId": "record-007875",
+      "insectId": "species-6062",
+      "source": "日本の冬夜蛾",
+      "printedPage": "81",
+      "evidence": "広葉樹一般はヨーロッパについての記述。",
+      "before": "record-007875,species-6062,広葉樹,,,葉,幼虫,日本の冬夜蛾,",
+      "after": "record-007875,species-6062,広葉樹,,国外,葉,幼虫,日本の冬夜蛾,"
+    },
+    {
+      "recordId": "host-nov26-source-0341",
+      "insectId": "species-0341",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "154",
+      "evidence": "寄主欄にイネ科など。",
+      "before": null,
+      "after": "host-nov26-source-0341,species-0341,イネ科,イネ科,文献,,幼虫,日本産蛾類標準図鑑3,"
+    },
+    {
+      "recordId": "host-nov26-source-0339a",
+      "insectId": "species-0339",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "153",
+      "evidence": "本文と寄主欄の植物・摂食部位を照合。",
+      "before": null,
+      "after": "host-nov26-source-0339a,species-0339,イタドリ,タデ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑3,長野県でイタドリの葉を食べる幼虫を採集"
+    },
+    {
+      "recordId": "host-nov26-source-0339b",
+      "insectId": "species-0339",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "153",
+      "evidence": "寄主欄にカキの葉での飼育記録を明記。",
+      "before": null,
+      "after": "host-nov26-source-0339b,species-0339,カキノキ,カキノキ科,飼育,葉,幼虫,日本産蛾類標準図鑑3,原典の表記はカキ"
+    },
+    {
+      "recordId": "host-nov26-source-1816-karamatsu",
+      "insectId": "species-1816",
+      "source": "北海道立総合研究機構 林業試験場（カラマツイトヒキハマキ）",
+      "printedPage": null,
+      "evidence": "林業試験場の写真・寄主欄で確認。",
+      "before": null,
+      "after": "host-nov26-source-1816-karamatsu,species-1816,カラマツ,マツ科,野外（国内）,葉,幼虫,北海道立総合研究機構 林業試験場（カラマツイトヒキハマキ）,カラマツ葉上の終齢幼虫と食害を写真付きで報告"
+    },
+    {
+      "recordId": "host-nov26-source-1816-guimatsu",
+      "insectId": "species-1816",
+      "source": "北海道立総合研究機構 林業試験場（カラマツイトヒキハマキ）",
+      "printedPage": null,
+      "evidence": "林業試験場の写真・寄主欄で確認。",
+      "before": null,
+      "after": "host-nov26-source-1816-guimatsu,species-1816,グイマツ,マツ科,野外（国内）,葉,幼虫,北海道立総合研究機構 林業試験場（カラマツイトヒキハマキ）,グイマツ葉の幼虫巣を写真付きで報告"
+    },
+    {
+      "recordId": "hostplant-B1B6-0783",
+      "insectId": "species-3863",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "before": "hostplant-B1B6-0783,species-3863,ツタウルシ,ウルシ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": "hostplant-B1B6-0783,species-3863,タニウツギ,スイカズラ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "hostplant-B1B6-0784",
+      "insectId": "species-3863",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "before": "hostplant-B1B6-0784,species-3863,フクシマツタウルシ,,文献,,,日本産蛾類標準図鑑1,",
+      "after": "hostplant-B1B6-0784,species-3863,ツクシヤブウツギ,スイカズラ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "hostplant-B1B6-0786",
+      "insectId": "species-3864",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "before": "hostplant-B1B6-0786,species-3864,クスノキ,クスノキ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": "hostplant-B1B6-0786,species-3864,ダンコウバイ,クスノキ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "host-nov26-source-3864-shirodamo",
+      "insectId": "species-3864",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "before": null,
+      "after": "host-nov26-source-3864-shirodamo,species-3864,シロダモ,クスノキ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "hostplant-B1B6-0797",
+      "insectId": "species-3868",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "199",
+      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "before": "hostplant-B1B6-0797,species-3868,コマユミ,ニシキギ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": "hostplant-B1B6-0797,species-3868,コメツガ,マツ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "hostplant-B1B6-0806",
+      "insectId": "species-3872",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "200",
+      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "before": "hostplant-B1B6-0806,species-3872,トチノキ,ムクロジ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": "hostplant-B1B6-0806,species-3872,トウヒ,マツ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "hostplant-B1B6-0807",
+      "insectId": "species-3873",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "200",
+      "evidence": "原本の種見出しと直下の寄主植物欄を目視照合。",
+      "before": "hostplant-B1B6-0807,species-3873,ヤマコウバシ,クスノキ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": "hostplant-B1B6-0807,species-3873,コメツガ,マツ科,文献,,幼虫,日本産蛾類標準図鑑1,"
+    },
+    {
+      "recordId": "host-nov26-source-3865-kusunoki",
+      "insectId": "species-3865",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の種欄と Holloway (1993) The Moths of Borneo 11 p. 50 の香港での飼育報告を照合。",
+      "before": null,
+      "after": "host-nov26-source-3865-kusunoki,species-3865,クスノキ,クスノキ科,国外,,幼虫,日本産蛾類標準図鑑1,香港のクスノキから幼虫が得られた / 国内の寄主は未確認"
+    },
+    {
+      "recordId": "hostplant-B1B6-0792",
+      "insectId": "species-3866",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "同じ見開きのクスノキはヒメウコンエダシャクの欄。対象種欄にはタブノキと Alseodaphne 属。",
+      "before": "hostplant-B1B6-0792,species-3866,クスノキ,クスノキ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": "hostplant-B1B6-0792,species-3866,Alseodaphne属,クスノキ科,国外,,幼虫,日本産蛾類標準図鑑1,インドでの記録 / 植物は属までの同定"
+    },
+    {
+      "recordId": "hostplant-B1B6-0793",
+      "insectId": "species-3867",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の4植物は正しい現行行 hostplant-PDFAUDIT-20260710-0047～0050 に収載。イヌガヤは対象種欄の外。",
+      "before": "hostplant-B1B6-0793,species-3867,イヌガヤ,イチイ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-B1B6-0794",
+      "insectId": "species-3867",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の4植物は正しい現行行 hostplant-PDFAUDIT-20260710-0047～0050 に収載。カヤは対象種欄の外。",
+      "before": "hostplant-B1B6-0794,species-3867,カヤ,イチイ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-B1B6-0795",
+      "insectId": "species-3867",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の4植物は正しい現行行 hostplant-PDFAUDIT-20260710-0047～0050 に収載。イヌマキは対象種欄の外。",
+      "before": "hostplant-B1B6-0795,species-3867,イヌマキ,マキ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-B1B6-0796",
+      "insectId": "species-3867",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "198",
+      "evidence": "原本の4植物は正しい現行行 hostplant-PDFAUDIT-20260710-0047～0050 に収載。ナギは対象種欄の外。",
+      "before": "hostplant-B1B6-0796,species-3867,ナギ,マキ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-B1B6-0798",
+      "insectId": "species-3868",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "199",
+      "evidence": "原本の寄主欄はコメツガ。ツガは推定で、マサキは同欄にない。",
+      "before": "hostplant-B1B6-0798,species-3868,マサキ,ニシキギ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-B1B6-0799",
+      "insectId": "species-3869",
+      "source": "日本産蛾類標準図鑑1",
+      "printedPage": "199",
+      "evidence": "原本は針葉樹を含む広食性とのみ記述。コマユミは対象種欄の外。",
+      "before": "hostplant-B1B6-0799,species-3869,コマユミ,ニシキギ科,文献,,,日本産蛾類標準図鑑1,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-912685",
+      "insectId": "species-0832",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "195",
+      "evidence": "原本の種欄でオオヨモギと地域を照合。",
+      "before": "hostplant-912685,species-0832,ヨモギ,キク科,文献,,幼虫,日本産蛾類標準図鑑3,",
+      "after": "hostplant-912685,species-0832,オオヨモギ,キク科,国外,,幼虫,日本産蛾類標準図鑑3,ヨーロッパの寄主記録"
+    },
+    {
+      "recordId": "hostplant-912686",
+      "insectId": "species-0833",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "195",
+      "evidence": "原本は属までを記載。藤沢勝利 (1989) の国内のタムラソウとは区別する。",
+      "before": "hostplant-912686,species-0833,タムラソウ,キク科,文献,,幼虫,日本産蛾類標準図鑑3,",
+      "after": "hostplant-912686,species-0833,タムラソウ属,キク科,国外,,幼虫,日本産蛾類標準図鑑3,ヨーロッパの寄主記録"
+    },
+    {
+      "recordId": "host-nov26-source-0833-yagurumagiku",
+      "insectId": "species-0833",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "195",
+      "evidence": "原本は属までを記載。藤沢勝利 (1989) の国内のタムラソウとは区別する。",
+      "before": null,
+      "after": "host-nov26-source-0833-yagurumagiku,species-0833,ヤグルマギク属,キク科,国外,,幼虫,日本産蛾類標準図鑑3,ヨーロッパの寄主記録"
+    },
+    {
+      "recordId": "hostplant-906036",
+      "insectId": "species-0837",
+      "source": "藤沢勝利 (1989)",
+      "printedPage": null,
+      "evidence": "旧行は国外のセリ科2属をセリと誤登録。原典は国内の寄主を未知とし、現行分類は未同定の Agonopterix sp. A。",
+      "before": "hostplant-906036,species-0837,セリ,セリ科,,,,藤沢勝利 (1989),食草は外国ではセリ科のSelinum属やカワラボウフウ属（Peucedanum）が知られているが、わが国での食草は未知",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-901261",
+      "insectId": "species-5113",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "205",
+      "evidence": "原本は寄主植物を未知とし、ヒサカキの枯葉上で発見とだけ記載。",
+      "before": "hostplant-901261,species-5113,ヒサカキ,モッコク科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑2,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-901262",
+      "insectId": "species-5114",
+      "source": "日本産蛾類標準図鑑2",
+      "printedPage": "205",
+      "evidence": "原本は枯れ葉の摂食を記録。",
+      "before": "hostplant-901262,species-5114,ヌルデ,ウルシ科,野外（国内）,葉,幼虫,日本産蛾類標準図鑑2,",
+      "after": "hostplant-901262,species-5114,ヌルデの枯れ葉,ウルシ科,文献,,幼虫,日本産蛾類標準図鑑2,ヌルデの枯れ葉を摂食"
+    },
+    {
+      "recordId": "host-nov26-source-0264-rotten-wood",
+      "insectId": "species-0264",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "123",
+      "evidence": "原本の食餌は腐朽木。キノコとの関係は推測として記載。",
+      "before": null,
+      "after": "host-nov26-source-0264-rotten-wood,species-0264,朽ち木,,文献,,幼虫,日本産蛾類標準図鑑3,腐朽木を食べる / 幼虫は樹皮の裏や枝の中で見られる"
+    },
+    {
+      "recordId": "host-nov26-source-0265-dead-cycas",
+      "insectId": "species-0265",
+      "source": "日本産蛾類標準図鑑3",
+      "printedPage": "124",
+      "evidence": "原本は沖縄での枯死幹の利用を記載。旧行のシケシダに根拠なし。",
+      "before": null,
+      "after": "host-nov26-source-0265-dead-cycas,species-0265,ソテツの枯れ木,ソテツ科,野外（国内）,幹,幼虫,日本産蛾類標準図鑑3,沖縄で立ち枯れの幹から幼虫が得られた"
+    },
+    {
+      "recordId": "host-nov26-source-1534-kunugi",
+      "insectId": "species-1534",
+      "source": "イモムシ・ケムシ図鑑（芋活.com）",
+      "printedPage": null,
+      "evidence": "旧データと直接の出典ページを照合。日本産蛾類標準図鑑3 p.323 は寄主を未知とする。",
+      "before": null,
+      "after": "host-nov26-source-1534-kunugi,species-1534,クヌギ,ブナ科,文献,,幼虫,イモムシ・ケムシ図鑑（芋活.com）,幼虫図鑑の寄主欄に記載 / 植物ごとの観察条件と部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-1534-onigurumi",
+      "insectId": "species-1534",
+      "source": "イモムシ・ケムシ図鑑（芋活.com）",
+      "printedPage": null,
+      "evidence": "旧データと直接の出典ページを照合。日本産蛾類標準図鑑3 p.323 は寄主を未知とする。",
+      "before": null,
+      "after": "host-nov26-source-1534-onigurumi,species-1534,オニグルミ,クルミ科,文献,,幼虫,イモムシ・ケムシ図鑑（芋活.com）,幼虫図鑑の寄主欄に記載 / 植物ごとの観察条件と部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-1534-ezoenoki",
+      "insectId": "species-1534",
+      "source": "イモムシ・ケムシ図鑑（芋活.com）",
+      "printedPage": null,
+      "evidence": "旧データと直接の出典ページを照合。日本産蛾類標準図鑑3 p.323 は寄主を未知とする。",
+      "before": null,
+      "after": "host-nov26-source-1534-ezoenoki,species-1534,エゾエノキ,アサ科,文献,,幼虫,イモムシ・ケムシ図鑑（芋活.com）,幼虫図鑑の寄主欄に記載 / 植物ごとの観察条件と部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-1534-fabaceae",
+      "insectId": "species-1534",
+      "source": "イモムシ・ケムシ図鑑（芋活.com）",
+      "printedPage": null,
+      "evidence": "旧データと直接の出典ページを照合。日本産蛾類標準図鑑3 p.323 は寄主を未知とする。",
+      "before": null,
+      "after": "host-nov26-source-1534-fabaceae,species-1534,マメ科,マメ科,文献,,幼虫,イモムシ・ケムシ図鑑（芋活.com）,幼虫図鑑の寄主欄に記載 / 植物ごとの観察条件と部位は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-0628-mayumi",
+      "insectId": "species-0628",
+      "source": "Turner et al. (2010) p. 3",
+      "printedPage": "3",
+      "evidence": "Table 1 の標本 ZMA.INS.LEPI.10 に学名と Food plant を記載。 標本表と日本産蛾類標準図鑑3 p.159 で国内産地が一致しないため、標本の出典表記に限定した。",
+      "before": null,
+      "after": "host-nov26-source-0628-mayumi,species-0628,マユミ,ニシキギ科,文献,,,Turner et al. (2010) p. 3,日本産標本 ZMA.INS.LEPI.10 の食餌植物として記載 / 観察条件は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-0616-nishikigi",
+      "insectId": "species-0616",
+      "source": "Turner et al. (2010) p. 3",
+      "printedPage": "3",
+      "evidence": "Table 1 の標本 ZMA.INS.LEPI.40 に学名と Food plant を記載。",
+      "before": null,
+      "after": "host-nov26-source-0616-nishikigi,species-0616,ニシキギ,ニシキギ科,文献,,,Turner et al. (2010) p. 3,日本産標本 ZMA.INS.LEPI.40 の食餌植物として記載 / 観察条件は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-0619-mayumi",
+      "insectId": "species-0619",
+      "source": "Turner et al. (2010) p. 3",
+      "printedPage": "3",
+      "evidence": "Table 1 の標本 ZMA.INS.LEPI.34 に学名と Food plant を記載。",
+      "before": null,
+      "after": "host-nov26-source-0619-mayumi,species-0619,マユミ,ニシキギ科,文献,,,Turner et al. (2010) p. 3,日本産標本 ZMA.INS.LEPI.34 の食餌植物として記載 / 観察条件は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-0636-tsurumasaki",
+      "insectId": "species-0636",
+      "source": "Turner et al. (2010) p. 3",
+      "printedPage": "3",
+      "evidence": "Table 1 の標本 ZMA.INS.LEPI.1 に学名と Food plant を記載。",
+      "before": null,
+      "after": "host-nov26-source-0636-tsurumasaki,species-0636,ツルマサキ,ニシキギ科,文献,,,Turner et al. (2010) p. 3,日本産標本 ZMA.INS.LEPI.1 の食餌植物として記載 / 観察条件は未記載"
+    },
+    {
+      "recordId": "host-nov26-source-21040-akinire",
+      "insectId": "species-21040",
+      "source": "秋元信一 (1983) p. 89",
+      "printedPage": "89",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21040-akinire,species-21040,アキニレ,ニレ科,野外（国内）,葉,,秋元信一 (1983) p. 89,京都で葉巻型虫えいから有翅成虫を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21045-harunire",
+      "insectId": "species-21045",
+      "source": "秋元信一 (1983) p. 64",
+      "printedPage": "64",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21045-harunire,species-21045,ハルニレ,ニレ科,野外（国内）,葉,,秋元信一 (1983) p. 64,札幌で葉巻型虫えいからホロタイプを採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21046-harunire",
+      "insectId": "species-21046",
+      "source": "秋元信一 (1983) p. 56",
+      "printedPage": "56",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21046-harunire,species-21046,ハルニレ,ニレ科,野外（国内）,葉,,秋元信一 (1983) p. 56,札幌で葉巻型虫えいからホロタイプを採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21047-harunire",
+      "insectId": "species-21047",
+      "source": "秋元信一 (1983) p. 52",
+      "printedPage": "52",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21047-harunire,species-21047,ハルニレ,ニレ科,野外（国内）,葉,,秋元信一 (1983) p. 52,札幌で葉巻型虫えいから新基準標本を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21047-kinmizuhiki",
+      "insectId": "species-21047",
+      "source": "秋元信一 (1983) p. 52",
+      "printedPage": "52",
+      "evidence": "原著の種見出しと標本記録を照合。 日本原色アブラムシ図鑑 p.457 では夏寄主を不明と記載する。原著 p.55 にも根上の無翅成虫を記載。",
+      "before": null,
+      "after": "host-nov26-source-21047-kinmizuhiki,species-21047,キンミズヒキ,バラ科,野外（国内）,根,成虫,秋元信一 (1983) p. 52,札幌で根から無翅成虫5個体を採集 / 二次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21049-harunire",
+      "insectId": "species-21049",
+      "source": "秋元信一 (1983) p. 76",
+      "printedPage": "76",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21049-harunire,species-21049,ハルニレ,ニレ科,野外（国内）,葉,成虫,秋元信一 (1983) p. 76,定山渓で葉巻型虫えいから有翅成虫を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21049-ohyou",
+      "insectId": "species-21049",
+      "source": "秋元信一 (1983) p. 76",
+      "printedPage": "76",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21049-ohyou,species-21049,オヒョウ,ニレ科,野外（国内）,葉,成虫,秋元信一 (1983) p. 76,網走で葉巻型虫えいから有翅成虫を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21050-harunire",
+      "insectId": "species-21050",
+      "source": "秋元信一 (1983) p. 69",
+      "printedPage": "69",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21050-harunire,species-21050,ハルニレ,ニレ科,野外（国内）,葉,,秋元信一 (1983) p. 69,札幌で葉巻型虫えいから有翅成虫を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21050-sedum",
+      "insectId": "species-21050",
+      "source": "秋元信一 (1983) p. 69",
+      "printedPage": "69",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21050-sedum,species-21050,マンネングサ属,ベンケイソウ科,野外（国内）,根,成虫,秋元信一 (1983) p. 69,札幌で根から無翅成虫1個体を採集 / 植物は原著で Sedum sp."
+    },
+    {
+      "recordId": "host-nov26-source-21051-epilobium",
+      "insectId": "species-21051",
+      "source": "秋元信一 (1983) p. 61",
+      "printedPage": "61",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21051-epilobium,species-21051,アカバナ属,アカバナ科,野外（国内）,根,成虫,秋元信一 (1983) p. 61,定山渓で根から無翅成虫のホロタイプなどを採集 / 植物は属までの同定"
+    },
+    {
+      "recordId": "host-nov26-source-21052-harunire",
+      "insectId": "species-21052",
+      "source": "秋元信一 (1983) p. 48",
+      "printedPage": "48",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21052-harunire,species-21052,ハルニレ,ニレ科,野外（国内）,葉,成虫,秋元信一 (1983) p. 48,札幌で葉巻型虫えいから有翅成虫を採集 / 幹母は他種が形成した虫えいを利用する"
+    },
+    {
+      "recordId": "host-nov26-source-21052-salix",
+      "insectId": "species-21052",
+      "source": "秋元信一 (1983) p. 48",
+      "printedPage": "48",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21052-salix,species-21052,ヤナギ属,ヤナギ科,野外（国内）,根,成虫,秋元信一 (1983) p. 48,定山渓で根から二次寄主世代の成虫1個体を採集 / 植物は属までの同定"
+    },
+    {
+      "recordId": "host-nov26-source-21053-akinire",
+      "insectId": "species-21053",
+      "source": "秋元信一 (1983) p. 43",
+      "printedPage": "43",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21053-akinire,species-21053,アキニレ,ニレ科,野外（国内）,芽,幼虫,秋元信一 (1983) p. 43,大阪府美原で初期虫えいと展開中の芽から幹母幼虫を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21054-keyaki",
+      "insectId": "species-21054",
+      "source": "秋元信一 (1983) p. 84",
+      "printedPage": "84",
+      "evidence": "原著の種見出しと標本記録を照合。",
+      "before": null,
+      "after": "host-nov26-source-21054-keyaki,species-21054,ケヤキ,ニレ科,野外（国内）,葉,,秋元信一 (1983) p. 84,札幌でケヤキの葉巻型虫えいからホロタイプを採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21040-ringo",
+      "insectId": "species-21040",
+      "source": "秋元信一 (1983) p. 93",
+      "printedPage": "93",
+      "evidence": "秋元 (1983) p.93 が Takahashi (1963) の標本原産植物と国内二次寄主を明記。",
+      "before": null,
+      "after": "host-nov26-source-21040-ringo,species-21040,リンゴ,バラ科,文献,根,,秋元信一 (1983) p. 93,リンゴの根から得た標本に基づく高橋の種記載を引用 / 二次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21048-ringo",
+      "insectId": "species-21048",
+      "source": "木村佳子 (2010) p. 125",
+      "printedPage": "125",
+      "evidence": "原著の方法・結果を照合。",
+      "before": null,
+      "after": "host-nov26-source-21048-ringo,species-21048,リンゴ,バラ科,野外（国内）,枝・幹,,木村佳子 (2010) p. 125,青森県の試験圃場で品種「ふじ」の枝幹を吸汁するコロニーを調査"
+    },
+    {
+      "recordId": "hostplant-902700",
+      "insectId": "species-21041",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "454",
+      "evidence": "原本のナキリスゲを読み直し、カンスゲとの併記を確認。",
+      "before": "hostplant-902700,species-21041,ナリヒラスゲ,,文献,茎部,,日本原色アブラムシ図鑑,密集して寄生する / 蝋状物質におおわれほとんど見えない",
+      "after": "hostplant-902700,species-21041,ナキリスゲ,カヤツリグサ科,文献,茎部,,日本原色アブラムシ図鑑,茎部に密集して寄生する"
+    },
+    {
+      "recordId": "hostplant-902707",
+      "insectId": "species-21044",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "456",
+      "evidence": "原本 p.456 に記載された種と植物を確認し、欠けていた植物の科を登録。",
+      "before": "hostplant-902707,species-21044,ハンショウヅル,,文献,茎、ときに根,,日本原色アブラムシ図鑑,群棲するが個体数は少ない",
+      "after": "hostplant-902707,species-21044,ハンショウヅル,キンポウゲ科,文献,茎、ときに根,,日本原色アブラムシ図鑑,群棲するが個体数は少ない"
+    },
+    {
+      "recordId": "hostplant-902708",
+      "insectId": "species-23149",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "456–457",
+      "evidence": "p.456の本種欄にハルニレはない。隣のp.457ニレワタムシの欄の植物。正しい種は原著に基づく別行で掲載。",
+      "before": "hostplant-902708,species-23149,ハルニレ,ニレ科,文献,葉裏,,日本原色アブラムシ図鑑,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-902709",
+      "insectId": "species-23149",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "456–457",
+      "evidence": "p.456の本種欄にアキニレはない。p.457の旧図鑑内で記述が一致せず、秋元 (1983) の識別表でアキニレの寄主記録をアキニレワタムシに対応付けた。",
+      "before": "hostplant-902709,species-23149,アキニレ,ニレ科,文献,葉裏,,日本原色アブラムシ図鑑,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-902702",
+      "insectId": "species-21059",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "455",
+      "evidence": "p.455 は寄主名を列挙するがアズマザサの部位は未記載。",
+      "before": "hostplant-902702,species-21059,アズマザサ,イネ科,文献,クマザサの根、ケヤキでは虫癭,,日本原色アブラムシ図鑑,",
+      "after": "hostplant-902702,species-21059,アズマザサ,イネ科,文献,,,日本原色アブラムシ図鑑,"
+    },
+    {
+      "recordId": "hostplant-902703",
+      "insectId": "species-21059",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "455",
+      "evidence": "p.455 の二次寄主クマザサの根。",
+      "before": "hostplant-902703,species-21059,クマザサ,イネ科,文献,クマザサの根、ケヤキでは虫癭,,日本原色アブラムシ図鑑,",
+      "after": "hostplant-902703,species-21059,クマザサ,イネ科,文献,根,,日本原色アブラムシ図鑑,"
+    },
+    {
+      "recordId": "hostplant-902704",
+      "insectId": "species-21059",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "455",
+      "evidence": "p.455 のケヤキ葉上の虫えい。",
+      "before": "hostplant-902704,species-21059,ケヤキ,ニレ科,文献,クマザサの根、ケヤキでは虫癭,,日本原色アブラムシ図鑑,",
+      "after": "hostplant-902704,species-21059,ケヤキ,ニレ科,文献,葉,,日本原色アブラムシ図鑑,"
+    },
+    {
+      "recordId": "hostplant-902705",
+      "insectId": "species-21059",
+      "source": "秋元信一 (1985) p. 16",
+      "printedPage": "16",
+      "evidence": "旧図鑑もハルニレを挙げるが、秋元 (1985) はハルニレ樹皮の秋移住虫を誤飛来として明記。",
+      "before": "hostplant-902705,species-21059,ハルニレ,ニレ科,文献,クマザサの根、ケヤキでは虫癭,,日本原色アブラムシ図鑑,",
+      "after": null
+    },
+    {
+      "recordId": "hostplant-902724",
+      "insectId": "species-21065",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "464",
+      "evidence": "p.464 にハルニレ葉に虫えい。",
+      "before": "hostplant-902724,species-21065,ハルニレ,ニレ科,文献,イネ科植物では根,,日本原色アブラムシ図鑑,コロニーは小さい",
+      "after": "hostplant-902724,species-21065,ハルニレ,ニレ科,文献,葉,,日本原色アブラムシ図鑑,コロニーは小さい"
+    },
+    {
+      "recordId": "hostplant-902725",
+      "insectId": "species-21065",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "464",
+      "evidence": "p.464 はアキニレを列挙するが部位記載はハルニレ・イネ科植物のみ。",
+      "before": "hostplant-902725,species-21065,アキニレ,ニレ科,文献,イネ科植物では根,,日本原色アブラムシ図鑑,コロニーは小さい",
+      "after": "hostplant-902725,species-21065,アキニレ,ニレ科,文献,,,日本原色アブラムシ図鑑,コロニーは小さい"
+    },
+    {
+      "recordId": "hostplant-902726",
+      "insectId": "species-21065",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "464",
+      "evidence": "p.464 の根の記載はイネ科に限る。",
+      "before": "hostplant-902726,species-21065,イネ科植物,,文献,イネ科植物では根,,日本原色アブラムシ図鑑,コロニーは小さい",
+      "after": "hostplant-902726,species-21065,イネ科植物,イネ科,文献,根,,日本原色アブラムシ図鑑,コロニーは小さい"
+    },
+    {
+      "recordId": "host-nov26-source-21055-naginatakouju",
+      "insectId": "species-21055",
+      "source": "秋元信一 (1985) p. 40",
+      "printedPage": "40",
+      "evidence": "原著の種見出しと標本欄を照合。",
+      "before": null,
+      "after": "host-nov26-source-21055-naginatakouju,species-21055,ナギナタコウジュ,シソ科,野外（国内）,葉,,秋元信一 (1985) p. 40,札幌で葉の巻き込み部分から幼虫・成虫を採集 / 一次寄主は未確認"
+    },
+    {
+      "recordId": "host-nov26-source-21056-harunire",
+      "insectId": "species-21056",
+      "source": "秋元信一 (1985) p. 30",
+      "printedPage": "30",
+      "evidence": "原著の種見出しと標本欄を照合。",
+      "before": null,
+      "after": "host-nov26-source-21056-harunire,species-21056,ハルニレ,ニレ科,野外（国内）,葉,,秋元信一 (1985) p. 30,ハルニレの虫えいから新基準標本を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21057-harunire",
+      "insectId": "species-21057",
+      "source": "秋元信一 (1985) p. 39",
+      "printedPage": "39",
+      "evidence": "原著の種見出しと標本欄を照合。",
+      "before": null,
+      "after": "host-nov26-source-21057-harunire,species-21057,ハルニレ,ニレ科,野外（国内）,葉,,秋元信一 (1985) p. 39,北海道野幌で葉の虫えいから新基準標本を採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21057-ooketade",
+      "insectId": "species-21057",
+      "source": "秋元信一 (1985) p. 39",
+      "printedPage": "39",
+      "evidence": "原著の種見出しと標本欄を照合。",
+      "before": null,
+      "after": "host-nov26-source-21057-ooketade,species-21057,オオケタデ,タデ科,野外（国内）,根,成虫,秋元信一 (1985) p. 39,北海道野幌で根から二次寄主世代の成虫3個体を採集"
+    },
+    {
+      "recordId": "host-nov26-source-21058-harunire",
+      "insectId": "species-21058",
+      "source": "秋元信一 (1985) p. 34",
+      "printedPage": "34",
+      "evidence": "原著の種見出しと標本欄を照合。",
+      "before": null,
+      "after": "host-nov26-source-21058-harunire,species-21058,ハルニレ,ニレ科,野外（国内）,葉,,秋元信一 (1985) p. 34,北海道美唄で葉の虫えいからホロタイプを採集 / 一次寄主"
+    },
+    {
+      "recordId": "host-nov26-source-21042-kusabotan",
+      "insectId": "species-21042",
+      "source": "青木重幸 (1977) p. 336",
+      "printedPage": "336",
+      "evidence": "原記載の Biological notes を照合。",
+      "before": null,
+      "after": "host-nov26-source-21042-kusabotan,species-21042,クサボタン,キンポウゲ科,野外（国内）,茎・花柄,,青木重幸 (1977) p. 336,茎や花柄に形成されたコロニーを観察"
+    },
+    {
+      "recordId": "host-nov26-source-22458-toriashishouma",
+      "insectId": "species-22458",
+      "source": "日本産カミキリムシ",
+      "printedPage": "356",
+      "evidence": "図鑑原本の種欄で幼虫の根茎への食入を確認。引用元は未照合。",
+      "before": null,
+      "after": "host-nov26-source-22458-toriashishouma,species-22458,トリアシショウマ,ユキノシタ科,飼育,根茎,幼虫,日本産カミキリムシ,同図鑑が森一規（2004）の室内観察を引用 / 野外寄主は未確認"
+    },
+    {
+      "recordId": "host-nov26-source-H595-momi",
+      "insectId": "species-H595",
+      "source": "鈴木邦雄・南雅之 (2018) p. 17",
+      "printedPage": "17",
+      "evidence": "さやばね30号 p.17の引用箇所を確認。松原の原報は未照合。採集のみの他植物は登録しない。",
+      "before": null,
+      "after": "host-nov26-source-H595-momi,species-H595,モミ,マツ科,飼育,葉,成虫,鈴木邦雄・南雅之 (2018) p. 17,松原豊（2017）の飼育観察を引用 / 成虫がモミの葉を摂食した"
+    },
+    {
+      "recordId": "host-nov26-source-6025-hannoki-reared",
+      "insectId": "species-6025",
+      "source": "高島 昭 (2001)",
+      "printedPage": "38",
+      "evidence": "種番号15の解説にハンノキでの幼虫飼育を明記。既存の野外記録とは別の出典。",
+      "before": null,
+      "after": "host-nov26-source-6025-hannoki-reared,species-6025,ハンノキ,カバノキ科,飼育,,幼虫,高島 昭 (2001) p. 38,幼虫をハンノキで飼育。植物部位と飼育の詳細は未記載。"
+    },
+    {
+      "recordId": "host-nov26-source-6040-alnus",
+      "insectId": "species-6040",
+      "source": "高島 昭 (2001)",
+      "printedPage": "40",
+      "evidence": "種番号27の解説にハンノキ属の摂食を明記。属レベルの記載を保持。",
+      "before": null,
+      "after": "host-nov26-source-6040-alnus,species-6040,ハンノキ属,カバノキ科,文献,,幼虫,高島 昭 (2001) p. 40,幼虫の食餌はハンノキ属と記載。植物種と観察条件は未記載。"
+    },
+    {
+      "recordId": "host-nov26-source-6046-tsubaki-oshima",
+      "insectId": "species-6046",
+      "source": "大根田順子ほか (2016年度)",
+      "printedPage": "1",
+      "evidence": "東京都の定点調査報告（平成28年度、32-3、PDF p. 1）に花内幼虫と花弁・子房の食害を記載。",
+      "before": null,
+      "after": "host-nov26-source-6046-tsubaki-oshima,species-6046,ツバキ,ツバキ科,野外（国内）,花,幼虫,大根田順子ほか (2016年度) PDF p. 1,伊豆大島で花内の幼虫と花弁・子房の食害を調査。"
+    }
+  ],
+  "identity_changes": [
+    {
+      "insectId": "species-1816",
+      "before": "species-1816,Tortricidae,ハマキガ科,Olethreutinae,ヒメハマキガ亜科,Olethreutini,ヒメハマキガ族,Zeiraphera,,ratzeburgiana,,,,カラマツイトヒキハマキ,,,,Zeiraphera ratzeburgiana,,,",
+      "after": "species-1816,Tortricidae,ハマキガ科,Tortricinae,ハマキガ亜科,Archipini,カクモンハマキガ族,Ptycholomoides,,aeriferana,,(Herrich-Schäffer),1851,カラマツイトヒキハマキ,,,キスジクロハマキ,\"Ptycholomoides aeriferana (Herrich-Schäffer, 1851)\",,,",
+      "source": "北海道立総合研究機構 林業試験場、国立環境研究所の外来種一覧、北海道の蛾類相（苫小牧研究林）",
+      "evidence": "旧原簿の連続2行に異なる学名が結び付いていた。北海道林業試験場のカラマツ・グイマツ上の幼虫写真と寄主欄を照合し、誤学名の旧行にあったトウヒは採録しない。"
+    }
+  ],
+  "note_changes": [
+    {
+      "recordId": "note-aphid-guide-a231-species-21047-ecology",
+      "insectId": "species-21047",
+      "source": "日本原色アブラムシ図鑑",
+      "printedPage": "457",
+      "before": "ハルニレで卵越冬し、春に葉裏へ偽虫癭をつくる。次世代の有翅形は夏寄主へ移住するが夏寄主は不明で、秋にハルニレへ戻る。 葉裏に寄生する。",
+      "after": "ハルニレで卵越冬し、春に葉裏へ偽虫癭をつくる。次世代の有翅形は夏寄主へ移住し、秋にハルニレへ戻る。同図鑑では夏寄主を不明としている。",
+      "evidence": "旧図鑑の見解と、秋元 (1983) p.52 のキンミズヒキ根からの採集記録が区別できるようにした。"
+    }
+  ],
+  "followup": {
+    "historical_scope": "手元にある食草CSVの変更149版を比較。対象図鑑と旧ウェブ出典で植物名が消え、現行で訪花以外がない38候補・18分類群を抽出。",
+    "held": [
+      "ハナウドヒラタマルハキバガの旧4件は隣のキガシラヒラタマルハキバガに帰属。現行の正しい4件を確認。",
+      "チャイロヒラタモグリガモドキとマルモンイラガの寄主は標準図鑑3で不明。旧記録を復元しない。",
+      "ヒメクルマコヤガのイネコウジは菌類で、類似種との混同が指摘された記録。種の確認まで保留。",
+      "標準図鑑4 pp.86–155の旧抽出445件は現行に対応する寄主関係あり。",
+      "標本や文献で属まで不明な植物は近縁種から補完しない。",
+      "ハネナガモクメキリガのサクラ類は、文献にヒロバモクメキリガとの同定の混同が指摘されているため、原報の分類と食草記録を確認するまで保留。"
+    ],
+    "sources": {
+      "秋元信一 (1983)": "https://eprints.lib.hokudai.ac.jp/repo/huscap/all/9821/27_p37-106.pdf",
+      "秋元信一 (1985)": "https://eprints.lib.hokudai.ac.jp/dspace/bitstream/2115/9827/1/31_p1-79.pdf",
+      "Turner et al. (2010)": "https://pure.uva.nl/ws/files/948165/89153_332269.pdf",
+      "木村佳子 (2010)": "https://www.naro.go.jp/org/tarc/to-noken/DB/DATA/063/063-125.pdf",
+      "青木重幸 (1977)": "https://dl.ndl.go.jp/pid/10652027",
+      "鈴木邦雄・南雅之 (2018)": "https://coleoptera.sakura.ne.jp/SayabaneNS/sayabane%2830%29_10-21.pdf#page=8",
+      "イモムシ・ケムシ図鑑（芋活.com）": "https://www.imokatsu.com/imo-taiwaniraga.htm",
+      "高島 昭 (2001)": "https://www.konchukan.net/pdf/kiberihamushi/Vol29_1/kiberihamushi_29_1_34-49.pdf",
+      "大根田順子ほか (2016年度)": "https://www.tokyo-aff.or.jp/uploaded/attachment/5830.pdf",
+      "Sohn et al. (2005)": "https://doi.org/10.1016/S1226-8615(08)60085-0"
+    }
+  }
+}
