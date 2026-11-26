@@ -20,10 +20,13 @@ test('アオスジアゲハの発生時期は月別・地域別情報を保持�
   const emergence = notes.find((row) => row.note_type === '出現時期');
   assert.equal(
     emergence?.content,
-    '日本西南部の暖地：年3回（第1化4～6月、第2化7～8月、第3化8～9月）',
+    '日本西南部の暖地ではふつう年3化（第1化4〜6月、第2化7〜8月、第3化8〜9月）。',
   );
-  assert.ok(notes.some((row) => row.content.includes('静岡県西部では年4化')));
-  assert.ok(notes.some((row) => row.content.includes('奄美大島付近の暖地')));
+  const regional = notes.find((row) => row.note_type === '出現時期' && row.content.includes('静岡県西部では年4化'));
+  assert.ok(regional?.content.includes('奄美大島付近の暖地'));
+  assert.equal(regional.page, '28');
+  const ecology = notes.find((row) => row.note_type === '生態情報');
+  assert.match(ecology.content, /蛹が休眠を続け、翌春に羽化/);
 });
 
 test('アオスジアゲハの訪花先は幼虫食草と別レコードで保持する', () => {

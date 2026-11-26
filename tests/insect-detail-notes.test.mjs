@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { projectInsectNotes } from '../src/utils/insectNoteRevisions.js';
 import { buildInsectDetailNotes, parseInsectDetailSeason } from '../src/utils/insectDetailNotes.js';
 
 const season = (content, reference) => ({ type: '出現時期', content, reference });
@@ -76,4 +77,25 @@ test('field season excludes captivity, juvenile seasons and isolated dated speci
 test('foreign dates and single records appear in the text without extending the domestic season chart', () => {
   const text = ['日本では7月に成虫が出現する。ヨーロッパでは5〜7月に出現する。', '2012年11月に1頭を採集。'];
   assert.deepEqual(parseInsectDetailSeason(text).months, [7]);
+});
+
+test('source revisions preserve the original row and project independent ecology and adult timing', () => {
+  const original = {
+    record_id: 'note-tamamushi-10002-ecology-5bcb8caafe15',
+    insect_id: 'species-10002',
+    note_type: '生態情報',
+    content: '成虫は5〜6月に発生し、モモなどを後食する。日本では長崎県・鹿児島県・東京都などから記録されている。',
+    reference: '日本産タマムシ大図鑑',
+    page: '',
+    year: '1867',
+  };
+  const result = projectInsectNotes([original])[0];
+  assert.equal(result.note_type, '生態情報');
+  assert.doesNotMatch(result.content, /5〜6月/);
+  assert.match(result.content, /モモなどを後食/);
+  assert.equal(result.year, '2013');
+  assert.equal(result.record_id, original.record_id);
+  assert.match(original.content, /5〜6月/);
+  const changed = { ...original, page: '109' };
+  assert.deepEqual(projectInsectNotes([changed]), [changed]);
 });

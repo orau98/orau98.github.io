@@ -8,6 +8,7 @@
  * @returns {Object} - 分類群別に整理されたデータ
  */
 import logger from './logger.js';
+import { projectInsectNotes } from './insectNoteRevisions.js';
 import { normalizeHostRecord } from './hostRecord.js';
 import { createSafeInsectFilename } from './image.js';
 import {
@@ -193,7 +194,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
   // 総合備考をinsect_idでグループ化
   const generalNotesByInsect = {};
-  generalNotesData.forEach(note => {
+  projectInsectNotes(generalNotesData).forEach(note => {
     if (!note || !note.insect_id) return;
     if (!generalNotesByInsect[note.insect_id]) {
       generalNotesByInsect[note.insect_id] = [];

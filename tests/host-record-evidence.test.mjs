@@ -105,7 +105,11 @@ test('November literature records match the approved page evidence and stay dist
     assert.ok(bibliographyKeys.has(entry.bibliography_key), entry.bibliography_key);
     const insect = insectsById.get(entry.insect_id);
     assert.equal(insect.japanese_name, entry.insect_name, entry.record_id);
-    assert.equal(insect.scientific_name, entry.scientific_name, entry.record_id);
+    const provisional = /^(.+?\s+sp\.\s+\d+) of .+, \d{4}$/.exec(entry.scientific_name);
+    assert.equal(insect.scientific_name, provisional?.[1] || entry.scientific_name, entry.record_id);
+    if (provisional) {
+      assert.ok(insect.notes.includes('文献での暫定表記は「' + entry.scientific_name + '」。'), entry.record_id);
+    }
   }
   for (const entry of approvedHosts) {
     const row = hostsById.get(entry.record_id);

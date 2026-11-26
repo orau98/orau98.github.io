@@ -1,5 +1,6 @@
 import { getPlantUsage, getPlantInsectUsage, uniqueInsects } from './lib/plantUsage.mjs';
 import { normalizeHostRecord } from '../src/utils/hostRecord.js';
+import { projectInsectNotes } from '../src/utils/insectNoteRevisions.js';
 import { buildImageIndex } from './build-image-index.mjs';
 import fs from 'fs';
 import path from 'path';
@@ -2546,7 +2547,7 @@ async function generateMetaPages() {
     if (filteredHostplants > 0) {
       console.warn(`[meta] filtered suspicious hostplant rows: ${filteredHostplants}`);
     }
-    const generalNotesData = generalNotesCsvPath ? loadCSV(generalNotesCsvPath) : [];
+    const generalNotesData = generalNotesCsvPath ? projectInsectNotes(loadCSV(generalNotesCsvPath)) : [];
     
     // バタフライとハムシの従来データも読み込み
     const butterflyData = loadCSVOptional(path.join(__dirname, '../public/butterfly_host.csv'));
