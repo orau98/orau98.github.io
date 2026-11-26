@@ -7,6 +7,7 @@ import Papa from 'papaparse';
 
 import { convertNormalizedDataToStandardFormat } from '../src/utils/normalizedDataParser.js';
 import {
+  getPublicHostPlantEvidenceNotes,
   getPublicHostPlantNote,
   getPublicHostPlantSectionNote,
   getPublicHostPlantNoteSegments,
@@ -188,4 +189,26 @@ test('overseas status is structured and is not repeated in visitor-facing notes'
       assert.equal(getPublicHostPlantNote(row.notes || ''), row.notes || '', `${csvPath}: ${recordId}`);
     }
   }
+});
+
+test('食草欄に飼育の成否と蛹による同定を残す', () => {
+  const rows = parseCsv('normalized_data/hostplants.csv');
+  const records = rows
+    .filter(({ record_id }) => [
+      'host-recheck-1837-adan',
+      'host-recheck-1837-shimaguwa',
+      'host-recheck-5331-tabunoki',
+    ].includes(record_id))
+    .map(({ notes }) => ({ notes }));
+
+  const notes = getPublicHostPlantEvidenceNotes([
+    ...records,
+    { notes: '6月に羽化する / 冬は蛹で越冬する' },
+  ]);
+
+  assert.ok(notes.some((note) => note.includes('羽化せず、蛹の形態に基づく同定')));
+  assert.ok(notes.some((note) => note.includes('1頭が羽化し、2頭は寄生')));
+  assert.ok(notes.some((note) => note.includes('植物別の羽化成否は未記載')));
+  assert.ok(!notes.includes('6月に羽化する'));
+  assert.ok(!notes.includes('冬は蛹で越冬する'));
 });
