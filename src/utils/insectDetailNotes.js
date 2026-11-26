@@ -180,7 +180,8 @@ export function parseInsectDetailSeason(seasonTexts) {
     const overseasAt = sentence.search(overseas);
     const domestic = overseasAt < 0 ? sentence : sentence.slice(0, overseasAt);
     const plotText = domestic.replace(/[。、，]$/, '').replace(DETAILED_RANGE, '$1$2〜$3');
-    if (!hasSeason(plotText) || IMMATURE_OR_CAPTIVE.test(plotText) || INDIVIDUAL_RECORD.test(plotText)) return [];
+    if (!hasSeason(plotText) || IMMATURE_OR_CAPTIVE.test(plotText) || INDIVIDUAL_RECORD.test(plotText)
+      || /偶産(?:種)?(?:と考え|と思われ|の記録)/.test(plotText)) return [];
     return [parseEmergenceTime(plotText)];
   }));
   const collect = (key) => [...new Set(records.flatMap((record) => record[key]))];

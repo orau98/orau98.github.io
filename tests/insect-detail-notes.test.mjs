@@ -99,3 +99,10 @@ test('source revisions preserve the original row and project independent ecology
   const changed = { ...original, page: '109' };
   assert.deepEqual(projectInsectNotes([changed]), [changed]);
 });
+
+test('occasional visitors retain their record months without depicting an established adult season', () => {
+  const statement = '成虫は3〜9月に記録されているが、偶産と考えられる。';
+  const result = buildInsectDetailNotes({ type: 'moth', generalNotes: [season(statement, '日本産蛾類標準図鑑2')] });
+  assert.deepEqual(result.seasonTexts, [statement]);
+  assert.deepEqual(parseInsectDetailSeason(result.seasonTexts).months, []);
+});
