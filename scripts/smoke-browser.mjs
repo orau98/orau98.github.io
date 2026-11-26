@@ -24,7 +24,7 @@ export const PAGES = [
   { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
   { name: '植物ごとの出典（ウスイロオナガシジミ）', path: `/butterfly/${E('ウスイロオナガシジミ')}/`, waitFor: 'ウラジロガシ', plantSources: true },
   { name: '訪花の書誌（アオスジアオリンガ）', path: `/moth/${E('アオスジアオリンガ')}/`, waitFor: 'リョウブ', flowerCitation: true },
-  { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true },
+  { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true, plantTaxonomy: true },
   { name: '観察ガイド（コナラ）', path: `/plant/${E('コナラ')}/`, waitFor: '見つけた場所から虫を調べる', seo: true, observationGuide: true },
   { name: '検索（アゲハ）', path: `/?q=${E('アゲハ')}`, waitFor: '件が見つかりました' },
   { name: '英語トップ', path: '/en/', waitFor: 'results', seo: true },
@@ -153,6 +153,21 @@ async function checkPage(browser, origin, page, viewport) {
       if (expected[key] !== rendered[key]) {
         problems.push(`SEO情報（${key}）が静的HTMLと違う: 「${expected[key]}」→「${rendered[key]}」`);
       }
+    }
+  }
+  if (page.plantTaxonomy) {
+    try {
+      const profile = tab.getByRole('region', { name: '解説・植物情報', exact: true });
+      const familyLink = { name: 'ブナ科 の植物を検索', exact: true };
+      const family = profile.getByRole('link', familyLink);
+      await family.waitFor({ timeout: 10000 });
+      if (await family.getAttribute('href') !== `/?tab=plants&pfamily=${E('ブナ科')}` ||
+          await tab.getByRole('link', familyLink).count() !== 1 ||
+          await tab.getByRole('link', { name: 'ブナ科', exact: true }).count() !== 0) {
+        problems.push('科名と科での絞り込みが植物情報欄に集約されていない');
+      }
+    } catch (error) {
+      problems.push(`植物情報欄の分類を確認できない: ${error.message.split('\n')[0]}`);
     }
   }
   if (page.observationGuide) {
