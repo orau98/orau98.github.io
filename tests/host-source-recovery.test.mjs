@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import test from 'node:test';
 import Papa from 'papaparse';
 import { normalizeHostRecord } from '../src/utils/hostRecord.js';
+import { projectInsectNotes } from '../src/utils/insectNoteRevisions.js';
 import { getCompactReferenceMeta } from '../src/utils/sourceLinks.js';
 
 const read = (relative) => fs.readFileSync(new URL(relative, import.meta.url), 'utf8');
@@ -75,7 +76,13 @@ test('図鑑の隣り合う欄の寄主を別種へ移さない', () => {
     .filter((row) => !row.isFlowerVisit);
   assert.ok(!hosts('species-3868').some((record) => record.name === 'コメツガ'));
   assert.deepEqual(hosts('species-3869').map((record) => record.name), ['コメツガ']);
-  assert.match(read('../normalized_data/general_notes.csv'), /note-1001649[^\r\n]+針葉樹を含む幅広い植物/);
+  const notes = Papa.parse(read('../normalized_data/general_notes.csv'), { header: true, skipEmptyLines: true });
+  const original = notes.data.find((row) => row.record_id === 'note-1001649');
+  assert.equal(original.content, '幼虫で越冬する。成虫は灯火に飛来し、昼間にも花を訪れて吸蜜する。');
+  assert.match(projectInsectNotes([original])[0].content, /針葉樹を含む幅広い植物/);
+  const habitat = notes.data.find((row) => row.record_id === 'note-nov26-source-0265-dead-cycas');
+  assert.equal(habitat.note_type, '生態情報');
+  assert.equal(getCompactReferenceMeta(habitat.reference).location, 'p. 124');
 });
 
 test('カラマツイトヒキハマキの正しい学名に原典の寄主を結び付ける', () => {
