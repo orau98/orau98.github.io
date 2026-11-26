@@ -88,3 +88,21 @@ export const getPublicHostPlantSectionNote = (note = '') =>
     .filter((segment) => !isInternalHostPlantNoteSegment(segment))
     .filter((segment) => !isInternalCatalogNoteSegment(segment))
     .join(' / ');
+
+const isLifecycleNote = (segment) =>
+  /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(segment);
+
+const mentionsPlantPart = (segment) =>
+  /葉|花|蕾|茎|根|枝|幹|樹皮|果実|種子|花粉|（[^）]*科）/.test(segment);
+
+const describesRearingOutcome = (segment) =>
+  /から(?:の)?羽化|羽化(?:個体|標本)|(?:[0-9０-９]+|全)頭(?:が|とも)?羽化/.test(segment)
+  || (/飼育|蛹|同定/.test(segment) && /羽化(?:せず|しなかった)/.test(segment));
+
+// 出現時期の重複は省き、飼育の成否や同定の根拠は食草欄に残す。
+export const getPublicHostPlantEvidenceNotes = (records = []) =>
+  [...new Set(records.flatMap(({ notes }) =>
+    getPublicHostPlantNoteSegments(notes).filter((segment) =>
+      !isLifecycleNote(segment) || mentionsPlantPart(segment) || describesRearingOutcome(segment),
+    ),
+  ))];

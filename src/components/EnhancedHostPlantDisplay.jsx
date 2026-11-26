@@ -11,7 +11,7 @@ import { buildJapaneseReferenceLabel, getPrimaryEnglishName } from '../utils/eng
 import { formatScientificNameReact } from '../utils/scientificNameFormatter.jsx';
 import { getHostResourceType } from '../utils/hostResource';
 import { HOST_STYLE, FLOWER_STYLE, buildShowMoreLabel } from '../utils/hostVisitStyle';
-import { getPublicHostPlantNoteSegments } from '../utils/publicHostPlantNotes';
+import { getPublicHostPlantEvidenceNotes } from '../utils/publicHostPlantNotes';
 import { buildPlantUseSummary } from '../utils/plantUseSummary';
 import {
   getObservationTypeCategory,
@@ -176,24 +176,6 @@ const getPlantPartLabel = (plantPart, isEnglish = false) => {
   })[plantPart] || plantPart;
 };
 
-// 食草欄の備考から、植物の利用に関係する文だけを取り出す（出現時期など生活史の重複は除く）
-const isLifecycleNote = (s) => /地中性|越冬|年[0-9一二三]化|出現|発生|羽化/.test(s);
-const isPlantRelevantNote = (s) => /葉|花|蕾|若葉|茎|根|枝|幹|樹皮|果実|種子|花粉/.test(s) || /（[^）]*科）/.test(s);
-// 羽化時期のメモは除外し、寄主からの羽化や出典標本を根拠とする備考は表示する。
-const isHostEmergenceEvidence = (s) => /から(?:の)?羽化|羽化(?:個体|標本)/.test(s);
-const getPlantRelevantNotes = (records = []) => {
-  const notes = new Set();
-  records.forEach((record) => {
-    if (!record.notes) return;
-    getPublicHostPlantNoteSegments(record.notes).forEach((segment) => {
-      if (!segment) return;
-      if (isLifecycleNote(segment) && !isPlantRelevantNote(segment) && !isHostEmergenceEvidence(segment)) return;
-      notes.add(segment);
-    });
-  });
-  return Array.from(notes);
-};
-
 const getObservationLabel = ({ label, regionLabel }, isEnglish) =>
   regionLabel ? (isEnglish ? `${label} (${regionLabel})` : `${label}（${regionLabel}）`) : label;
 
@@ -293,7 +275,7 @@ const PlantUseRow = ({ item, label, familyLabel, locale, sharedUsage }) => {
               label={sourceLabel}
               isEnglish={isEnglish}
               items={sources.flatMap((source) => {
-                const notes = getPlantRelevantNotes(source.records)
+                const notes = getPublicHostPlantEvidenceNotes(source.records)
                   .map((note) => note.replace(sourcePagePattern, '').replace(/（\s*）|\(\s*\)/g, '').trim())
                   .filter(Boolean);
                 if (!source.key && notes.length === 0) return [];
@@ -333,7 +315,7 @@ const PlantUseList = ({ groups, kind = 'host', locale = 'ja', plantDetails = {} 
         evidence,
       };
     },
-    notesOf: (group) => getPlantRelevantNotes(group.records),
+    notesOf: (group) => getPublicHostPlantEvidenceNotes(group.records),
   }), [groups, isEnglish]);
 
   if (summary.plantCount === 0) return null;
@@ -524,7 +506,7 @@ const HostPlantDetailCard = React.memo(({ plantGroup, locale = 'ja', plantDetail
       {/* 出典情報（必要時のみ下段に表示） */}
       {evidence.map(({ key, presentation, records }) => {
         const references = records.map((record) => record.reference).filter(Boolean);
-        const notes = getPlantRelevantNotes(records);
+        const notes = getPublicHostPlantEvidenceNotes(records);
         if (evidence.length === 1 && references.length === 0 && notes.length === 0) return null;
         return (
           <div key={key} className="mt-2 pt-2 border-t border-emerald-200/30 dark:border-emerald-700/30 space-y-1.5">
