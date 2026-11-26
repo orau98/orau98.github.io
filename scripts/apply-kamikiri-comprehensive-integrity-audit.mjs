@@ -156,13 +156,22 @@ function verifyPdf() {
 function validateTaxonIdentities(audit) {
   const insectsPath = path.join(DATA_ROOT, 'normalized_data', 'insects.csv');
   const byId = new Map(parseCsv(insectsPath).map((row) => [row.insect_id, row]));
+  const identityUpdates = new Map(audit.metadata_cleanup_actions
+    .filter((action) => action.op === 'update_insect' && action.before && action.after)
+    .map((action) => [action.insect_id, action]));
   for (const action of [...audit.actions, ...audit.metadata_cleanup_actions]) {
     const insect = byId.get(action.insect_id);
     if (!insect) throw new Error(`${action.action_id}: current insect is missing`);
-    if (
-      insect.japanese_name !== action.current_japanese_name ||
-      insect.scientific_name !== action.current_scientific_name
-    ) {
+    const matchesCurrent = insect.japanese_name === action.current_japanese_name
+      && insect.scientific_name === action.current_scientific_name;
+    // An audit can be rerun on either exact side of its own approved identity update.
+    const update = identityUpdates.get(action.insect_id);
+    const matchesBefore = update
+      && update.after.japanese_name === action.current_japanese_name
+      && update.after.scientific_name === action.current_scientific_name
+      && insect.japanese_name === update.before.japanese_name
+      && insect.scientific_name === update.before.scientific_name;
+    if (!matchesCurrent && !matchesBefore) {
       throw new Error(`${action.action_id}: current taxon identity drift`);
     }
   }
