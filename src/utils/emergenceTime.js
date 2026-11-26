@@ -101,6 +101,11 @@ const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorM
 
 const MONTH_NUMBER = String.raw`\d{1,2}`;
 const RANGE_MARK = '[〜~－–—−-]';
+const MONTH_LIST_ITEM = String.raw`${MONTH_NUMBER}(?:\s*${RANGE_MARK}\s*${MONTH_NUMBER})?`;
+const ELIDED_MONTH_LIST = new RegExp(
+  String.raw`(?<![\d.年])(?:${MONTH_LIST_ITEM}\s*[、,・]\s*)+${MONTH_LIST_ITEM}\s*月`,
+  'g',
+);
 const PART = `(?:[上中下](?:[・、]?[上中下])?旬|初旬|初め|初|末|前半|後半|[上中下](?=\\s*(?:${RANGE_MARK}|[、,。]|$)))`;
 const APPROXIMATE = '(?:頃|ごろ)?';
 const DATE = String.raw`(?:${MONTH_NUMBER}\s*月?\s*${RANGE_MARK}\s*)?${MONTH_NUMBER}\s*月\s*(?:${PART})?\s*${APPROXIMATE}`;
@@ -127,6 +132,7 @@ const UNPARSED_EXPLICIT_RANGE = new RegExp(
   'g',
 );
 const NEGATED_APPEARANCE = /^\s*(?:頃|ごろ)?(?:までは?|には?|では?|は)?\s*(?:見られ|現れ|出現し|発生し|羽化し)な(?:い|かった)/;
+const PEAK_DAY = /ピーク\s*(?:は|が|:)\s*\d{1,2}\s*月\s*\d{1,2}\s*日(?:前後|頃|ごろ|過ぎ)?(?=\s*(?:[、,)]|$))/g;
 
 const KANJI_MONTHS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
 
@@ -134,9 +140,10 @@ function normalizeCalendarText(value) {
   return String(value ?? '').normalize('NFKC')
     .replace(/(?<![一二三四五六七八九十])(?:十[一二]?|[一二三四五六七八九])(?=\s*月)/g,
       (word) => String(KANJI_MONTHS.indexOf(word) + 1))
-    // 旧データの「10-12、1-5月」は二つの月範囲として読む。
-    .replace(/(?<![\d.])(?:\d{1,2}\s*[-–−]\s*\d{1,2}\s*[、,]\s*)+(?=\d{1,2}\s*[-–−]\s*\d{1,2}\s*月)/g,
-      (list) => list.replace(/(\d)(?=\s*[、,])/g, '$1月'));
+    // 末尾だけに「月」が付く列挙では、各項目に単位を補う。
+    .replace(ELIDED_MONTH_LIST, (list, offset, text) => NEGATED_APPEARANCE.test(text.slice(offset + list.length))
+      ? list
+      : list.replace(/(\d)(?=\s*[、,・])/g, '$1月'));
 }
 
 export const hasCalendarMonth = (text) => /\d{1,2}\s*月/.test(normalizeCalendarText(text));
@@ -174,7 +181,8 @@ function addDateRange(months, periods, firstMonth, firstPart, lastMonth, lastPar
 }
 
 function collectNumericPeriods(text, months, periods) {
-  let remaining = text;
+  // 特定の日付で示されたピークを、発生月全体として扱わない。
+  let remaining = text.replace(PEAK_DAY, '。');
   // 完結した期間を先に消費し、両端の月を単独月として再解釈しない。
   for (const pattern of [CONTINUOUS_APPEARANCE, EXPLICIT_RANGE]) {
     remaining = remaining.replace(pattern, (phrase, startText, nextYear, endText, offset, sentence) => {

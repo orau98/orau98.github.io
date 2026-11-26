@@ -40,7 +40,7 @@ const OBSERVATION_GUIDES = new Map([
         label: '虫こぶ',
         text: 'ケヤキで虫こぶを作るアブラムシが記録されています。',
         examples: [
-          { id: 'species-21059', part: 'クマザサの根、ケヤキでは虫癭' },
+          { id: 'species-21059', part: '葉の虫こぶ' },
         ],
       },
       {
