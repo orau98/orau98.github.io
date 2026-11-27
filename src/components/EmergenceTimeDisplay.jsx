@@ -194,21 +194,12 @@ const EmergenceTimeDisplay = ({ emergenceTime, source, compact = false, dense = 
           ))}
         </div>
 
-        {/* 凡例（ツールチップはタッチ端末で見えないため常時表示する） */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-3 w-5 rounded-sm bg-orange-300" aria-hidden="true" />
-            {seasonRecords
-              ? (isEnglish ? 'Adult season across records' : '掲載記録をまとめた発生期')
-              : (isEnglish ? 'Adult season' : '発生期')}
-          </span>
-          {fuzzyPeriods.length > 0 && (
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-3 w-5 rounded-sm bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-300/70 dark:from-orange-300/60 dark:to-orange-200/15 dark:ring-orange-300/60" aria-hidden="true" />
-              {isEnglish ? 'Broad seasonal note (e.g. "spring")' : '幅のある記述（「春」など）'}
-            </span>
-          )}
-        </div>
+        {fuzzyPeriods.some((period) => !activePeriods.includes(period)) && (
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <span className="h-3 w-5 shrink-0 rounded-sm bg-gradient-to-b from-orange-200/80 to-orange-50/15 ring-1 ring-inset ring-orange-300/70 dark:from-orange-300/60 dark:to-orange-200/15 dark:ring-orange-300/60" aria-hidden="true" />
+            <span>{isEnglish ? 'Broad seasonal note (e.g. "spring")' : '幅のある記述（「春」など）'}</span>
+          </div>
+        )}
       </div>}
       <InsectDetailNoteList
         notes={seasonRecords ?? [{ content: displayText, sources: source }]}
