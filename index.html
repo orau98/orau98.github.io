@@ -14,7 +14,7 @@
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#2c5530" />
     <!-- FOUC防止: Reactマウント前にテーマを確定させる（App.jsxのtheme初期化と同一ロジック） -->
-    <script>
+    <script data-theme-bootstrap>
       (function () {
         try {
           var theme = localStorage.getItem('theme');

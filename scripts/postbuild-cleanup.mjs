@@ -6,6 +6,7 @@ import { stripPrerenderedAds } from '../src/utils/prerenderedSnapshot.js';
 import { RETAINED_INSECT_JPEGS as RETAINED_INSECT_JPEG_LIST } from './lib/imageAssetConstants.mjs';
 import { ROUTE_PRELOAD_ATTRIBUTE, stripHomeOnlyPreloads } from './lib/earlyRouteResources.mjs';
 import { mergePlantEntries } from '../src/utils/plantListMerge.js';
+import { SITE_LOGO_SRC } from '../src/utils/siteBrand.js';
 import { isIndexablePlantProfile } from './lib/dataLiteBuilders.mjs';
 
 // Keep a small margin below GitHub Pages' 1 GiB published-site limit.
@@ -352,6 +353,7 @@ const extractProfileHead = (html = '') => {
     // postbuild rerun and gradually inflate the Pages artifact.
     .filter((tag) => (
       !/\bhref=["'](?:https:\/\/orau98\.github\.io)?\/assets\/index-[^"']+\.css/i.test(tag) &&
+      !/\bhref=["'][^"']*\/meta-styles\.css(?:[?#][^"']*)?["']/i.test(tag) &&
       !/\brel=["']preload["']/i.test(tag)
     ))
     .join('\n    ');
@@ -382,15 +384,31 @@ const extractProfileHead = (html = '') => {
 // The app keeps showing a copy of it until the React page is ready.
 // Standalone meta pages have their own ad slot, but only the app should
 // request ads on a profile route.
-const extractProfileBody = (html = '') => {
+const extractProfileBody = (html = '', locale = 'ja') => {
   const body = String(html || '').match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
-  const main = body.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
+  const main = body.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   if (!main) return '';
   // 種名・植物名の見出し（h1）は main の手前の meta-header にあるため、一緒に載せる
   const heading = body.match(
     /<header\b[^>]*\bclass=["'][^"']*\bmeta-header\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i,
   )?.[0] || '';
-  return stripPrerenderedAds(`${heading}${main}`)
+  const photo = main.match(/<section\b[^>]*\bclass=["'](?:image-section|image-gallery)["'][^>]*>[\s\S]*?<\/section>/i)?.[0] || '';
+  const copy = photo ? main.replace(photo, '') : main;
+  const home = locale === 'en' ? '/en/' : '/';
+  const brand = locale === 'en' ? EN_SITE_NAME : '昆虫植物図鑑';
+  return stripPrerenderedAds(`
+    <div class="profile-opening">
+      <div class="profile-opening-brand">
+        <a href="${home}">
+          <img src="${SITE_LOGO_SRC}" width="48" height="48" alt="">
+          <span>${brand}</span>
+        </a>
+      </div>
+      <div class="profile-opening-layout${photo ? ' profile-opening-with-photo' : ''}">
+        ${photo ? `<div class="profile-opening-photo">${photo}</div>` : ''}
+        <main class="meta-content">${heading}${copy}</main>
+      </div>
+    </div>`)
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/>\s+</g, '><')
@@ -444,6 +462,9 @@ const extractAnalyticsLoaderScript = (indexHtml) => {
   if (!String(indexHtml || '').includes('G-MFEQF99G0H')) return '';
   return '<script src="/assets/analytics-loader.js" data-measurement-id="G-MFEQF99G0H" data-send-page-view="false"></script>';
 };
+
+const extractThemeBootstrap = (indexHtml) =>
+  indexHtml.match(/<script data-theme-bootstrap>[\s\S]*?<\/script>/i)?.[0] || '';
 
 const extractSiteIconTags = (indexHtml) => {
   const headMatch = String(indexHtml || '').match(/<head[^>]*>([\s\S]*?)<\/head>/i);
@@ -621,7 +642,7 @@ const buildInsectProfileRouteShell = ({
   const isEnglish = locale === 'en';
   const siteName = isEnglish ? EN_SITE_NAME : '昆虫植物図鑑';
   const profileHead = extractProfileHead(profileHtml);
-  const staticProfileBody = extractProfileBody(profileHtml);
+  const staticProfileBody = extractProfileBody(profileHtml, locale);
   const fallbackTitle = isEnglish
     ? `${routeName} | Insect profile | ${siteName}`
     : `${routeName} | 昆虫詳細 - ${siteName}`;
@@ -667,6 +688,7 @@ const buildInsectProfileRouteShell = ({
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+${extractThemeBootstrap(indexHtml)}
 ${siteIconTags}
     <title>${escapeHtmlText(title)}</title>
     <meta name="description" content="${escapeHtmlAttr(description)}">
@@ -895,7 +917,7 @@ const buildPlantProfileRouteShell = (
   profileHtml = '',
 ) => {
   const route = buildPlantRouteMetadata(plantName, locale, canonicalIndexable, profileHtml);
-  const staticProfileBody = extractProfileBody(profileHtml);
+  const staticProfileBody = extractProfileBody(profileHtml, locale);
   const canonicalUrl = `${BASE_ORIGIN}${route.canonicalPath}`;
   const assetTags = extractSpaAssetTags(indexHtml);
   const siteIconTags = extractSiteIconTags(indexHtml);
@@ -940,6 +962,7 @@ const buildPlantProfileRouteShell = (
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+${extractThemeBootstrap(indexHtml)}
 ${siteIconTags}
     <title>${escapeHtmlText(route.title)}</title>
     <meta name="description" content="${escapeHtmlAttr(route.description)}">
