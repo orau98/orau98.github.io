@@ -119,6 +119,10 @@ const EXPLICIT_RANGE = new RegExp(
   String.raw`${DATE_PREFIX}(?<start>${DATE})\s*(?:に?${APPEARANCE})?\s*(?:${RANGE_MARK}|から|より)\s*${SCOPE}\s*${NEXT_YEAR}\s*(?<end>${DATE}|${PART})`,
   'g',
 );
+const RANGE_ENDING_IN_SEASON = new RegExp(
+  String.raw`${DATE_PREFIX}(${DATE})\s*(?:から|より)\s*((?:早|初|晩|盛)?[春夏秋冬])(?:季|期)?\s*(?:まで|にかけて)`,
+  'g',
+);
 const CONTINUOUS_APPEARANCE = new RegExp(
   String.raw`${DATE_PREFIX}(?<start>${DATE})\s*(?:から|より|に)?\s*(?:成虫[がは])?${APPEARANCE_CLAUSE}\s*[、,]?\s*(?:(?:成虫(?:で|のまま))?越冬(?:して|し[、,]?))?\s*${SCOPE}\s*${NEXT_YEAR}\s*(?<end>${DATE})(?=\s*(?:まで|にかけて))`,
   'g',
@@ -183,6 +187,19 @@ function addDateRange(months, periods, firstMonth, firstPart, lastMonth, lastPar
 function collectNumericPeriods(text, months, periods) {
   // 特定の日付で示されたピークを、発生月全体として扱わない。
   let remaining = text.replace(PEAK_DAY, '。');
+  // 季節で終わる範囲は、始点と季節の間だけを確定枠にする。
+  // 季節そのものは collectFuzzyEmergenceHints が目安として扱う。
+  remaining = remaining.replace(RANGE_ENDING_IN_SEASON, (phrase, startText, season, offset, sentence) => {
+    if (NEGATED_APPEARANCE.test(sentence.slice(offset + phrase.length))) return '。';
+    const [month, firstPart, , firstMonth] = readDate(startText);
+    if (firstMonth < 1 || month > 12) return '。';
+    addDateRange(months, periods, firstMonth, firstMonth === month ? firstPart : 1, month, 3, false);
+    const seasonMonths = FUZZY_SEASON_CUES.find(({ pattern }) => pattern.test(season))?.months || [];
+    if (!seasonMonths.includes(month)) {
+      addBridgePeriodsUntilSeason(months, periods, month, seasonMonths);
+    }
+    return '。';
+  });
   // 完結した期間を先に消費し、両端の月を単独月として再解釈しない。
   for (const pattern of [CONTINUOUS_APPEARANCE, EXPLICIT_RANGE]) {
     remaining = remaining.replace(pattern, (phrase, startText, nextYear, endText, offset, sentence) => {

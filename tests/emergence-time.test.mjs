@@ -99,3 +99,16 @@ test('specific peak days do not extend the reported adult season', () => {
     assert.deepEqual(parseInsectDetailSeason([text]).periods, periods, text);
   }
 });
+
+test('a numeric start and a seasonal end retain the intervening months', () => {
+  const autumn = parseInsectDetailSeason(['本州では4月から秋まで見られる。']);
+  assert.deepEqual(autumn.months, [4, 5, 6, 7, 8]);
+  assert.deepEqual(autumn.fuzzyMonths, [9, 10, 11]);
+
+  const lateAutumn = parseInsectDetailSeason(['成虫は3月頃から晩秋まで見られる。']);
+  assert.deepEqual(lateAutumn.months, [3, 4, 5, 6, 7, 8, 9]);
+  assert.deepEqual(lateAutumn.fuzzyMonths, [10, 11]);
+
+  assert.deepEqual(parseInsectDetailSeason(['9月下旬から秋まで見られる。']).periods, [9.3]);
+  assert.deepEqual(parseInsectDetailSeason(['4月に出現する。秋にも記録がある。']).months, [4]);
+});
