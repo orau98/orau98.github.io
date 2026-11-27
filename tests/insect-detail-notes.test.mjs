@@ -59,53 +59,6 @@ test('matching dates in editions with distinct locality or conditions are preser
   assert.deepEqual(result.seasonRecords.map((record) => record.content), qualifiers);
 });
 
-test('a bare adult season is redundant when the same source gives the same dates and annual frequency', () => {
-  const guide = '日本産蛾類標準図鑑2';
-  const otherGuide = '日本の冬夜蛾';
-  const summary = season('４～６月', guide);
-  const detailed = { ...season('4〜6月にかけて、年1回成虫は出現する。', guide), page: '372' };
-  for (const notes of [[summary, detailed], [detailed, summary]]) {
-    const result = buildInsectDetailNotes({
-      generalNotes: [...notes, { ...season('4〜5月', otherGuide), page: '102' }],
-    });
-    assert.deepEqual(result.seasonRecords, [
-      { content: detailed.content, sources: [guide + ' p. 372'] },
-      { content: '4〜5月', sources: [otherGuide + ' p. 102'] },
-    ]);
-    assert.deepEqual(parseInsectDetailSeason(result.seasonRecords.map(({ content }) => content)).months, [4, 5, 6]);
-  }
-});
-
-test('season summaries are kept when the longer text has different evidence or precision', () => {
-  const guide = '図鑑';
-  const summary = { ...season('4〜6月', guide), page: '372', year: '2011' };
-  const detail = { ...season('年1化で4〜6月に出現する。', guide), page: '372', year: '2011' };
-  const distinctRecords = [
-    { ...detail, page: '373' },
-    { ...detail, page: '' },
-    { ...detail, year: '2020' },
-    { ...detail, reference: '別の図鑑' },
-    { ...detail, content: '北海道では年1化で4〜6月に出現する。' },
-    { ...detail, content: '成虫は年1回、4〜6月頃に出現する。' },
-    { ...detail, content: '年1化で4月上旬〜6月中旬に出現する。' },
-    { ...detail, content: '成虫は年1化で4〜6月に出現すると考えられる。' },
-  ];
-  for (const record of distinctRecords) {
-    const { seasonRecords } = buildInsectDetailNotes({ generalNotes: [summary, record] });
-    assert.deepEqual(seasonRecords.map(({ content }) => content), [summary.content, record.content]);
-  }
-});
-
-test('redundant summaries with two generations retain the gap and the longer record', () => {
-  const guide = '図鑑';
-  const fullRecord = '成虫は年2化で、4〜5月と8〜9月に出現する。';
-  const result = buildInsectDetailNotes({
-    generalNotes: [season('4〜5月と8〜9月', guide), season(fullRecord, guide)],
-  });
-  assert.deepEqual(result.seasonRecords, [{ content: fullRecord, sources: [guide] }]);
-  assert.deepEqual(parseInsectDetailSeason([fullRecord]).months, [4, 5, 8, 9]);
-});
-
 test('field season excludes captivity, juvenile seasons and isolated dated specimens', () => {
   const result = buildInsectDetailNotes({
     type: 'moth',

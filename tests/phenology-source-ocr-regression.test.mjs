@@ -3,18 +3,19 @@ import fs from 'node:fs';
 import test from 'node:test';
 import Papa from 'papaparse';
 import { buildInsectDetailNotes, parseInsectDetailSeason } from '../src/utils/insectDetailNotes.js';
-import { projectInsectNotes } from '../src/utils/insectNoteRevisions.js';
+import { notesBeforeRedundancyAudit, redundancyAudit } from './fixtures/general-note-redundancy.mjs';
 
 const read = (path) => fs.readFileSync(new URL(path, import.meta.url), 'utf8');
 const canonical = read('../normalized_data/general_notes.csv');
-const notes = new Map(Papa.parse(canonical, { header: true, skipEmptyLines: true }).data
-  .map((row) => [row.record_id, row]));
+const parsedNotes = Papa.parse(canonical, { header: true, skipEmptyLines: true });
+const notes = new Map(parsedNotes.data.map((row) => [row.record_id, row]));
 const audit = JSON.parse(read('../data/source_audits/general-note-ocr-recheck-2026-11-26.json'));
+const previousNotes = notesBeforeRedundancyAudit(notes);
 
 test('原典再確認を行った一般注記と公開用CSVが監査台帳に一致する', () => {
   assert.equal(read('../public/general_notes.csv'), canonical);
   for (const entry of audit.rows) {
-    const row = notes.get(entry.record_id);
+    const row = previousNotes.get(entry.record_id);
     if (entry.decision === 'exclude') {
       assert.equal(row, undefined, entry.record_id);
       continue;
@@ -43,7 +44,7 @@ test('成虫期の原典再照合をCSVに反映し、冊子頁を出典とし�
   });
   assert.deepEqual(ledger.errors, []);
   for (const entry of ledger.data) {
-    const note = notes.get(entry.record_id);
+    const note = previousNotes.get(entry.record_id);
     if (entry.decision === 'remove') {
       assert.equal(note, undefined, entry.record_id);
       continue;
@@ -68,33 +69,46 @@ test('アオセダカシャチホコの2期と北海道の時期を表示する'
   assert.deepEqual(months.toSorted((a, b) => a - b), [5, 6, 7, 8]);
 });
 
-test('発生時期・生態の重複修正は元の行が一致するときだけ公開用データに適用する', () => {
-  const audit = Papa.parse(read('../data/source_audits/general-note-redundancy-recheck-2026-11-27.csv'), {
-    header: true,
-    skipEmptyLines: true,
-  });
-  assert.deepEqual(audit.errors, []);
-  for (const entry of audit.data) {
-    const source = notes.get(entry.record_id);
-    assert.equal(source?.insect_id, entry.insect_id, entry.record_id);
-    const projected = projectInsectNotes([source]);
+test('発生時期と生態情報の原本照合結果が正規化CSVに反映されている', () => {
+  const displayRevisions = JSON.parse(read('../normalized_data/general_note_display_revisions.json'));
+  assert.ok(redundancyAudit.length > 0);
+  assert.equal(new Set(redundancyAudit.map((entry) => entry.record_id)).size, redundancyAudit.length);
+  for (const entry of redundancyAudit) {
+    assert.ok(!Object.hasOwn(displayRevisions, entry.record_id), entry.record_id);
+    const note = notes.get(entry.record_id);
     if (entry.decision === 'exclude') {
-      assert.deepEqual(projected, [], entry.record_id);
+      assert.equal(note, undefined, entry.record_id);
     } else {
-      assert.deepEqual(projected, [{
-        ...source,
+      assert.equal(entry.decision, 'revise', entry.record_id);
+      assert.deepEqual(note, {
+        record_id: entry.record_id,
+        insect_id: entry.insect_id,
         note_type: entry.note_type,
         content: entry.content,
         reference: entry.reference,
         page: entry.printed_page,
-      }], entry.record_id);
+        year: entry.previous_year,
+      }, entry.record_id);
     }
+  }
+});
+
+test('正規化CSVに同じ種・出典・本文の備考を二重登録しない', () => {
+  assert.deepEqual(parsedNotes.errors, []);
+  assert.equal(notes.size, parsedNotes.data.length);
+  const seen = new Map();
+  for (const row of notes.values()) {
+    const key = JSON.stringify([
+      row.insect_id, row.note_type, row.reference, row.page, row.year, row.content,
+    ].map((value) => value.trim()));
+    assert.ok(!seen.has(key), `${seen.get(key)} / ${row.record_id}`);
+    seen.set(key, row.record_id);
   }
 });
 
 test('アトジロキリガは図鑑2の成虫期と年1回の出現を一つにまとめ、冬夜蛾の出典を保持する', () => {
   const rows = [...notes.values()].filter((note) => note.insect_id === 'species-6138');
-  const generalNotes = projectInsectNotes(rows).map((note) => ({ ...note, type: note.note_type }));
+  const generalNotes = rows.map((note) => ({ ...note, type: note.note_type }));
   const { seasonRecords } = buildInsectDetailNotes({ type: 'moth', generalNotes });
   assert.deepEqual(seasonRecords, [
     { content: '成虫は4〜6月にかけて年1回出現する。', sources: ['日本産蛾類標準図鑑2 p. 372'] },

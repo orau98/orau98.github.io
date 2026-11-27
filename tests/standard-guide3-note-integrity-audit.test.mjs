@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import Papa from 'papaparse';
 
 import { collectGeneralNoteIssues } from '../scripts/lib/generalNoteQuality.mjs';
+import { notesBeforeRedundancyAudit } from './fixtures/general-note-redundancy.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const APPLY_SCRIPT = path.join(ROOT, 'scripts', 'apply-standard-guide3-note-integrity-audit.mjs');
@@ -41,11 +42,12 @@ const COLUMNS = ['record_id', 'insect_id', 'note_type', 'content', 'reference', 
 const makeFixture = () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'standard-guide3-note-audit-'));
   const notesPath = path.join(directory, 'general_notes.csv');
-  const rows = Papa.parse(
+  const currentRows = Papa.parse(
     fs.readFileSync(NOTES_PATH, 'utf8').replace(/^\ufeff/, ''),
     { header: true, skipEmptyLines: true },
   ).data;
-  const byId = new Map(rows.map(row => [row.record_id, row]));
+  const byId = notesBeforeRedundancyAudit(currentRows.map(row => [row.record_id, row]));
+  const rows = [...byId.values()];
   // Recover the rows as reviewed in July before applying the original audit.
   for (const entry of followUp.rows) {
     if (entry.reference !== '日本産蛾類標準図鑑3' || entry.decision !== 'include') continue;

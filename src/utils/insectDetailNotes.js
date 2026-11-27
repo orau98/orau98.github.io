@@ -10,23 +10,13 @@ const IMMATURE_OR_CAPTIVE = /幼虫|幼生|幼体|若虫|幼若|卵|蛹|飼育|�
 const ECOLOGY = /越冬|越年|配偶|交尾|産卵|羽化後|飛翔|昼飛|夜行|活動|摂食|後食|食害|食性|食葉|広食|加害|大発生|多発生|越夏|休眠|割り出|材から|寄主|食草|訪花|集ま|棲息|生息|分布|普通種|普通に産|スウィーピング|灯火|飛来/;
 const INDIVIDUAL_RECORD = /\d{4}年\s*\d{1,2}月|[0-9０-９一二三]\s*(?:♂|♀|頭|個体|例のみ)|(?:♂|♀)\s*[0-9０-９一二三]/;
 const DETAILED_RANGE = /^(.*?)(\d{1,2}月[上中下]旬)[〜～~-]\d{1,2}月[上中下]旬に出現し始め、(\d{1,2}月[上中下]旬)まで見られる$/;
-const MONTH_TERM = '(?:1[0-2]|[1-9])月(?:[上中下]旬)?';
-const MONTH_RANGE = `${MONTH_TERM}(?:-${MONTH_TERM})?`;
-const SIMPLE_SEASON = `${MONTH_RANGE}(?:と${MONTH_RANGE})*`;
-const ANNUAL_GENERATIONS = '年(?:[1-9][0-9]?|[一二三四五六七八九十数])(?:回|化)';
-const SEASON_WITH_CONTEXT = new RegExp(
-  `^(?:(?<earlyFrequency>${ANNUAL_GENERATIONS})で?[、,]?(?:成虫は)?)?(?<range>${SIMPLE_SEASON})`
-  + `(?:にかけて?|に|にわたり)?[、,]?(?:(?<lateFrequency>${ANNUAL_GENERATIONS})[、,]?)?`
-  + '(?:成虫[はが])?(?:(?:出現|発生)(?:する)?|見られる)$',
-);
 
 const cleanText = (text) => String(text ?? '').trim();
 const hasText = (text) => Boolean(text) && !/^(?:不明|[-–—])(?:。)?$/.test(text);
-const normalizeNoteText = (text) => text.normalize('NFKC')
+const seasonKey = (text) => text.normalize('NFKC')
   .replace(/[\s。；;]+/g, '')
   .replace(/[〜～~–－]/g, '-')
-  .replace(/(\d)-(\d{1,2}月)/g, '$1月-$2');
-const seasonKey = (text) => normalizeNoteText(text)
+  .replace(/(\d)-(\d{1,2}月)/g, '$1月-$2')
   .replace(/^成虫(?:の発生時期|の出現時期|は)[:：]?/, '')
   .replace(/(?:に(?:発生|出現|羽化)する|に見られる|に(?:あらわれ|現れ)る)$/, '');
 
@@ -81,7 +71,6 @@ function hasEcologyInsteadOfTiming(sentence) {
 function addSentence(records, sentence, source, group) {
   const key = seasonKey(sentence);
   const page = cleanText(group?.page);
-  const year = cleanText(group?.year);
   const citation = source && /^[0-9０-９]/.test(page) && !/[;；]/.test(source)
     ? `${source} p. ${page.replace(/[;；]/g, '・')}`
     : source;
@@ -93,14 +82,12 @@ function addSentence(records, sentence, source, group) {
       existing.citations.add(citation);
     }
     existing.sources.add(source);
-    if (year) existing.years.add(year);
     return;
   }
   records.set(key, {
     text: sentence,
     sources: new Set(source ? [source] : []),
     citations: new Set(citation ? [citation] : []),
-    years: new Set(year ? [year] : []),
     group,
   });
 }
@@ -125,26 +112,6 @@ function groupSentences(records) {
     }
   }
   return rows;
-}
-
-function removeRedundantSeasonSummaries(records) {
-  for (const [key, record] of records) {
-    const detail = SEASON_WITH_CONTEXT.exec(normalizeNoteText(record.text).replace(/^成虫は/, ''))?.groups;
-    if (!detail || detail.earlyFrequency && detail.lateFrequency) continue;
-    const { range } = detail;
-    if (range === key) continue;
-    const summary = records.get(range);
-    if (!summary || normalizeNoteText(summary.text) !== range) continue;
-
-    // The same unqualified period may be independently reported on another page or in another work.
-    if (record.sources.size !== 1 || summary.sources.size !== 1) continue;
-    const [source] = record.sources;
-    if (!summary.sources.has(source) || /[;；]/.test(source)) continue;
-    if (summary.years.size && (record.years.size !== 1 || ![...summary.years].every((year) => record.years.has(year)))) continue;
-    if ([...summary.citations].every((citation) => citation === source || record.citations.has(citation))) {
-      records.delete(range);
-    }
-  }
 }
 
 export function buildInsectDetailNotes(insect) {
@@ -221,7 +188,6 @@ export function buildInsectDetailNotes(insect) {
     }
   }
 
-  removeRedundantSeasonSummaries(period);
   const seasonRecords = groupSentences(period);
   return {
     showSeason: seasonRecords.length > 0 || (showLegacySeason && seasonNotes.length > 0),
