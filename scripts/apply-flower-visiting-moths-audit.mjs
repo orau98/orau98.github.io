@@ -31,6 +31,8 @@ const SOURCE_REFERENCE = '花を訪れる蛾たち　知られざる姿を求め
 const LEDGER_SHA256 = 'bad54f975389bef5db313beca0f1114156781c36faec99ebcd9e082ec90b9f87';
 const EXPECTED_ACTIONS = 363;
 const EXPECTED_ADDITIONS = 357;
+// These two redundant source rows were consolidated by the moth taxonomy audit.
+const LEGACY_DUPLICATE_RECORD_IDS = ['hostplant-903947', 'hostplant-903948'];
 const HOST_COLUMNS = [
   'record_id',
   'insect_id',
@@ -311,7 +313,14 @@ function validateResult(source, ledger, baselineRelationshipCounts) {
     throw new Error(`post-transform actions are not fully applied: ${failures[0].action.action_id}`);
   }
   const sourceRows = rows.filter((row) => row.reference === SOURCE_REFERENCE);
-  if (sourceRows.length !== 2972) throw new Error(`unexpected source row count: ${sourceRows.length}`);
+  const legacyDuplicates = LEGACY_DUPLICATE_RECORD_IDS.filter((id) => ids.has(id)).length;
+  if (legacyDuplicates !== 0 && legacyDuplicates !== LEGACY_DUPLICATE_RECORD_IDS.length) {
+    throw new Error('moth source duplicates are only partially consolidated');
+  }
+  const expectedSourceRowCount = 2970 + legacyDuplicates;
+  if (sourceRows.length !== expectedSourceRowCount) {
+    throw new Error(`unexpected source row count: ${sourceRows.length} != ${expectedSourceRowCount}`);
+  }
   if (sourceRows.some((row) => !row.plant_family || row.plant_name === '（リスト無し）')) {
     throw new Error('source rows still contain blank families or invalid placeholders');
   }

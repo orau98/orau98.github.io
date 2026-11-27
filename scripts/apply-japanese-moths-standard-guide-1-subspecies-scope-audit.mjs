@@ -7,6 +7,7 @@ import Papa from 'papaparse';
 
 import { splitCsvRecordsWithDelimiters } from './lib/csvRecords.mjs';
 import { collectGeneralNoteIssues } from './lib/generalNoteQuality.mjs';
+import { splitInsectScientificName } from '../src/utils/insectScientificName.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const ROOT = path.join(path.dirname(__filename), '..');
@@ -159,14 +160,14 @@ const parseSimpleCsv = (filePath) => {
 
 const insects = new Map(parseSimpleCsv(INSECTS_PATH).map((row) => [row.insect_id, row]));
 const expectedTaxa = new Map([
-  ['species-20461', ['Eumelea biflavata Warren, 1896', 'オビベニホソシャク']],
+  ['species-20461', ['Eumelea biflavata', 'オビベニホソシャク']],
   ['species-21572', ['Eumelea biflavata insulata', 'オレベニホシシャク']],
-  ['species-4252', ['Xenortholitha propinguata (Kollar, 1844)', 'フタクロテンナミシャク']],
+  ['species-4252', ['Xenortholitha propinguata', 'フタクロテンナミシャク']],
   ['species-21573', ['Xenortholitha propinguata niphonica', 'フタクチトガリナミシャク']],
 ]);
 for (const [insectId, [scientificName, japaneseName]] of expectedTaxa) {
   const row = insects.get(insectId);
-  if (row?.scientific_name !== scientificName || row?.japanese_name !== japaneseName) {
+  if (splitInsectScientificName(row?.scientific_name).name !== scientificName || row?.japanese_name !== japaneseName) {
     throw new Error(`Target taxon identity mismatch: ${insectId}`);
   }
 }

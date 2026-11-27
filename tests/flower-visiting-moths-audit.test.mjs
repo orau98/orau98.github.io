@@ -157,7 +157,7 @@ test('all verified flower relationships apply atomically and remain idempotent',
       const key = relationshipKey(row);
       relationCounts.set(key, (relationCounts.get(key) || 0) + 1);
     }
-    assert.equal(sourceRows.length, 2972);
+    assert.equal(sourceRows.length, 2970);
     assert.equal(sourceRows.some((row) => row.plant_name === '（リスト無し）'), false);
     assert.equal(sourceRows.some((row) => !row.plant_family), false);
     assert.equal(sourceRows.some((row) => row.plant_name === 'ヤマタケタケアザミ'), false);
