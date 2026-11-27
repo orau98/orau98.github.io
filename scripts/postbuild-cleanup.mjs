@@ -386,6 +386,12 @@ const extractProfileHead = (html = '') => {
 // request ads on a profile route.
 const extractProfileBody = (html = '', locale = 'ja') => {
   const body = String(html || '').match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
+  // The build and npm's postbuild hook can both run this step. When the
+  // generated profile is the input on a later run, keep its photo and heading.
+  const existingOpening = body.match(
+    /<div id="root" data-static-profile="(?:insect|plant)">\s*(<div class="profile-opening">[\s\S]*?)<\/div>\s*$/i,
+  )?.[1];
+  if (existingOpening) return existingOpening.trim();
   const main = body.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || '';
   if (!main) return '';
   // 種名・植物名の見出し（h1）は main の手前の meta-header にあるため、一緒に載せる
