@@ -78,17 +78,8 @@ const Footer = ({ locale = 'ja' }) => {
       <div className="container mx-auto px-4 py-6 text-center text-neutral-600 dark:text-neutral-300">
         <p className="text-sm">
           {isEnglish
-            ? 'A database built from personal field observation and collection records. Source code on '
-            : '個人の観察・採集記録にもとづく図鑑データベースです。ソースコードは '}
-          <a
-            href="https://github.com/orau98/orau98.github.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-700 dark:text-blue-300 hover:underline"
-          >
-            GitHub
-          </a>
-          {isEnglish ? '.' : ' で公開しています。'}
+            ? 'A database built from personal field observation and collection records.'
+            : '個人の観察・採集記録にもとづく図鑑データベースです。'}
         </p>
         {/* リンクは指で押しやすいよう高さ32px以上・間隔を広めにする（以前は高さ16pxで隣と近かった） */}
         <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm">
