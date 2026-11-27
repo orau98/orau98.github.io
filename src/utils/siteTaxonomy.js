@@ -130,6 +130,26 @@ export const INSECT_COLLECTION_KEYS = Object.freeze(
   INSECT_SECTION_CONFIGS.map((section) => section.collectionKey),
 );
 
+const BUTTERFLY_FAMILIES = /^(Papilionidae|Pieridae|Lycaenidae|Nymphalidae|Hesperiidae|Riodinidae)$/;
+
+// Hyblaeidae was previously routed through the butterfly collection by the app.
+const PREVIOUS_BUTTERFLY_IDS = new Set(['species-2583', 'species-2584', 'species-2585']);
+
+export const getPreviousInsectSection = (insectId) =>
+  PREVIOUS_BUTTERFLY_IDS.has(insectId) ? 'butterfly' : '';
+
+export const classifyInsectType = (row) => {
+  const family = row.family?.trim() || '';
+  const familyJapanese = row.family_jp?.trim() || '';
+  if (BUTTERFLY_FAMILIES.test(family) || /チョウ科$/.test(familyJapanese)) return 'butterfly';
+  if (row.subfamily?.trim() === 'Scolytinae' || row.subfamily_jp?.includes('キクイムシ')) return 'barkbeetle';
+  if (family === 'Chrysomelidae' || family === 'Megalopodidae' || familyJapanese.includes('ハムシ')) return 'leafbeetle';
+  if (family === 'Cerambycidae' || familyJapanese === 'カミキリムシ科') return 'longhornbeetle';
+  if (family === 'Buprestidae' || familyJapanese === 'タマムシ科') return 'beetle';
+  if (family === 'Aphididae' || familyJapanese.includes('アブラムシ')) return 'aphid';
+  return 'moth';
+};
+
 export const INSECT_DETAIL_ROUTE_PATTERNS = Object.freeze(
   [
     ...INSECT_SECTION_CONFIGS.map(

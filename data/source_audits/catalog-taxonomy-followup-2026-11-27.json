@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "mappings": [
+    {
+      "duplicate_id": "species-20456",
+      "canonical_id": "species-0348",
+      "legacy_japanese_name": "ホルトノキナガヒゲコガ",
+      "legacy_scientific_name": "Agriothera elaeocarpophaga Roeslerstammiidae, 1013",
+      "source": "https://www.chiba-muse.or.jp/NATURAL/publication/journalsp_10_5saito.pdf",
+      "evidence": "千葉県立中央博物館の昆虫相調査は Agriothera elaeocarpophaga Moriuti, 1978 と記載。旧行は同じ二名法の後に科名と数値が混入し、関連記録はなかった。"
+    },
+    {
+      "duplicate_id": "species-20460",
+      "canonical_id": "species-0851",
+      "legacy_japanese_name": "ゴマダラマルハキバガ, ゴマダラカマガ",
+      "legacy_scientific_name": "Depressaria nomia Depressariidae, 1123",
+      "source": "https://ftp.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/gelechioidea/depressariidae/depressariinae/depressaria/",
+      "evidence": "Depressaria nomia Butler, 1879 の同一名。旧行の科名と番号は記載者・年ではなく、独自の関連記録もなかった。"
+    },
+    {
+      "duplicate_id": "species-20897",
+      "canonical_id": "species-1086",
+      "legacy_japanese_name": "ヨモギツツミノゴ",
+      "legacy_scientific_name": "Coleophora yomogiella",
+      "source": "日本産蛾類標準図鑑3 p.240（PDF p.87）",
+      "evidence": "見出しはヨモギツツミノガ Coleophora yomogiella Oku, 1974。旧行の和名末尾は誤記。同じ寄主欄のオオヨモギ・ヨモギが両IDに登録されていた。"
+    },
+    {
+      "duplicate_id": "species-20928",
+      "canonical_id": "species-1578",
+      "legacy_japanese_name": "チュラカバスカシバ",
+      "legacy_scientific_name": "Paradoxecia chura",
+      "source": "https://doi.org/10.18984/lepid.60.3_189",
+      "evidence": "原記載と日本産蛾類標準図鑑3 p.333（PDF p.133）で同種を確認。図鑑の和名チュラカバスカシバは既存の別名欄にあり、同書の生態記録1件を引き継ぐ。"
+    }
+  ],
+  "taxon_corrections": [
+    {
+      "insect_id": "species-1498",
+      "before": {
+        "family": "Tortricidae",
+        "family_jp": "ハマキガ科",
+        "subfamily": "Olethreutinae",
+        "subfamily_jp": "ヒメハマキガ亜科",
+        "tribe": "Eucosmini",
+        "tribe_jp": "モグリヒメハマキガ族",
+        "genus": "Crocidosema",
+        "species": "plebejana",
+        "author": "",
+        "year": "",
+        "scientific_name": "Crocidosema plebejana"
+      },
+      "after": {
+        "family": "Gelechiidae",
+        "family_jp": "キバガ科",
+        "subfamily": "Dichomeridinae",
+        "subfamily_jp": "フサキバガ亜科",
+        "tribe": "",
+        "tribe_jp": "",
+        "genus": "Pectinophora",
+        "species": "gossypiella",
+        "author": "(Saunders)",
+        "year": "1844",
+        "scientific_name": "Pectinophora gossypiella (Saunders, 1844)"
+      },
+      "source": "日本産蛾類標準図鑑3 p.316（PDF p.125）および農林水産省の病害虫リスク分析",
+      "source_url": "https://www.maff.go.jp/j/syouan/keneki/kikaku/attach/pdf/prareport-66.pdf",
+      "evidence": "ワタアカミムシガの見出しは Pectinophora gossypiella (Saunders, 1844)。寄主はワタ、オクラ、タチアオイ、ハイビスカス。本行とアオイヒメハマキ species-2315 は別種として扱う。"
+    }
+  ],
+  "host_record_actions": [
+    {
+      "action": "duplicate",
+      "before": {
+        "record_id": "hostplant-901942",
+        "insect_id": "species-20897",
+        "plant_name": "オオヨモギ",
+        "plant_family": "キク科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蛾類標準図鑑3",
+        "notes": ""
+      },
+      "retained_id": "hostplant-907842",
+      "source": "日本産蛾類標準図鑑3 p.240"
+    },
+    {
+      "action": "duplicate",
+      "before": {
+        "record_id": "hostplant-901943",
+        "insect_id": "species-20897",
+        "plant_name": "ヨモギ",
+        "plant_family": "キク科",
+        "observation_type": "",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蛾類標準図鑑3",
+        "notes": ""
+      },
+      "retained_id": "hostplant-912832",
+      "source": "日本産蛾類標準図鑑3 p.240"
+    },
+    {
+      "action": "unsupported_fragment",
+      "before": {
+        "record_id": "hostplant-907843",
+        "insect_id": "species-1086",
+        "plant_name": "ヒメ",
+        "plant_family": "キク科",
+        "observation_type": "文献",
+        "plant_part": "",
+        "life_stage": "幼虫",
+        "reference": "日本産蛾類標準図鑑3",
+        "notes": ""
+      },
+      "source": "日本産蛾類標準図鑑3 p.240",
+      "evidence": "寄主欄にオオヨモギ、ヨモギのみが記載される。"
+    }
+  ],
+  "note_actions": [
+    {
+      "before": {
+        "record_id": "note-1000260",
+        "insect_id": "species-20928",
+        "note_type": "生態情報",
+        "content": "沖縄島今帰仁村の乙羽岳で、合成性フェロモンに飛来した1雄のみが知られている。性フェロモンは特定されていない。",
+        "reference": "日本産蛾類標準図鑑3",
+        "page": "333",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1000260",
+        "insect_id": "species-1578",
+        "note_type": "生態情報",
+        "content": "沖縄島今帰仁村の乙羽岳で、合成性フェロモンに飛来した1雄のみが知られている。性フェロモンは特定されていない。",
+        "reference": "日本産蛾類標準図鑑3",
+        "page": "333",
+        "year": ""
+      },
+      "source": "日本産蛾類標準図鑑3 p.333",
+      "evidence": "見出しと同じ学名の正規IDへ記録を移す。"
+    },
+    {
+      "before": {
+        "record_id": "note-999415",
+        "insect_id": "species-1086",
+        "note_type": "出現時期",
+        "content": "成虫は6〜7月に出現",
+        "reference": "日本産蛾類標準図鑑3",
+        "page": "",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-999415",
+        "insect_id": "species-1086",
+        "note_type": "出現時期",
+        "content": "年2回、初夏と初秋に発生する。",
+        "reference": "日本産蛾類標準図鑑3",
+        "page": "240",
+        "year": ""
+      },
+      "source": "日本産蛾類標準図鑑3 p.240",
+      "evidence": "ヨモギツツミノガの生態欄。初秋の世代を復元。"
+    },
+    {
+      "before": {
+        "record_id": "note-999522",
+        "insect_id": "species-1498",
+        "note_type": "出現時期",
+        "content": "5～9月",
+        "reference": "日本産蛾類標準図鑑3",
+        "page": "",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-999522",
+        "insect_id": "species-1498",
+        "note_type": "生態情報",
+        "content": "通常は幼虫で越冬し、翌春に羽化する。",
+        "reference": "日本産蛾類標準図鑑3",
+        "page": "316",
+        "year": ""
+      },
+      "source": "日本産蛾類標準図鑑3 p.316",
+      "evidence": "ワタアカミムシガの見出しに続く本文。旧行の5〜9月は別の種の欄にあり、本種の記述ではない。"
+    }
+  ]
+}

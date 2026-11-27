@@ -9,7 +9,7 @@ import {
   buildNormalizedEntries,
   resolveImageBaseCandidates,
 } from '../src/utils/insectImageResolver.js';
-import { buildPlantPath, INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { buildPlantPath, getPreviousInsectSection, INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { comparePlantImageDisplayPriority } from '../src/utils/filename.js';
 import {
@@ -1312,6 +1312,24 @@ async function generateEnglishMetaPages() {
         englishInsectRouteMap[insect.id] = entry.href;
       }
       const japaneseName = cleanString(insect.name || insect.japaneseName);
+      const previousSection = getPreviousInsectSection(insect.id);
+      if (previousSection && previousSection !== type) {
+        const title = `${entry.primaryName} | ${section.singularLabel} profile from Japan`;
+        queueLegacyRedirect(
+          `/en/meta/${previousSection}/${encodeURIComponent(scientificSlug)}.html`,
+          entry.href,
+          title,
+          'taxonomy-merge',
+        );
+        for (const name of new Set([...entry.japaneseRouteNames, insect.id])) {
+          queueLegacyRedirect(
+            `/en/${previousSection}/${buildLegacyInsectSlug(name, insect.id)}/index.html`,
+            entry.cleanHref,
+            title,
+            'taxonomy-merge',
+          );
+        }
+      }
       if (japaneseName) {
         if (!insectObjectsByJapaneseName.has(japaneseName)) {
           insectObjectsByJapaneseName.set(japaneseName, []);
@@ -1338,6 +1356,20 @@ async function generateEnglishMetaPages() {
     leafBeetlePath: LEAF_BEETLE_CANONICAL_AUDIT_PATH,
     butterflyPath: BUTTERFLY_CANONICAL_AUDIT_PATH,
   });
+  // This URL was published for the pink bollworm under another species' name.
+  const pinkBollworm = insectEntriesById.get('species-1498');
+  const misassignedSlug = 'crocidosema-plebejana';
+  if (pinkBollworm) {
+    if (usedInsectSlugsByType.get(pinkBollworm.type)?.has(misassignedSlug)) {
+      throw new Error(`[meta-en] misassigned insect slug conflicts: ${misassignedSlug}`);
+    }
+    queueLegacyRedirect(
+      `/en/meta/${pinkBollworm.type}/${misassignedSlug}.html`,
+      pinkBollworm.href,
+      `${pinkBollworm.primaryName} | Moth profile from Japan`,
+      'taxonomy-merge',
+    );
+  }
   for (const redirect of mergedTaxonRedirects) {
     const canonical = insectEntriesById.get(redirect.canonicalId);
     if (!canonical) {

@@ -135,11 +135,7 @@ export function loadButterflyMergedTaxonRedirects(filePath) {
   });
 }
 
-export function loadMothMergedTaxonRedirects() {
-  const filePath = new URL(
-    '../../data/source_audits/moth-canonical-taxonomy-merge-2026-11-27.json',
-    import.meta.url,
-  );
+function loadMothMergeLedger(filePath) {
   const audit = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   if (audit.schema_version !== 1 || !Array.isArray(audit.mappings) || audit.mappings.length === 0) {
     throw new Error(`${filePath}: unexpected moth canonical-merge ledger`);
@@ -166,6 +162,13 @@ export function loadMothMergedTaxonRedirects() {
       taxonGroup: 'moth',
     };
   });
+}
+
+export function loadMothMergedTaxonRedirects() {
+  return [
+    'moth-canonical-taxonomy-merge-2026-11-27.json',
+    'catalog-taxonomy-followup-2026-11-27.json',
+  ].flatMap((filename) => loadMothMergeLedger(new URL(`../../data/source_audits/${filename}`, import.meta.url)));
 }
 
 export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath, butterflyPath }) {

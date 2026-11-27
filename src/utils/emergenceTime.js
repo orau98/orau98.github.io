@@ -71,11 +71,13 @@ const collectFuzzyEmergenceHints = (primaryText, supplementalTexts = [], anchorM
     if (!shouldAnalyzeEmergenceHint(text, isPrimary)) return;
 
     const matchedSeasonMonths = [];
-    const cueText = extractMentionedMonths(text).length ? text.replace(/[春夏秋冬]型|越夏|夏眠/g, '') : text;
+    let cueText = extractMentionedMonths(text).length ? text.replace(/[春夏秋冬]型|越夏|夏眠/g, '') : text;
     FUZZY_SEASON_CUES.forEach(({ pattern, months }) => {
       if (pattern.test(cueText)) {
         matchedSeasonMonths.push(months);
         months.forEach((month) => addMonthPeriods(fuzzyMonths, fuzzyPeriods, month));
+        // 「初夏」などの限定された季節を、後続の「夏」でも拾わない。
+        cueText = cueText.replace(new RegExp(pattern.source, 'g'), ' ');
       }
     });
 

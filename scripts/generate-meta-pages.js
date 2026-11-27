@@ -14,6 +14,8 @@ import {
 } from '../src/utils/insectImageResolver.js';
 import {
   buildPlantPath,
+  classifyInsectType,
+  getPreviousInsectSection,
   INSECT_SECTION_CONFIGS,
   META_PAGE_SECTIONS,
 } from '../src/utils/siteTaxonomy.js';
@@ -2494,6 +2496,7 @@ async function generateMetaPages() {
   };
   const queueInsectLegacyRedirects = ({ type, insectId, displayName, targetPath, title }) => {
     const runtimeRoute = runtimeInsectRouteById.get(insectId);
+    const previousSection = getPreviousInsectSection(insectId);
     const routeEntries = [
       runtimeRoute,
       runtimeRoute?.legacyName
@@ -2508,6 +2511,17 @@ async function generateMetaPages() {
       if (seenRoutes.has(routePath)) continue;
       seenRoutes.add(routePath);
       queueLegacyRedirect(routePath, targetPath, title);
+    }
+    if (previousSection && previousSection !== type) {
+      for (const name of new Set([displayName || insectId, insectId])) {
+        queueLegacyRedirect(
+          `/${previousSection}/${buildLegacyInsectSlug(name, insectId)}/index.html`,
+          `/${type}/${buildLegacyInsectSlug(displayName, insectId)}/`,
+          title,
+          'ja',
+          'taxonomy-merge',
+        );
+      }
     }
   };
   
@@ -2672,29 +2686,8 @@ async function generateMetaPages() {
       // 一般備考データを取得
       const generalNotes = generalNotesMapByInsectId.get(insectId) || [];
       
-      // 種ページのタイプ判定（科ベース）
-      const famLatin = (row.family || '').trim();
-      const famJP = (row.family_jp || '').trim();
-      const isButterfly = /チョウ科$/.test(famJP) || /^(Papilionidae|Pieridae|Lycaenidae|Nymphalidae|Hesperiidae|Riodinidae)$/.test(famLatin);
-      const isLeafBeetle = famJP.includes('ハムシ') || famLatin === 'Chrysomelidae' || famLatin === 'Megalopodidae';
-      const isLonghornBeetle = famJP === 'カミキリムシ科' || famLatin === 'Cerambycidae';
-      const isBarkBeetle =
-        (row.subfamily || '').trim() === 'Scolytinae' ||
-        (row.subfamily_jp || '').includes('キクイムシ');
-      const isBeetle = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
-      const isAphid = famJP.includes('アブラムシ') || famLatin === 'Aphididae';
-      const type = isButterfly
-        ? 'butterfly'
-        : (isBarkBeetle
-          ? 'barkbeetle'
-          : (isLeafBeetle
-          ? 'leafbeetle'
-          : (isLonghornBeetle
-            ? 'longhornbeetle'
-            : (isBeetle
-              ? 'beetle'
-              : (isAphid ? 'aphid' : 'moth')))));
-      
+      const type = classifyInsectType(row);
+
       const emergenceTime = emergenceByInsectId.get(insectId) || null;
 
       const insect = {
@@ -3216,33 +3209,7 @@ async function generateMetaPages() {
       if (!displayName || displayName.length < 2) return;
       const famJP = (row.family_jp || '').trim();
       const famLatin = (row.family || '').trim();
-      const isBfly =
-        /チョウ科$/.test(famJP) ||
-        /^(Papilionidae|Pieridae|Lycaenidae|Nymphalidae|Hesperiidae|Riodinidae)$/.test(famLatin);
-      const isLB =
-        famJP.includes('ハムシ') ||
-        famLatin === 'Chrysomelidae' ||
-        famLatin === 'Megalopodidae';
-      const isLHB = famJP === 'カミキリムシ科' || famLatin === 'Cerambycidae';
-      const isBB =
-        (row.subfamily || '').trim() === 'Scolytinae' ||
-        (row.subfamily_jp || '').includes('キクイムシ');
-      const isBtl = famJP === 'タマムシ科' || famLatin === 'Buprestidae';
-      const isAph =
-        famJP.includes('アブラムシ') || famLatin === 'Aphididae';
-      const insType = isBfly
-        ? 'butterfly'
-        : isBB
-        ? 'barkbeetle'
-        : isLB
-        ? 'leafbeetle'
-        : isLHB
-        ? 'longhornbeetle'
-        : isBtl
-        ? 'beetle'
-        : isAph
-        ? 'aphid'
-        : 'moth';
+      const insType = classifyInsectType(row);
       const familyLabel = famJP || famLatin || '不明';
       if (!insectIndexData[insType]) insectIndexData[insType] = {};
       if (!insectIndexData[insType][familyLabel])

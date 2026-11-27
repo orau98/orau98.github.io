@@ -18,7 +18,9 @@ import {
 import { getLegacyInsectRoute, insectHeadingName } from './insectScientificName.js';
 import {
   INSECT_COLLECTION_KEYS,
+  classifyInsectType,
   createEmptyInsectCollections,
+  getInsectSectionConfig,
 } from './siteTaxonomy.js';
 import { getHostResourceType, isPlantHostRecord } from './hostResource.js';
 import {
@@ -295,19 +297,6 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         notes: (n.page || '').trim()
       }));
 
-      // 英語キーでのタイプ判定（UIコンポーネントの条件分岐で使用）
-      const getTypeKey = (famJp = '', fam = '') => {
-        const fj = (famJp || '').trim();
-        const f = (fam || '').trim();
-        if (fj.includes('チョウ') || fj.includes('シジミ') || fj.includes('セセリ')) return 'butterfly';
-        if (fj.includes('アブラムシ') || f === 'Aphididae') return 'aphid';
-        if (f === 'Chrysomelidae' || fj.includes('ハムシ')) return 'leafbeetle';
-        if (f === 'Cerambycidae' || fj.includes('カミキリ')) return 'longhornbeetle';
-        if (insect.subfamily === 'Scolytinae' || insect.subfamily_jp?.includes('キクイムシ')) return 'barkbeetle';
-        if (f === 'Buprestidae' || fj.includes('タマムシ')) return 'beetle';
-        return 'moth';
-      };
-
       const hostPlantList = Array.from(new Set(
         hostPlants
           .filter(isPlantHostRecord)
@@ -348,7 +337,7 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
         alternativeNames,
         synonyms: insect.synonyms?.trim() || '',
         // 分類用フィールド（英語キー）
-        type: getTypeKey(insect.family_jp, insect.family)
+        type: classifyInsectType(insect)
       };
 
       insectData.scientificFilename = createSafeInsectFilename(insectData.scientificName);
@@ -377,41 +366,14 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
       } catch {}
 
       // 分類群ごとに振り分け（同名・同学名の重複は統合）
-      const classification = classifyInsect(insect);
-      const pushWithDedupe = (bucket, map) => {
-        const key = buildDedupKey(insect, insectData);
-        if (key && map.has(key)) {
-          mergeInsectRecords(map.get(key), insectData);
-          return;
-        }
-        bucket.push(insectData);
-        if (key) map.set(key, insectData);
-      };
-      switch (classification) {
-        case '蛾類':
-          pushWithDedupe(result.moths, dedupeMaps.moths);
-          break;
-        case '蝶類':
-          pushWithDedupe(result.butterflies, dedupeMaps.butterflies);
-          break;
-        case 'タマムシ類':
-          pushWithDedupe(result.beetles, dedupeMaps.beetles);
-          break;
-        case 'カミキリムシ類':
-          pushWithDedupe(result.longhornbeetles, dedupeMaps.longhornbeetles);
-          break;
-        case 'キクイムシ類':
-          pushWithDedupe(result.barkbeetles, dedupeMaps.barkbeetles);
-          break;
-        case 'ハムシ類':
-          pushWithDedupe(result.leafbeetles, dedupeMaps.leafbeetles);
-          break;
-        case 'アブラムシ類':
-          pushWithDedupe(result.aphids, dedupeMaps.aphids);
-          break;
-        default:
-          // デフォルトは蛾類として扱う
-          pushWithDedupe(result.moths, dedupeMaps.moths);
+      const { collectionKey } = getInsectSectionConfig(insectData.type);
+      const dedupeMap = dedupeMaps[collectionKey];
+      const key = buildDedupKey(insect, insectData);
+      if (key && dedupeMap.has(key)) {
+        mergeInsectRecords(dedupeMap.get(key), insectData);
+      } else {
+        result[collectionKey].push(insectData);
+        if (key) dedupeMap.set(key, insectData);
       }
 
     } catch (error) {
@@ -432,63 +394,6 @@ export const convertNormalizedDataToStandardFormat = (insectsData, hostplantsDat
 
   return result;
 };;
-
-/**
- * 昆虫の分類群を判定
- * @param {Object} insect - 昆虫データ
- * @returns {string} - 分類群
- */
-const classifyInsect = (insect) => {
-  const familyJp = insect.family_jp?.trim() || '';
-  const family = insect.family?.trim() || '';
-  const subfamilyJp = insect.subfamily_jp?.trim() || '';
-  const subfamily = insect.subfamily?.trim() || '';
-  
-  // 日本語科名による判定
-  if (familyJp.includes('チョウ') || familyJp.includes('シジミ') || familyJp.includes('セセリ')) {
-    return '蝶類';
-  }
-  
-  if (familyJp.includes('タマムシ')) {
-    return 'タマムシ類';
-  }
-
-  if (familyJp.includes('アブラムシ')) {
-    return 'アブラムシ類';
-  }
-  
-  if (familyJp.includes('カミキリ')) {
-    return 'カミキリムシ類';
-  }
-
-  if (subfamily === 'Scolytinae' || subfamilyJp.includes('キクイムシ')) {
-    return 'キクイムシ類';
-  }
-  
-  if (familyJp.includes('ハムシ')) {
-    return 'ハムシ類';
-  }
-  
-  // 英語科名による判定
-  if (family === 'Chrysomelidae') {
-    return 'ハムシ類';
-  }
-  
-  if (family === 'Buprestidae') {
-    return 'タマムシ類';
-  }
-  
-  if (family === 'Cerambycidae') {
-    return 'カミキリムシ類';
-  }
-
-  if (family === 'Aphididae') {
-    return 'アブラムシ類';
-  }
-  
-  // その他は蛾類として扱う
-  return '蛾類';
-};
 
 /**
  * データ品質チェック

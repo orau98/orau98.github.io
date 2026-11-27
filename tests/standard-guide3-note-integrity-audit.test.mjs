@@ -33,6 +33,10 @@ const followUp = JSON.parse(fs.readFileSync(new URL(
   '../data/source_audits/general-note-ocr-recheck-2026-11-26.json',
   import.meta.url,
 ), 'utf8'));
+const taxonomyFollowUp = JSON.parse(fs.readFileSync(new URL(
+  '../data/source_audits/catalog-taxonomy-followup-2026-11-27.json',
+  import.meta.url,
+), 'utf8'));
 const reviewedRows = Papa.parse(
   fs.readFileSync(ALL_ROWS_PATH, 'utf8').replace(/^\ufeff/, ''),
   { header: true, skipEmptyLines: true },
@@ -46,7 +50,12 @@ const makeFixture = () => {
     fs.readFileSync(NOTES_PATH, 'utf8').replace(/^\ufeff/, ''),
     { header: true, skipEmptyLines: true },
   ).data;
-  const byId = notesBeforeRedundancyAudit(currentRows.map(row => [row.record_id, row]));
+  const currentById = new Map(currentRows.map(row => [row.record_id, row]));
+  for (const { before, after } of taxonomyFollowUp.note_actions) {
+    assert.deepEqual(currentById.get(after.record_id), after);
+    currentById.set(before.record_id, before);
+  }
+  const byId = notesBeforeRedundancyAudit(currentById);
   const rows = [...byId.values()];
   // Recover the rows as reviewed in July before applying the original audit.
   for (const entry of followUp.rows) {

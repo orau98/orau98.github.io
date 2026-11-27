@@ -112,3 +112,12 @@ test('a numeric start and a seasonal end retain the intervening months', () => {
   assert.deepEqual(parseInsectDetailSeason(['9月下旬から秋まで見られる。']).periods, [9.3]);
   assert.deepEqual(parseInsectDetailSeason(['4月に出現する。秋にも記録がある。']).months, [4]);
 });
+
+test('specific seasons stay distinct without masking a separate broad season', () => {
+  const twoBroods = parseInsectDetailSeason(['年2回、初夏と初秋に発生する。']);
+  assert.deepEqual(twoBroods.months, []);
+  assert.deepEqual(twoBroods.fuzzyMonths, [5, 6, 9, 10]);
+
+  const regional = parseInsectDetailSeason(['本州では初夏に、九州では夏に発生する。']);
+  assert.deepEqual(regional.fuzzyMonths, [5, 6, 7, 8]);
+});

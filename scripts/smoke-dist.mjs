@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
 import { splitInsectScientificName } from '../src/utils/insectScientificName.js';
-import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
+import { getPreviousInsectSection, INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
 import { slugifyScientificLabel } from './lib/englishNaming.mjs';
 import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
 import {
@@ -470,6 +470,22 @@ assert(
   'full insect partitions must be marked as detail-ready',
 );
 const mothsById = new Map(mothsLite.map((moth) => [moth.id, moth]));
+const pinkBollworm = mothsById.get('species-1498');
+assert(pinkBollworm?.scientificName === 'Pectinophora gossypiella (Saunders, 1844)', 'pink bollworm identity mismatch');
+assert(/^Crocidosema plebejana\b/.test(mothsById.get('species-2315')?.scientificName || ''), 'false pink bollworm taxon merge');
+const formerPinkBollwormMeta = readDistText('en/meta/moth/crocidosema-plebejana.html');
+assert(formerPinkBollwormMeta.includes('/en/meta/moth/pectinophora-gossypiella.html'), 'incorrect former pink bollworm URL target');
+for (const moth of mothsLite.filter((insect) => insect.classification?.family === 'Hyblaeidae')) {
+  const previousSection = getPreviousInsectSection(moth.id);
+  assert(previousSection === 'butterfly', `missing former section: ${moth.id}`);
+  for (const locale of ['ja', 'en']) {
+    const currentPath = buildInsectPath(moth, locale);
+    const oldPath = buildInsectPath({ ...moth, type: previousSection }, locale);
+    const redirect = readDistText(`${decodeURIComponent(oldPath).slice(1)}index.html`);
+    assert(redirect.includes('name="x-redirect-kind" content="taxonomy-merge"'), `missing redirect: ${oldPath}`);
+    assert(redirect.includes(currentPath), `wrong redirect target: ${oldPath}`);
+  }
+}
 for (const { duplicateId, canonicalId } of loadMothMergedTaxonRedirects()) {
   const canonicalMoth = mothsById.get(canonicalId);
   assert(!mothsById.has(duplicateId), `duplicate moth remains in the catalog: ${duplicateId}`);
