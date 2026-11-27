@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import test from 'node:test';
 import Papa from 'papaparse';
 import { buildInsectDetailNotes, parseInsectDetailSeason } from '../src/utils/insectDetailNotes.js';
+import { projectInsectNotes } from '../src/utils/insectNoteRevisions.js';
 
 const read = (path) => fs.readFileSync(new URL(path, import.meta.url), 'utf8');
 const canonical = read('../normalized_data/general_notes.csv');
@@ -65,6 +66,42 @@ test('アオセダカシャチホコの2期と北海道の時期を表示する'
   assert.deepEqual(seasonRecords[0].sources, ['日本産蛾類標準図鑑2 p. 136']);
   const { months } = parseInsectDetailSeason(seasonRecords.map(({ content }) => content));
   assert.deepEqual(months.toSorted((a, b) => a - b), [5, 6, 7, 8]);
+});
+
+test('発生時期・生態の重複修正は元の行が一致するときだけ公開用データに適用する', () => {
+  const audit = Papa.parse(read('../data/source_audits/general-note-redundancy-recheck-2026-11-27.csv'), {
+    header: true,
+    skipEmptyLines: true,
+  });
+  assert.deepEqual(audit.errors, []);
+  for (const entry of audit.data) {
+    const source = notes.get(entry.record_id);
+    assert.equal(source?.insect_id, entry.insect_id, entry.record_id);
+    const projected = projectInsectNotes([source]);
+    if (entry.decision === 'exclude') {
+      assert.deepEqual(projected, [], entry.record_id);
+    } else {
+      assert.deepEqual(projected, [{
+        ...source,
+        note_type: entry.note_type,
+        content: entry.content,
+        reference: entry.reference,
+        page: entry.printed_page,
+      }], entry.record_id);
+    }
+  }
+});
+
+test('アトジロキリガは図鑑2の成虫期と年1回の出現を一つにまとめ、冬夜蛾の出典を保持する', () => {
+  const rows = [...notes.values()].filter((note) => note.insect_id === 'species-6138');
+  const generalNotes = projectInsectNotes(rows).map((note) => ({ ...note, type: note.note_type }));
+  const { seasonRecords } = buildInsectDetailNotes({ type: 'moth', generalNotes });
+  assert.deepEqual(seasonRecords, [
+    { content: '成虫は4〜6月にかけて年1回出現する。', sources: ['日本産蛾類標準図鑑2 p. 372'] },
+    { content: '4〜5月', sources: ['日本の冬夜蛾 p. 102'] },
+  ]);
+  const { months } = parseInsectDetailSeason(seasonRecords.map(({ content }) => content));
+  assert.deepEqual(months, [4, 5, 6]);
 });
 
 test('出典にない世代間の月や、飼育・偶産の月を足さない', () => {
