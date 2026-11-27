@@ -1359,13 +1359,14 @@ async function generateEnglishMetaPages() {
   // This URL was published for the pink bollworm under another species' name.
   const pinkBollworm = insectEntriesById.get('species-1498');
   const misassignedSlug = 'crocidosema-plebejana';
+  const misassignedMetaPath = `/en/meta/moth/${misassignedSlug}.html`;
   if (pinkBollworm) {
     if (usedInsectSlugsByType.get(pinkBollworm.type)?.has(misassignedSlug)) {
       throw new Error(`[meta-en] misassigned insect slug conflicts: ${misassignedSlug}`);
     }
     queueLegacyRedirect(
-      `/en/meta/${pinkBollworm.type}/${misassignedSlug}.html`,
-      pinkBollworm.href,
+      misassignedMetaPath,
+      pinkBollworm.cleanHref,
       `${pinkBollworm.primaryName} | Moth profile from Japan`,
       'taxonomy-merge',
     );
@@ -1489,7 +1490,7 @@ async function generateEnglishMetaPages() {
       fs.writeFileSync(outputPath, buildLegacyRedirectHtml({
         title,
         targetUrl,
-        noindex: false,
+        noindex: routePath === misassignedMetaPath,
         redirectKind,
       }));
     } catch (error) {

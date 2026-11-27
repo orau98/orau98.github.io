@@ -474,7 +474,12 @@ const pinkBollworm = mothsById.get('species-1498');
 assert(pinkBollworm?.scientificName === 'Pectinophora gossypiella (Saunders, 1844)', 'pink bollworm identity mismatch');
 assert(/^Crocidosema plebejana\b/.test(mothsById.get('species-2315')?.scientificName || ''), 'false pink bollworm taxon merge');
 const formerPinkBollwormMeta = readDistText('en/meta/moth/crocidosema-plebejana.html');
-assert(formerPinkBollwormMeta.includes('/en/meta/moth/pectinophora-gossypiella.html'), 'incorrect former pink bollworm URL target');
+assertLegacyMetaCompatibility(formerPinkBollwormMeta, 'former pink bollworm URL');
+assert(
+  formerPinkBollwormMeta.includes(`window.__LEGACY_META_TARGET_PATH__ = ${JSON.stringify(buildInsectPath(pinkBollworm, 'en'))}`),
+  'incorrect former pink bollworm URL target',
+);
+assert(/name="robots" content="noindex, follow(?:,|")/.test(formerPinkBollwormMeta), 'misassigned pink bollworm URL must stay noindex');
 for (const moth of mothsLite.filter((insect) => insect.classification?.family === 'Hyblaeidae')) {
   const previousSection = getPreviousInsectSection(moth.id);
   assert(previousSection === 'butterfly', `missing former section: ${moth.id}`);
