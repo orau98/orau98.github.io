@@ -532,7 +532,9 @@ assertAnalyticsLoader(okinagusaRouteHtml, okinagusaRoutePath);
 assert(
   okinagusaRouteHtml.includes('window.__PLANT_ROUTE_SHELL__') &&
     okinagusaRouteHtml.includes('/assets/index-') &&
-    okinagusaRouteHtml.includes('/assets/meta-styles.css?v=4') &&
+    !okinagusaRouteHtml.includes('meta-styles.css') &&
+    okinagusaRouteHtml.includes('<script data-theme-bootstrap>') &&
+    okinagusaRouteHtml.includes('class="profile-opening-layout') &&
     okinagusaRouteHtml.includes('<div id="root" data-static-profile="plant">') &&
     okinagusaRouteHtml.includes('<main class="meta-content">'),
   'オキナグサ direct route must serve static profile content plus the Japanese SPA',
@@ -773,7 +775,9 @@ for (const segment of insectProfileSegments) {
 const aoAtsubaRouteHtml = readDistText(path.join('moth', 'アオアツバ', 'index.html'));
 assert(
   aoAtsubaRouteHtml.includes('window.__INSECT_ROUTE_SHELL__') &&
-    aoAtsubaRouteHtml.includes('/assets/meta-styles.css?v=4') &&
+    !aoAtsubaRouteHtml.includes('meta-styles.css') &&
+    aoAtsubaRouteHtml.includes('<script data-theme-bootstrap>') &&
+    aoAtsubaRouteHtml.includes('class="profile-opening-layout') &&
     aoAtsubaRouteHtml.includes('<div id="root" data-static-profile="insect">') &&
     aoAtsubaRouteHtml.includes('<main class="meta-content">') &&
     !/http-equiv=["']refresh["']/i.test(aoAtsubaRouteHtml) &&

@@ -26,7 +26,6 @@ const PrerenderedSnapshot = () => {
   if (!snapshot || normalizeSnapshotPath(pathname) !== snapshot.path) return null;
   return (
     <div
-      className="meta-page"
       data-prerendered-snapshot={snapshot.profile}
       // 自サイトのビルドで作った静的HTML（広告枠・scriptは除去済み）。
       // 同じオブジェクトを渡し続け、App の描き直しのたびに innerHTML を入れ直させない

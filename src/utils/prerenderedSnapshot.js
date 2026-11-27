@@ -3,9 +3,8 @@
 // 遅い回線では一度見えた本文が数秒間消えていた。起動時に本文の写しを取っておき、
 // そのページの画面が描けるまでは写しを表示し続ける（components/PrerenderedSnapshot）。
 //
-// 写しの見た目は静的ページ用のスタイルシート（meta-styles.css）が担う。このスタイルシートは
-// h2・section・dl などの要素全体に効くため、ページの画面を描いたら外す
-// （外さないと、直接開いたときだけアプリの画面に二重の枠や見出しの縦線が付いていた）。
+// 現行の個別ページは通常画面のCSSで本文を表示する。キャッシュに残った旧HTMLでは
+// 全体に効く meta-styles.css が残っている場合があるため、画面を切り替える時に外す。
 
 const STATIC_STYLESHEET_SELECTOR = 'link[rel="stylesheet"][href*="meta-styles.css"]';
 

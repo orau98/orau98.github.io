@@ -22,11 +22,12 @@ export const PAGES = [
   { name: '植物一覧', path: '/?tab=plants', waitFor: '件が見つかりました' },
   { name: '昆虫一覧ページ（/moth/）', path: '/moth/', waitFor: '件が見つかりました', seo: true },
   { name: '昆虫の詳細（オオミズアオ）', path: `/moth/${E('オオミズアオ')}/`, waitFor: '食草', seo: true },
+  { name: '昆虫の初期表示（アトジロキリガ）', path: `/moth/${E('アトジロキリガ')}/`, waitFor: '発生時期', opening: 'アトジロキリガ', seo: true },
   { name: '発生時期の記録と出典（ウスバフユシャク）', path: `/moth/${E('ウスバフユシャク')}/`, waitFor: '発生時期', seasonSources: true },
   { name: '年をまたぐ発生時期（チャマダラキリガ）', path: `/moth/${E('チャマダラキリガ')}/`, waitFor: '発生時期', seasonMonths: [11, 12, 1, 2, 3] },
   { name: '植物ごとの出典（ウスイロオナガシジミ）', path: `/butterfly/${E('ウスイロオナガシジミ')}/`, waitFor: 'ウラジロガシ', plantSources: true },
   { name: '訪花の書誌（アオスジアオリンガ）', path: `/moth/${E('アオスジアオリンガ')}/`, waitFor: 'リョウブ', flowerCitation: true },
-  { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', seo: true, plantTaxonomy: true },
+  { name: '植物の詳細（クヌギ）', path: `/plant/${E('クヌギ')}/`, waitFor: 'クヌギ', opening: 'クヌギ', seo: true, plantTaxonomy: true },
   { name: '観察ガイド（コナラ）', path: `/plant/${E('コナラ')}/`, waitFor: '見つけた場所から虫を調べる', seo: true, observationGuide: true },
   { name: '検索（アゲハ）', path: `/?q=${E('アゲハ')}`, waitFor: '件が見つかりました' },
   { name: '英語トップ', path: '/en/', waitFor: 'results', seo: true },
@@ -90,6 +91,69 @@ function readStaticSeo(urlPath) {
 // 外部サービス（広告・解析・Instagram・フォント）由来のエラーは対象外
 const isThirdParty = (text = '') => /googlesyndication|googletagmanager|google-analytics|instagram|fonts\.g|doubleclick|adsbygoogle/i.test(text);
 
+async function openProfileWithDelayedAssets(context, tab, origin, page, problems) {
+  const dark = tab.viewportSize().width >= 640;
+  await tab.addInitScript((theme) => window.localStorage.setItem('theme', theme), dark ? 'dark' : 'light');
+  const release = {};
+  for (const [kind, pattern] of [
+    ['entry', /\/assets\/index-[^/]+\.js$/],
+    ['data', /\/assets\/data-lite\/.*\.json(?:\?.*)?$/],
+  ]) {
+    const gate = new Promise((resolve) => { release[kind] = resolve; });
+    await context.route((url) => url.origin === origin && pattern.test(url.href), async (route) => {
+      await gate;
+      await route.continue();
+    });
+  }
+
+  try {
+    await tab.goto(origin + page.path, { waitUntil: 'commit' });
+    const initial = tab.locator('#root > .profile-opening');
+    await initial.locator('.meta-header h1', { hasText: page.opening }).waitFor({ state: 'visible', timeout: 10000 });
+    await tab.waitForFunction(() => {
+      const layout = document.querySelector('#root > .profile-opening .profile-opening-layout');
+      return layout && getComputedStyle(layout).display === 'grid';
+    }, null, { timeout: 10000 });
+    const before = await initial.locator('.profile-opening-layout').evaluate((layout) => ({
+      photo: layout.querySelector('.profile-opening-photo img')?.getBoundingClientRect().width || 0,
+      legacyCss: Boolean(document.querySelector('link[href*="meta-styles.css"]')),
+      dark: document.documentElement.classList.contains('dark'),
+    }));
+    if (before.legacyCss) problems.push('初期HTMLが旧デザインのスタイルシートを読み込んでいる');
+    if (before.dark !== dark) problems.push('アプリの起動前に保存したテーマが反映されていない');
+
+    release.entry();
+    const snapshot = tab.locator('[data-prerendered-snapshot] .profile-opening');
+    await snapshot.locator('.meta-header h1', { hasText: page.opening }).waitFor({ state: 'visible', timeout: 15000 });
+    if (await snapshot.locator('.profile-opening-brand').isVisible()) problems.push('読み込み中にヘッダーが重複している');
+    if (before.photo) {
+      const photo = await snapshot.locator('.profile-opening-photo img').first().boundingBox();
+      if (!photo || Math.abs(photo.width - before.photo) > 2) problems.push('データ待ちに切り替わる際に写真の幅が変化した');
+    }
+  } catch (error) {
+    problems.push(`詳細の初期表示を確認できない: ${error.message.split('\n')[0]}`);
+  } finally {
+    release.entry();
+    release.data();
+  }
+}
+
+async function checkProfileWithoutJavaScript(browser, origin, page, viewport, problems) {
+  const context = await browser.newContext({ viewport, javaScriptEnabled: false });
+  try {
+    await context.route((url) => url.origin !== origin, (route) => route.abort());
+    const tab = await context.newPage();
+    await tab.goto(origin + page.path, { waitUntil: 'domcontentloaded' });
+    const body = tab.locator('#root > .profile-opening main');
+    await body.getByRole('heading', { level: 1, name: page.opening, exact: true }).waitFor({ state: 'visible', timeout: 10000 });
+    if (!await body.locator('section.basic-info').isVisible()) problems.push('JavaScript 無効時に基本情報が表示されない');
+  } catch (error) {
+    problems.push(`JavaScript 無効時の本文を確認できない: ${error.message.split('\n')[0]}`);
+  } finally {
+    await context.close();
+  }
+}
+
 async function checkPage(browser, origin, page, viewport) {
   const context = await browser.newContext({ viewport, locale: page.path.startsWith('/en') ? 'en-US' : 'ja-JP', serviceWorkers: 'block' });
   // 外部への通信は遮断して、ネットワーク状況に左右されないようにする
@@ -107,7 +171,12 @@ async function checkPage(browser, origin, page, viewport) {
     if (url.startsWith(origin) && /\/assets\//.test(url) && response.status() >= 400) problems.push(`読み込み失敗 ${response.status()}: ${url.slice(origin.length)}`);
   });
   const startedAt = Date.now();
-  await tab.goto(origin + page.path, { waitUntil: 'domcontentloaded' });
+  if (page.opening) {
+    await openProfileWithDelayedAssets(context, tab, origin, page, problems);
+    if (viewport.width < 640) await checkProfileWithoutJavaScript(browser, origin, page, viewport, problems);
+  } else {
+    await tab.goto(origin + page.path, { waitUntil: 'domcontentloaded' });
+  }
   try {
     // 個別ページは、アプリの画面が描けるまで静的HTMLの本文の写し（data-prerendered-snapshot）を出す。
     // 写しにも同じ文字があるので、写しが消えてアプリの画面に切り替わるまで待つ

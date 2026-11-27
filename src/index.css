@@ -644,6 +644,116 @@ img[loading="lazy"] {
   backdrop-filter: none;
 }
 
+/* 最初のHTMLとReactの読み込み中で写真・種名の配置を共用する。 */
+.profile-opening {
+  @apply bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-900 dark:to-slate-800;
+}
+
+.profile-opening-brand {
+  @apply border-b border-emerald-600/20 bg-gradient-to-r from-slate-900 via-[#0c3b31] to-slate-900 text-emerald-50 dark:from-slate-950 dark:via-[#06241e] dark:to-slate-950;
+}
+
+.profile-opening-brand a {
+  @apply mx-auto flex min-h-16 max-w-7xl items-center gap-3 px-4 font-bold sm:min-h-20 sm:px-6 sm:text-xl lg:px-8;
+}
+
+.profile-opening-brand img {
+  @apply h-10 w-10 shrink-0 sm:h-12 sm:w-12;
+}
+
+/* App がヘッダーを描いた後は、本文の写しだけを続けて表示する。 */
+[data-prerendered-snapshot] .profile-opening-brand {
+  display: none;
+}
+
+.profile-opening-layout {
+  @apply mx-auto grid min-w-0 max-w-7xl gap-6 px-4 pb-8 pt-8 sm:pt-16;
+}
+
+.profile-opening-with-photo {
+  @apply lg:grid-cols-5 lg:items-start;
+}
+
+.profile-opening-with-photo .profile-opening-photo {
+  @apply min-w-0 lg:col-span-3;
+}
+
+.profile-opening-with-photo .meta-content {
+  @apply min-w-0 lg:col-span-2;
+}
+
+.profile-opening .meta-content {
+  @apply min-w-0 space-y-4 break-words;
+}
+
+.profile-opening :is(.meta-header, .meta-content > section) {
+  @apply rounded-card border border-line bg-surface p-5 text-ink shadow-e1;
+}
+
+.profile-opening h1 {
+  @apply break-words text-2xl font-bold leading-tight sm:text-3xl;
+}
+
+.profile-opening .meta-header h2 {
+  @apply mt-2 text-sm font-medium text-ink-muted sm:text-base;
+}
+
+.profile-opening .meta-content :is(h3, h4) {
+  @apply mb-2 font-semibold;
+}
+
+.profile-opening .meta-content :is(dl, p, ul, ol) {
+  @apply text-sm leading-relaxed;
+}
+
+.profile-opening dl {
+  @apply grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1;
+}
+
+.profile-opening dt {
+  @apply font-medium text-ink-muted;
+}
+
+.profile-opening ul {
+  @apply list-disc pl-5;
+}
+
+.profile-opening ol {
+  @apply list-decimal pl-5;
+}
+
+.profile-opening .meta-content a {
+  @apply text-emerald-700 underline dark:text-emerald-300;
+}
+
+.profile-opening-photo :is(.image-section, .image-gallery) {
+  @apply overflow-hidden rounded-card border border-line bg-surface-raised shadow-e3;
+}
+
+.profile-opening-photo :is(.image-section, .gallery-item) img {
+  @apply block aspect-[4/3] w-full object-contain;
+}
+
+.profile-opening-photo .gallery-container {
+  @apply grid grid-cols-4 gap-2;
+}
+
+.profile-opening-photo .gallery-item {
+  @apply min-w-0;
+}
+
+.profile-opening-photo .gallery-item:first-child {
+  @apply col-span-full;
+}
+
+.profile-opening-photo .gallery-item:not(:first-child) img {
+  @apply aspect-square object-cover;
+}
+
+.profile-opening-photo :is(.image-caption, .image-gallery > h3, .gallery-item > p) {
+  @apply px-4 py-2 text-sm text-ink-muted;
+}
+
 /* ページの画面を描いた瞬間に写しを隠す。写しの片付け（DOMから外す）は描画の後に回すため、
    それまでの間に本文が二重に出ないようにする（hooks/useReleasePrerenderedSnapshot） */
 main > [data-route-page] ~ [data-prerendered-snapshot] {
