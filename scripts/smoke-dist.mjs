@@ -1,12 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import { buildInsectPath } from '../src/utils/insectSlug.js';
+import { splitInsectScientificName } from '../src/utils/insectScientificName.js';
 import { INSECT_SECTION_CONFIGS } from '../src/utils/siteTaxonomy.js';
 import { slugifyScientificLabel } from './lib/englishNaming.mjs';
 import { loadKamikiriMergedTaxonRedirects } from './lib/kamikiriAuditRedirects.mjs';
 import {
   loadButterflyMergedTaxonRedirects,
   loadLeafBeetleMergedTaxonRedirects,
+  loadMothMergedTaxonRedirects,
 } from './lib/mergedTaxonRedirects.mjs';
 import { hasNoindexRobotsMeta } from './lib/metaPageLinks.mjs';
 import { SITE_ICON_VERSION } from '../src/utils/siteBrand.js';
@@ -467,6 +469,23 @@ assert(
   mothsLite.every((record) => record?._detail === true),
   'full insect partitions must be marked as detail-ready',
 );
+const mothsById = new Map(mothsLite.map((moth) => [moth.id, moth]));
+for (const { duplicateId, canonicalId } of loadMothMergedTaxonRedirects()) {
+  const canonicalMoth = mothsById.get(canonicalId);
+  assert(!mothsById.has(duplicateId), `duplicate moth remains in the catalog: ${duplicateId}`);
+  const { authority } = splitInsectScientificName(canonicalMoth?.scientificName);
+  assert(/\d{4}\b/.test(authority), `moth authority is incomplete: ${canonicalId}`);
+  const redirectPath = path.join('moth', duplicateId, 'index.html');
+  assert(
+    readDistText(redirectPath).includes('name="x-redirect-kind" content="taxonomy-merge"'),
+    `missing moth redirect: ${redirectPath}`,
+  );
+  const englishRedirectPath = path.join('en', redirectPath);
+  assert(
+    readDistText(englishRedirectPath).includes('name="x-redirect-kind" content="taxonomy-merge"'),
+    `missing English moth redirect: ${englishRedirectPath}`,
+  );
+}
 assert(
   fs.statSync(path.join(DIST_DIR, 'assets/data-lite/catalog/moths.json')).size <
     fs.statSync(path.join(DIST_DIR, 'assets/data-lite/moths.json')).size * 0.7,

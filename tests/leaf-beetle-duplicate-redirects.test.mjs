@@ -78,11 +78,14 @@ test('the generic redirect inventory preserves all canonical taxon merges', () =
     leafBeetlePath: LEAF_AUDIT_PATH,
     butterflyPath: BUTTERFLY_AUDIT_PATH,
   });
-  assert.equal(all.length, 113);
+  assert.equal(all.length, 122);
   assert.equal(all.filter(({ taxonGroup }) => taxonGroup === 'longhornbeetle').length, 97);
   assert.equal(all.filter(({ taxonGroup }) => taxonGroup === 'leafbeetle').length, 13);
   assert.equal(all.filter(({ taxonGroup }) => taxonGroup === 'butterfly').length, 3);
-  assert.equal(new Set(all.map(({ duplicateId }) => duplicateId)).size, 113);
+  const moths = all.filter(({ taxonGroup }) => taxonGroup === 'moth');
+  assert.equal(moths.length, 9);
+  assert.equal(moths.find(({ duplicateId }) => duplicateId === 'species-21594')?.canonicalId, 'species-3823');
+  assert.equal(new Set(all.map(({ duplicateId }) => duplicateId)).size, all.length);
 });
 
 test('meta generators and the postbuild guard use permanent taxonomy-merge redirects', () => {

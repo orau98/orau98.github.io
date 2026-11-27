@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "mappings": [
+    {
+      "duplicate_id": "species-21574",
+      "canonical_id": "species-3593",
+      "legacy_japanese_name": "スジハグルマエダシャク",
+      "legacy_scientific_name": "Synegia limitatoidea",
+      "source": "https://repository.naro.go.jp/record/3149/files/niaes_report_No37p1-55p.pdf#page=5",
+      "evidence": "目録43。スジハグルマエダシャクの種小名は limitatoides。併載された訪花・食草記録を同じ種に統合。"
+    },
+    {
+      "duplicate_id": "species-21575",
+      "canonical_id": "species-3592",
+      "legacy_japanese_name": "マルハグルマエダシャク",
+      "legacy_scientific_name": "Synegia ichinosawana",
+      "source": "https://repository.naro.go.jp/record/3149/files/niaes_report_No37p1-55p.pdf#page=5",
+      "evidence": "目録42。マルハグルマエダシャクの種小名は ichinosawana。旧IDと現行行は同じ種の記録。"
+    },
+    {
+      "duplicate_id": "species-21578",
+      "canonical_id": "species-3761",
+      "legacy_japanese_name": "キイロトゲエダシャク",
+      "legacy_scientific_name": "Apochima praecutaria",
+      "source": "https://www.pref.mie.lg.jp/common/content/000401553.pdf",
+      "evidence": "キイロトゲエダシャクの種小名は praeacutaria。両行に同一文献のアセビ・ヒサカキ訪花記録が存在。"
+    },
+    {
+      "duplicate_id": "species-21591",
+      "canonical_id": "species-3809",
+      "legacy_japanese_name": "オオマエキトビエダシャク",
+      "legacy_scientific_name": "Nothomiza oxygenioides",
+      "source": "https://db.kahaku.go.jp/webmuseum/col_a3_07/NSMT-I-L_9276",
+      "evidence": "標準図鑑1 p.187と標本目録による同一種。種小名は oxygoniodes。"
+    },
+    {
+      "duplicate_id": "species-21594",
+      "canonical_id": "species-3823",
+      "legacy_japanese_name": "ミスジツマキリエダシャク",
+      "legacy_scientific_name": "Xerodes rufescentarius rufescentarius",
+      "source": "https://www.nat.museum.ibk.ed.jp/wp-content/uploads/2025/05/1748333650.pdf",
+      "evidence": "標準図鑑1 p.190、図鑑PDF p.41の見出しは Xerodes rufescentaria (Motschulsky, 1861)。農研機構井上標本目録 p.19 no.217も亜種区分を採用しない。同書とジャパンサーチ s_net-5338445 に男性形の使用例がある。"
+    },
+    {
+      "duplicate_id": "species-21601",
+      "canonical_id": "species-3845",
+      "legacy_japanese_name": "モミジツマキリエダシャク",
+      "legacy_scientific_name": "Endropiodes indictinarius",
+      "source": "https://repository.naro.go.jp/record/3149/files/niaes_report_No37p1-55p.pdf#page=21",
+      "evidence": "目録236。モミジツマキリエダシャクの indictinarius は標準図鑑の indictinaria と同種に用いられた男性形。"
+    },
+    {
+      "duplicate_id": "species-21602",
+      "canonical_id": "species-3846",
+      "legacy_japanese_name": "ツヅリヅマキリエダシャク",
+      "legacy_scientific_name": "Endropiodes circumflexus",
+      "source": "https://www.nat.museum.ibk.ed.jp/wp-content/uploads/2025/05/1748333650.pdf",
+      "evidence": "標本資料 s_net-4453179 は circumflexus をツツジツマキリエダシャクとする。茨城県産昆虫目録は circumflexa Inoue, 1976。旧行の和名は取り込み時の誤記。"
+    },
+    {
+      "duplicate_id": "species-21695",
+      "canonical_id": "species-6023",
+      "legacy_japanese_name": "カシワキボシキリガ",
+      "legacy_scientific_name": "Lithophane plumbeolimbata",
+      "source": "https://www.nat.museum.ibk.ed.jp/wp-content/uploads/2025/05/1748333650.pdf",
+      "evidence": "『花を訪れる蛾たち』p.165（PDF p.83）no.412 の見出しは Lithophane pruinosa。3件の訪花植物も旧行と一致。茨城県産昆虫目録で記載者と年を照合。"
+    },
+    {
+      "duplicate_id": "species-21729",
+      "canonical_id": "species-5929",
+      "legacy_japanese_name": "ホソバミドリヨトウ",
+      "legacy_scientific_name": "Euplexia angusta",
+      "source": "https://www.jstage.jst.go.jp/browse/lepid/38/2/_contents/-char/ja",
+      "evidence": "吉本（1987）が Euplexidia angusta をホソバミドリヨトウとして原記載。『花を訪れる蛾たち』p.172（PDF p.87）no.455 の属名と訪花植物2件も一致。"
+    }
+  ],
+  "authority_updates": [
+    {
+      "insect_id": "species-21569",
+      "previous_scientific_name": "Paratalanta taiwanensis sasakii",
+      "scientific_name": "Paratalanta taiwanensis sasakii Inoue, 1982",
+      "source": "https://repository.naro.go.jp/record/3140/files/niaes_report_No34p101-142p.pdf",
+      "evidence": "農研機構の井上標本目録255。日本・ロシア南東部産の亜種を Paratalanta taiwanensis sasakii Inoue, 1982 と記載。"
+    },
+    {
+      "insect_id": "species-21572",
+      "previous_scientific_name": "Eumelea biflavata insulata",
+      "scientific_name": "Eumelea biflavata insulata Warren, 1896",
+      "source": "日本産蛾類標準図鑑1 p.204（PDF p.48）",
+      "evidence": "分類欄で日本産の亜種を insulata Warren, 1896 と明記。"
+    },
+    {
+      "insect_id": "species-21573",
+      "previous_scientific_name": "Xenortholitha propinguata niphonica",
+      "scientific_name": "Xenortholitha propinguata niphonica (Butler, 1878)",
+      "source": "日本産蛾類標準図鑑1 p.279（PDF p.85）",
+      "evidence": "分類欄で本州・四国・朝鮮半島産の亜種を niphonica (Butler, 1878) と明記。"
+    },
+    {
+      "insect_id": "species-3592",
+      "previous_scientific_name": "Synegia ichinosawaiana (Matsumura, 1925)",
+      "scientific_name": "Synegia ichinosawana (Matsumura, 1925)",
+      "source": "https://repository.naro.go.jp/record/3149/files/niaes_report_No37p1-55p.pdf#page=5",
+      "evidence": "標本目録の ichinosawana を採用し、元の科学名表記と構造化欄の不一致を解消。"
+    }
+  ],
+  "merged_host_records": {
+    "hostplant-PDFAUDIT-20260710-0024": "hostplant-000940",
+    "hostplant-PDFAUDIT-20260710-0025": "hostplant-000941",
+    "hostplant-PDFAUDIT-20260710-0030": "hostplant-001168",
+    "hostplant-PDFAUDIT-20260710-0031": "hostplant-001169",
+    "hostplant-PDFAUDIT-20260710-0033": "hostplant-001178",
+    "hostplant-PDFAUDIT-20260710-0034": "hostplant-001179",
+    "hostplant-PDFAUDIT-20260710-0035": "hostplant-001180",
+    "hostplant-PDFAUDIT-20260710-0036": "hostplant-001181",
+    "hostplant-PDFAUDIT-20260710-0037": "hostplant-001182",
+    "hostplant-PDFAUDIT-20260710-0038": "hostplant-001183",
+    "hostplant-903947": "hostplant-903893",
+    "hostplant-903948": "hostplant-903894"
+  },
+  "general_note_actions": [
+    {
+      "record_id": "note-1003540",
+      "before": {
+        "record_id": "note-1003540",
+        "insect_id": "species-3823",
+        "note_type": "生態情報",
+        "content": "年1化",
+        "reference": "日本産蛾類標準図鑑1",
+        "page": "",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1003540",
+        "insect_id": "species-3823",
+        "note_type": "生態情報",
+        "content": "北海道では年1化、本州以南では年2化する。",
+        "reference": "日本産蛾類標準図鑑1",
+        "page": "190",
+        "year": ""
+      },
+      "source": "日本産蛾類標準図鑑1 p.190（PDF p.41）"
+    },
+    {
+      "record_id": "note-1005391",
+      "before": {
+        "record_id": "note-1005391",
+        "insect_id": "species-21591",
+        "note_type": "出現時期",
+        "content": "地域によって年3〜4化する。奄美大島や沖縄島では3月から出現し、より暖かい地域に普通に産する。",
+        "reference": "日本産蛾類標準図鑑1",
+        "page": "187",
+        "year": ""
+      },
+      "covered_by": [
+        "note-1003535",
+        "note-1003535-adult-season"
+      ],
+      "source": "日本産蛾類標準図鑑1 p.187"
+    },
+    {
+      "record_id": "note-1005393",
+      "before": {
+        "record_id": "note-1005393",
+        "insect_id": "species-21594",
+        "note_type": "出現時期",
+        "content": "北海道: 年1化; 本州中部: 4～6月、7～8月",
+        "reference": "日本産蛾類標準図鑑1",
+        "page": "",
+        "year": ""
+      },
+      "after": {
+        "record_id": "note-1005393",
+        "insect_id": "species-3823",
+        "note_type": "出現時期",
+        "content": "本州中部では成虫が4〜6月と7〜8月に出現する。",
+        "reference": "日本産蛾類標準図鑑1",
+        "page": "190",
+        "year": ""
+      },
+      "source": "日本産蛾類標準図鑑1 p.190（PDF p.41）"
+    }
+  ],
+  "counts": {
+    "insect_deletions": 9,
+    "host_moves": 53,
+    "host_deletions": 12,
+    "note_moves": 4,
+    "note_deletions": 1
+  }
+}

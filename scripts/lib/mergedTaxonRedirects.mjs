@@ -135,6 +135,39 @@ export function loadButterflyMergedTaxonRedirects(filePath) {
   });
 }
 
+export function loadMothMergedTaxonRedirects() {
+  const filePath = new URL(
+    '../../data/source_audits/moth-canonical-taxonomy-merge-2026-11-27.json',
+    import.meta.url,
+  );
+  const audit = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  if (audit.schema_version !== 1 || !Array.isArray(audit.mappings) || audit.mappings.length === 0) {
+    throw new Error(`${filePath}: unexpected moth canonical-merge ledger`);
+  }
+
+  return audit.mappings.map((mapping) => {
+    const duplicateId = clean(mapping.duplicate_id);
+    const canonicalId = clean(mapping.canonical_id);
+    const legacyJapaneseName = clean(mapping.legacy_japanese_name);
+    const legacyScientificName = clean(mapping.legacy_scientific_name);
+    if (
+      !duplicateId || !canonicalId || duplicateId === canonicalId
+      || !legacyJapaneseName || !legacyScientificName || !clean(mapping.source) || !clean(mapping.evidence)
+    ) {
+      throw new Error(`${filePath}: invalid moth redirect ${duplicateId} -> ${canonicalId}`);
+    }
+    return {
+      duplicateId,
+      canonicalId,
+      legacyJapaneseName,
+      legacyScientificName,
+      legacyDisplayName: legacyJapaneseName,
+      legacyRouteName: duplicateId,
+      taxonGroup: 'moth',
+    };
+  });
+}
+
 export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath, butterflyPath }) {
   const redirects = [
     ...loadKamikiriMergedTaxonRedirects(kamikiriPath).map((redirect) => ({
@@ -144,6 +177,7 @@ export function loadMergedTaxonRedirects({ kamikiriPath, leafBeetlePath, butterf
     })),
     ...loadLeafBeetleMergedTaxonRedirects(leafBeetlePath),
     ...(butterflyPath ? loadButterflyMergedTaxonRedirects(butterflyPath) : []),
+    ...loadMothMergedTaxonRedirects(),
   ];
   const duplicateIds = new Set();
   for (const redirect of redirects) {
